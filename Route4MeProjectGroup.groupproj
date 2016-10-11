@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{834834EC-F629-43A0-9AC3-82EAF5C9D95A}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="Route4MeProject.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="UnitTests\Route4MeProjectTests.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="Route4MeProject">
+        <MSBuild Projects="Route4MeProject.dproj"/>
+    </Target>
+    <Target Name="Route4MeProject:Clean">
+        <MSBuild Projects="Route4MeProject.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Route4MeProject:Make">
+        <MSBuild Projects="Route4MeProject.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Route4MeProjectTests">
+        <MSBuild Projects="UnitTests\Route4MeProjectTests.dproj"/>
+    </Target>
+    <Target Name="Route4MeProjectTests:Clean">
+        <MSBuild Projects="UnitTests\Route4MeProjectTests.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Route4MeProjectTests:Make">
+        <MSBuild Projects="UnitTests\Route4MeProjectTests.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="Route4MeProject;Route4MeProjectTests"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="Route4MeProject:Clean;Route4MeProjectTests:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="Route4MeProject:Make;Route4MeProjectTests:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
