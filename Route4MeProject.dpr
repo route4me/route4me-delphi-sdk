@@ -16,7 +16,10 @@ uses
   NullableInterceptorUnit in 'Nullabled\NullableInterceptorUnit.pas',
   JSONNullableConverterUnit in 'Nullabled\JSONNullableConverterUnit.pas',
   NullableBasicTypesUnit in 'Nullabled\NullableBasicTypesUnit.pas',
-  JSONDictionaryInterceptorObjectUnit in 'Nullabled\JSONDictionaryInterceptorObjectUnit.pas';
+  JSONDictionaryInterceptorObjectUnit in 'Nullabled\JSONDictionaryInterceptorObjectUnit.pas',
+  AddressBookContactUnit in 'DataTypes\AddressBookContactUnit.pas',
+  AddressBookContactActionsUnit in 'Actions\AddressBookContactActionsUnit.pas',
+  AddressBookParametersUnit in 'QueryTypes\AddressBookParametersUnit.pas';
 
 {$R *.res}
 
