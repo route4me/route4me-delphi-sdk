@@ -2,7 +2,8 @@ unit BaseOptimizationParametersProviderUnit;
 
 interface
 
-uses IOptimizationParametersProviderUnit, OptimizationParametersUnit,
+uses
+  IOptimizationParametersProviderUnit, OptimizationParametersUnit,
   AddressUnit, RouteParametersUnit;
 
 type

@@ -7,7 +7,7 @@ uses
   DataObjectUnit;
 
 type
-  TTestMultipleDepotMultipleDriver = class(TTestRoute4MeManager)
+  TTestMultipleDepotMultipleDriver = class(TTestOptimization)
   protected
     procedure InitOptimizationParametersProvider; override;
     procedure CheckResult(dataObject: TDataObject); override;

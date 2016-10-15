@@ -28,7 +28,8 @@ type
 //    [HttpQueryMemberAttribute(Name = "display", EmitDefaultValue = false)]
     FDisplay: NullableString;
   public
-    constructor Create;
+    constructor Create; overload;
+    constructor Create(Limit: integer; Offset: integer); overload;
 
     property AddressId: NullableString read FAddressId write FAddressId;
     property Limit: NullableInteger read FLimit write FLimit;
@@ -41,6 +42,14 @@ type
 implementation
 
 { TAddressBookParameters }
+
+constructor TAddressBookParameters.Create(Limit: integer; Offset: integer);
+begin
+  Create;
+
+  FLimit := Limit;
+  FOffset := Offset;
+end;
 
 constructor TAddressBookParameters.Create;
 begin

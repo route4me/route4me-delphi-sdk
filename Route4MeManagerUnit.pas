@@ -5,34 +5,34 @@ interface
 uses
   Classes, SysUtils,
   OptimizationParametersUnit, DataObjectUnit, IRoute4MeManagerUnit,
-  AddressBookContactUnit;
+  AddressBookContactUnit, AddressBookContactActionsUnit, ConnectionUnit;
 
 type
   TRoute4MeManager = class(TInterfacedObject, IRoute4MeManager)
   private
     FApiKey: String;
-    FAddressBookContact: TAddressBookContact;
-
-    function GetAddressBookContact: TAddressBookContact;
+    FAddressBookContact: TAddressBookContactActions;
+    FConnection: TConnection;
   public
     constructor Create(ApiKey: String);
     destructor Destroy; override;
 
     function RunOptimization(optimizationParameters: TOptimizationParameters; out errorString: String): TDataObject;
 
-    property AddressBookContact: TAddressBookContact read GetAddressBookContact;
+    function AddressBookContact: TAddressBookContactActions;
   end;
 
 implementation
 
 { TRoute4MeManager }
 
-uses EnumsUnit, R4MeInfrastructureSettingsUnit;
+uses EnumsUnit;
 
 constructor TRoute4MeManager.Create(ApiKey: String);
 begin
   FApiKey := ApiKey;
   FAddressBookContact := nil;
+  FConnection := TConnection.Create;
 end;
 
 destructor TRoute4MeManager.Destroy;
@@ -40,13 +40,14 @@ begin
   if (FAddressBookContact <> nil) then
     FreeAndNil(FAddressBookContact);
 
+  FConnection.Free;
   inherited;
 end;
 
-function TRoute4MeManager.GetAddressBookContact: TAddressBookContact;
+function TRoute4MeManager.AddressBookContact: TAddressBookContactActions;
 begin
   if (FAddressBookContact = nil) then
-    FAddressBookContact := TAddressBookContact.Create;
+    FAddressBookContact := TAddressBookContactActions.Create(FConnection);
   Result := FAddressBookContact;
 end;
 

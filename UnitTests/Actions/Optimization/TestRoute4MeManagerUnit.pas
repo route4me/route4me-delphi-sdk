@@ -9,9 +9,8 @@ uses
   IOptimizationParametersProviderUnit, IRoute4MeManagerUnit;
 
 type
-  TTestRoute4MeManager = class abstract(TBaseRoute4MeTest)
+  TTestOptimization = class abstract(TBaseRoute4MeTest)
   protected
-    FRoute4MeManager: IRoute4MeManager;
     FTestDataOptimizationParametersProvider: IOptimizationParametersProvider;
 
     procedure CheckResult(dataObject: TDataObject); virtual; abstract;
@@ -25,7 +24,7 @@ type
 
 implementation
 
-procedure TTestRoute4MeManager.RunOptimization;
+procedure TTestOptimization.RunOptimization;
 var
   errorString: String;
   dataObject: TDataObject;
@@ -36,18 +35,18 @@ begin
   CheckResult(dataObject);
 end;
 
-procedure TTestRoute4MeManager.SetUp;
+procedure TTestOptimization.SetUp;
 begin
-  // Create the manager with the api key
-  FRoute4MeManager := TRoute4MeManager.Create(c_ApiKey);
+  inherited;
 
   InitOptimizationParametersProvider;
 end;
 
-procedure TTestRoute4MeManager.TearDown;
+procedure TTestOptimization.TearDown;
 begin
   FTestDataOptimizationParametersProvider := nil;
-  FRoute4MeManager := nil;
+
+  inherited;
 end;
 
 end.

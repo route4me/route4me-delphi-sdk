@@ -7,7 +7,7 @@ uses
   DataObjectUnit;
 
 type
-  TTestSingleDriverRoute10Stops = class(TTestRoute4MeManager)
+  TTestSingleDriverRoute10Stops = class(TTestOptimization)
   protected
     procedure InitOptimizationParametersProvider; override;
     procedure CheckResult(dataObject: TDataObject); override;

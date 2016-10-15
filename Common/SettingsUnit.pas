@@ -1,4 +1,4 @@
-unit R4MeInfrastructureSettingsUnit;
+unit SettingsUnit;
 
 interface
 
@@ -7,16 +7,16 @@ type
   /// Route4Me infrastructure settings
   /// Api version 4 hosts constants
   /// </summary>
-  TR4MeInfrastructureSettings = class
+  TSettings = class
   public
     const ApiVersion = '4';
 
-    const MainHost      = 'https://www.route4me.com';
-    const ApiHost       = MainHost + '/api.v4/optimization_problem.php';
+    const MainHost = 'https://www.route4me.com';
+    const ApiHost = MainHost + '/api.v4/optimization_problem.php';
     const ShowRouteHost = MainHost + '/route4me.php';
-    const RouteHost     = MainHost + '/api.v4/route.php';
-    const SetGpsHost    = MainHost + '/track/set.php';
-    const GetUsersHost  = MainHost + '/api/member/view_users.php';
+    const RouteHost = MainHost + '/api.v4/route.php';
+    const SetGpsHost = MainHost + '/track/set.php';
+    const GetUsersHost = MainHost + '/api/member/view_users.php';
     const AddRouteNotesHost = MainHost + '/actions/addRouteNotes.php';
     const ActivityFeedHost = MainHost + '/api.v4/activity_feed.php';
     const GetAddress = MainHost + '/api.v4/address.php';
