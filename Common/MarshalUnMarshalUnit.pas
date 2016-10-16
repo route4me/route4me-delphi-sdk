@@ -3,14 +3,15 @@ unit MarshalUnMarshalUnit;
 interface
 
 uses
-  GenericParametersUnit,
+  GenericParametersUnit, System.Rtti,
   REST.JsonReflect, System.JSON;
 
 type
   TMarshalUnMarshal = class
   public
     class function ToJson(GenericParameters: TGenericParameters): String; static;
-    class function FromJson(JsonString: String): TGenericParameters; static;
+    class function FromJson(JsonString: String): TGenericParameters; overload; static;
+    class function FromJson(AClass: TClass; JsonString: String): TObject; overload; static;
   end;
 
 implementation
@@ -30,8 +31,26 @@ begin
   try
     JsonObject := TJSONObject.ParseJSONValue(JSONString) as TJSONObject;
     try
-      Unmarshal.CreateObject(TGenericParameters, JsonObject, ResultObject);
+      ResultObject := Unmarshal.CreateObject(TGenericParameters, JsonObject);
       Result := ResultObject as TGenericParameters;
+    finally
+      JsonObject.Free;
+    end;
+  finally
+    Unmarshal.Free;
+  end;
+end;
+
+class function TMarshalUnMarshal.FromJson(AClass: TClass; JsonString: String): TObject;
+var
+  Unmarshal: TJSONUnMarshal;
+  JsonObject: TJSONObject;
+begin
+  Unmarshal := TJSONUnMarshal.Create({TJSONNullableConverter.Create});
+  try
+    JsonObject := TJSONObject.ParseJSONValue(JSONString) as TJSONObject;
+    try
+      Result := Unmarshal.CreateObject(AClass, JsonObject);
     finally
       JsonObject.Free;
     end;

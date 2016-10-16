@@ -16,8 +16,8 @@ type
 
         class operator Implicit(A: NullableObject): TObject;
         class operator Implicit(PValue: TObject): NullableObject;
-{        class operator Equal(A, B: NullableObject): boolean;
-        class operator NotEqual(A, B: NullableObject): boolean;}
+        class operator Equal(A, B: NullableObject): boolean;
+        class operator NotEqual(A, B: NullableObject): boolean;
 
         class function Null: NullableObject; static;
 
@@ -125,7 +125,7 @@ type
     NullableDoubleArray = array of NullableDouble;
 
     NullableString = record
-    strict private
+    private
         FValue: String;
         FIsNull: boolean;
 
@@ -140,15 +140,13 @@ type
 
         class function Null: NullableString; static;
 
-        function ToString(): String; 
+        function ToString(): String;
 
         property Value: String read GetValue;
         property IsNull: boolean read FIsNull;
         function IsNotNull: boolean;
 
         function IfNull(DefaultValue: string): string;
-
-        function Equals(Other: NullableString): boolean;
     end;
 
     NullableBoolean = record
@@ -626,12 +624,6 @@ begin
         raise Exception.Create('Непредвиденный вариант сравнения');
 end;
 
-function NullableString.Equals(Other: NullableString): boolean;
-begin
-    Result := (Self.IsNull and Other.IsNull)
-        or (Self.IsNotNull and Other.IsNotNull) and (Self.Value = Other.Value);
-end;
-
 function NullableString.GetValue: String;
 begin
     if (FIsNull) then
@@ -764,10 +756,25 @@ begin
     FIsNull := False;
 end;
 
-{class operator NullableObject.Equal(A, B: NullableObject): boolean;
+class operator NullableObject.Equal(A, B: NullableObject): boolean;
 begin
-  Result := A.Value = B.Value;
-end;}
+    if (A.IsNull <> B.IsNull) then
+    begin
+        Result := False;
+    end
+    else
+    if (A.IsNull = B.IsNull) and (A.IsNull) then
+    begin
+        Result := True;
+    end
+    else
+    if (A.IsNull = B.IsNull) and (not A.IsNull) then
+    begin
+        Result := (A.Value.Equals(B.Value));
+    end
+    else
+        raise Exception.Create('Непредвиденный вариант сравнения');
+end;
 
 procedure NullableObject.Free;
 begin
@@ -797,10 +804,10 @@ begin
     Result := not IsNull;
 end;
 
-{class operator NullableObject.NotEqual(A, B: NullableObject): boolean;
+class operator NullableObject.NotEqual(A, B: NullableObject): boolean;
 begin
     Result := not (A = B);
-end;}
+end;
 
 class function NullableObject.Null: NullableObject;
 begin

@@ -86,6 +86,8 @@ type
   public
     constructor Create;
 
+    function Equals(Obj: TObject): Boolean; override;
+
     //let the R4M api know if this sdk request is coming from a file upload within your environment (for analytics)
 //    [DataMember(Name = 'is_upload', EmitDefaultValue = false)]
     property IsUpload: NullableString read FIsUpload write FIsUpload;
@@ -298,6 +300,38 @@ begin
     FTravelMode := NullableString.Null;
     FMetric := NullableInteger.Null;
     FParts := NullableInteger.Null;
+end;
+
+function TRouteParameters.Equals(Obj: TObject): Boolean;
+var
+  Other: TRouteParameters;
+  Res: boolean;
+begin
+  Result := False;
+
+  if not (Obj is TRouteParameters) then
+    Exit;
+
+  Other := TRouteParameters(Obj);
+
+  Res :=
+    (IsUpload = Other.IsUpload) and
+    (RT = Other.RT) and
+    (DisableOptimization = Other.DisableOptimization) and
+    (RouteName = Other.RouteName) and
+    (AlgorithmType = Other.AlgorithmType) and
+    (StoreRoute = Other.StoreRoute) and
+    (RouteDate = Other.RouteDate) and
+    (RouteTime = Other.RouteTime) and
+    (Optimize = Other.Optimize) and
+    (DistanceUnit = Other.DistanceUnit) and
+    (DeviceType = Other.DeviceType) and
+    (RouteMaxDuration = Other.RouteMaxDuration) and
+    (VehicleCapacity = Other.VehicleCapacity) and
+    (VehicleMaxDistanceMI = Other.VehicleMaxDistanceMI) and
+    (TravelMode = Other.TravelMode) and
+    (Metric = Other.Metric) and
+    (Parts = Other.Parts);
 end;
 
 end.

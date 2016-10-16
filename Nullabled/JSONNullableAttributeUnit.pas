@@ -9,8 +9,6 @@ type
   JSONNullableAttribute = class(JsonReflectAttribute)
   private
     FIsRequired: boolean;
-  protected
-    function GetInterceptorType: TClass; virtual;
   public
     /// <summary>
     /// Constructor of JSONNullableAttribute
@@ -25,17 +23,12 @@ implementation
 
 { JSONNullableAttribute }
 
-uses NullableInterceptorUnit;
+uses NullableInterceptorUnit, NullableCustomizerUnit;
 
 constructor JSONNullableAttribute.Create(IsRequired: boolean);
 begin
-  Inherited Create(ctObject, rtString, GetInterceptorType);
+  Inherited Create(ctObject, rtString, TNullableInterceptor, TNullableCustomizer);
   FIsRequired := IsRequired;
-end;
-
-function JSONNullableAttribute.GetInterceptorType: TClass;
-begin
-  Result := TNullableInterceptor;
 end;
 
 end.

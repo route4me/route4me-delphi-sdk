@@ -2,7 +2,9 @@ unit AddressBookContactUnit;
 
 interface
 
-uses NullableBasicTypesUnit, GenericParametersUnit;
+uses
+  REST.Json.Types, JSONNullableAttributeUnit,
+  NullableBasicTypesUnit, GenericParametersUnit;
 
 type
 
@@ -60,11 +62,9 @@ type
     FZip: NullableString;
 
     [JSONName('cached_lat')]
-    [JSONNullable]
     FLatitude: Double;
 
     [JSONName('cached_lng')]
-    [JSONNullable]
     FLongitude: Double;
 
     [JSONName('color')]

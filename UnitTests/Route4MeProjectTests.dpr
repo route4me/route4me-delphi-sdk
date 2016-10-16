@@ -52,7 +52,9 @@ uses
   TestMarshalOptimizationParametersUnit in 'Json\Marshal\TestMarshalOptimizationParametersUnit.pas',
   TestUnmarshalOptimizationParametersUnit in 'Json\Unmarshal\TestUnmarshalOptimizationParametersUnit.pas',
   TestBaseJsonMarshalUnit in 'Json\Marshal\TestBaseJsonMarshalUnit.pas',
-  TestBaseJsonUnmarshalUnit in 'Json\Unmarshal\TestBaseJsonUnmarshalUnit.pas';
+  TestBaseJsonUnmarshalUnit in 'Json\Unmarshal\TestBaseJsonUnmarshalUnit.pas',
+  TestUnmarshalNullableUnit in 'Json\Unmarshal\TestUnmarshalNullableUnit.pas',
+  NullableCustomizerUnit in '..\Nullabled\NullableCustomizerUnit.pas';
 
 {R *.RES}
 

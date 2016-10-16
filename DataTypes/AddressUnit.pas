@@ -84,6 +84,8 @@ type
 
     procedure AddCustomField(Key: String; Value: String);
 
+    function Equals(Obj: TObject): Boolean; override;
+
     property AddressString: String read FAddressString write FAddressString;
     property Alias: NullableString read FAlias write FAlias;
 
@@ -339,6 +341,37 @@ begin
   Create(AddressString, Latitude, Longitude, Time, TimeWindowStart, TimeWindowEnd);
   FTimeWindowStart2 := TimeWindowStart2;
   FTimeWindowEnd2 := TimeWindowEnd2;
+end;
+
+function TAddress.Equals(Obj: TObject): Boolean;
+var
+  Other: TAddress;
+  Res: boolean;
+begin
+  Result := False;
+
+  if not (Obj is TAddress) then
+    Exit;
+
+  Other := TAddress(Obj);
+
+  Res := (AddressString = Other.AddressString) and
+    (Alias = Other.Alias) and
+    (RouteDestinationId = Other.RouteDestinationId) and
+    (MemberId = Other.MemberId) and
+    (IsDepot = Other.IsDepot) and
+    (Latitude = Other.Latitude) and
+    (Longitude = Other.Longitude) and
+    (RouteId = Other.RouteId) and
+    (Time = Other.Time) and
+    (CurbsideLatitude = Other.CurbsideLatitude) and
+    (CurbsideLongitude = Other.CurbsideLongitude) and
+    (TimeWindowStart = Other.TimeWindowStart) and
+    (TimeWindowEnd = Other.TimeWindowEnd) and
+    (TimeWindowStart2 = Other.TimeWindowStart2) and
+    (TimeWindowEnd2 = Other.TimeWindowEnd2) and
+    (SequenceNo = Other.SequenceNo) and
+    (CustomFields = Other.CustomFields);
 end;
 
 end.
