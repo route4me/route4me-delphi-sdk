@@ -12,20 +12,22 @@ type
   TTestNullableBooleanClass = class(TGenericParameters)
   private
     [JSONName('boolean_null')]
-    [JSONNullable(True)]
+    [JSONNullableBoolean(True)]
     FTestNull: NullableBoolean;
 
     [JSONName('boolean_null_but_not_need_save')]
-    [JSONNullable]
+    [JSONNullableBoolean]
     FTestNullButNotNeedSave: NullableBoolean;
 
     [JSONName('boolean_not_null')]
-    [JSONNullable]
+    [JSONNullableBoolean]
     FTest: NullableBoolean;
   public
-    class function AsJson: String;
+    constructor Create;
 
     function Equals(Obj: TObject): Boolean; override;
+
+    class function AsJson: String;
 
     property TestNull: NullableBoolean read FTestNull write FTestNull;
     property TestNullButNotNeedSave: NullableBoolean read FTestNullButNotNeedSave write FTestNullButNotNeedSave;
@@ -35,20 +37,20 @@ type
   TTestUnmarshalNullableStringClass = class(TGenericParameters)
   private
     [JSONName('string_null')]
-    [JSONNullable(True)]
+    [JSONNullableString(True)]
     FTestNull: NullableString;
 
     [JSONName('string_null_but_not_need_save')]
-    [JSONNullable]
+    [JSONNullableString]
     FTestNullButNotNeedSave: NullableString;
 
     [JSONName('string_not_null')]
-    [JSONNullable]
+    [JSONNullableString]
     FTest: NullableString;
-
-    FDebug: String;
   public
     constructor Create;
+
+    function Equals(Obj: TObject): Boolean; override;
 
     class function AsJson: String;
 
@@ -60,17 +62,21 @@ type
   TTestNullableIntegerClass = class(TGenericParameters)
   private
     [JSONName('integer_null')]
-    [JSONNullable(True)]
+    [JSONNullableNumber(True)]
     FTestNull: NullableInteger;
 
     [JSONName('integer_null_but_not_need_save')]
-    [JSONNullable]
+    [JSONNullableNumber]
     FTestNullButNotNeedSave: NullableInteger;
 
     [JSONName('integer_not_null')]
-    [JSONNullable]
+    [JSONNullableNumber]
     FTest: NullableInteger;
   public
+    constructor Create;
+
+    function Equals(Obj: TObject): Boolean; override;
+
     class function AsJson: String;
 
     property TestNull: NullableInteger read FTestNull write FTestNull;
@@ -78,41 +84,24 @@ type
     property Test: NullableInteger read FTest write FTest;
   end;
 
-  TTestNullableInt64Class = class(TGenericParameters)
-  private
-    [JSONName('int64_null')]
-    [JSONNullable(True)]
-    FTestNull: NullableInt64;
-
-    [JSONName('int64_null_but_not_need_save')]
-    [JSONNullable]
-    FTestNullButNotNeedSave: NullableInt64;
-
-    [JSONName('int64_not_null')]
-    [JSONNullable]
-    FTest: NullableInt64;
-  public
-    class function AsJson: String;
-
-    property TestNull: NullableInt64 read FTestNull write FTestNull;
-    property TestNullButNotNeedSave: NullableInt64 read FTestNullButNotNeedSave write FTestNullButNotNeedSave;
-    property Test: NullableInt64 read FTest write FTest;
-  end;
-
   TTestNullableDoubleClass = class(TGenericParameters)
   private
     [JSONName('double_null')]
-    [JSONNullable(True)]
+    [JSONNullableNumber(True)]
     FTestNull: NullableDouble;
 
     [JSONName('double_null_but_not_need_save')]
-    [JSONNullable]
+    [JSONNullableNumber]
     FTestNullButNotNeedSave: NullableDouble;
 
     [JSONName('double_not_null')]
-    [JSONNullable]
+    [JSONNullableNumber]
     FTest: NullableDouble;
   public
+    constructor Create;
+
+    function Equals(Obj: TObject): Boolean; override;
+
     class function AsJson: String;
 
     property TestNull: NullableDouble read FTestNull write FTestNull;
@@ -120,32 +109,35 @@ type
     property Test: NullableDouble read FTest write FTest;
   end;
 
+  TTestObject = class
+    IntValue: integer;
+    BoolValue: boolean;
+    StringValue: String;
+    DoubleValue: double;
+    ArrayValue: array of integer;
+
+    function Equals(Obj: TObject): Boolean; override;
+  end;
+
   TTestNullableObjectClass = class(TGenericParameters)
-  private
-  type
-    TTestObject = class
-      IntValue: integer;
-      BoolValue: boolean;
-      StringValue: String;
-      DoubleValue: double;
-      ArrayValue: array of integer;
-    end;
-  var
     [JSONName('object_null')]
-    [JSONNullable(True)]
+    [JSONNullableObject(TTestObject,True)]
     FTestNull: NullableObject;
 
     [JSONName('object_null_but_not_need_save')]
-    [JSONNullable]
+    [JSONNullableObject(TTestObject)]
     FTestNullButNotNeedSave: NullableObject;
 
     [JSONName('object_not_null')]
-    [JSONNullable]
+    [JSONNullableObject(TTestObject)]
     FTest: NullableObject;
   public
+    constructor Create;
     destructor Destroy; override;
 
+    function Equals(Obj: TObject): Boolean; override;
     function MakeTestObject(): TObject;
+
     class function AsJson: String;
 
     property TestNull: NullableObject read FTestNull write FTestNull;
@@ -158,7 +150,6 @@ type
     procedure TestNullableBoolean();
     procedure TestNullableString();
     procedure TestNullableInteger();
-    procedure TestNullableInt64();
     procedure TestNullableDouble();
     procedure TestNullableObject();
   end;
@@ -169,10 +160,16 @@ implementation
 
 uses MarshalUnMarshalUnit;
 
+constructor TTestNullableBooleanClass.Create;
+begin
+    FTestNull := NullableBoolean.Null;
+    FTestNullButNotNeedSave := NullableBoolean.Null;
+    FTest := NullableBoolean.Null;
+end;
+
 function TTestNullableBooleanClass.Equals(Obj: TObject): Boolean;
 var
   Other: TTestNullableBooleanClass;
-  Res: boolean;
 begin
   Result := False;
 
@@ -204,7 +201,23 @@ begin
     FTestNull := NullableString.Null;
     FTestNullButNotNeedSave := NullableString.Null;
     FTest := NullableString.Null;
-//    FTest := 'asd';
+end;
+
+function TTestUnmarshalNullableStringClass.Equals(Obj: TObject): Boolean;
+var
+  Other: TTestUnmarshalNullableStringClass;
+begin
+  Result := False;
+
+  if not (Obj is TTestUnmarshalNullableStringClass) then
+    Exit;
+
+  Other := TTestUnmarshalNullableStringClass(Obj);
+
+  Result :=
+    (TestNull = Other.TestNull) and
+    (TestNullButNotNeedSave = Other.TestNullButNotNeedSave) and
+    (Test = Other.Test);
 end;
 
 { TTestUnmarshalNullable }
@@ -255,29 +268,6 @@ begin
   end;
 end;
 
-procedure TTestUnmarshalNullable.TestNullableInt64;
-var
-  Etalon: TTestNullableInt64Class;
-  Actual: TTestNullableInt64Class;
-  Obj: TObject;
-begin
-  Obj := TMarshalUnMarshal.FromJson(TTestNullableInt64Class, TTestNullableInt64Class.AsJson);
-  CheckIs(Obj, TTestNullableInt64Class);
-
-  Actual := Obj as TTestNullableInt64Class;
-
-  Etalon := TTestNullableInt64Class.Create;
-  try
-    Etalon.TestNull := NullableInt64.Null;
-    Etalon.TestNullButNotNeedSave := NullableInt64.Null;
-    Etalon.Test := 123;
-
-    CheckTrue(Etalon.Equals(Actual));
-  finally
-    Etalon.Free;
-  end;
-end;
-
 procedure TTestUnmarshalNullable.TestNullableInteger;
 var
   Etalon: TTestNullableIntegerClass;
@@ -303,6 +293,39 @@ end;
 
 procedure TTestUnmarshalNullable.TestNullableObject;
 var
+  Etalon: TTestNullableObjectClass;
+  Actual: TTestNullableObjectClass;
+  TestObj: TTestObject;
+  Obj: TObject;
+begin
+  Obj := TMarshalUnMarshal.FromJson(TTestNullableObjectClass, TTestNullableObjectClass.AsJson);
+  CheckIs(Obj, TTestNullableObjectClass);
+
+  Actual := Obj as TTestNullableObjectClass;
+
+  Etalon := TTestNullableObjectClass.Create;
+  try
+    Etalon.TestNull := NullableObject.Null;
+    Etalon.TestNullButNotNeedSave := NullableObject.Null;
+
+    TestObj := TTestObject.Create;
+    TestObj.IntValue := 123;
+    TestObj.BoolValue := True;
+    TestObj.StringValue := '321';
+    TestObj.DoubleValue := 123.456;
+    SetLength(TestObj.ArrayValue, 3);
+    TestObj.ArrayValue[0] := 3;
+    TestObj.ArrayValue[1] := 4;
+    TestObj.ArrayValue[2] := 5;
+    Etalon.Test := TestObj;
+
+    CheckTrue(Etalon.Equals(Actual));
+  finally
+    Etalon.Free;
+  end;
+end;
+
+{var
   op: TTestNullableObjectClass;
 begin
   op := TTestNullableObjectClass.Create;
@@ -315,7 +338,7 @@ begin
   finally
     op.Free;
   end;
-end;
+end;  }
 
 procedure TTestUnmarshalNullable.TestNullableString;
 var
@@ -347,11 +370,28 @@ begin
   Result := '{"integer_null":null,"integer_not_null":123}';
 end;
 
-{ TTestNullableInt64Class }
-
-class function TTestNullableInt64Class.AsJson: String;
+constructor TTestNullableIntegerClass.Create;
 begin
-  Result := '{"int64_null":null,"int64_not_null":123}';
+    FTestNull := NullableInteger.Null;
+    FTestNullButNotNeedSave := NullableInteger.Null;
+    FTest := NullableInteger.Null;
+end;
+
+function TTestNullableIntegerClass.Equals(Obj: TObject): Boolean;
+var
+  Other: TTestNullableIntegerClass;
+begin
+  Result := False;
+
+  if not (Obj is TTestNullableIntegerClass) then
+    Exit;
+
+  Other := TTestNullableIntegerClass(Obj);
+
+  Result :=
+    (TestNull = Other.TestNull) and
+    (TestNullButNotNeedSave = Other.TestNullButNotNeedSave) and
+    (Test = Other.Test);
 end;
 
 { TTestNullableDoubleClass }
@@ -361,12 +401,60 @@ begin
   Result := '{"double_null":null,"double_not_null":123.456}';
 end;
 
+constructor TTestNullableDoubleClass.Create;
+begin
+    FTestNull := NullableDouble.Null;
+    FTestNullButNotNeedSave := NullableDouble.Null;
+    FTest := NullableDouble.Null;
+end;
+
+function TTestNullableDoubleClass.Equals(Obj: TObject): Boolean;
+var
+  Other: TTestNullableDoubleClass;
+begin
+  Result := False;
+
+  if not (Obj is TTestNullableDoubleClass) then
+    Exit;
+
+  Other := TTestNullableDoubleClass(Obj);
+
+  Result :=
+    (TestNull = Other.TestNull) and
+    (TestNullButNotNeedSave = Other.TestNullButNotNeedSave) and
+    (Test = Other.Test);
+end;
+
 { TTestNullableObjectClass }
+
+constructor TTestNullableObjectClass.Create;
+begin
+    FTestNull := NullableObject.Null;
+    FTestNullButNotNeedSave := NullableObject.Null;
+    FTest := NullableObject.Null;
+end;
 
 destructor TTestNullableObjectClass.Destroy;
 begin
   FTest.Free;
   inherited;
+end;
+
+function TTestNullableObjectClass.Equals(Obj: TObject): Boolean;
+var
+  Other: TTestNullableObjectClass;
+begin
+  Result := False;
+
+  if not (Obj is TTestNullableObjectClass) then
+    Exit;
+
+  Other := TTestNullableObjectClass(Obj);
+
+  Result :=
+    (TestNull = Other.TestNull) and
+    (TestNullButNotNeedSave = Other.TestNullButNotNeedSave) and
+    (Test = Other.Test);
 end;
 
 class function TTestNullableObjectClass.AsJson: String;
@@ -389,6 +477,35 @@ begin
   Res.ArrayValue[2] := 5;
 
   Result := Res;
+end;
+
+{ TTestObject }
+
+function TTestObject.Equals(Obj: TObject): Boolean;
+var
+  Other: TTestObject;
+  i: integer;
+begin
+  Result := False;
+
+  if not (Obj is TTestObject) then
+    Exit;
+
+  Other := TTestObject(Obj);
+
+  Result :=
+    (IntValue = Other.IntValue) and
+    (BoolValue = Other.BoolValue) and
+    (StringValue = Other.StringValue) and
+    (DoubleValue = Other.DoubleValue);
+
+  if Result then
+  begin
+    if (Length(ArrayValue) <> Length(Other.ArrayValue)) then
+      Exit(False);
+    for i := 0 to High(ArrayValue) do
+      Result := Result and (ArrayValue[i] = Other.ArrayValue[i]);
+  end;
 end;
 
 initialization

@@ -12,15 +12,15 @@ type
   TTestNullableBooleanClass = class(TGenericParameters)
   private
     [JSONName('boolean_null')]
-    [JSONNullable(True)]
+    [JSONNullableBoolean(True)]
     FTestNull: NullableBoolean;
 
     [JSONName('boolean_null_but_not_need_save')]
-    [JSONNullable]
+    [JSONNullableBoolean]
     FTestNullButNotNeedSave: NullableBoolean;
 
     [JSONName('boolean_not_null')]
-    [JSONNullable]
+    [JSONNullableBoolean]
     FTest: NullableBoolean;
   public
     function Etalon: String;
@@ -33,15 +33,15 @@ type
   TTestNullableStringClass = class(TGenericParameters)
   private
     [JSONName('string_null')]
-    [JSONNullable(True)]
+    [JSONNullableString(True)]
     FTestNull: NullableString;
 
     [JSONName('string_null_but_not_need_save')]
-    [JSONNullable]
+    [JSONNullableString]
     FTestNullButNotNeedSave: NullableString;
 
     [JSONName('string_not_null')]
-    [JSONNullable]
+    [JSONNullableString]
     FTest: NullableString;
   public
     function Etalon: String;
@@ -54,15 +54,15 @@ type
   TTestNullableIntegerClass = class(TGenericParameters)
   private
     [JSONName('integer_null')]
-    [JSONNullable(True)]
+    [JSONNullableNumber(True)]
     FTestNull: NullableInteger;
 
     [JSONName('integer_null_but_not_need_save')]
-    [JSONNullable]
+    [JSONNullableNumber]
     FTestNullButNotNeedSave: NullableInteger;
 
     [JSONName('integer_not_null')]
-    [JSONNullable]
+    [JSONNullableNumber]
     FTest: NullableInteger;
   public
     function Etalon: String;
@@ -72,39 +72,18 @@ type
     property Test: NullableInteger read FTest write FTest;
   end;
 
-  TTestNullableInt64Class = class(TGenericParameters)
-  private
-    [JSONName('int64_null')]
-    [JSONNullable(True)]
-    FTestNull: NullableInt64;
-
-    [JSONName('int64_null_but_not_need_save')]
-    [JSONNullable]
-    FTestNullButNotNeedSave: NullableInt64;
-
-    [JSONName('int64_not_null')]
-    [JSONNullable]
-    FTest: NullableInt64;
-  public
-    function Etalon: String;
-
-    property TestNull: NullableInt64 read FTestNull write FTestNull;
-    property TestNullButNotNeedSave: NullableInt64 read FTestNullButNotNeedSave write FTestNullButNotNeedSave;
-    property Test: NullableInt64 read FTest write FTest;
-  end;
-
   TTestNullableDoubleClass = class(TGenericParameters)
   private
     [JSONName('double_null')]
-    [JSONNullable(True)]
+    [JSONNullableNumber(True)]
     FTestNull: NullableDouble;
 
     [JSONName('double_null_but_not_need_save')]
-    [JSONNullable]
+    [JSONNullableNumber]
     FTestNullButNotNeedSave: NullableDouble;
 
     [JSONName('double_not_null')]
-    [JSONNullable]
+    [JSONNullableNumber]
     FTest: NullableDouble;
   public
     function Etalon: String;
@@ -126,15 +105,15 @@ type
     end;
   var
     [JSONName('object_null')]
-    [JSONNullable(True)]
+    [JSONNullableObject(TTestObject,True)]
     FTestNull: NullableObject;
 
     [JSONName('object_null_but_not_need_save')]
-    [JSONNullable]
+    [JSONNullableObject(TTestObject)]
     FTestNullButNotNeedSave: NullableObject;
 
     [JSONName('object_not_null')]
-    [JSONNullable]
+    [JSONNullableObject(TTestObject)]
     FTest: NullableObject;
   public
     destructor Destroy; override;
@@ -152,7 +131,6 @@ type
     procedure TestNullableBoolean();
     procedure TestNullableString();
     procedure TestNullableInteger();
-    procedure TestNullableInt64();
     procedure TestNullableDouble();
     procedure TestNullableObject();
   end;
@@ -200,22 +178,6 @@ begin
     op.TestNull := NullableDouble.Null;
     op.TestNullButNotNeedSave := NullableDouble.Null;
     op.Test := 123.456;
-
-    CheckEquals(op.Etalon, op.ToJsonString);
-  finally
-    op.Free;
-  end;
-end;
-
-procedure TTestMarshalNullable.TestNullableInt64;
-var
-  op: TTestNullableInt64Class;
-begin
-  op := TTestNullableInt64Class.Create;
-  try
-    op.TestNull := NullableInt64.Null;
-    op.TestNullButNotNeedSave := NullableInt64.Null;
-    op.Test := 123;
 
     CheckEquals(op.Etalon, op.ToJsonString);
   finally
@@ -276,13 +238,6 @@ end;
 function TTestNullableIntegerClass.Etalon: String;
 begin
   Result := '{"integer_null":null,"integer_not_null":123}';
-end;
-
-{ TTestNullableInt64Class }
-
-function TTestNullableInt64Class.Etalon: String;
-begin
-  Result := '{"int64_null":null,"int64_not_null":123}';
 end;
 
 { TTestNullableDoubleClass }

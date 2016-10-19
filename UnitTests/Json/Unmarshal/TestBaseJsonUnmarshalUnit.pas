@@ -32,7 +32,7 @@ begin
   try
     ActualList.LoadFromFile(JsonFilename);
 
-    Actual := TMarshalUnMarshal.FromJson(ActualList.Text);
+    Actual := TMarshalUnMarshal.FromJson(TGenericParameters, ActualList.Text) as TGenericParameters;
     CheckTrue(Etalon.OptimizationParameters.Equals(Actual));
   finally
     ActualList.Free;

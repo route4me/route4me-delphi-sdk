@@ -29,13 +29,6 @@ type
     constructor Create(Value: integer);
   end;
 
-  TNullableInt64IntermediateObject = class(TBaseNullableIntermediateObject)
-  private
-    FValue: int64;
-  public
-    constructor Create(Value: int64);
-  end;
-
   TNullableBooleanIntermediateObject = class(TBaseNullableIntermediateObject)
   private
     FValue: boolean;
@@ -65,7 +58,7 @@ type
   end;
 
   TNullableInterceptor = class(TJSONInterceptor)
-  private
+  protected
   const
     IsNullFieldCaption = 'FIsNull';
     ValueFieldCaption = 'FValue';
@@ -76,12 +69,31 @@ type
     /// <param name="Field">Field name</param>
     /// <result> a serializable object </result>
     function ObjectConverter(Data: TObject; Field: string): TObject; override;
+  end;
+
+  TNullableObjectInterceptor = class(TNullableInterceptor)
+  public
+    constructor Create;
+
     /// <summary>Reverter that sets an object field to a value based on
     /// an intermediate object</summary>
     /// <param name="Data">Current object instance being populated</param>
     /// <param name="Field">Field name</param>
     /// <param name="Arg"> intermediate object </param>
-//    procedure ObjectReverter(Data: TObject; Field: string; Arg: TObject); override;
+    procedure ObjectReverter(Data: TObject; Field: string; Arg: TObject); override;
+  end;
+
+  TNullableNumberAndStringInterceptor = class(TNullableInterceptor)
+  private
+  type
+    TInternalJSONUnMarshal = class(TJSONUnMarshal);
+
+  var
+    FInternalUnMarshal: TInternalJSONUnMarshal;
+  public
+    constructor Create;
+    destructor Destroy; override;
+
     /// <summary>Field reverter that sets an object field to a value based on
     /// an array of intermediate objects</summary>
     /// <param name="Data">Current object instance being populated</param>
@@ -99,7 +111,7 @@ type
 implementation
 
 uses
-  JSONNullableAttributeUnit;
+  JSONNullableAttributeUnit, TestUnmarshalNullableUnit;
 
 { TNullableInterceptor }
 
@@ -135,9 +147,9 @@ begin
     IsRequiredFound := False;
     for Attr in RttiField.GetAttributes do
     begin
-      if Attr is JSONNullableAttribute then
+      if Attr is BaseJSONNullableAttribute then
       begin
-        IsRequired := JSONNullableAttribute(attr).IsRequired;
+        IsRequired := BaseJSONNullableAttribute(attr).IsRequired;
         IsRequiredFound := True;
       end;
     end;
@@ -163,8 +175,6 @@ begin
           ValueIntermediateObject := TNullableBooleanIntermediateObject.Create(Value.AsBoolean);
         tkInteger:
           ValueIntermediateObject := TNullableIntegerIntermediateObject.Create(Value.AsInteger);
-        tkInt64:
-          ValueIntermediateObject := TNullableInt64IntermediateObject.Create(Value.AsInt64);
         tkFloat:
           ValueIntermediateObject := TNullableDoubleIntermediateObject.Create(Value.AsExtended);
         TTypeKind.tkString, TTypeKind.tkLString, TTypeKind.tkWString, TTypeKind.tkUString:
@@ -192,158 +202,6 @@ begin
     raise Exception.Create('The result can not be undefinded!');
 end;
 
-{procedure TNullableInterceptor.ObjectReverter(Data: TObject; Field: string;
-  Arg: TObject);
-var
-  ctx: TRttiContext;
-  RttiType: TRttiType;
-  RttiField, IsNullField, ValueField: TRttiField;
-  RttiRecord: TRttiRecordType;
-  Attr: TCustomAttribute;
-  IsRequired: boolean;
-  IsRequiredFound: boolean;
-  Ptr: Pointer;
-begin
-  ctx := TRttiContext.Create;
-  try
-    RttiType := ctx.GetType(Data.ClassType);
-    RttiField := RttiType.GetField(Field);
-    Ptr := RttiField.GetValue(Data).GetReferenceToRawData;
-
-    if (not RttiField.FieldType.IsRecord) then
-        raise Exception.Create('The field marked attribute "JSONNullable" must be a record.');
-
-    IsRequired := False;
-    IsRequiredFound := False;
-    for Attr in RttiField.GetAttributes do
-    begin
-      if Attr is JSONNullableAttribute then
-      begin
-        IsRequired := JSONNullableAttribute(attr).IsRequired;
-        IsRequiredFound := True;
-      end;
-    end;
-    if not IsRequiredFound then
-      raise Exception.Create('This intercepter (TNullableInterceptor) was created not in JSONNullableAttribute.');
-
-    RttiRecord := RttiField.FieldType.AsRecord;
-
-    IsNullField := RttiRecord.GetField(IsNullFieldCaption);
-    ValueField := RttiRecord.GetField(ValueFieldCaption);
-
-    if (Arg = nil) then
-      IsNullField.SetValue(Ptr, TValue.From(True));
-
-  finally
-    ctx.Free;
-  end;
-end;
- }
-procedure TNullableInterceptor.ObjectsReverter(Data: TObject; Field: string;
-  Args: TListOfObjects);
-var
-  ctx: TRttiContext;
-  RttiType: TRttiType;
-  RttiField, IsNullField, ValueField: TRttiField;
-  RttiRecord: TRttiRecordType;
-  Attr: TCustomAttribute;
-  IsRequired: boolean;
-  IsRequiredFound: boolean;
-  Ptr: Pointer;
-begin
-  if (Args <> nil) then
-    Exit;
-
-  ctx := TRttiContext.Create;
-  try
-    RttiType := ctx.GetType(Data.ClassType);
-    RttiField := RttiType.GetField(Field);
-    Ptr := RttiField.GetValue(Data).GetReferenceToRawData;
-
-    if (not RttiField.FieldType.IsRecord) then
-        raise Exception.Create('The field marked attribute "JSONNullable" must be a record.');
-
-    IsRequired := False;
-    IsRequiredFound := False;
-    for Attr in RttiField.GetAttributes do
-    begin
-      if Attr is JSONNullableAttribute then
-      begin
-        IsRequired := JSONNullableAttribute(attr).IsRequired;
-        IsRequiredFound := True;
-      end;
-    end;
-    if not IsRequiredFound then
-      raise Exception.Create('This intercepter (TNullableInterceptor) was created not in JSONNullableAttribute.');
-
-    RttiRecord := RttiField.FieldType.AsRecord;
-
-    IsNullField := RttiRecord.GetField(IsNullFieldCaption);
-    ValueField := RttiRecord.GetField(ValueFieldCaption);
-
-    IsNullField.SetValue(Ptr, TValue.From(True));
-
-  finally
-    ctx.Free;
-  end;
-end;
-
-procedure TNullableInterceptor.StringReverter(Data: TObject; Field,
-  Arg: string);
-var
-  ctx: TRttiContext;
-  RttiType: TRttiType;
-  RttiField, IsNullField, ValueField: TRttiField;
-  RttiRecord: TRttiRecordType;
-  Attr: TCustomAttribute;
-  IsRequired: boolean;
-  IsRequiredFound: boolean;
-  Ptr: Pointer;
-
-  TempS: String;
-begin
-  ctx := TRttiContext.Create;
-  try
-    RttiType := ctx.GetType(Data.ClassType);
-    RttiField := RttiType.GetField(Field);
-    Ptr := RttiField.GetValue(Data).GetReferenceToRawData;
-
-    if (not RttiField.FieldType.IsRecord) then
-        raise Exception.Create('The field marked attribute "JSONNullable" must be a record.');
-
-    IsRequired := False;
-    IsRequiredFound := False;
-    for Attr in RttiField.GetAttributes do
-    begin
-      if Attr is JSONNullableAttribute then
-      begin
-        IsRequired := JSONNullableAttribute(attr).IsRequired;
-        IsRequiredFound := True;
-      end;
-    end;
-    if not IsRequiredFound then
-      raise Exception.Create('This intercepter (TNullableInterceptor) was created not in JSONNullableAttribute.');
-
-    RttiRecord := RttiField.FieldType.AsRecord;
-
-    IsNullField := RttiRecord.GetField(IsNullFieldCaption);
-    IsNullField.SetValue(Ptr, TValue.From(False));
-
-    ValueField := RttiRecord.GetField(ValueFieldCaption);
-    TempS := 'qwe';
-    TempS := ValueField.GetValue(Ptr).AsString;
-    ValueField.SetValue(Ptr, TValue.From(Arg));
-    TempS := ValueField.GetValue(Ptr).AsString;
-
-
-{    RttiField := RttiType.GetField('FDebug');
-    Ptr := Pointer(Data);
-    RttiField.SetValue(Ptr, TValue.From(Arg));}
-  finally
-    ctx.Free;
-  end;
-end;
-
 { TNullableBooleanIntermediateObject }
 
 constructor TNullableBooleanIntermediateObject.Create(Value: boolean);
@@ -354,13 +212,6 @@ end;
 { TNullableIntegerIntermediateObject }
 
 constructor TNullableIntegerIntermediateObject.Create(Value: integer);
-begin
-  FValue := Value;
-end;
-
-{ TNullableInt64IntermediateObject }
-
-constructor TNullableInt64IntermediateObject.Create(Value: int64);
 begin
   FValue := Value;
 end;
@@ -392,6 +243,181 @@ end;
 constructor TNullableObjectIntermediateObject.Create(Value: TObject);
 begin
   FValue := Value;
+end;
+
+{ TNullableNumberAndStringInterceptor }
+
+constructor TNullableNumberAndStringInterceptor.Create;
+begin
+  FInternalUnMarshal := TInternalJSONUnMarshal.Create;
+end;
+
+destructor TNullableNumberAndStringInterceptor.Destroy;
+begin
+  FInternalUnMarshal.Free;
+
+  inherited;
+end;
+
+procedure TNullableNumberAndStringInterceptor.ObjectsReverter(Data: TObject;
+  Field: string; Args: TListOfObjects);
+var
+  ctx: TRttiContext;
+  RttiType: TRttiType;
+  RttiField, IsNullField, ValueField: TRttiField;
+  RttiRecord: TRttiRecordType;
+  Attr: TCustomAttribute;
+  IsRequired: boolean;
+  IsRequiredFound: boolean;
+  Ptr: Pointer;
+begin
+  if (Args <> nil) then
+    Exit;
+
+  ctx := TRttiContext.Create;
+  try
+    RttiType := ctx.GetType(Data.ClassType);
+    RttiField := RttiType.GetField(Field);
+
+    if (not RttiField.FieldType.IsRecord) then
+        raise Exception.Create('The field marked attribute "JSONNullable" must be a record.');
+
+    IsRequired := False;
+    IsRequiredFound := False;
+    for Attr in RttiField.GetAttributes do
+    begin
+      if Attr is BaseJSONNullableAttribute then
+      begin
+        IsRequired := BaseJSONNullableAttribute(attr).IsRequired;
+        IsRequiredFound := True;
+      end;
+    end;
+    if not IsRequiredFound then
+      raise Exception.Create('This intercepter (TNullableInterceptor) was created not in JSONNullableAttribute.');
+
+    RttiRecord := RttiField.FieldType.AsRecord;
+
+    IsNullField := RttiRecord.GetField(IsNullFieldCaption);
+    ValueField := RttiRecord.GetField(ValueFieldCaption);
+
+    Ptr := RttiField.GetValue(Data).GetReferenceToRawData;
+    IsNullField.SetValue(Ptr, TValue.From(True));
+
+  finally
+    ctx.Free;
+  end;
+end;
+
+procedure TNullableNumberAndStringInterceptor.StringReverter(Data: TObject; Field,
+  Arg: string);
+var
+  ctx: TRttiContext;
+  RttiType: TRttiType;
+  RttiRecordField, IsNullField, ValueField: TRttiField;
+  RttiRecord: TRttiRecordType;
+  RecordValue: TValue;
+  Attr: TCustomAttribute;
+  IsRequired: boolean;
+  IsRequiredFound: boolean;
+  Ptr: Pointer;
+  Value: TValue;
+
+  TempS: String;
+begin
+  ctx := TRttiContext.Create;
+  try
+    RttiType := ctx.GetType(Data.ClassType);
+    RttiRecordField := RttiType.GetField(Field);
+
+    if (not RttiRecordField.FieldType.IsRecord) then
+        raise Exception.Create('The field marked attribute "JSONNullable" must be a record.');
+
+    RttiRecord := RttiRecordField.FieldType.AsRecord;
+    RecordValue := RttiRecordField.GetValue(Data);
+    Ptr := RecordValue.GetReferenceToRawData;
+
+    IsRequired := False;
+    IsRequiredFound := False;
+    for Attr in RttiRecordField.GetAttributes do
+    begin
+      if Attr is BaseJSONNullableAttribute then
+      begin
+        IsRequired := BaseJSONNullableAttribute(attr).IsRequired;
+        IsRequiredFound := True;
+      end;
+    end;
+    if not IsRequiredFound then
+      raise Exception.Create('This intercepter (TNullableInterceptor) was created not in JSONNullableAttribute.');
+
+    IsNullField := RttiRecord.GetField(IsNullFieldCaption);
+    IsNullField.SetValue(Ptr, TValue.From(False));
+
+    ValueField := RttiRecord.GetField(ValueFieldCaption);
+    ValueField.SetValue(Ptr,
+      FInternalUnMarshal.StringToTValue(Arg, ValueField.FieldType.Handle));
+
+    RttiRecordField.SetValue(Data, RecordValue);
+  finally
+    ctx.Free;
+  end;
+end;
+
+{ TNullableObjectInterceptor }
+
+constructor TNullableObjectInterceptor.Create;
+begin
+  ObjectType := TTestObject;
+end;
+
+procedure TNullableObjectInterceptor.ObjectReverter(Data: TObject; Field: string;
+  Arg: TObject);
+var
+  ctx: TRttiContext;
+  RttiType: TRttiType;
+  RttiRecordField, IsNullField, ValueField: TRttiField;
+  RttiRecord: TRttiRecordType;
+  Attr: TCustomAttribute;
+  IsRequired: boolean;
+  IsRequiredFound: boolean;
+  Ptr: Pointer;
+  RecordValue: TValue;
+begin
+  ctx := TRttiContext.Create;
+  try
+    RttiType := ctx.GetType(Data.ClassType);
+    RttiRecordField := RttiType.GetField(Field);
+    RecordValue := RttiRecordField.GetValue(Data);
+    Ptr := RecordValue.GetReferenceToRawData;
+
+    if (not RttiRecordField.FieldType.IsRecord) then
+        raise Exception.Create('The field marked attribute "JSONNullable" must be a record.');
+
+    IsRequired := False;
+    IsRequiredFound := False;
+    for Attr in RttiRecordField.GetAttributes do
+    begin
+      if Attr is BaseJSONNullableAttribute then
+      begin
+        IsRequired := BaseJSONNullableAttribute(attr).IsRequired;
+        IsRequiredFound := True;
+      end;
+    end;
+    if not IsRequiredFound then
+      raise Exception.Create('This intercepter (TNullableInterceptor) was created not in JSONNullableAttribute.');
+
+    RttiRecord := RttiRecordField.FieldType.AsRecord;
+
+    IsNullField := RttiRecord.GetField(IsNullFieldCaption);
+    IsNullField.SetValue(Ptr, Arg = nil);
+
+    ValueField := RttiRecord.GetField(ValueFieldCaption);
+    ValueField.SetValue(Ptr, Arg);
+
+    RttiRecordField.SetValue(Data, RecordValue);
+
+  finally
+    ctx.Free;
+  end;
 end;
 
 end.

@@ -36,7 +36,7 @@ type
 
     [JSONName('route_date')]
     [JSONNullable]
-    FRouteDate: NullableInt64;
+    FRouteDate: NullableInteger;
 
     [JSONName('route_time')]
     [JSONNullable]
@@ -116,7 +116,7 @@ type
     //the route start date in UTC, unix timestamp seconds.
     //used to show users when the route will begin, also used for reporting and analytics
 //    [DataMember(Name = 'route_date', EmitDefaultValue = false)]
-    property RouteDate: NullableInt64 read FRouteDate write FRouteDate;  // nullable
+    property RouteDate: NullableInteger read FRouteDate write FRouteDate;  // nullable
 
     //offset in seconds relative to the route start date (i.e. 9AM would be 60 * 60 * 9)
 //    [DataMember(Name = 'route_time', EmitDefaultValue = false)]
@@ -289,7 +289,7 @@ begin
     FRouteName := NullableString.Null;
     FAlgorithmType := NullableInteger.Null;
     FStoreRoute := NullableBoolean.Null;
-    FRouteDate := NullableInt64.Null;
+    FRouteDate := NullableInteger.Null;
     FRouteTime := NullableInteger.Null;
     FOptimize := NullableString.Null;
     FDistanceUnit := NullableString.Null;

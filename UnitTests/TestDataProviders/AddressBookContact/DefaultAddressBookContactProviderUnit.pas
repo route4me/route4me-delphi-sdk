@@ -16,7 +16,8 @@ implementation
 
 function TDefaultAddressBookContactProvider.AddressBookContact: TAddressBookContact;
 begin
-  Result := TAddressBookContact.Create('324 Columbus Ave #1 New York, NY 10023', 40.7803123, -73.9793079);
+  Result := TAddressBookContact.Create(
+    '324 Columbus Ave #1 New York, NY 10023', 40.7803123, -73.9793079);
 end;
 
 end.

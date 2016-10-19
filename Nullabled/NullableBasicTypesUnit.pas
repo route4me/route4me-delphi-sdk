@@ -28,27 +28,6 @@ type
         function IsNotNull: boolean;
     end;
 
-    NullableInt64 = record
-    strict private
-        FValue: int64;
-        FIsNull: boolean;
-
-        function GetValue: int64;
-    public
-        constructor Create(PValue: int64);
-
-        class operator Implicit(A: NullableInt64): int64;
-        class operator Implicit(PValue: int64): NullableInt64;
-        class operator Equal(A, B: NullableInt64): boolean;
-        class operator NotEqual(A, B: NullableInt64): boolean;
-
-        class function Null: NullableInt64; static;
-
-        property Value: int64 read GetValue;
-        property IsNull: boolean read FIsNull;
-        function IsNotNull: boolean;
-    end;
-
     NullableInteger = record
     strict private
         FValue: integer;
@@ -173,67 +152,6 @@ type
     end;
 
 implementation
-
-{ NullableInt64 }
-
-constructor NullableInt64.Create(PValue: int64);
-begin
-    FValue := PValue;
-    FIsNull := False;
-end;
-
-class operator NullableInt64.Equal(A, B: NullableInt64): boolean;
-begin
-    if (A.IsNull <> B.IsNull) then
-    begin
-        Result := False;
-    end
-    else
-    if (A.IsNull = B.IsNull) and (A.IsNull) then
-    begin
-        Result := True;
-    end
-    else
-    if (A.IsNull = B.IsNull) and (not A.IsNull) then
-    begin
-        Result := (A.Value = B.Value);
-    end
-    else
-        raise Exception.Create('Ќепредвиденный вариант сравнени€');
-end;
-
-function NullableInt64.GetValue: int64;
-begin
-    if (FIsNull) then
-        raise Exception.Create('Ќевозможно получить значение - оно равно Null')
-    else
-        Result := FValue;
-end;
-
-class operator NullableInt64.Implicit(A: NullableInt64): int64;
-begin
-    Result := A.Value;
-end;
-
-class operator NullableInt64.Implicit(PValue: int64): NullableInt64;
-begin
-    Result := NullableInt64.Create(PValue);
-end;
-
-class operator NullableInt64.NotEqual(A, B: NullableInt64): boolean;
-begin
-    Result := not (A = B);
-end;
-
-class function NullableInt64.Null: NullableInt64;
-begin
-    Result.FIsNull := True;
-end;
-
-function NullableInt64.IsNotNull: boolean;
-begin
-    Result := not IsNull;
-end;
 
 { NullableInteger }
 
