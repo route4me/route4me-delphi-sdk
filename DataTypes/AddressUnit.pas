@@ -4,7 +4,7 @@ interface
 
 uses
   REST.Json.Types, System.Generics.Collections, System.Rtti, Classes, SysUtils,
-  JSONNullableAttributeUnit,
+  JSONNullableAttributeUnit, JSONDictionaryInterceptorObjectUnit,
   NullableBasicTypesUnit;
 
 type
@@ -44,7 +44,7 @@ type
     FTime: NullableInteger;
 
     [JSONName('custom_fields')]
-    [JSONNullable]
+    [JSONNullableObject(TDictionaryStringIntermediateObject)]
     FCustomFields: NullableObject;
 
     [JSONName('curbside_lat')]
@@ -75,7 +75,12 @@ type
     [JSONNullable]
     FSequenceNo: NullableInteger;
   public
+    /// <remarks>
+    ///  Constructor with 0-arguments must be and be public.
+    ///  For JSON-deserialization.
+    /// </remarks>
     constructor Create; overload;
+
     constructor Create(AddressString: String; Latitude, Longitude: double; Time: NullableInteger); overload;
     constructor Create(AddressString: String; Alias: String; Latitude, Longitude: double; Time: NullableInteger); overload;
     constructor Create(AddressString: String; Latitude, Longitude: double; Time: NullableInteger; TimeWindowStart, TimeWindowEnd: integer); overload;
@@ -273,11 +278,10 @@ type
 
 *)
   end;
+
 implementation
 
 { TAddress }
-
-uses JSONDictionaryInterceptorObjectUnit;
 
 constructor TAddress.Create(AddressString: String; Latitude, Longitude: double;
   Time: NullableInteger);
@@ -346,7 +350,6 @@ end;
 function TAddress.Equals(Obj: TObject): Boolean;
 var
   Other: TAddress;
-  Res: boolean;
 begin
   Result := False;
 
@@ -355,7 +358,7 @@ begin
 
   Other := TAddress(Obj);
 
-  Res := (AddressString = Other.AddressString) and
+  Result := (AddressString = Other.AddressString) and
     (Alias = Other.Alias) and
     (RouteDestinationId = Other.RouteDestinationId) and
     (MemberId = Other.MemberId) and

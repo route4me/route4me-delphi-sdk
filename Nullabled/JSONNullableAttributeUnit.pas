@@ -10,7 +10,7 @@ type
   private
     FIsRequired: boolean;
   protected
-    constructor CreateCommon; virtual;
+    constructor CreateCommon;
   public
     /// <summary>
     /// Constructor of JSONNullableAttribute
@@ -21,33 +21,20 @@ type
     property IsRequired: boolean read FIsRequired;
   end;
 
-  JSONNullableStringAndNumberAttribute = class abstract(BaseJSONNullableAttribute)
-  protected
-    constructor CreateCommon; override;
+  JSONNullableAttribute = class abstract(BaseJSONNullableAttribute)
   end;
 
-  JSONNullableObjectAttribute = class (BaseJSONNullableAttribute)
+  JSONNullableObjectAttribute = class (JSONNullableAttribute)
   private
     FClass: TClass;
-  protected
-    constructor CreateCommon; override;
   public
     /// <summary>
     /// Constructor of JSONNullableAttribute
     /// <param name="IsRequired"> Required attribute or not. </param>
     /// </summary>
     constructor Create(Clazz: TClass; IsRequired: boolean = False); reintroduce;
-  end;
 
-  JSONNullableStringAttribute = class (JSONNullableStringAndNumberAttribute)
-  end;
-
-  JSONNullableNumberAttribute = class (JSONNullableStringAndNumberAttribute)
-  end;
-
-  JSONNullableBooleanAttribute = class (BaseJSONNullableAttribute)
-  protected
-    constructor CreateCommon; override;
+    property Clazz: TClass read FClass;
   end;
 
 implementation
@@ -59,13 +46,8 @@ uses NullableInterceptorUnit;
 constructor JSONNullableObjectAttribute.Create(Clazz: TClass;
   IsRequired: boolean);
 begin
-  FClass := Clazz;
   Inherited Create(IsRequired);
-end;
-
-constructor JSONNullableObjectAttribute.CreateCommon;
-begin
-  Inherited Create(ctObject, rtObject, TNullableObjectInterceptor);
+  FClass := Clazz;
 end;
 
 { BaseJSONNullableAttribute }
@@ -78,22 +60,8 @@ end;
 
 constructor BaseJSONNullableAttribute.CreateCommon;
 begin
-  Inherited Create();
-end;
-
-{ JSONNullableStringAndNumberAttribute }
-
-constructor JSONNullableStringAndNumberAttribute.CreateCommon;
-begin
-  Inherited Create(ctObject, rtString, TNullableNumberAndStringInterceptor);
-end;
-
-{ JSONNullableBooleanAttribute }
-
-constructor JSONNullableBooleanAttribute.CreateCommon;
-begin
-//  Inherited;
-  Inherited Create(ctObject, rtObject, TNullableNumberAndStringInterceptor);
+  Inherited Create(ctObject, rtString, TNullableInterceptor);
 end;
 
 end.
+

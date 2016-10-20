@@ -84,6 +84,10 @@ type
     [JSONNullable]
     FParts: NullableInteger;
   public
+    /// <remarks>
+    ///  Constructor with 0-arguments must be and be public.
+    ///  For JSON-deserialization.
+    /// </remarks>
     constructor Create;
 
     function Equals(Obj: TObject): Boolean; override;
@@ -305,7 +309,6 @@ end;
 function TRouteParameters.Equals(Obj: TObject): Boolean;
 var
   Other: TRouteParameters;
-  Res: boolean;
 begin
   Result := False;
 
@@ -314,7 +317,7 @@ begin
 
   Other := TRouteParameters(Obj);
 
-  Res :=
+  Result :=
     (IsUpload = Other.IsUpload) and
     (RT = Other.RT) and
     (DisableOptimization = Other.DisableOptimization) and

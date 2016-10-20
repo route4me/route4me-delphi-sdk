@@ -4,10 +4,14 @@ interface
 
 uses
   TestFramework,
-  TestBaseJsonUnmarshalUnit;
+  TestBaseJsonUnmarshalUnit,
+  IOptimizationParametersProviderUnit;
 
 type
   TTestUnmarshalOptimizationParameters = class(TTestBaseJsonUnmarshal)
+  private
+    procedure CheckEquals(Etalon: IOptimizationParametersProvider; TestName: String);
+
     procedure MultipleDepotMultipleDriver();
     procedure MultipleDepotMultipleDriverTimeWindow();
     procedure MultipleDepotMultipleDriverWith24StopsTimeWindow();
@@ -25,14 +29,37 @@ implementation
 { TTestOptimizationParametersToJson }
 
 uses
-  IOptimizationParametersProviderUnit,
+  Classes,
   SingleDriverRoute10StopsTestDataProviderUnit,
   SingleDriverRoundTripTestDataProviderUnit,
   SingleDriverMultipleTimeWindowsTestDataProviderUnit,
   SingleDepotMultipleDriverNoTimeWindowTestDataProviderUnit,
   MultipleDepotMultipleDriverTestDataProviderUnit,
   MultipleDepotMultipleDriverTimeWindowTestDataProviderUnit,
-  MultipleDepotMultipleDriverWith24StopsTimeWindowTestDataProviderUnit;
+  MultipleDepotMultipleDriverWith24StopsTimeWindowTestDataProviderUnit,
+  OptimizationParametersUnit, MarshalUnMarshalUnit;
+
+procedure TTestUnmarshalOptimizationParameters.CheckEquals(
+  Etalon: IOptimizationParametersProvider; TestName: String);
+var
+  ActualList: TStringList;
+  Actual: TOptimizationParameters;
+  JsonFilename: String;
+  OptimizationParameters: TOptimizationParameters;
+begin
+  JsonFilename := EtalonFilename(TestName);
+  ActualList := TStringList.Create;
+  try
+    ActualList.LoadFromFile(JsonFilename);
+
+    OptimizationParameters := Etalon.OptimizationParameters;
+    Actual := TMarshalUnMarshal.FromJson(OptimizationParameters.ClassType, ActualList.Text) as TOptimizationParameters;
+    CheckTrue(OptimizationParameters.Equals(Actual));
+  finally
+    ActualList.Free;
+  end;
+  Etalon := nil;
+end;
 
 procedure TTestUnmarshalOptimizationParameters.MultipleDepotMultipleDriver();
 begin
@@ -45,42 +72,42 @@ procedure TTestUnmarshalOptimizationParameters.MultipleDepotMultipleDriverTimeWi
 begin
   CheckEquals(
     TMultipleDepotMultipleDriverTimeWindowTestDataProvider.Create,
-    EtalonFilename('OptimizationParametersToJson\MultipleDepotMultipleDriverTimeWindow'));
+    'OptimizationParametersToJson\MultipleDepotMultipleDriverTimeWindow');
 end;
 
 procedure TTestUnmarshalOptimizationParameters.MultipleDepotMultipleDriverWith24StopsTimeWindow;
 begin
   CheckEquals(
     TMultipleDepotMultipleDriverWith24StopsTimeWindowTestDataProvider.Create,
-    EtalonFilename('OptimizationParametersToJson\MultipleDepotMultipleDriverWith24StopsTimeWindow'));
+    'OptimizationParametersToJson\MultipleDepotMultipleDriverWith24StopsTimeWindow');
 end;
 
 procedure TTestUnmarshalOptimizationParameters.SingleDepotMultipleDriverNoTimeWindow;
 begin
   CheckEquals(
     TSingleDepotMultipleDriverNoTimeWindowTestDataProvider.Create,
-    EtalonFilename('OptimizationParametersToJson\SingleDepotMultipleDriverNoTimeWindow'));
+    'OptimizationParametersToJson\SingleDepotMultipleDriverNoTimeWindow');
 end;
 
 procedure TTestUnmarshalOptimizationParameters.SingleDriverMultipleTimeWindows;
 begin
   CheckEquals(
     TSingleDriverMultipleTimeWindowsTestDataProvider.Create,
-    EtalonFilename('OptimizationParametersToJson\SingleDriverMultipleTimeWindows'));
+    'OptimizationParametersToJson\SingleDriverMultipleTimeWindows');
 end;
 
 procedure TTestUnmarshalOptimizationParameters.SingleDriverRoundTrip;
 begin
   CheckEquals(
     TSingleDriverRoundTripTestDataProvider.Create,
-    EtalonFilename('OptimizationParametersToJson\SingleDriverRoundTrip'));
+    'OptimizationParametersToJson\SingleDriverRoundTrip');
 end;
 
 procedure TTestUnmarshalOptimizationParameters.SingleDriverRoute10Stops;
 begin
   CheckEquals(
     TSingleDriverRoute10StopsTestDataProvider.Create,
-    EtalonFilename('OptimizationParametersToJson\SingleDriverRoute10Stops'));
+    'OptimizationParametersToJson\SingleDriverRoute10Stops');
 end;
 
 initialization

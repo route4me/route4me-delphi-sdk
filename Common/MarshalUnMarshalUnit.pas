@@ -13,11 +13,15 @@ type
     IsNullFieldCaption = 'FIsNull';
     ValueFieldCaption = 'FValue';
 
-//    class procedure InitIntermediateObject(AClass: TClass; JsonObject: TJSONObject); static;
+
+    class var ctx: TRttiContext;
+    class var Marshal: TJSONMarshal;
+
+    class procedure InitIntermediateObject({AClass: TClass; }TypeInfo: Pointer; JsonObject: TJSONObject);
   public
-    class function ToJson(GenericParameters: TGenericParameters): String; static;
-//    class function FromJson(JsonString: String): TGenericParameters; overload; static;
-    class function FromJson(AClass: TClass; JsonString: String): TObject; overload; static;
+    class function ToJson(GenericParameters: TGenericParameters): String;
+//    class function FromJson(JsonString: String): TGenericParameters; overload;
+    class function FromJson(AClass: TClass; JsonString: String): TObject; overload;
   end;
 
 implementation
@@ -57,7 +61,16 @@ begin
   try
     JsonObject := TJSONObject.ParseJSONValue(JSONString) as TJSONObject;
     try
-//      InitIntermediateObject(AClass, JsonObject);
+
+      ctx := TRttiContext.Create;
+      Marshal := TJSONMarshal.Create;
+      try
+        InitIntermediateObject(AClass.ClassInfo, JsonObject);
+      finally
+        Marshal.Free;
+        ctx.Free;
+      end;
+
       Result := Unmarshal.CreateObject(AClass, JsonObject);
     finally
       JsonObject.Free;
@@ -67,10 +80,9 @@ begin
   end;
 end;
 
-(*class procedure TMarshalUnMarshal.InitIntermediateObject(AClass: TClass;
+class procedure TMarshalUnMarshal.InitIntermediateObject({AClass: TClass;}TypeInfo: Pointer;
   JsonObject: TJSONObject);
 var
-  ctx: TRttiContext;
   RttiType: TRttiType;
 
   function IsNullabledAttribute(Name: String; out Field: TRttiField): boolean;
@@ -83,101 +95,76 @@ var
       for Attr in RttiField.GetAttributes do
         if (Attr is JSONNameAttribute) and (JSONNameAttribute(Attr).Name = Name) then
         begin
+          Field := RttiField;
           for Attr1 in RttiField.GetAttributes do
-            if (Attr1 is JSONNullableAttribute) then
+            if (Attr1 is BaseJSONNullableAttribute) then
             begin
-              Field := RttiField;
               Exit(True);
             end;
         end;
   end;
 var
-  i: integer;
+  i, j: integer;
   Name: String;
   Value: TJSONValue;
   RttiRecordField: TRttiField;
-  ConcreteNullableIntermediateObject: TBaseNullableIntermediateObject;
-  NullableIntermediateObject: TNullableIntermediateObject;
-  RttiRecord: TRttiRecordType;
-  IsNullField, ValueField: TRttiField;
-  JsonIntermediateObject: TJSONValue;
-  Marshal: TJSONMarshal;
+  ObjectAsString: String;
+  JSONValue: TJSONValue;
+  ArrayItemObject: TJSONObject;
+//  ItemClass: TClass;
+  ItemTypeInfo: Pointer;
+  elementType: TRttiType;
 begin
-{
-	"integer_null": {
-		"nullableIntermediateObject": {
-			"value": 6471586,
-			"isNull": true,
-			"isRequired": true
-		}
-	},
-	"integer_null_but_not_need_save": {
-		"nullableIntermediateObject": {
-			"value": 6471586,
-			"isNull": true,
-			"isRequired": false
-		}
-	},
-	"integer_not_null": {
-		"nullableIntermediateObject": {
-			"value": 123,
-			"isNull": false,
-			"isRequired": false
-		}
-	}
-}
+  RttiType := ctx.GetType(TypeInfo{AClass});
 
-  ctx := TRttiContext.Create;
-  Marshal := TJSONMarshal.Create();
-  try
-    RttiType := ctx.GetType(AClass);
-
-    for i := JsonObject.Count - 1 downto 0 do
+  for i := JsonObject.Count - 1 downto 0 do
+  begin
+    Name := JsonObject.Pairs[i].JsonString.Value;
+    if IsNullabledAttribute(Name, RttiRecordField) then
     begin
-      Name := JsonObject.Pairs[i].JsonString.Value;
-      if IsNullabledAttribute(Name, RttiRecordField) then
+      if (not RttiRecordField.FieldType.IsRecord) then
+        raise Exception.Create('The field marked attribute "JSONNullable" must be a record.');
+
+      Value := JsonObject.Pairs[i].JsonValue;
+
+      if (Value is TJSONTrue) then
       begin
-        if (not RttiRecordField.FieldType.IsRecord) then
-          raise Exception.Create('The field marked attribute "JSONNullable" must be a record.');
+        JsonObject.RemovePair(Name);
+        JsonObject.AddPair(Name, 'true');
+      end;
+      if (Value is TJSONFalse) then
+      begin
+        JsonObject.RemovePair(Name);
+        JsonObject.AddPair(Name, 'false');
+      end;
 
-        ConcreteNullableIntermediateObject := nil;
-        Value := JsonObject.Pairs[i].JsonValue;
-{        if (Value is TJSONObject) then
-          ConcreteNullableIntermediateObject := TNullableObjectIntermediateObject.Create(TJSONObject(Value).Value);}
-        if (Value is TJSONString) then
-          ConcreteNullableIntermediateObject := TNullableStringIntermediateObject.Create(TJSONString(Value).Value);
-        if (Value is TJSONNumber) then
-        begin
-          RttiRecord := RttiRecordField.FieldType.AsRecord;
-          ValueField := RttiRecord.GetField(ValueFieldCaption);
-
-          if (ValueField.FieldType.TypeKind = tkInteger) then
-            ConcreteNullableIntermediateObject := TNullableIntegerIntermediateObject.Create(TJSONNumber(Value).AsInt);
-          if (ValueField.FieldType.TypeKind = tkFloat) then
-            ConcreteNullableIntermediateObject := TNullableDoubleIntermediateObject.Create(TJSONNumber(Value).AsDouble);
-        end;
-        if (Value is TJSONTrue) then
-            ConcreteNullableIntermediateObject := TNullableBooleanIntermediateObject.Create(True);
-        if (Value is TJSONFalse) then
-            ConcreteNullableIntermediateObject := TNullableBooleanIntermediateObject.Create(False);
-
-        if (ConcreteNullableIntermediateObject <> nil) then
-        begin
-          ConcreteNullableIntermediateObject.IsNull := False;
-          NullableIntermediateObject := TNullableIntermediateObject.Create(ConcreteNullableIntermediateObject);
-          JsonIntermediateObject := Marshal.Marshal(NullableIntermediateObject);
-
-          JsonObject.RemovePair(Name);
-          JsonObject.AddPair(Name, JsonIntermediateObject);
-        end;
+      if (Value is TJSONObject) then
+      begin
+        ObjectAsString := TJSONObject(Value).ToString;
+        JsonObject.RemovePair(Name);
+        JsonObject.AddPair(Name, ObjectAsString);
       end;
     end;
-  finally
-    Marshal.Free;
-    ctx.Free;
+
+    JSONValue := JsonObject.Pairs[i].JsonValue;
+    if (JSONValue is TJSONArray) then
+    begin
+      if RttiRecordField.FieldType is TRttiArrayType then
+        elementType := TRttiArrayType(RttiRecordField.FieldType).elementType
+      else
+        elementType := TRttiDynamicArrayType(RttiRecordField.FieldType).elementType;
+      ItemTypeInfo := elementType.Handle;
+
+      for j := 0 to TJSONArray(JSONValue).Count - 1 do
+        if TJSONArray(JSONValue).Items[j] is TJSONObject then
+        begin
+          ArrayItemObject := TJSONObject(TJSONArray(JSONValue).Items[j]);
+          InitIntermediateObject(ItemTypeInfo, ArrayItemObject);
+        end;
+    end;
   end;
 end;
-*)
+
 class function TMarshalUnMarshal.ToJson(
   GenericParameters: TGenericParameters): String;
 var

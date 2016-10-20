@@ -8,7 +8,7 @@ type
     /// <summary>
     /// Convert DateTime to Unix epoch time
     /// </summary>
-    class function ConvertToUnixTimestamp(Date: TDateTime): int64; static;
+    class function ConvertToUnixTimestamp(Date: TDateTime): int64;
   end;
 
 implementation

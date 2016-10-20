@@ -10,8 +10,6 @@ uses
   Route4MeManagerUnit in 'Route4MeManagerUnit.pas',
   DataObjectUnit in 'DataTypes\DataObjectUnit.pas',
   EnumsUnit in 'DataTypes\EnumsUnit.pas',
-  R4MeInfrastructureSettingsUnit in 'R4MeInfrastructureSettingsUnit.pas',
-  JsonSerializerUnit in 'JsonSerializerUnit.pas',
   JSONNullableAttributeUnit in 'Nullabled\JSONNullableAttributeUnit.pas',
   NullableInterceptorUnit in 'Nullabled\NullableInterceptorUnit.pas',
   JSONNullableConverterUnit in 'Nullabled\JSONNullableConverterUnit.pas',
@@ -19,7 +17,12 @@ uses
   JSONDictionaryInterceptorObjectUnit in 'Nullabled\JSONDictionaryInterceptorObjectUnit.pas',
   AddressBookContactUnit in 'DataTypes\AddressBookContactUnit.pas',
   AddressBookContactActionsUnit in 'Actions\AddressBookContactActionsUnit.pas',
-  AddressBookParametersUnit in 'QueryTypes\AddressBookParametersUnit.pas';
+  AddressBookParametersUnit in 'QueryTypes\AddressBookParametersUnit.pas',
+  MarshalUnMarshalUnit in 'Common\MarshalUnMarshalUnit.pas',
+  ConnectionUnit in 'Common\ConnectionUnit.pas',
+  IConnectionUnit in 'Common\IConnectionUnit.pas',
+  SettingsUnit in 'Common\SettingsUnit.pas',
+  BaseActionUnit in 'Actions\BaseActionUnit.pas';
 
 {$R *.res}
 

@@ -63,7 +63,6 @@ end;
 function TDictionaryStringIntermediateObject.Equals(Obj: TObject): Boolean;
 var
   Other: TDictionaryStringIntermediateObject;
-  PairEquals: boolean;
   Pair: TStringPair;
   OtherPair: TStringPair;
 begin
@@ -77,7 +76,6 @@ begin
   if (Length(FDictionaryIntermediateObject) <> Length(Other.FDictionaryIntermediateObject)) then
     Exit;
 
-  PairEquals := True;
   for Pair in FDictionaryIntermediateObject do
   begin
     if not GetPair(Pair.Key, Other.FDictionaryIntermediateObject, OtherPair) then
@@ -127,7 +125,6 @@ end;
 function TDictionaryIntegerIntermediateObject.Equals(Obj: TObject): Boolean;
 var
   Other: TDictionaryIntegerIntermediateObject;
-  PairEquals: boolean;
   Pair: TIntegerPair;
   OtherPair: TIntegerPair;
 begin
@@ -141,7 +138,6 @@ begin
   if (Length(FDictionaryIntermediateObject) <> Length(Other.FDictionaryIntermediateObject)) then
     Exit;
 
-  PairEquals := True;
   for Pair in FDictionaryIntermediateObject do
   begin
     if not GetPair(Pair.Key, Other.FDictionaryIntermediateObject, OtherPair) then

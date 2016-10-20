@@ -3,7 +3,7 @@ unit TestUnmarshalNullableUnit;
 interface
 
 uses
-  TestFramework, REST.Json.Types,
+  TestFramework, REST.Json.Types, Types,
   JSONNullableAttributeUnit,
   GenericParametersUnit,
   NullableBasicTypesUnit;
@@ -12,16 +12,20 @@ type
   TTestNullableBooleanClass = class(TGenericParameters)
   private
     [JSONName('boolean_null')]
-    [JSONNullableBoolean(True)]
+    [JSONNullable(True)]
     FTestNull: NullableBoolean;
 
     [JSONName('boolean_null_but_not_need_save')]
-    [JSONNullableBoolean]
+    [JSONNullable]
     FTestNullButNotNeedSave: NullableBoolean;
 
-    [JSONName('boolean_not_null')]
-    [JSONNullableBoolean]
-    FTest: NullableBoolean;
+    [JSONName('boolean_not_null_true')]
+    [JSONNullable]
+    FTestTrue: NullableBoolean;
+
+    [JSONName('boolean_not_null_false')]
+    [JSONNullable]
+    FTestFalse: NullableBoolean;
   public
     constructor Create;
 
@@ -31,21 +35,22 @@ type
 
     property TestNull: NullableBoolean read FTestNull write FTestNull;
     property TestNullButNotNeedSave: NullableBoolean read FTestNullButNotNeedSave write FTestNullButNotNeedSave;
-    property Test: NullableBoolean read FTest write FTest;
+    property TestTrue: NullableBoolean read FTestTrue write FTestTrue;
+    property TestFalse: NullableBoolean read FTestFalse write FTestFalse;
   end;
 
   TTestUnmarshalNullableStringClass = class(TGenericParameters)
   private
     [JSONName('string_null')]
-    [JSONNullableString(True)]
+    [JSONNullable(True)]
     FTestNull: NullableString;
 
     [JSONName('string_null_but_not_need_save')]
-    [JSONNullableString]
+    [JSONNullable]
     FTestNullButNotNeedSave: NullableString;
 
     [JSONName('string_not_null')]
-    [JSONNullableString]
+    [JSONNullable]
     FTest: NullableString;
   public
     constructor Create;
@@ -62,15 +67,15 @@ type
   TTestNullableIntegerClass = class(TGenericParameters)
   private
     [JSONName('integer_null')]
-    [JSONNullableNumber(True)]
+    [JSONNullable(True)]
     FTestNull: NullableInteger;
 
     [JSONName('integer_null_but_not_need_save')]
-    [JSONNullableNumber]
+    [JSONNullable]
     FTestNullButNotNeedSave: NullableInteger;
 
     [JSONName('integer_not_null')]
-    [JSONNullableNumber]
+    [JSONNullable]
     FTest: NullableInteger;
   public
     constructor Create;
@@ -87,15 +92,15 @@ type
   TTestNullableDoubleClass = class(TGenericParameters)
   private
     [JSONName('double_null')]
-    [JSONNullableNumber(True)]
+    [JSONNullable(True)]
     FTestNull: NullableDouble;
 
     [JSONName('double_null_but_not_need_save')]
-    [JSONNullableNumber]
+    [JSONNullable]
     FTestNullButNotNeedSave: NullableDouble;
 
     [JSONName('double_not_null')]
-    [JSONNullableNumber]
+    [JSONNullable]
     FTest: NullableDouble;
   public
     constructor Create;
@@ -110,13 +115,21 @@ type
   end;
 
   TTestObject = class
-    IntValue: integer;
-    BoolValue: boolean;
-    StringValue: String;
-    DoubleValue: double;
-    ArrayValue: array of integer;
+  private
+    FIntValue: integer;
+    FBoolValue: boolean;
+    FStringValue: String;
+    FDoubleValue: double;
+    FArrayValue: TIntegerDynArray;
 
+  public
     function Equals(Obj: TObject): Boolean; override;
+
+    property IntValue: integer read FIntValue;
+    property BoolValue: boolean read FBoolValue;
+    property StringValue: String read FStringValue;
+    property DoubleValue: double read FDoubleValue;
+    property ArrayValue: TIntegerDynArray read FArrayValue;
   end;
 
   TTestNullableObjectClass = class(TGenericParameters)
@@ -136,7 +149,7 @@ type
     destructor Destroy; override;
 
     function Equals(Obj: TObject): Boolean; override;
-    function MakeTestObject(): TObject;
+    class function MakeTestObject(): TObject;
 
     class function AsJson: String;
 
@@ -164,7 +177,8 @@ constructor TTestNullableBooleanClass.Create;
 begin
     FTestNull := NullableBoolean.Null;
     FTestNullButNotNeedSave := NullableBoolean.Null;
-    FTest := NullableBoolean.Null;
+    FTestTrue := NullableBoolean.Null;
+    FTestFalse := NullableBoolean.Null;
 end;
 
 function TTestNullableBooleanClass.Equals(Obj: TObject): Boolean;
@@ -181,12 +195,13 @@ begin
   Result :=
     (TestNull = Other.TestNull) and
     (TestNullButNotNeedSave = Other.TestNullButNotNeedSave) and
-    (Test = Other.Test);
+    (TestTrue = Other.TestTrue) and
+    (TestFalse = Other.TestFalse);
 end;
 
 class function TTestNullableBooleanClass.AsJson: String;
 begin
-  Result := '{"boolean_null":null,"boolean_not_null":true}';
+  Result := '{"boolean_null":null,"boolean_not_null_true":true,"boolean_not_null_false":false}';
 end;
 
 { TTestNullableStringClass }
@@ -237,7 +252,8 @@ begin
   try
     Etalon.TestNull := NullableBoolean.Null;
     Etalon.TestNullButNotNeedSave := NullableBoolean.Null;
-    Etalon.Test := True;
+    Etalon.TestTrue := True;
+    Etalon.TestFalse := False;
 
     CheckTrue(Etalon.Equals(Actual));
   finally
@@ -295,7 +311,6 @@ procedure TTestUnmarshalNullable.TestNullableObject;
 var
   Etalon: TTestNullableObjectClass;
   Actual: TTestNullableObjectClass;
-  TestObj: TTestObject;
   Obj: TObject;
 begin
   Obj := TMarshalUnMarshal.FromJson(TTestNullableObjectClass, TTestNullableObjectClass.AsJson);
@@ -308,16 +323,7 @@ begin
     Etalon.TestNull := NullableObject.Null;
     Etalon.TestNullButNotNeedSave := NullableObject.Null;
 
-    TestObj := TTestObject.Create;
-    TestObj.IntValue := 123;
-    TestObj.BoolValue := True;
-    TestObj.StringValue := '321';
-    TestObj.DoubleValue := 123.456;
-    SetLength(TestObj.ArrayValue, 3);
-    TestObj.ArrayValue[0] := 3;
-    TestObj.ArrayValue[1] := 4;
-    TestObj.ArrayValue[2] := 5;
-    Etalon.Test := TestObj;
+    Etalon.Test := TTestNullableObjectClass.MakeTestObject;
 
     CheckTrue(Etalon.Equals(Actual));
   finally
@@ -462,19 +468,19 @@ begin
   Result := '{"object_null":null,"object_not_null":{"intValue":123,"boolValue":true,"stringValue":"321","doubleValue":123.456,"arrayValue":[3,4,5]}}';
 end;
 
-function TTestNullableObjectClass.MakeTestObject: TObject;
+class function TTestNullableObjectClass.MakeTestObject: TObject;
 var
   Res: TTestObject;
 begin
   Res := TTestObject.Create;
-  Res.IntValue := 123;
-  Res.BoolValue := True;
-  Res.StringValue := '321';
-  Res.DoubleValue := 123.456;
-  SetLength(Res.ArrayValue, 3);
-  Res.ArrayValue[0] := 3;
-  Res.ArrayValue[1] := 4;
-  Res.ArrayValue[2] := 5;
+  Res.FIntValue := 123;
+  Res.FBoolValue := True;
+  Res.FStringValue := '321';
+  Res.FDoubleValue := 123.456;
+  SetLength(Res.FArrayValue, 3);
+  Res.FArrayValue[0] := 3;
+  Res.FArrayValue[1] := 4;
+  Res.FArrayValue[2] := 5;
 
   Result := Res;
 end;

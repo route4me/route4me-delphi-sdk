@@ -85,6 +85,8 @@ begin
       Exit;
 
     AddressEquals := AddressEquals and Address.Equals(OtherAddress);
+    if not AddressEquals then
+      Break;
   end;
 
   if ((FParameters <> nil) and (Other.Parameters = nil)) or

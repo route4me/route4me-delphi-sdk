@@ -12,15 +12,15 @@ type
   TTestNullableBooleanClass = class(TGenericParameters)
   private
     [JSONName('boolean_null')]
-    [JSONNullableBoolean(True)]
+    [JSONNullable(True)]
     FTestNull: NullableBoolean;
 
     [JSONName('boolean_null_but_not_need_save')]
-    [JSONNullableBoolean]
+    [JSONNullable]
     FTestNullButNotNeedSave: NullableBoolean;
 
     [JSONName('boolean_not_null')]
-    [JSONNullableBoolean]
+    [JSONNullable]
     FTest: NullableBoolean;
   public
     function Etalon: String;
@@ -33,15 +33,15 @@ type
   TTestNullableStringClass = class(TGenericParameters)
   private
     [JSONName('string_null')]
-    [JSONNullableString(True)]
+    [JSONNullable(True)]
     FTestNull: NullableString;
 
     [JSONName('string_null_but_not_need_save')]
-    [JSONNullableString]
+    [JSONNullable]
     FTestNullButNotNeedSave: NullableString;
 
     [JSONName('string_not_null')]
-    [JSONNullableString]
+    [JSONNullable]
     FTest: NullableString;
   public
     function Etalon: String;
@@ -54,15 +54,15 @@ type
   TTestNullableIntegerClass = class(TGenericParameters)
   private
     [JSONName('integer_null')]
-    [JSONNullableNumber(True)]
+    [JSONNullable(True)]
     FTestNull: NullableInteger;
 
     [JSONName('integer_null_but_not_need_save')]
-    [JSONNullableNumber]
+    [JSONNullable]
     FTestNullButNotNeedSave: NullableInteger;
 
     [JSONName('integer_not_null')]
-    [JSONNullableNumber]
+    [JSONNullable]
     FTest: NullableInteger;
   public
     function Etalon: String;
@@ -75,15 +75,15 @@ type
   TTestNullableDoubleClass = class(TGenericParameters)
   private
     [JSONName('double_null')]
-    [JSONNullableNumber(True)]
+    [JSONNullable(True)]
     FTestNull: NullableDouble;
 
     [JSONName('double_null_but_not_need_save')]
-    [JSONNullableNumber]
+    [JSONNullable]
     FTestNullButNotNeedSave: NullableDouble;
 
     [JSONName('double_not_null')]
-    [JSONNullableNumber]
+    [JSONNullable]
     FTest: NullableDouble;
   public
     function Etalon: String;

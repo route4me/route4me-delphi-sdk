@@ -4,7 +4,8 @@ interface
 
 uses
   REST.Json.Types, JSONNullableAttributeUnit,
-  NullableBasicTypesUnit, GenericParametersUnit;
+  NullableBasicTypesUnit, GenericParametersUnit,
+  JSONDictionaryInterceptorObjectUnit;
 
 type
 
@@ -76,14 +77,21 @@ type
     FAddressIcon: NullableString;
 
     [JSONName('address_custom_data')]
-    [JSONNullable]
+    [JSONNullableObject(TDictionaryStringIntermediateObject)]
     FCustomData: NullableObject;
 
-    constructor Create; overload;
   public
+    /// <remarks>
+    ///  Constructor with 0-arguments must be and be public.
+    ///  For JSON-deserialization.
+    /// </remarks>
+    constructor Create; overload;
+
     constructor Create(Address: String; Latitude, Longitude: Double); overload;
 
     procedure AddCustomData(Key: String; Value: String);
+
+    function Equals(Obj: TObject): Boolean; override;
 
     property Id: NullableString read FId write FId;
     /// <summary>
@@ -176,8 +184,6 @@ implementation
 
 { TAddressBookContact }
 
-uses JSONDictionaryInterceptorObjectUnit;
-
 constructor TAddressBookContact.Create;
 begin
   FId := NullableString.Null;
@@ -216,6 +222,37 @@ begin
   FAddress := Address;
   FLatitude := Latitude;
   FLongitude := Longitude;
+end;
+
+function TAddressBookContact.Equals(Obj: TObject): Boolean;
+var
+  Other: TAddressBookContact;
+begin
+  Result := False;
+
+  if not (Obj is TAddressBookContact) then
+    Exit;
+
+  Other := TAddressBookContact(Obj);
+
+  Result := (Id = Other.Id) and
+    (AddressGroup = Other.AddressGroup) and
+    (Alias = Other.Alias) and
+    (Address = Other.Address) and
+    (Address2 = Other.Address2) and
+    (FirstName = Other.FirstName) and
+    (LastName = Other.LastName) and
+    (Email = Other.Email) and
+    (PhoneNumber = Other.PhoneNumber) and
+    (City = Other.City) and
+    (StateId = Other.StateId) and
+    (CountryId = Other.CountryId) and
+    (Zip = Other.Zip) and
+    (Latitude = Other.Latitude) and
+    (Longitude = Other.Longitude) and
+    (Color = Other.Color) and
+    (AddressIcon = Other.AddressIcon) and
+    (CustomData = Other.CustomData);
 end;
 
 end.

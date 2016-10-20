@@ -16,19 +16,19 @@ type
     FIsSentToBackground: boolean;
     FAddresses: TArray<TAddress>;
   public
-    [DataMember(Name = 'optimization_problem_id')]
+//    [DataMember(Name = 'optimization_problem_id')]
     property OptimizationProblemId: String read FOptimizationProblemId write FOptimizationProblemId;
 
-    [DataMember(Name = 'state')]
+//    [DataMember(Name = 'state')]
     property State: TOptimizationState read FState write FState;
 
-    [DataMember(Name = 'user_errors')]
+//    [DataMember(Name = 'user_errors')]
     property UserErrors: TList<String> read FUserErrors write FUserErrors;
 
-    [DataMember(Name = 'sent_to_background')]
+//    [DataMember(Name = 'sent_to_background')]
     property IsSentToBackground: boolean read FIsSentToBackground write FIsSentToBackground;
 
-    [DataMember(Name = 'addresses')]
+//    [DataMember(Name = 'addresses')]
     property Addresses: TArray<TAddress> read FAddresses write FAddresses;
 
 (*    [DataMember(Name = 'parameters')]
