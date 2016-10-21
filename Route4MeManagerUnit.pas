@@ -5,20 +5,24 @@ interface
 uses
   Classes, SysUtils,
   OptimizationParametersUnit, DataObjectUnit, IRoute4MeManagerUnit,
-  AddressBookContactUnit, AddressBookContactActionsUnit, ConnectionUnit;
+  AddressBookContactUnit, AddressBookContactActionsUnit, ConnectionUnit,
+  OptimizationActionUnit;
 
 type
   TRoute4MeManager = class(TInterfacedObject, IRoute4MeManager)
   private
     FApiKey: String;
-    FAddressBookContact: TAddressBookContactActions;
     FConnection: TConnection;
+
+    FAddressBookContact: TAddressBookContactActions;
+    FOptimization: TOptimizationActions;
   public
     constructor Create(ApiKey: String);
     destructor Destroy; override;
 
-    function RunOptimization(optimizationParameters: TOptimizationParameters; out errorString: String): TDataObject;
+    procedure SetConnectionProxy(Host: String; Port: integer; Username, Password: String);
 
+    function Optimization: TOptimizationActions;
     function AddressBookContact: TAddressBookContactActions;
   end;
 
@@ -32,16 +36,30 @@ constructor TRoute4MeManager.Create(ApiKey: String);
 begin
   FApiKey := ApiKey;
   FAddressBookContact := nil;
-  FConnection := TConnection.Create;
+  FConnection := TConnection.Create(FApiKey);
 end;
 
 destructor TRoute4MeManager.Destroy;
 begin
   if (FAddressBookContact <> nil) then
     FreeAndNil(FAddressBookContact);
+  if (FOptimization <> nil) then
+    FreeAndNil(FOptimization);
 
   FConnection.Free;
   inherited;
+end;
+
+function TRoute4MeManager.Optimization: TOptimizationActions;
+begin
+  if (FOptimization = nil) then
+    FOptimization := TOptimizationActions.Create(FConnection);
+  Result := FOptimization;
+end;
+
+procedure TRoute4MeManager.SetConnectionProxy(Host: String; Port: integer; Username, Password: String);
+begin
+  FConnection.SetProxy(Host, Port, Username, Password);
 end;
 
 function TRoute4MeManager.AddressBookContact: TAddressBookContactActions;
@@ -49,15 +67,6 @@ begin
   if (FAddressBookContact = nil) then
     FAddressBookContact := TAddressBookContactActions.Create(FConnection);
   Result := FAddressBookContact;
-end;
-
-function TRoute4MeManager.RunOptimization(
-  OptimizationParameters: TOptimizationParameters;
-  out ErrorString: String): TDataObject;
-begin
-{    Result := GetJsonObjectFromAPI<TDataObject>(
-      optimizationParameters, TR4MeInfrastructureSettings.ApiHost,
-      HttpMethodType.Post, False, ErrorString);}
 end;
 
 end.

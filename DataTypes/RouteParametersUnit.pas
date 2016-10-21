@@ -11,63 +11,63 @@ type
   TRouteParameters = class
   private
     [JSONName('is_upload')]
-    [JSONNullable]
+    [Nullable]
     FIsUpload: NullableString;
 
     [JSONName('rt')]
-    [JSONNullable]
+    [Nullable]
     FRT: NullableBoolean;
 
     [JSONName('disable_optimization')]
-    [JSONNullable]
+    [Nullable]
     FDisableOptimization: NullableBoolean;
 
     [JSONName('route_name')]
-    [JSONNullable]
+    [Nullable]
     FRouteName: NullableString;
 
     [JSONName('algorithm_type')]
-    [JSONNullable]
+    [Nullable]
     FAlgorithmType: NullableInteger;
 
     [JSONName('store_route')]
-    [JSONNullable]
+    [Nullable]
     FStoreRoute: NullableBoolean;
 
     [JSONName('route_date')]
-    [JSONNullable]
+    [Nullable]
     FRouteDate: NullableInteger;
 
     [JSONName('route_time')]
-    [JSONNullable]
+    [Nullable]
     FRouteTime: NullableInteger;
 
     [JSONName('optimize')]
-    [JSONNullable]
+    [Nullable]
     FOptimize: NullableString;
 
     [JSONName('distance_unit')]
-    [JSONNullable]
+    [Nullable]
     FDistanceUnit: NullableString;
 
     [JSONName('device_type')]
-    [JSONNullable]
+    [Nullable]
     FDeviceType: NullableString;
 
     [JSONName('route_max_duration')]
-    [JSONNullable]
+    [Nullable]
     FRouteMaxDuration: NullableInteger;
 
     [JSONName('vehicle_capacity')]
-    [JSONNullable]
+    [Nullable]
     FVehicleCapacity: NullableString;
 
     [JSONName('vehicle_max_distance_mi')]
-    [JSONNullable]
+    [Nullable]
     FVehicleMaxDistanceMI: NullableString;
 
     [JSONName('travel_mode')]
-    [JSONNullable]
+    [Nullable]
     FTravelMode: NullableString;
 
     //1 = ROUTE4ME_METRIC_EUCLIDEAN (use euclidean distance when computing point to point distance)
@@ -77,11 +77,11 @@ type
     //4 = ROUTE4ME_METRIC_MATRIX (use road network driving distance when computing point to point distance)
     //5 = ROUTE4ME_METRIC_EXACT_2D (use exact rectilinear distance)
     [JSONName('metric')]
-    [JSONNullable]
+    [Nullable]
     FMetric: NullableInteger;
 
     [JSONName('parts')]
-    [JSONNullable]
+    [Nullable]
     FParts: NullableInteger;
   public
     /// <remarks>

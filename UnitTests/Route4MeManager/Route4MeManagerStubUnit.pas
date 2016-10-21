@@ -3,13 +3,13 @@ unit Route4MeManagerStubUnit;
 interface
 
 uses IRoute4MeManagerUnit, OptimizationParametersUnit, DataObjectUnit,
-  AddressBookContactActionsUnit;
+  AddressBookContactActionsUnit, OptimizationActionUnit;
 
 type
   TRoute4MeManagerStub = class(TInterfacedObject, IRoute4MeManager)
   public
-    function RunOptimization(optimizationParameters: TOptimizationParameters; out errorString: String): TDataObject;
     function AddressBookContact: TAddressBookContactActions;
+    function Optimization: TOptimizationActions;
   end;
 
 implementation
@@ -21,9 +21,7 @@ begin
 
 end;
 
-function TRoute4MeManagerStub.RunOptimization(
-  optimizationParameters: TOptimizationParameters;
-  out errorString: String): TDataObject;
+function TRoute4MeManagerStub.Optimization: TOptimizationActions;
 begin
 
 end;

@@ -12,54 +12,54 @@ type
   TAddressBookContact = class(TGenericParameters)
   private
     [JSONName('address_id')]
-    [JSONNullable]
+    [Nullable]
     FId: NullableString;
 
     [JSONName('address_group')]
-    [JSONNullable]
+    [Nullable]
     FAddressGroup: NullableString;
 
     [JSONName('address_alias')]
-    [JSONNullable]
+    [Nullable]
     FAlias: NullableString;
 
     [JSONName('address_1')]
     FAddress: String;
 
     [JSONName('address_2')]
-    [JSONNullable]
+    [Nullable]
     FAddress2: NullableString;
 
     [JSONName('first_name')]
-    [JSONNullable]
+    [Nullable]
     FFirstName: NullableString;
 
     [JSONName('last_name')]
-    [JSONNullable]
+    [Nullable]
     FLastName: NullableString;
 
     [JSONName('address_email')]
-    [JSONNullable]
+    [Nullable]
     FEmail: NullableString;
 
     [JSONName('address_phone_number')]
-    [JSONNullable]
+    [Nullable]
     FPhoneNumber: NullableString;
 
     [JSONName('address_city')]
-    [JSONNullable]
+    [Nullable]
     FCity: NullableString;
 
     [JSONName('address_state_id')]
-    [JSONNullable]
+    [Nullable]
     FStateId: NullableString;
 
     [JSONName('address_country_id')]
-    [JSONNullable]
+    [Nullable]
     FCountryId: NullableString;
 
     [JSONName('address_zip')]
-    [JSONNullable]
+    [Nullable]
     FZip: NullableString;
 
     [JSONName('cached_lat')]
@@ -69,15 +69,15 @@ type
     FLongitude: Double;
 
     [JSONName('color')]
-    [JSONNullable]
+    [Nullable]
     FColor: NullableString;
 
     [JSONName('address_icon')]
-    [JSONNullable]
+    [Nullable]
     FAddressIcon: NullableString;
 
     [JSONName('address_custom_data')]
-    [JSONNullableObject(TDictionaryStringIntermediateObject)]
+    [NullableObject(TDictionaryStringIntermediateObject)]
     FCustomData: NullableObject;
 
   public

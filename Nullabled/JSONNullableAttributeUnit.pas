@@ -21,10 +21,10 @@ type
     property IsRequired: boolean read FIsRequired;
   end;
 
-  JSONNullableAttribute = class abstract(BaseJSONNullableAttribute)
+  NullableAttribute = class abstract(BaseJSONNullableAttribute)
   end;
 
-  JSONNullableObjectAttribute = class (JSONNullableAttribute)
+  NullableObjectAttribute = class (NullableAttribute)
   private
     FClass: TClass;
   public
@@ -41,10 +41,10 @@ implementation
 
 uses NullableInterceptorUnit;
 
-{ JSONNullableObjectAttribute }
+{ NullableObjectAttribute }
 
-constructor JSONNullableObjectAttribute.Create(Clazz: TClass;
-  IsRequired: boolean);
+constructor NullableObjectAttribute.Create(Clazz: TClass;
+  IsRequired: boolean = False);
 begin
   Inherited Create(IsRequired);
   FClass := Clazz;
@@ -52,7 +52,7 @@ end;
 
 { BaseJSONNullableAttribute }
 
-constructor BaseJSONNullableAttribute.Create(IsRequired: boolean);
+constructor BaseJSONNullableAttribute.Create(IsRequired: boolean = False);
 begin
   CreateCommon;
   FIsRequired := IsRequired;

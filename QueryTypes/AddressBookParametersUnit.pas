@@ -2,30 +2,32 @@ unit AddressBookParametersUnit;
 
 interface
 
-uses NullableBasicTypesUnit, GenericParametersUnit;
+uses
+  NullableBasicTypesUnit,
+  GenericParametersUnit, HttpQueryMemberAttributeUnit;
 
 type
   TAddressBookParameters = class(TGenericParameters)
   private
-//    [HttpQueryMemberAttribute(Name = "address_id", EmitDefaultValue = false)]
+    [HttpQueryMember('address_id')]
     FAddressId: NullableString;
 
-//    [HttpQueryMemberAttribute(Name = "limit", EmitDefaultValue = false)]
+    [HttpQueryMember('limit')]
     FLimit: NullableInteger;
 
-//    [HttpQueryMemberAttribute(Name = "offset", EmitDefaultValue = false)]
+    [HttpQueryMember('offset')]
     FOffset: NullableInteger;
 
-//    [HttpQueryMemberAttribute(Name = "start", EmitDefaultValue = false)]
+    [HttpQueryMember('start')]
     FStart: NullableInteger;
 
-//    [HttpQueryMemberAttribute(Name = "query", EmitDefaultValue = false)]
+    [HttpQueryMember('query')]
     FQuery: NullableString;
 
-//    [HttpQueryMemberAttribute(Name = "fields", EmitDefaultValue = false)]
+    [HttpQueryMember('fields')]
     FFields: NullableString;
 
-//    [HttpQueryMemberAttribute(Name = "display", EmitDefaultValue = false)]
+    [HttpQueryMember('display')]
     FDisplay: NullableString;
   public
     constructor Create; overload;

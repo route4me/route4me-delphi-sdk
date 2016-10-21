@@ -9,11 +9,6 @@ uses
 type
   TMarshalUnMarshal = class
   private
-  const
-    IsNullFieldCaption = 'FIsNull';
-    ValueFieldCaption = 'FValue';
-
-
     class var ctx: TRttiContext;
     class var Marshal: TJSONMarshal;
 
@@ -90,6 +85,7 @@ var
     RttiField: TRttiField;
     Attr, Attr1: TCustomAttribute;
   begin
+    Field := nil;
     Result := False;
     for RttiField in RttiType.GetFields do
       for Attr in RttiField.GetAttributes do
@@ -107,7 +103,7 @@ var
   i, j: integer;
   Name: String;
   Value: TJSONValue;
-  RttiRecordField: TRttiField;
+  RttiField: TRttiField;
   ObjectAsString: String;
   JSONValue: TJSONValue;
   ArrayItemObject: TJSONObject;
@@ -120,9 +116,9 @@ begin
   for i := JsonObject.Count - 1 downto 0 do
   begin
     Name := JsonObject.Pairs[i].JsonString.Value;
-    if IsNullabledAttribute(Name, RttiRecordField) then
+    if IsNullabledAttribute(Name, RttiField) then
     begin
-      if (not RttiRecordField.FieldType.IsRecord) then
+      if (not RttiField.FieldType.IsRecord) then
         raise Exception.Create('The field marked attribute "JSONNullable" must be a record.');
 
       Value := JsonObject.Pairs[i].JsonValue;
@@ -146,13 +142,16 @@ begin
       end;
     end;
 
+    if (RttiField = nil) then
+      Continue;
+    
     JSONValue := JsonObject.Pairs[i].JsonValue;
     if (JSONValue is TJSONArray) then
     begin
-      if RttiRecordField.FieldType is TRttiArrayType then
-        elementType := TRttiArrayType(RttiRecordField.FieldType).elementType
+      if RttiField.FieldType is TRttiArrayType then
+        elementType := TRttiArrayType(RttiField.FieldType).elementType
       else
-        elementType := TRttiDynamicArrayType(RttiRecordField.FieldType).elementType;
+        elementType := TRttiDynamicArrayType(RttiField.FieldType).elementType;
       ItemTypeInfo := elementType.Handle;
 
       for j := 0 to TJSONArray(JSONValue).Count - 1 do
@@ -162,6 +161,19 @@ begin
           InitIntermediateObject(ItemTypeInfo, ArrayItemObject);
         end;
     end;
+    if (JSONValue is TJSONObject) then
+    begin
+{      RttiField.FieldType.Handle
+      if RttiField.FieldType is TRttiInstanceType then
+        elementType := TRttiInstanceType(RttiField.FieldType).elementType
+      else
+        elementType := TRttiDynamicArrayType(RttiField.FieldType).elementType;
+      ItemTypeInfo := elementType.Handle;}
+      ItemTypeInfo := RttiField.FieldType.Handle;
+
+      InitIntermediateObject(ItemTypeInfo, TJSONObject(JSONValue));
+    end;
+
   end;
 end;
 

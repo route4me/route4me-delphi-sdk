@@ -123,7 +123,7 @@ begin
     Ptr := RttiField.GetValue(Data).GetReferenceToRawData;
 
     if (not RttiField.FieldType.IsRecord) then
-        raise Exception.Create('The field marked attribute "JSONNullable" must be a record.');
+        raise Exception.Create('The field marked attribute "Nullable" must be a record.');
 
     IsRequired := False;
     IsRequiredFound := False;
@@ -331,11 +331,11 @@ begin
       ObjectType := ValueField.FieldType;
       if (ObjectType.TypeKind = tkClass) then
       begin
-        if not (NullableAttribute is JSONNullableObjectAttribute) then
+        if not (NullableAttribute is NullableObjectAttribute) then
           raise Exception.Create(
-            'The field class of "NullableObject" must be marked as "JSONNullableObject" Attribute');
+            'The field class of "NullableObject" must be marked as "NullableObject" Attribute');
 
-        Clazz := JSONNullableObjectAttribute(NullableAttribute).Clazz;
+        Clazz := NullableObjectAttribute(NullableAttribute).Clazz;
         Value := GetObjectValue(Arg, Clazz, InternalUnMarshal);
       end
       else

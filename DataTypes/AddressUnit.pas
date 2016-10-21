@@ -11,22 +11,22 @@ type
   TAddress = class
   private
     [JSONName('route_destination_id')]
-    [JSONNullable]
+    [Nullable]
     FRouteDestinationId: NullableInteger;
 
     [JSONName('alias')]
-    [JSONNullable]
+    [Nullable]
     FAlias: NullableString;
 
     [JSONName('member_id')]
-    [JSONNullable]
+    [Nullable]
     FMemberId: NullableString;
 
     [JSONName('address')]
     FAddressString: String;
 
     [JSONName('is_depot')]
-    [JSONNullable]
+    [Nullable]
     FIsDepot: NullableBoolean;
 
     [JSONName('lat')]
@@ -36,43 +36,43 @@ type
     FLongitude: double;
 
     [JSONName('route_id')]
-    [JSONNullable]
+    [Nullable]
     FRouteId: NullableString;
 
     [JSONName('time')]
-    [JSONNullable]
+    [Nullable]
     FTime: NullableInteger;
 
     [JSONName('custom_fields')]
-    [JSONNullableObject(TDictionaryStringIntermediateObject)]
+    [NullableObject(TDictionaryStringIntermediateObject)]
     FCustomFields: NullableObject;
 
     [JSONName('curbside_lat')]
-    [JSONNullable(True)]
+    [Nullable(True)]
     FCurbsideLatitude: NullableDouble;
 
     [JSONName('curbside_lng')]
-    [JSONNullable(True)]
+    [Nullable(True)]
     FCurbsideLongitude: NullableDouble;
 
     [JSONName('time_window_start')]
-    [JSONNullable]
+    [Nullable]
     FTimeWindowStart: NullableInteger;
 
     [JSONName('time_window_end')]
-    [JSONNullable]
+    [Nullable]
     FTimeWindowEnd: NullableInteger;
 
     [JSONName('time_window_start_2')]
-    [JSONNullable]
+    [Nullable]
     FTimeWindowStart2: NullableInteger;
 
     [JSONName('time_window_end_2')]
-    [JSONNullable]
+    [Nullable]
     FTimeWindowEnd2: NullableInteger;
 
     [JSONName('sequence_no')]
-    [JSONNullable]
+    [Nullable]
     FSequenceNo: NullableInteger;
   public
     /// <remarks>

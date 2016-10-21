@@ -34,7 +34,7 @@ end;
 function TAddressBookContactActions.Add(Contact: TAddressBookContact;
   out errorString: String): boolean;
 begin
-  Result := FConnection.Post(Contact, TSettings.AddressBook, errorString);
+//  Result := FConnection.Post(Contact, TSettings.AddressBook, errorString);
 
 (* Responce:
 {

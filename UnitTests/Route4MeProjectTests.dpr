@@ -54,7 +54,16 @@ uses
   TestBaseJsonMarshalUnit in 'Json\Marshal\TestBaseJsonMarshalUnit.pas',
   TestBaseJsonUnmarshalUnit in 'Json\Unmarshal\TestBaseJsonUnmarshalUnit.pas',
   TestUnmarshalNullableUnit in 'Json\Unmarshal\TestUnmarshalNullableUnit.pas',
-  TestUnmarshalAddressBookContactUnit in 'Json\Unmarshal\TestUnmarshalAddressBookContactUnit.pas';
+  TestUnmarshalAddressBookContactUnit in 'Json\Unmarshal\TestUnmarshalAddressBookContactUnit.pas',
+  HttpQueryMemberAttributeUnit in '..\QueryTypes\HttpQueryMemberAttributeUnit.pas',
+  DirectionLocationUnit in '..\DataTypes\DirectionLocationUnit.pas',
+  DirectionPathPointUnit in '..\DataTypes\DirectionPathPointUnit.pas',
+  DirectionStepUnit in '..\DataTypes\DirectionStepUnit.pas',
+  DirectionUnit in '..\DataTypes\DirectionUnit.pas',
+  LinksUnit in '..\DataTypes\LinksUnit.pas',
+  TrackingHistoryUnit in '..\DataTypes\TrackingHistoryUnit.pas',
+  OptimizationActionUnit in '..\Actions\OptimizationActionUnit.pas',
+  DeleteTestUnit1 in 'DeleteTestUnit1.pas';
 
 {R *.RES}
 

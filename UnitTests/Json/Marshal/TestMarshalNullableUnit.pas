@@ -12,15 +12,15 @@ type
   TTestNullableBooleanClass = class(TGenericParameters)
   private
     [JSONName('boolean_null')]
-    [JSONNullable(True)]
+    [Nullable(True)]
     FTestNull: NullableBoolean;
 
     [JSONName('boolean_null_but_not_need_save')]
-    [JSONNullable]
+    [Nullable]
     FTestNullButNotNeedSave: NullableBoolean;
 
     [JSONName('boolean_not_null')]
-    [JSONNullable]
+    [Nullable]
     FTest: NullableBoolean;
   public
     function Etalon: String;
@@ -33,15 +33,15 @@ type
   TTestNullableStringClass = class(TGenericParameters)
   private
     [JSONName('string_null')]
-    [JSONNullable(True)]
+    [Nullable(True)]
     FTestNull: NullableString;
 
     [JSONName('string_null_but_not_need_save')]
-    [JSONNullable]
+    [Nullable]
     FTestNullButNotNeedSave: NullableString;
 
     [JSONName('string_not_null')]
-    [JSONNullable]
+    [Nullable]
     FTest: NullableString;
   public
     function Etalon: String;
@@ -54,15 +54,15 @@ type
   TTestNullableIntegerClass = class(TGenericParameters)
   private
     [JSONName('integer_null')]
-    [JSONNullable(True)]
+    [Nullable(True)]
     FTestNull: NullableInteger;
 
     [JSONName('integer_null_but_not_need_save')]
-    [JSONNullable]
+    [Nullable]
     FTestNullButNotNeedSave: NullableInteger;
 
     [JSONName('integer_not_null')]
-    [JSONNullable]
+    [Nullable]
     FTest: NullableInteger;
   public
     function Etalon: String;
@@ -75,15 +75,15 @@ type
   TTestNullableDoubleClass = class(TGenericParameters)
   private
     [JSONName('double_null')]
-    [JSONNullable(True)]
+    [Nullable(True)]
     FTestNull: NullableDouble;
 
     [JSONName('double_null_but_not_need_save')]
-    [JSONNullable]
+    [Nullable]
     FTestNullButNotNeedSave: NullableDouble;
 
     [JSONName('double_not_null')]
-    [JSONNullable]
+    [Nullable]
     FTest: NullableDouble;
   public
     function Etalon: String;
@@ -105,15 +105,15 @@ type
     end;
   var
     [JSONName('object_null')]
-    [JSONNullableObject(TTestObject,True)]
+    [NullableObject(TTestObject,True)]
     FTestNull: NullableObject;
 
     [JSONName('object_null_but_not_need_save')]
-    [JSONNullableObject(TTestObject)]
+    [NullableObject(TTestObject)]
     FTestNullButNotNeedSave: NullableObject;
 
     [JSONName('object_not_null')]
-    [JSONNullableObject(TTestObject)]
+    [NullableObject(TTestObject)]
     FTest: NullableObject;
   public
     destructor Destroy; override;

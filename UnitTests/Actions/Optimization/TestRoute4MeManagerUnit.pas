@@ -29,7 +29,7 @@ var
   errorString: String;
   dataObject: TDataObject;
 begin
-  dataObject := FRoute4MeManager.RunOptimization(
+  dataObject := FRoute4MeManager.Optimization.Run(
     FTestDataOptimizationParametersProvider.OptimizationParameters, errorString);
 
   CheckResult(dataObject);

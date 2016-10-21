@@ -1,14 +1,14 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
-        <ProjectGuid>{EF6D8B61-3F40-4F50-AFFA-9BB72EA11160}</ProjectGuid>
+        <ProjectGuid>{B2C03F77-D584-43EB-8B2A-8361D701CB94}</ProjectGuid>
         <ProjectVersion>18.1</ProjectVersion>
         <FrameworkType>None</FrameworkType>
+        <MainSource>Route4MeExamplesProject.dpr</MainSource>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>1</TargetedPlatforms>
         <AppType>Console</AppType>
-        <MainSource>Route4MeProjectTests.dpr</MainSource>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
         <Base>true</Base>
@@ -40,11 +40,9 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
-        <SanitizedProjectName>Route4MeProjectTests</SanitizedProjectName>
-        <DCC_UnitSearchPath>$(BDS)\Source\DUnit\src;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
-        <DCC_Define>_CONSOLE_TESTRUNNER;$(DCC_Define)</DCC_Define>
-        <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
-        <DCC_DcuOutput>.</DCC_DcuOutput>
+        <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;$(DCC_Namespace)</DCC_Namespace>
+        <SanitizedProjectName>Route4MeExamplesProject</SanitizedProjectName>
+        <DCC_DcuOutput>.\$(Platform)\$(Config)</DCC_DcuOutput>
         <DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
         <DCC_E>false</DCC_E>
         <DCC_N>false</DCC_N>
@@ -54,11 +52,13 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
-        <DCC_UsePackage>DBXSqliteDriver;RESTComponents;DataSnapServerMidas;DBXDb2Driver;DBXInterBaseDriver;vclactnband;frxe23;vclFireDAC;emsclientfiredac;DataSnapFireDAC;svnui;tethering;JvGlobus;FireDACADSDriver;JvPluginSystem;DBXMSSQLDriver;JvMM;DatasnapConnectorsFreePascal;FireDACMSSQLDriver;PngComponentsD;vcltouch;JvBands;vcldb;bindcompfmx;svn;Intraweb;DBXOracleDriver;JvJans;JvNet;inetdb;JvAppFrm;FmxTeeUI;JvDotNetCtrls;FireDACIBDriver;fmx;fmxdae;vclib;JvWizards;TipedEditProject;FireDACDBXDriver;dbexpress;IndyCore;vclx;JvPageComps;dsnap;DataSnapCommon;emsclient;FireDACCommon;JvDB;RESTBackendComponents;DataSnapConnectors;GridViewD7;VCLRESTComponents;soapserver;frxTee23;JclDeveloperTools;vclie;bindengine;DBXMySQLDriver;FireDACOracleDriver;CloudService;FireDACMySQLDriver;DBXFirebirdDriver;JvCmp;JvHMI;FireDACCommonDriver;DataSnapClient;inet;bindcompdbx;IndyIPCommon;JvCustom;vcl;DBXSybaseASEDriver;IndyIPServer;JvXPCtrls;IndySystem;FireDACDb2Driver;dsnapcon;FireDACMSAccDriver;fmxFireDAC;FireDACInfxDriver;vclimg;TeeDB;FireDAC;Jcl;JvCore;JvCrypt;FireDACSqliteDriver;FireDACPgDriver;ibmonitor;FireDACASADriver;DBXOdbcDriver;FireDACTDataDriver;FMXTee;vclshlctrls;soaprtl;DbxCommonDriver;JvDlgs;JvRuntimeDesign;ibxpress;Tee;JvManagedThreads;DataSnapServer;xmlrtl;soapmidas;DataSnapNativeClient;fmxobj;vclwinx;ibxbindings;rtl;FireDACDSDriver;DbxClientDriver;JvTimeFramework;DBXSybaseASADriver;CustomIPTransport;vcldsnap;JvSystem;JvStdCtrls;bindcomp;appanalytics;DBXInformixDriver;IndyIPClient;bindcompvcl;frxDB23;TeeUI;vclribbon;dbxcds;VclSmp;JvDocking;adortl;FireDACODBCDriver;JvPascalInterpreter;JclVcl;DataSnapIndy10ServerTransport;dsnapxml;DataSnapProviderClient;dbrtl;inetdbxpress;FireDACMongoDBDriver;IndyProtocols;frx23;JvControls;JvPrintPreview;JclContainers;fmxase;$(DCC_UsePackage)</DCC_UsePackage>
+        <DCC_ConsoleTarget>true</DCC_ConsoleTarget>
         <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <DCC_UsePackage>DBXSqliteDriver;RESTComponents;DataSnapServerMidas;DBXDb2Driver;DBXInterBaseDriver;vclactnband;frxe23;vclFireDAC;emsclientfiredac;DataSnapFireDAC;svnui;tethering;JvGlobus;FireDACADSDriver;JvPluginSystem;DBXMSSQLDriver;JvMM;DatasnapConnectorsFreePascal;FireDACMSSQLDriver;PngComponentsD;vcltouch;JvBands;vcldb;bindcompfmx;svn;Intraweb;DBXOracleDriver;JvJans;JvNet;inetdb;JvAppFrm;FmxTeeUI;JvDotNetCtrls;FireDACIBDriver;fmx;fmxdae;vclib;JvWizards;TipedEditProject;FireDACDBXDriver;dbexpress;IndyCore;vclx;JvPageComps;dsnap;DataSnapCommon;emsclient;FireDACCommon;JvDB;RESTBackendComponents;DataSnapConnectors;GridViewD7;VCLRESTComponents;soapserver;frxTee23;JclDeveloperTools;vclie;bindengine;DBXMySQLDriver;FireDACOracleDriver;CloudService;FireDACMySQLDriver;DBXFirebirdDriver;JvCmp;JvHMI;FireDACCommonDriver;DataSnapClient;inet;bindcompdbx;IndyIPCommon;JvCustom;vcl;DBXSybaseASEDriver;IndyIPServer;JvXPCtrls;IndySystem;FireDACDb2Driver;dsnapcon;FireDACMSAccDriver;fmxFireDAC;FireDACInfxDriver;vclimg;TeeDB;FireDAC;Jcl;JvCore;JvCrypt;FireDACSqliteDriver;FireDACPgDriver;ibmonitor;FireDACASADriver;DBXOdbcDriver;FireDACTDataDriver;FMXTee;vclshlctrls;soaprtl;DbxCommonDriver;JvDlgs;JvRuntimeDesign;ibxpress;Tee;JvManagedThreads;DataSnapServer;xmlrtl;soapmidas;DataSnapNativeClient;fmxobj;vclwinx;ibxbindings;rtl;FireDACDSDriver;DbxClientDriver;JvTimeFramework;DBXSybaseASADriver;CustomIPTransport;vcldsnap;JvSystem;JvStdCtrls;bindcomp;appanalytics;DBXInformixDriver;IndyIPClient;bindcompvcl;frxDB23;TeeUI;vclribbon;dbxcds;VclSmp;JvDocking;adortl;FireDACODBCDriver;JvPascalInterpreter;JclVcl;DataSnapIndy10ServerTransport;dsnapxml;DataSnapProviderClient;dbrtl;inetdbxpress;FireDACMongoDBDriver;IndyProtocols;frx23;JvControls;JvPrintPreview;JclContainers;fmxase;$(DCC_UsePackage)</DCC_UsePackage>
+        <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win64)'!=''">
+        <DCC_ConsoleTarget>true</DCC_ConsoleTarget>
         <DCC_UsePackage>DBXSqliteDriver;RESTComponents;DataSnapServerMidas;DBXDb2Driver;DBXInterBaseDriver;vclactnband;vclFireDAC;emsclientfiredac;DataSnapFireDAC;tethering;FireDACADSDriver;DBXMSSQLDriver;DatasnapConnectorsFreePascal;FireDACMSSQLDriver;PngComponentsD;vcltouch;vcldb;bindcompfmx;Intraweb;DBXOracleDriver;inetdb;FmxTeeUI;FireDACIBDriver;fmx;fmxdae;vclib;FireDACDBXDriver;dbexpress;IndyCore;vclx;dsnap;DataSnapCommon;emsclient;FireDACCommon;RESTBackendComponents;DataSnapConnectors;VCLRESTComponents;soapserver;vclie;bindengine;DBXMySQLDriver;FireDACOracleDriver;CloudService;FireDACMySQLDriver;DBXFirebirdDriver;FireDACCommonDriver;DataSnapClient;inet;bindcompdbx;IndyIPCommon;vcl;DBXSybaseASEDriver;IndyIPServer;IndySystem;FireDACDb2Driver;dsnapcon;FireDACMSAccDriver;fmxFireDAC;FireDACInfxDriver;vclimg;TeeDB;FireDAC;FireDACSqliteDriver;FireDACPgDriver;ibmonitor;FireDACASADriver;DBXOdbcDriver;FireDACTDataDriver;FMXTee;vclshlctrls;soaprtl;DbxCommonDriver;ibxpress;Tee;DataSnapServer;xmlrtl;soapmidas;DataSnapNativeClient;fmxobj;vclwinx;ibxbindings;rtl;FireDACDSDriver;DbxClientDriver;DBXSybaseASADriver;CustomIPTransport;vcldsnap;bindcomp;appanalytics;DBXInformixDriver;IndyIPClient;bindcompvcl;TeeUI;vclribbon;dbxcds;VclSmp;adortl;FireDACODBCDriver;DataSnapIndy10ServerTransport;dsnapxml;DataSnapProviderClient;dbrtl;inetdbxpress;FireDACMongoDBDriver;IndyProtocols;fmxase;$(DCC_UsePackage)</DCC_UsePackage>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1)'!=''">
@@ -70,9 +70,6 @@
         <DCC_RemoteDebug>true</DCC_RemoteDebug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-        <VerInfo_Locale>1033</VerInfo_Locale>
-        <Manifest_File>(None)</Manifest_File>
-        <DCC_DcuOutput>Dcu</DCC_DcuOutput>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
@@ -85,29 +82,28 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="..\Route4MeManagerUnit.pas"/>
-        <DCCReference Include="..\DataTypes\AddressUnit.pas"/>
-        <DCCReference Include="..\QueryTypes\OptimizationParametersUnit.pas"/>
-        <DCCReference Include="..\QueryTypes\GenericParametersUnit.pas"/>
-        <DCCReference Include="..\DataTypes\RouteParametersUnit.pas"/>
-        <DCCReference Include="..\DataTypes\DataObjectUnit.pas"/>
-        <DCCReference Include="..\DataTypes\EnumsUnit.pas"/>
-        <DCCReference Include="Route4MeManager\Route4MeManagerStubUnit.pas"/>
-        <DCCReference Include="..\IRoute4MeManagerUnit.pas"/>
-        <DCCReference Include="..\Nullabled\NullableBasicTypesUnit.pas"/>
-        <DCCReference Include="..\Nullabled\JSONNullableAttributeUnit.pas"/>
-        <DCCReference Include="..\Nullabled\NullableInterceptorUnit.pas"/>
-        <DCCReference Include="..\Nullabled\JSONNullableConverterUnit.pas"/>
-        <DCCReference Include="..\Nullabled\JSONDictionaryInterceptorObjectUnit.pas"/>
-        <DCCReference Include="..\DataTypes\AddressBookContactUnit.pas"/>
-        <DCCReference Include="Route4MeManager\BaseRoute4MeTestUnit.pas"/>
-        <DCCReference Include="..\Actions\AddressBookContactActionsUnit.pas"/>
-        <DCCReference Include="..\QueryTypes\AddressBookParametersUnit.pas"/>
-        <DCCReference Include="Actions\TestAddressBookContactActionsUnit.pas"/>
-        <DCCReference Include="Actions\Optimization\TestMultipleDepotMultipleDriverUnit.pas"/>
-        <DCCReference Include="Actions\Optimization\TestSingleDriverRoundTripUnit.pas"/>
-        <DCCReference Include="Actions\Optimization\TestSingleDriverRoute10StopsUnit.pas"/>
-        <DCCReference Include="Actions\Optimization\TestRoute4MeManagerUnit.pas"/>
+        <DCCReference Include="Examples\SingleDriverRoute10StopsUnit.pas"/>
+        <DCCReference Include="Examples\Route4MeExamplesUnit.pas"/>
+        <DCCReference Include="Nullabled\JSONDictionaryInterceptorObjectUnit.pas"/>
+        <DCCReference Include="Nullabled\JSONNullableAttributeUnit.pas"/>
+        <DCCReference Include="Nullabled\JSONNullableConverterUnit.pas"/>
+        <DCCReference Include="Nullabled\NullableBasicTypesUnit.pas"/>
+        <DCCReference Include="Nullabled\NullableInterceptorUnit.pas"/>
+        <DCCReference Include="Nullabled\NullableTypesUnit.pas"/>
+        <DCCReference Include="Common\ConnectionUnit.pas"/>
+        <DCCReference Include="Common\IConnectionUnit.pas"/>
+        <DCCReference Include="Common\MarshalUnMarshalUnit.pas"/>
+        <DCCReference Include="Common\SettingsUnit.pas"/>
+        <DCCReference Include="Common\UtilsUnit.pas"/>
+        <DCCReference Include="DataTypes\AddressBookContactUnit.pas"/>
+        <DCCReference Include="DataTypes\AddressUnit.pas"/>
+        <DCCReference Include="DataTypes\DataObjectUnit.pas"/>
+        <DCCReference Include="DataTypes\EnumsUnit.pas"/>
+        <DCCReference Include="DataTypes\RouteParametersUnit.pas"/>
+        <DCCReference Include="QueryTypes\AddressBookParametersUnit.pas"/>
+        <DCCReference Include="QueryTypes\GenericParametersUnit.pas"/>
+        <DCCReference Include="QueryTypes\OptimizationParametersUnit.pas"/>
+        <DCCReference Include="Route4MeManagerUnit.pas"/>
         <DCCReference Include="TestDataProviders\OptimizationParameters\BaseOptimizationParametersProviderUnit.pas"/>
         <DCCReference Include="TestDataProviders\OptimizationParameters\IOptimizationParametersProviderUnit.pas"/>
         <DCCReference Include="TestDataProviders\OptimizationParameters\MultipleDepotMultipleDriverTestDataProviderUnit.pas"/>
@@ -117,32 +113,16 @@
         <DCCReference Include="TestDataProviders\OptimizationParameters\SingleDriverMultipleTimeWindowsTestDataProviderUnit.pas"/>
         <DCCReference Include="TestDataProviders\OptimizationParameters\SingleDriverRoundTripTestDataProviderUnit.pas"/>
         <DCCReference Include="TestDataProviders\OptimizationParameters\SingleDriverRoute10StopsTestDataProviderUnit.pas"/>
-        <DCCReference Include="TestDataProviders\AddressBookContact\IAddressBookContactProviderUnit.pas"/>
-        <DCCReference Include="TestDataProviders\AddressBookContact\FullAddressBookContactProviderUnit.pas"/>
-        <DCCReference Include="TestDataProviders\AddressBookContact\DefaultAddressBookContactProviderUnit.pas"/>
-        <DCCReference Include="..\Common\SettingsUnit.pas"/>
-        <DCCReference Include="..\Common\UtilsUnit.pas"/>
-        <DCCReference Include="..\Common\ConnectionUnit.pas"/>
-        <DCCReference Include="..\Common\IConnectionUnit.pas"/>
-        <DCCReference Include="..\Actions\BaseActionUnit.pas"/>
-        <DCCReference Include="..\Common\MarshalUnMarshalUnit.pas"/>
-        <DCCReference Include="Json\Marshal\TestMarshalAddressBookContactUnit.pas"/>
-        <DCCReference Include="Json\Marshal\TestMarshalNullableUnit.pas"/>
-        <DCCReference Include="Json\Marshal\TestMarshalOptimizationParametersUnit.pas"/>
-        <DCCReference Include="Json\Unmarshal\TestUnmarshalOptimizationParametersUnit.pas"/>
-        <DCCReference Include="Json\Marshal\TestBaseJsonMarshalUnit.pas"/>
-        <DCCReference Include="Json\Unmarshal\TestBaseJsonUnmarshalUnit.pas"/>
-        <DCCReference Include="Json\Unmarshal\TestUnmarshalNullableUnit.pas"/>
-        <DCCReference Include="Json\Unmarshal\TestUnmarshalAddressBookContactUnit.pas"/>
-        <DCCReference Include="..\QueryTypes\HttpQueryMemberAttributeUnit.pas"/>
-        <DCCReference Include="..\DataTypes\DirectionLocationUnit.pas"/>
-        <DCCReference Include="..\DataTypes\DirectionPathPointUnit.pas"/>
-        <DCCReference Include="..\DataTypes\DirectionStepUnit.pas"/>
-        <DCCReference Include="..\DataTypes\DirectionUnit.pas"/>
-        <DCCReference Include="..\DataTypes\LinksUnit.pas"/>
-        <DCCReference Include="..\DataTypes\TrackingHistoryUnit.pas"/>
-        <DCCReference Include="..\Actions\OptimizationActionUnit.pas"/>
-        <DCCReference Include="DeleteTestUnit1.pas"/>
+        <DCCReference Include="Actions\AddressBookContactActionsUnit.pas"/>
+        <DCCReference Include="Actions\BaseActionUnit.pas"/>
+        <DCCReference Include="Actions\OptimizationActionUnit.pas"/>
+        <DCCReference Include="DataTypes\DirectionUnit.pas"/>
+        <DCCReference Include="DataTypes\DirectionLocationUnit.pas"/>
+        <DCCReference Include="DataTypes\DirectionStepUnit.pas"/>
+        <DCCReference Include="DataTypes\DirectionPathPointUnit.pas"/>
+        <DCCReference Include="DataTypes\LinksUnit.pas"/>
+        <DCCReference Include="DataTypes\TrackingHistoryUnit.pas"/>
+        <DCCReference Include="QueryTypes\HttpQueryMemberAttributeUnit.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -161,14 +141,10 @@
         <BorlandProject>
             <Delphi.Personality>
                 <Source>
-                    <Source Name="MainSource">Route4MeProjectTests.dpr</Source>
+                    <Source Name="MainSource">Route4MeExamplesProject.dpr</Source>
                 </Source>
-                <Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k240.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp240.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
-                </Excluded_Packages>
             </Delphi.Personality>
-            <Deployment Version="2">
+            <Deployment Version="3">
                 <DeployFile LocalName="$(BDS)\Redist\osx32\libcgunwind.1.0.dylib" Class="DependencyModule">
                     <Platform Name="OSX32">
                         <Overwrite>true</Overwrite>
@@ -184,38 +160,23 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="Win32\Debug\Route4MeExamplesProject.exe" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win32">
+                        <RemoteName>Route4MeExamplesProject.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\Redist\osx32\libcgsqlite3.dylib" Class="DependencyModule">
                     <Platform Name="OSX32">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="Win32\Debug\Route4MeProjectTests.exe" Configuration="Debug" Class="ProjectOutput">
-                    <Platform Name="Win32">
-                        <RemoteName>Route4MeProjectTests.exe</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployClass Name="DependencyModule">
-                    <Platform Name="Win32">
-                        <Operation>0</Operation>
-                        <Extensions>.dll;.bpl</Extensions>
-                    </Platform>
+                <DeployClass Name="ProjectiOSDeviceResourceRules">
                     <Platform Name="iOSDevice64">
                         <Operation>1</Operation>
-                        <Extensions>.dylib</Extensions>
-                    </Platform>
-                    <Platform Name="OSX32">
-                        <RemoteDir>Contents\MacOS</RemoteDir>
-                        <Operation>1</Operation>
-                        <Extensions>.dylib</Extensions>
                     </Platform>
                     <Platform Name="iOSDevice32">
                         <Operation>1</Operation>
-                        <Extensions>.dylib</Extensions>
-                    </Platform>
-                    <Platform Name="iOSSimulator">
-                        <Operation>1</Operation>
-                        <Extensions>.dylib</Extensions>
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="ProjectOSXResource">
@@ -267,17 +228,20 @@
                     </Platform>
                 </DeployClass>
                 <DeployClass Required="true" Name="ProjectOutput">
+                    <Platform Name="iOSDevice64">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice32">
+                        <Operation>1</Operation>
+                    </Platform>
                     <Platform Name="Win32">
                         <Operation>0</Operation>
                     </Platform>
-                    <Platform Name="iOSDevice64">
+                    <Platform Name="Linux64">
                         <Operation>1</Operation>
                     </Platform>
                     <Platform Name="OSX32">
                         <RemoteDir>Contents\MacOS</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice32">
                         <Operation>1</Operation>
                     </Platform>
                     <Platform Name="Android">
@@ -330,12 +294,7 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <DeployClass Name="AndroidLibnativeX86File">
-                    <Platform Name="Android">
-                        <RemoteDir>library\lib\x86</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
+                <DeployClass Name="AndroidLibnativeX86File"/>
                 <DeployClass Name="iPhone_Launch320">
                     <Platform Name="iOSSimulator">
                         <Operation>1</Operation>
@@ -418,11 +377,11 @@
                 </DeployClass>
                 <DeployClass Name="ProjectiOSEntitlements">
                     <Platform Name="iOSDevice64">
-                        <RemoteDir>../</RemoteDir>
+                        <RemoteDir>..\</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                     <Platform Name="iOSDevice32">
-                        <RemoteDir>../</RemoteDir>
+                        <RemoteDir>..\</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
@@ -446,7 +405,7 @@
                 </DeployClass>
                 <DeployClass Name="ProjectOSXEntitlements">
                     <Platform Name="OSX32">
-                        <RemoteDir>../</RemoteDir>
+                        <RemoteDir>..\</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
@@ -569,12 +528,27 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <DeployClass Name="ProjectiOSDeviceResourceRules">
+                <DeployClass Name="DependencyModule">
+                    <Platform Name="Win32">
+                        <Operation>0</Operation>
+                        <Extensions>.dll;.bpl</Extensions>
+                    </Platform>
                     <Platform Name="iOSDevice64">
                         <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
+                    </Platform>
+                    <Platform Name="OSX32">
+                        <RemoteDir>Contents\MacOS</RemoteDir>
+                        <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
                     </Platform>
                     <Platform Name="iOSDevice32">
                         <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
+                    </Platform>
+                    <Platform Name="iOSSimulator">
+                        <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
                     </Platform>
                 </DeployClass>
                 <ProjectRoot Platform="iOSDevice64" Name="$(PROJECTNAME).app"/>
@@ -590,12 +564,6 @@
                 <Platform value="Win32">True</Platform>
                 <Platform value="Win64">False</Platform>
             </Platforms>
-            <UnitTesting>
-                <TestFramework>DUnit / Delphi Win32</TestFramework>
-                <TestRunner>GUI</TestRunner>
-                <SourceProjectName>D:\Distr\Frigate\Route4Me\Route4MeProject.dproj</SourceProjectName>
-                <TestProjectName/>
-            </UnitTesting>
         </BorlandProject>
         <ProjectFileVersion>12</ProjectFileVersion>
     </ProjectExtensions>

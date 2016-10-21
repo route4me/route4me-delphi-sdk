@@ -9,6 +9,9 @@
         <Projects Include="UnitTests\Route4MeProjectTests.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="Route4MeExamplesProject.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -35,14 +38,23 @@
     <Target Name="Route4MeProjectTests:Make">
         <MSBuild Projects="UnitTests\Route4MeProjectTests.dproj" Targets="Make"/>
     </Target>
+    <Target Name="Route4MeExamplesProject">
+        <MSBuild Projects="Route4MeExamplesProject.dproj"/>
+    </Target>
+    <Target Name="Route4MeExamplesProject:Clean">
+        <MSBuild Projects="Route4MeExamplesProject.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Route4MeExamplesProject:Make">
+        <MSBuild Projects="Route4MeExamplesProject.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="Route4MeProject;Route4MeProjectTests"/>
+        <CallTarget Targets="Route4MeProject;Route4MeProjectTests;Route4MeExamplesProject"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="Route4MeProject:Clean;Route4MeProjectTests:Clean"/>
+        <CallTarget Targets="Route4MeProject:Clean;Route4MeProjectTests:Clean;Route4MeExamplesProject:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="Route4MeProject:Make;Route4MeProjectTests:Make"/>
+        <CallTarget Targets="Route4MeProject:Make;Route4MeProjectTests:Make;Route4MeExamplesProject:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

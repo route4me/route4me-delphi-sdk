@@ -4,7 +4,7 @@ interface
 
 uses
   REST.Json.Types, System.Generics.Collections,
-  JSONNullableAttributeUnit,
+  JSONNullableAttributeUnit, HttpQueryMemberAttributeUnit,
   GenericParametersUnit, RouteParametersUnit, AddressUnit,
   NullableBasicTypesUnit;
 
@@ -12,13 +12,19 @@ type
   TOptimizationParameters = class(TGenericParameters)
   private
     [JSONMarshalled(False)]
-    FOptimizationProblemID: String;
+    [HttpQueryMember('optimization_problem_id')]
+    [Nullable]
+    FOptimizationProblemID: NullableString;
 
     [JSONMarshalled(False)]
-    FReOptimize: boolean;
+    [HttpQueryMember('reoptimize')]
+    [Nullable]
+    FReOptimize: NullableBoolean;
 
     [JSONMarshalled(False)]
-    FShowDirections: boolean;
+    [HttpQueryMember('show_directions')]
+    [Nullable]
+    FShowDirections: NullableBoolean;
 
     [JSONNameAttribute('addresses')]
     FAddresses: TArray<TAddress>;
@@ -32,19 +38,10 @@ type
 
     function Equals(Obj: TObject): Boolean; override;
 
-//    [HttpQueryMemberAttribute(Name = 'optimization_problem_id', EmitDefaultValue = false)]
-    property OptimizationProblemID: String read FOptimizationProblemID write FOptimizationProblemID;
-
-//    [HttpQueryMemberAttribute(Name = 'reoptimize', EmitDefaultValue = false)]
-    property ReOptimize: boolean read FReOptimize write FReOptimize;
-
-//    [HttpQueryMemberAttribute(Name = 'show_directions', EmitDefaultValue = false)]
-    property ShowDirections: boolean read FShowDirections write FShowDirections;
-
-//    [DataMember(Name = 'parameters', EmitDefaultValue = false)]
+    property OptimizationProblemID: NullableString read FOptimizationProblemID write FOptimizationProblemID;
+    property ReOptimize: NullableBoolean read FReOptimize write FReOptimize;
+    property ShowDirections: NullableBoolean read FShowDirections write FShowDirections;
     property Parameters: TRouteParameters read FParameters write FParameters;
-
-//    [DataMember(Name = 'addresses', EmitDefaultValue = false)]
     property Addresses: TArray<TAddress> read FAddresses write FAddresses;
   end;
 
@@ -55,6 +52,10 @@ implementation
 constructor TOptimizationParameters.Create;
 begin
   Inherited;
+
+  FOptimizationProblemID := NullableString.Null;
+  FReOptimize := NullableBoolean.Null;
+  FShowDirections := NullableBoolean.Null;
 
   SetLength(FAddresses, 0);
   FParameters := TRouteParameters.Create;

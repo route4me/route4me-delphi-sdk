@@ -52,6 +52,9 @@ var
   TDistanceUnitDescription: array[TDistanceUnit] of String = ('mi', 'km');
   TOptimizeDescription: array[TOptimize] of String = ('Distance', 'Time', 'timeWithTraffic');
   TTravelModeDescription: array[TTravelMode] of String = ('Driving', 'Walking', 'Trucking');
+  TOptimizationDescription: array[TOptimizationState] of String =
+    ('Initial', 'MatrixProcessing', 'Optimizing', 'Optimized', 'Error', 'ComputingDirections');
+
 
 implementation
 
