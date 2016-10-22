@@ -54,8 +54,8 @@ var
 
 begin
   try
-//    Examples := TRoute4MeExamples.Create();
-    Examples := TRoute4MeExamples.CreateDebug();
+    Examples := TRoute4MeExamples.Create();
+//    Examples := TRoute4MeExamples.CreateDebug();
 
     DataObject := Examples.SingleDriverRoute10Stops();
 
@@ -76,6 +76,9 @@ begin
     ReadLn;
   except
     on E: Exception do
+    begin
       Writeln(E.ClassName, ': ', E.Message);
+      ReadLn;
+    end;
   end;
 end.

@@ -21,10 +21,10 @@ type
     property IsRequired: boolean read FIsRequired;
   end;
 
-  NullableAttribute = class abstract(BaseJSONNullableAttribute)
+  NullableAttribute = class(BaseJSONNullableAttribute)
   end;
 
-  NullableObjectAttribute = class (NullableAttribute)
+  NullableObjectAttribute = class(NullableAttribute)
   private
     FClass: TClass;
   public

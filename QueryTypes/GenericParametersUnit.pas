@@ -3,8 +3,9 @@ unit GenericParametersUnit;
 interface
 
 uses
-  Classes, SysUtils, Rtti, System.Generics.Collections,
-  REST.Json.Types, HttpQueryMemberAttributeUnit, JSONNullableAttributeUnit;
+  Classes, SysUtils, Rtti, System.Generics.Collections, System.JSON,
+  REST.Json.Types, HttpQueryMemberAttributeUnit, JSONNullableAttributeUnit,
+  UtilsUnit;
 
 type
 
@@ -20,7 +21,8 @@ type
     constructor Create;
 
     function ToJsonString: String;
-    function Serialize(ApiKey: String = ''): String;
+    function ToJsonValue: TJSONValue;
+    function Serialize(ApiKey: String = ''): TListStringPair;
   end;
 
 implementation
@@ -38,7 +40,7 @@ begin
   FConvertBooleansToInteger := True;
 end;
 
-function TGenericParameters.Serialize(ApiKey: String): String;
+function TGenericParameters.Serialize(ApiKey: String): TListStringPair;
   function GetHttpAttribute(Field: TRttiField): HttpQueryMemberAttribute;
   var
     Attr: TCustomAttribute;
@@ -86,85 +88,73 @@ function TGenericParameters.Serialize(ApiKey: String): String;
     else
       Result := ValueField;
   end;
-type
-  TStringPair = TPair<String,String>;
 var
   ctx: TRttiContext;
   RttiType: TRttiType;
   Field: TRttiField;
   Value: TValue;
   Attr: HttpQueryMemberAttribute;
-  ParamsCollection: TList<TStringPair>;
   Pair: TStringPair;
   FieldName, FieldValue: String;
 begin
-  ParamsCollection := TList<TStringPair>.Create;
+  Result := TListStringPair.Create;
+
+  if (ApiKey <> EmptyStr) then
+    Result.Add(TStringPair.Create('api_key', ApiKey));
+
+  ctx := TRttiContext.Create;
   try
-    ctx := TRttiContext.Create;
+    rttiType := ctx.GetType(Self.ClassType);
 
-    try
-      rttiType := ctx.GetType(Self.ClassType);
-
-      for Field in rttiType.GetFields do
-      begin
-        Attr := GetHttpAttribute(Field);
-        if (Attr = nil) then
-          Continue;
-
-        if (IsNullableField(Field)) then
-        begin
-          Value := GetNullableFieldValue(Field);
-          if Value.IsEmpty then
-            Continue;
-        end;
-
-        FieldName := Field.Name;
-
-        Value := Field.GetValue(Self);
-        if (Value.IsEmpty) then
-        begin
-          if Attr.IsRequired then
-            FieldValue := Attr.DefaultValue;
-
-          FieldValue := 'null';
-        end
-        else
-        begin
-          FieldValue := Value.ToString;
-
-          if (Value.Kind = tkEnumeration) and (FConvertBooleansToInteger) then
-            if Value.AsBoolean then
-              FieldValue := '1'
-            else
-              FieldValue := '0';
-
-        end;
-
-        ParamsCollection.Add(TStringPair.Create(FieldName, FieldValue));
-      end;
-    finally
-      ctx.Free;
-    end;
-
-    if (ApiKey = EmptyStr) then
-      Result := '?'
-    else
-      Result := Format('?api_key=%s', [ApiKey]);
-
-    if (ParamsCollection.Count > 0) then
+    for Field in rttiType.GetFields do
     begin
-      for Pair in ParamsCollection do
-        Result := Result + Format('%s=%s&', [Pair.Key, Pair.Value]);
-      Delete(Result, Length(Result), 1);
+      Attr := GetHttpAttribute(Field);
+      if (Attr = nil) then
+        Continue;
+
+      if (IsNullableField(Field)) then
+      begin
+        Value := GetNullableFieldValue(Field);
+        if Value.IsEmpty then
+          Continue;
+      end;
+
+      FieldName := Field.Name;
+
+      Value := Field.GetValue(Self);
+      if (Value.IsEmpty) then
+      begin
+        if Attr.IsRequired then
+          FieldValue := Attr.DefaultValue;
+
+        FieldValue := 'null';
+      end
+      else
+      begin
+        FieldValue := Value.ToString;
+
+        if (Value.Kind = tkEnumeration) and (FConvertBooleansToInteger) then
+          if Value.AsBoolean then
+            FieldValue := '1'
+          else
+            FieldValue := '0';
+      end;
+
+      Result.Add(TStringPair.Create(FieldName, FieldValue));
     end;
   finally
-    ParamsCollection.Free;
+    ctx.Free;
   end;
 end;
 
 function TGenericParameters.ToJsonString: String;
 begin
   Result := TMarshalUnMarshal.ToJson(Self);
+end;
+
+function TGenericParameters.ToJsonValue: TJSONValue;
+begin
+  Result := TMarshalUnMarshal.ToJsonValue(Self);
 end;
 
 end.

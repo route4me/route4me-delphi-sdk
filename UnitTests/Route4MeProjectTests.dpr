@@ -70,3 +70,5 @@ uses
 begin
   GUITestRunner.RunRegisteredTests;
 end.
+
+// RSP-16172

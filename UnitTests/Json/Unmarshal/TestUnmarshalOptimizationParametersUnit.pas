@@ -18,10 +18,9 @@ type
 
     procedure SingleDepotMultipleDriverNoTimeWindow();
     procedure SingleDriverMultipleTimeWindows();
-    procedure SingleDriverRoute10Stops();
-  published
-
     procedure SingleDriverRoundTrip();
+  published
+    procedure SingleDriverRoute10Stops();
   end;
 
 implementation
@@ -52,7 +51,7 @@ begin
   try
     ActualList.LoadFromFile(JsonFilename);
 
-    OptimizationParameters := Etalon.OptimizationParameters;
+    OptimizationParameters := Etalon.OptimizationParametersForResponce;
     Actual := TMarshalUnMarshal.FromJson(OptimizationParameters.ClassType, ActualList.Text) as TOptimizationParameters;
     CheckTrue(OptimizationParameters.Equals(Actual));
   finally

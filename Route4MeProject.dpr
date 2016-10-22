@@ -22,7 +22,16 @@ uses
   ConnectionUnit in 'Common\ConnectionUnit.pas',
   IConnectionUnit in 'Common\IConnectionUnit.pas',
   SettingsUnit in 'Common\SettingsUnit.pas',
-  BaseActionUnit in 'Actions\BaseActionUnit.pas';
+  BaseActionUnit in 'Actions\BaseActionUnit.pas',
+  UtilsUnit in 'Common\UtilsUnit.pas',
+  HttpQueryMemberAttributeUnit in 'QueryTypes\HttpQueryMemberAttributeUnit.pas',
+  OptimizationActionUnit in 'Actions\OptimizationActionUnit.pas',
+  DirectionPathPointUnit in 'DataTypes\DirectionPathPointUnit.pas',
+  DirectionLocationUnit in 'DataTypes\DirectionLocationUnit.pas',
+  DirectionStepUnit in 'DataTypes\DirectionStepUnit.pas',
+  LinksUnit in 'DataTypes\LinksUnit.pas',
+  TrackingHistoryUnit in 'DataTypes\TrackingHistoryUnit.pas',
+  DirectionUnit in 'DataTypes\DirectionUnit.pas';
 
 {$R *.res}
 

@@ -18,7 +18,7 @@ type
     FOptimizationProblemId: String;
 
     [JSONName('state')]
-    FState: TOptimizationState;
+    FState: Integer; //TOptimizationState;
 
     [JSONName('user_errors')]
     FUserErrors: TArray<String>;
@@ -52,7 +52,7 @@ type
     function SortAddresses: TArray<TAddress>;
 
     property OptimizationProblemId: String read FOptimizationProblemId write FOptimizationProblemId;
-    property State: TOptimizationState read FState write FState;
+    property State: Integer {TOptimizationState} read FState write FState;
     property UserErrors: TArray<String> read FUserErrors write FUserErrors;
     property IsSentToBackground: boolean read FIsSentToBackground write FIsSentToBackground;
     property Addresses: TArray<TAddress> read FAddresses write FAddresses;
@@ -162,6 +162,7 @@ end;
 
 function TDataObject.SortAddresses: TArray<TAddress>;
 begin
+  SetLength(Result, Length(FAddresses));
   TArray.Copy<TAddress>(FAddresses, Result, Length(FAddresses));
   TArray.Sort<TAddress>(Result, TComparer<TAddress>.Construct(
     function (const Address1, Address2: TAddress): Integer

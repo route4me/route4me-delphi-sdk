@@ -11,7 +11,7 @@ type
   public
     const ApiVersion = '4';
 
-    const MainHost = 'http://www.route4me.com';
+    const MainHost = 'https://www.route4me.com';
     const ApiHost = MainHost + '/api.v4/optimization_problem.php';
     const ShowRouteHost = MainHost + '/route4me.php';
     const RouteHost = MainHost + '/api.v4/route.php';

@@ -40,7 +40,7 @@ begin
   try
     CheckEquals(
       EtalonFilename('OptimizationParametersToJson\MultipleDepotMultipleDriver'),
-      DataProvider.OptimizationParameters.ToJsonString);
+      DataProvider.OptimizationParametersForRequest.ToJsonString);
   finally
     DataProvider := nil;
   end;
@@ -54,7 +54,7 @@ begin
   try
     CheckEquals(
       EtalonFilename('OptimizationParametersToJson\MultipleDepotMultipleDriverTimeWindow'),
-      DataProvider.OptimizationParameters.ToJsonString);
+      DataProvider.OptimizationParametersForRequest.ToJsonString);
   finally
     DataProvider := nil;
   end;
@@ -68,7 +68,7 @@ begin
   try
     CheckEquals(
       EtalonFilename('OptimizationParametersToJson\MultipleDepotMultipleDriverWith24StopsTimeWindow'),
-      DataProvider.OptimizationParameters.ToJsonString);
+      DataProvider.OptimizationParametersForRequest.ToJsonString);
   finally
     DataProvider := nil;
   end;
@@ -82,7 +82,7 @@ begin
   try
     CheckEquals(
       EtalonFilename('OptimizationParametersToJson\SingleDepotMultipleDriverNoTimeWindow'),
-      DataProvider.OptimizationParameters.ToJsonString);
+      DataProvider.OptimizationParametersForRequest.ToJsonString);
   finally
     DataProvider := nil;
   end;
@@ -96,7 +96,7 @@ begin
   try
     CheckEquals(
       EtalonFilename('OptimizationParametersToJson\SingleDriverMultipleTimeWindows'),
-      DataProvider.OptimizationParameters.ToJsonString);
+      DataProvider.OptimizationParametersForRequest.ToJsonString);
   finally
     DataProvider := nil;
   end;
@@ -110,7 +110,7 @@ begin
   try
     CheckEquals(
       EtalonFilename('OptimizationParametersToJson\SingleDriverRoundTrip'),
-      DataProvider.OptimizationParameters.ToJsonString);
+      DataProvider.OptimizationParametersForRequest.ToJsonString);
   finally
     DataProvider := nil;
   end;
@@ -124,7 +124,7 @@ begin
   try
     CheckEquals(
       EtalonFilename('OptimizationParametersToJson\SingleDriverRoute10Stops'),
-      DataProvider.OptimizationParameters.ToJsonString);
+      DataProvider.OptimizationParametersForRequest.ToJsonString);
   finally
     DataProvider := nil;
   end;

@@ -30,7 +30,7 @@ var
   dataObject: TDataObject;
 begin
   dataObject := FRoute4MeManager.Optimization.Run(
-    FTestDataOptimizationParametersProvider.OptimizationParameters, errorString);
+    FTestDataOptimizationParametersProvider.OptimizationParametersForRequest, errorString);
 
   CheckResult(dataObject);
 end;

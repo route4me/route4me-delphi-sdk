@@ -286,9 +286,11 @@ procedure TNullableInterceptor.StringReverter(Data: TObject; Field,
   Arg: string);
 var
   ctx: TRttiContext;
-  RttiType: TRttiType;
+  RttiType, RttiTypeObject: TRttiType;
   RttiRecordField, IsNullField, ValueField: TRttiField;
+  RttiMethodObject: TRttiMethod;
   RttiRecord: TRttiRecordType;
+  RttiRecordObject: TRttiRecordType;
   RecordValue: TValue;
   Attr: TCustomAttribute;
   Ptr: Pointer;
@@ -297,6 +299,8 @@ var
   Clazz: TClass;
   ObjectType: TRttiType;
   NullableAttribute: BaseJSONNullableAttribute;
+  FieldObject: TRttiField;
+  Obj: TObject;
 begin
   ctx := TRttiContext.Create;
   InternalUnMarshal := TInternalJSONUnMarshal.Create;
@@ -336,7 +340,14 @@ begin
             'The field class of "NullableObject" must be marked as "NullableObject" Attribute');
 
         Clazz := NullableObjectAttribute(NullableAttribute).Clazz;
-        Value := GetObjectValue(Arg, Clazz, InternalUnMarshal);
+        RttiTypeObject := ctx.GetType(Clazz);
+        RttiMethodObject := RttiTypeObject.GetMethod('FromJsonString');
+        if (RttiMethodObject <> nil) then
+        begin
+          Value := RttiMethodObject.Invoke(Clazz, [Arg]);
+        end
+        else
+          Value := GetObjectValue(Arg, Clazz, InternalUnMarshal);
       end
       else
       begin

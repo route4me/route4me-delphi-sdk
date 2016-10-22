@@ -21,7 +21,7 @@ function TOptimizationActions.Run(
   OptimizationParameters: TOptimizationParameters;
   out ErrorString: String): TDataObject;
 begin
-  Result := FConnection.Post(OptimizationParameters, TSettings.ApiHost, TDataObject, errorString) as TDataObject;
+  Result := FConnection.Post(TSettings.ApiHost, OptimizationParameters, TDataObject, errorString) as TDataObject;
 end;
 
 end.

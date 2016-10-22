@@ -15,8 +15,7 @@ type
     FRouteDestinationId: NullableInteger;
 
     [JSONName('alias')]
-    [Nullable]
-    FAlias: NullableString;
+    FAlias: String;
 
     [JSONName('member_id')]
     [Nullable]
@@ -92,7 +91,7 @@ type
     function Equals(Obj: TObject): Boolean; override;
 
     property AddressString: String read FAddressString write FAddressString;
-    property Alias: NullableString read FAlias write FAlias;
+    property Alias: String read FAlias write FAlias;
 
     property RouteDestinationId: NullableInteger read FRouteDestinationId write FRouteDestinationId;
 
@@ -313,7 +312,8 @@ end;
 
 constructor TAddress.Create;
 begin
-  FAlias := NullableString.Null;
+  FAlias := EmptyStr;
+
   FCurbsideLatitude := NullableDouble.Null;
   FCurbsideLongitude := NullableDouble.Null;
   FMemberId := NullableString.Null;

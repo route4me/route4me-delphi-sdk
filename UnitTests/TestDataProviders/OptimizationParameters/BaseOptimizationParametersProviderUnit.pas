@@ -13,9 +13,14 @@ type
 
     function MakeAddresses(): TArray<TAddress>; virtual; abstract;
     function MakeRouteParameters(): TRouteParameters; virtual; abstract;
-  public
-    function OptimizationParameters: TOptimizationParameters;
 
+    /// <summary>
+    ///  After responce some fields are changed from request.
+    /// </summary>
+    procedure CorrectForResponce(OptimizationParameters: TOptimizationParameters); virtual; abstract;
+  public
+    function OptimizationParametersForRequest: TOptimizationParameters;
+    function OptimizationParametersForResponce: TOptimizationParameters;
   end;
 implementation
 
@@ -28,11 +33,17 @@ begin
     AddressArray[High(AddressArray)] := Address;
 end;
 
-function TBaseOptimizationParametersProvider.OptimizationParameters: TOptimizationParameters;
+function TBaseOptimizationParametersProvider.OptimizationParametersForRequest: TOptimizationParameters;
 begin
   Result := TOptimizationParameters.Create;
   Result.Parameters := MakeRouteParameters;
   Result.Addresses := MakeAddresses;
+end;
+
+function TBaseOptimizationParametersProvider.OptimizationParametersForResponce: TOptimizationParameters;
+begin
+  Result := OptimizationParametersForRequest;
+  CorrectForResponce(Result);
 end;
 
 end.

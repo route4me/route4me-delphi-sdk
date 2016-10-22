@@ -2,6 +2,8 @@ unit UtilsUnit;
 
 interface
 
+uses
+  System.Generics.Collections;
 type
   TUtils = class
   public
@@ -10,6 +12,10 @@ type
     /// </summary>
     class function ConvertToUnixTimestamp(Date: TDateTime): int64;
   end;
+
+  TStringPair = TPair<String,String>;
+  TArrayStringPair = TArray<TStringPair>;
+  TListStringPair = TList<TStringPair>;
 
 implementation
 

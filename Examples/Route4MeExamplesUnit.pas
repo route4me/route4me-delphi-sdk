@@ -60,8 +60,8 @@ begin
     WriteLn(Format('$s executed successfully', [ExampleName]));
     WriteLn('');
 
-    WriteLn('Optimization Problem ID: %s', DataObject.OptimizationProblemId);
-    WriteLn('State: %s', TOptimizationDescription[DataObject.State]);
+    WriteLn(Format('Optimization Problem ID: %s', [DataObject.OptimizationProblemId]));
+    WriteLn(Format('State: %s', [TOptimizationDescription[TOptimizationState(DataObject.State)]]));
 
     for UserError in DataObject.UserErrors do
       WriteLn(Format('UserError : "$s"', [UserError]));
@@ -77,7 +77,7 @@ begin
     end;
   end
   else
-    WriteLn(Format('%s error %s', [ExampleName, ErrorString]));
+    WriteLn(Format('%s error: "%s"', [ExampleName, ErrorString]));
 end;
 
 end.
