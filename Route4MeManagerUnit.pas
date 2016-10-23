@@ -6,7 +6,7 @@ uses
   Classes, SysUtils,
   OptimizationParametersUnit, DataObjectUnit, IRoute4MeManagerUnit,
   AddressBookContactUnit, AddressBookContactActionsUnit, ConnectionUnit,
-  OptimizationActionUnit;
+  OptimizationActionUnit, RouteActionUnit;
 
 type
   TRoute4MeManager = class(TInterfacedObject, IRoute4MeManager)
@@ -16,6 +16,7 @@ type
 
     FAddressBookContact: TAddressBookContactActions;
     FOptimization: TOptimizationActions;
+    FRoute: TRouteActions;
   public
     constructor Create(ApiKey: String);
     destructor Destroy; override;
@@ -23,6 +24,7 @@ type
     procedure SetConnectionProxy(Host: String; Port: integer; Username, Password: String);
 
     function Optimization: TOptimizationActions;
+    function Route: TRouteActions;
     function AddressBookContact: TAddressBookContactActions;
   end;
 
@@ -35,12 +37,18 @@ uses EnumsUnit;
 constructor TRoute4MeManager.Create(ApiKey: String);
 begin
   FApiKey := ApiKey;
+
   FAddressBookContact := nil;
+  FOptimization := nil;
+  FRoute := nil;
+
   FConnection := TConnection.Create(FApiKey);
 end;
 
 destructor TRoute4MeManager.Destroy;
 begin
+  if (FRoute <> nil) then
+    FreeAndNil(FRoute);
   if (FAddressBookContact <> nil) then
     FreeAndNil(FAddressBookContact);
   if (FOptimization <> nil) then
@@ -55,6 +63,13 @@ begin
   if (FOptimization = nil) then
     FOptimization := TOptimizationActions.Create(FConnection);
   Result := FOptimization;
+end;
+
+function TRoute4MeManager.Route: TRouteActions;
+begin
+  if (FRoute = nil) then
+    FRoute := TRouteActions.Create(FConnection);
+  Result := FRoute;
 end;
 
 procedure TRoute4MeManager.SetConnectionProxy(Host: String; Port: integer; Username, Password: String);

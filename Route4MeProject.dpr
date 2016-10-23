@@ -31,7 +31,10 @@ uses
   DirectionStepUnit in 'DataTypes\DirectionStepUnit.pas',
   LinksUnit in 'DataTypes\LinksUnit.pas',
   TrackingHistoryUnit in 'DataTypes\TrackingHistoryUnit.pas',
-  DirectionUnit in 'DataTypes\DirectionUnit.pas';
+  DirectionUnit in 'DataTypes\DirectionUnit.pas',
+  RouteActionUnit in 'Actions\RouteActionUnit.pas',
+  AddressesOrderInfoUnit in 'AdditionalDataTypes\AddressesOrderInfoUnit.pas',
+  CommonTypesUnit in 'Common\CommonTypesUnit.pas';
 
 {$R *.res}
 

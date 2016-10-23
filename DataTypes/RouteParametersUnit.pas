@@ -12,7 +12,7 @@ type
   private
     [JSONName('is_upload')]
     [Nullable]
-    FIsUpload: NullableString;
+    FIsUpload: NullableBoolean;
 
     [JSONName('rt')]
     [Nullable]
@@ -94,7 +94,7 @@ type
 
     //let the R4M api know if this sdk request is coming from a file upload within your environment (for analytics)
 //    [DataMember(Name = 'is_upload', EmitDefaultValue = false)]
-    property IsUpload: NullableString read FIsUpload write FIsUpload;
+    property IsUpload: NullableBoolean read FIsUpload write FIsUpload;
 
     //the tour type of this route. rt is short for round trip, the optimization engine changes its behavior for round trip routes
 //    [DataMember(Name = 'rt', EmitDefaultValue = false)]
@@ -287,7 +287,7 @@ implementation
 
 constructor TRouteParameters.Create;
 begin
-    FIsUpload := NullableString.Null;
+    FIsUpload := NullableBoolean.Null;
     FRT := NullableBoolean.Null;
     FDisableOptimization := NullableBoolean.Null;
     FRouteName := NullableString.Null;

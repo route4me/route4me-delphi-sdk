@@ -28,7 +28,7 @@ implementation
 { TTestOptimizationParametersToJson }
 
 uses
-  Classes,
+  Classes, System.JSON,
   SingleDriverRoute10StopsTestDataProviderUnit,
   SingleDriverRoundTripTestDataProviderUnit,
   SingleDriverMultipleTimeWindowsTestDataProviderUnit,
@@ -45,14 +45,22 @@ var
   Actual: TOptimizationParameters;
   JsonFilename: String;
   OptimizationParameters: TOptimizationParameters;
+  JsonValue: TJSONValue;
 begin
   JsonFilename := EtalonFilename(TestName);
   ActualList := TStringList.Create;
   try
     ActualList.LoadFromFile(JsonFilename);
 
-    OptimizationParameters := Etalon.OptimizationParametersForResponce;
-    Actual := TMarshalUnMarshal.FromJson(OptimizationParameters.ClassType, ActualList.Text) as TOptimizationParameters;
+    JsonValue := TJSONObject.ParseJSONValue(ActualList.Text);
+    try
+      OptimizationParameters := Etalon.OptimizationParametersForResponce;
+      Actual := TMarshalUnMarshal.FromJson(
+        OptimizationParameters.ClassType, {ActualList.Text}JsonValue) as TOptimizationParameters;
+    finally
+      JsonValue.Free;
+    end;
+
     CheckTrue(OptimizationParameters.Equals(Actual));
   finally
     ActualList.Free;

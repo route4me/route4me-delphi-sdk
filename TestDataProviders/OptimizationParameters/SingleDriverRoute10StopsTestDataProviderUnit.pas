@@ -12,8 +12,8 @@ type
     function MakeAddresses(): TArray<TAddress>; override;
     function MakeRouteParameters(): TRouteParameters; override;
   public
-
   end;
+
 implementation
 
 { TSingleDriverRoute10StopsTestDataProvider }

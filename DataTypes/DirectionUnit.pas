@@ -3,9 +3,12 @@ unit DirectionUnit;
 interface
 
 uses
-  REST.Json.Types, DirectionLocationUnit, DirectionStepUnit;
+  REST.Json.Types, SysUtils, System.Generics.Collections,
+  Generics.Defaults,
+  DirectionLocationUnit, DirectionStepUnit;
 
 type
+
   TDirection = class
   private
     [JSONName('location')]
@@ -20,7 +23,22 @@ type
     property Steps: TArray<TDirectionStep> read FSteps write FSteps;
   end;
 
+  TDirectionArray = TArray<TDirection>;
+
+function SortDirections(Directions: TDirectionArray): TDirectionArray;
+
 implementation
+
+function SortDirections(Directions: TDirectionArray): TDirectionArray;
+begin
+  SetLength(Result, Length(Directions));
+  TArray.Copy<TDirection>(Directions, Result, Length(Directions));
+  TArray.Sort<TDirection>(Result, TComparer<TDirection>.Construct(
+    function (const Direction1, Direction2: TDirection): Integer
+    begin
+      Result := Direction1.Location.Compare(Direction2.Location);
+    end));
+end;
 
 { TDirection }
 

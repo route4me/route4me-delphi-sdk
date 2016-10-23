@@ -21,7 +21,7 @@ implementation
 { TTestOptimizationParametersToJson }
 
 uses
-  Classes,
+  Classes, System.JSON,
   DefaultAddressBookContactProviderUnit, FullAddressBookContactProviderUnit,
   AddressBookContactUnit, MarshalUnMarshalUnit;
 
@@ -32,14 +32,22 @@ var
   Actual: TAddressBookContact;
   JsonFilename: String;
   AddressBookContact: TAddressBookContact;
+  JsonValue: TJSONValue;
 begin
   JsonFilename := EtalonFilename(TestName);
   ActualList := TStringList.Create;
   try
     ActualList.LoadFromFile(JsonFilename);
 
-    AddressBookContact := Etalon.AddressBookContact;
-    Actual := TMarshalUnMarshal.FromJson(AddressBookContact.ClassType, ActualList.Text) as TAddressBookContact;
+    JsonValue := TJSONObject.ParseJSONValue(ActualList.Text);
+    try
+      AddressBookContact := Etalon.AddressBookContact;
+      Actual := TMarshalUnMarshal.FromJson(
+        AddressBookContact.ClassType, JsonValue) as TAddressBookContact;
+    finally
+      JsonValue.Free;
+    end;
+
     CheckTrue(AddressBookContact.Equals(Actual));
   finally
     ActualList.Free;

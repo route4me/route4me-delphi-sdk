@@ -1,4 +1,4 @@
-unit MultipleDepotMultipleDriverTimeWindowTestDataProviderUnit;
+﻿unit MultipleDepotMultipleDriverTimeWindowTestDataProviderUnit;
 
 interface
 
@@ -9,7 +9,7 @@ uses
 type
   TMultipleDepotMultipleDriverTimeWindowTestDataProvider = class(TBaseOptimizationParametersProvider)
   protected
-    function MakeAddresses(): TArray<TAddress>; override;
+    function MakeAddresses(): TAddressesArray; override;
     function MakeRouteParameters(): TRouteParameters; override;
   public
 
@@ -23,11 +23,11 @@ uses
   DateUtils,
   EnumsUnit, UtilsUnit;
 
-function TMultipleDepotMultipleDriverTimeWindowTestDataProvider.MakeAddresses: TArray<TAddress>;
+function TMultipleDepotMultipleDriverTimeWindowTestDataProvider.MakeAddresses: TAddressesArray;
 var
   FirstAddress: TAddress;
 begin
-  Result := TArray<TAddress>.Create();
+  Result := TAddressesArray.Create();
 
   FirstAddress := TAddress.Create(
     '455 S 4th St, Louisville, KY 40202', 38.251698, -85.757308, 300);

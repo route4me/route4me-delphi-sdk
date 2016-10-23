@@ -90,6 +90,8 @@ type
         class operator LessThanOrEqual(A, B: NullableDouble): boolean;
         class operator GreaterThanOrEqual(A, B: NullableDouble): boolean;
 
+        function Compare(Other: NullableDouble): integer;
+
         class function Null: NullableDouble; static;
 
         function ToString(): String; overload;
@@ -306,6 +308,23 @@ begin
 end;
 
 { NullableDouble }
+
+function NullableDouble.Compare(Other: NullableDouble): integer;
+begin
+  if (IsNull and Other.IsNotNull) then
+    Result := LessThanValue
+  else
+  if (IsNotNull and Other.IsNull) then
+    Result := GreaterThanValue
+  else
+  if (Self = Other) then
+    Result := EqualsValue
+  else
+  if (Self < Other) then
+    Result := LessThanValue
+  else
+    Result := GreaterThanValue;
+end;
 
 constructor NullableDouble.Create(PValue: double);
 begin

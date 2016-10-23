@@ -19,14 +19,16 @@ implementation
 
 { TBaseRoute4MeTest }
 
-uses Route4MeManagerUnit, MarshalUnMarshalUnit, EnumsUnit, AddressUnit;
+uses
+  System.JSON,
+  Route4MeManagerUnit, MarshalUnMarshalUnit, EnumsUnit, AddressUnit;
 
 { TDeleteTestUnit1 }
 
 function TDeleteTestUnit1.GetEtalon: TDataObject;
 var
   UserErrors: TArray<String>;
-  TAddresses: TArray<TAddress>;
+  Addresses: TAddressesArray;
 begin
   Result := TDataObject.Create;
   Result.State := Integer(TOptimizationState.Optimized);
@@ -41,14 +43,21 @@ var
   st: TStringList;
   obj: TObject;
   Etalon: TDataObject;
+  JsonValue: TJSONValue;
 begin
   st := TStringList.Create;
   try
     st.LoadFromFile('..\..\testdata.json');
-    obj := TMarshalUnMarshal.FromJson(TDataObject, st.Text);
 
-    CheckIs(obj, TDataObject);
-    Etalon := GetEtalon;
+    JsonValue := TJSONObject.ParseJSONValue(st.Text);
+    try
+      obj := TMarshalUnMarshal.FromJson(TDataObject, JsonValue);
+
+      CheckIs(obj, TDataObject);
+      Etalon := GetEtalon;
+    finally
+      JsonValue.Free;
+    end;
     try
       CheckTrue(obj.Equals(Etalon));
     finally

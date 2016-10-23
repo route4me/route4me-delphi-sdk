@@ -11,7 +11,6 @@ uses
   OptimizationParametersUnit in '..\QueryTypes\OptimizationParametersUnit.pas',
   GenericParametersUnit in '..\QueryTypes\GenericParametersUnit.pas',
   RouteParametersUnit in '..\DataTypes\RouteParametersUnit.pas',
-  DataObjectUnit in '..\DataTypes\DataObjectUnit.pas',
   EnumsUnit in '..\DataTypes\EnumsUnit.pas',
   Route4MeManagerStubUnit in 'Route4MeManager\Route4MeManagerStubUnit.pas',
   IRoute4MeManagerUnit in '..\IRoute4MeManagerUnit.pas',
@@ -63,7 +62,15 @@ uses
   LinksUnit in '..\DataTypes\LinksUnit.pas',
   TrackingHistoryUnit in '..\DataTypes\TrackingHistoryUnit.pas',
   OptimizationActionUnit in '..\Actions\OptimizationActionUnit.pas',
-  DeleteTestUnit1 in 'DeleteTestUnit1.pas';
+  DeleteTestUnit1 in 'DeleteTestUnit1.pas',
+  RouteActionUnit in '..\Actions\RouteActionUnit.pas',
+  AddressesOrderInfoUnit in '..\AdditionalDataTypes\AddressesOrderInfoUnit.pas',
+  TestUnmarshalDataObjectRouteUnit in 'Json\Unmarshal\TestUnmarshalDataObjectRouteUnit.pas',
+  IDataObjectRouteProviderUnit in 'TestDataProviders\DataObjectRoute\IDataObjectRouteProviderUnit.pas',
+  SampleDataObjectRouteProviderUnit in 'TestDataProviders\DataObjectRoute\SampleDataObjectRouteProviderUnit.pas',
+  BaseDataObjectRouteProviderUnit in 'TestDataProviders\DataObjectRoute\BaseDataObjectRouteProviderUnit.pas',
+  DataObjectUnit in '..\DataTypes\DataObjectUnit.pas',
+  CommonTypesUnit in '..\Common\CommonTypesUnit.pas';
 
 {R *.RES}
 

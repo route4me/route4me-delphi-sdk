@@ -20,13 +20,19 @@ type
     constructor CreateDebug;
 
     destructor Destroy; override;
+
+    function SingleDriverRoute10Stops: TDataObject;
+    procedure ResequenceRouteDestinations(Route: TDataObjectRoute);
+
   end;
 
 implementation
 
 { TRoute4MeExamples }
 
-uses AddressUnit, EnumsUnit;
+uses AddressUnit, EnumsUnit, IOptimizationParametersProviderUnit,
+  OptimizationParametersUnit, SingleDriverRoute10StopsTestDataProviderUnit,
+  GenericParametersUnit, AddressesOrderInfoUnit;
 
 constructor TRoute4MeExamples.Create;
 begin
@@ -57,7 +63,7 @@ begin
 
   if (DataObject <> nil) then
   begin
-    WriteLn(Format('$s executed successfully', [ExampleName]));
+    WriteLn(Format('%s executed successfully', [ExampleName]));
     WriteLn('');
 
     WriteLn(Format('Optimization Problem ID: %s', [DataObject.OptimizationProblemId]));
@@ -69,7 +75,7 @@ begin
     WriteLn('');
 
     // Sort addresses by sequence order
-    AddressesSorted := DataObject.SortAddresses;
+    AddressesSorted := AddressUnit.SortAddresses(DataObject.Addresses);
     for Address in AddressesSorted do
     begin
       WriteLn(Format('Address: %s', [Address.AddressString]));
@@ -78,6 +84,71 @@ begin
   end
   else
     WriteLn(Format('%s error: "%s"', [ExampleName, ErrorString]));
+end;
+
+procedure TRoute4MeExamples.ResequenceRouteDestinations(
+  Route: TDataObjectRoute);
+var
+  AddressesOrderInfo: TAddressesOrderInfo;
+  Address: TAddress;
+  AddressInfo: TAddressInfo;
+  i: integer;
+  SequenceNo: integer;
+  ErrorString: String;
+  NewRoute: TDataObjectRoute;
+begin
+  if (Length(Route.Addresses) < 3) then
+  begin
+    WriteLn(Format('ResequenceRouteDestinations error: "%s"',
+      ['Route.Addresses.Length < 3. Number of addresses should be >= 3']));
+    Exit;
+   end;
+
+  // Switch 2 addresses after departure address:
+  AddressesOrderInfo := TAddressesOrderInfo.Create(Route.RouteID);
+  for i := 0 to Length(Route.Addresses) - 1 do
+  begin
+    Address := Route.Addresses[i];
+
+    SequenceNo := i;
+    if (i = 1) then
+      SequenceNo := 2
+    else
+      if (i = 2) then
+        SequenceNo := 1;
+
+    AddressInfo := TAddressInfo.Create;
+    AddressInfo.DestinationId := Address.RouteDestinationId.Value;
+    AddressInfo.SequenceNo := SequenceNo;
+    AddressInfo.IsDepot := (AddressInfo.SequenceNo = 0);
+
+    AddressesOrderInfo.AddAddress(AddressInfo);
+  end;
+
+  // Run the query
+  NewRoute := Route4MeManager.Route.Resequence(AddressesOrderInfo, ErrorString);
+
+  // Output the result
+  PrintExampleOptimizationResult('ResequenceRouteDestinations, switch 2 addresses.', NewRoute, ErrorString);
+  WriteLn('');
+end;
+
+function TRoute4MeExamples.SingleDriverRoute10Stops: TDataObject;
+var
+  DataProvider: IOptimizationParametersProvider;
+  ErrorString: String;
+  DataObject: TDataObject;
+begin
+  DataProvider := TSingleDriverRoute10StopsTestDataProvider.Create;
+
+  // Run the query
+  DataObject := Route4MeManager.Optimization.Run(
+    DataProvider.OptimizationParameters, ErrorString);
+
+  // Output the result
+  PrintExampleOptimizationResult('SingleDriverRoute10Stops', DataObject, ErrorString);
+
+  Result := DataObject;
 end;
 
 end.

@@ -236,8 +236,12 @@ var
   JsonValue: TJsonValue;
 begin
   JsonValue := TJsonObject.ParseJSONValue(s);
-  Obj := UnMarshal.CreateObject(Clazz, JsonValue as TJsonObject);
-  Result := TValue.From(Obj);
+  try
+    Obj := UnMarshal.CreateObject(Clazz, JsonValue as TJsonObject);
+    Result := TValue.From(Obj);
+  finally
+    JsonValue.Free;
+  end;
 end;
 
 procedure TNullableInterceptor.ObjectsReverter(Data: TObject;

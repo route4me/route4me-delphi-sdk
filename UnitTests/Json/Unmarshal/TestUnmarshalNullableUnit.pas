@@ -3,7 +3,7 @@ unit TestUnmarshalNullableUnit;
 interface
 
 uses
-  TestFramework, REST.Json.Types, Types,
+  TestFramework, REST.Json.Types, System.JSON, Types,
   JSONNullableAttributeUnit,
   GenericParametersUnit,
   NullableBasicTypesUnit;
@@ -31,7 +31,7 @@ type
 
     function Equals(Obj: TObject): Boolean; override;
 
-    class function AsJson: String;
+    class function AsJson: TJSONValue;
 
     property TestNull: NullableBoolean read FTestNull write FTestNull;
     property TestNullButNotNeedSave: NullableBoolean read FTestNullButNotNeedSave write FTestNullButNotNeedSave;
@@ -57,7 +57,7 @@ type
 
     function Equals(Obj: TObject): Boolean; override;
 
-    class function AsJson: String;
+    class function AsJson: TJSONValue;
 
     property TestNull: NullableString read FTestNull write FTestNull;
     property TestNullButNotNeedSave: NullableString read FTestNullButNotNeedSave write FTestNullButNotNeedSave;
@@ -82,7 +82,7 @@ type
 
     function Equals(Obj: TObject): Boolean; override;
 
-    class function AsJson: String;
+    class function AsJson: TJSONValue;
 
     property TestNull: NullableInteger read FTestNull write FTestNull;
     property TestNullButNotNeedSave: NullableInteger read FTestNullButNotNeedSave write FTestNullButNotNeedSave;
@@ -107,7 +107,7 @@ type
 
     function Equals(Obj: TObject): Boolean; override;
 
-    class function AsJson: String;
+    class function AsJson: TJSONValue;
 
     property TestNull: NullableDouble read FTestNull write FTestNull;
     property TestNullButNotNeedSave: NullableDouble read FTestNullButNotNeedSave write FTestNullButNotNeedSave;
@@ -151,7 +151,7 @@ type
     function Equals(Obj: TObject): Boolean; override;
     class function MakeTestObject(): TObject;
 
-    class function AsJson: String;
+    class function AsJson: TJSONValue;
 
     property TestNull: NullableObject read FTestNull write FTestNull;
     property TestNullButNotNeedSave: NullableObject read FTestNullButNotNeedSave write FTestNullButNotNeedSave;
@@ -199,16 +199,18 @@ begin
     (TestFalse = Other.TestFalse);
 end;
 
-class function TTestNullableBooleanClass.AsJson: String;
+class function TTestNullableBooleanClass.AsJson: TJSONValue;
 begin
-  Result := '{"boolean_null":null,"boolean_not_null_true":true,"boolean_not_null_false":false}';
+  Result := TJSONObject.ParseJSONValue(
+    '{"boolean_null":null,"boolean_not_null_true":true,"boolean_not_null_false":false}');
 end;
 
 { TTestNullableStringClass }
 
-class function TTestUnmarshalNullableStringClass.AsJson: String;
+class function TTestUnmarshalNullableStringClass.AsJson: TJSONValue;
 begin
-  Result := '{"string_null":null,"string_not_null":"123"}';
+  Result := TJSONObject.ParseJSONValue(
+    '{"string_null":null,"string_not_null":"123"}');
 end;
 
 constructor TTestUnmarshalNullableStringClass.Create;
@@ -242,8 +244,14 @@ var
   Etalon: TTestNullableBooleanClass;
   Actual: TTestNullableBooleanClass;
   Obj: TObject;
+  JsonValue: TJSONValue;
 begin
-  Obj := TMarshalUnMarshal.FromJson(TTestNullableBooleanClass, TTestNullableBooleanClass.AsJson);
+  JsonValue := TTestNullableBooleanClass.AsJson;
+  try
+    Obj := TMarshalUnMarshal.FromJson(TTestNullableBooleanClass, JsonValue);
+  finally
+    JsonValue.Free;
+  end;
   CheckIs(Obj, TTestNullableBooleanClass);
 
   Actual := Obj as TTestNullableBooleanClass;
@@ -266,8 +274,14 @@ var
   Etalon: TTestNullableDoubleClass;
   Actual: TTestNullableDoubleClass;
   Obj: TObject;
+  JsonValue: TJSONValue;
 begin
-  Obj := TMarshalUnMarshal.FromJson(TTestNullableDoubleClass, TTestNullableDoubleClass.AsJson);
+  JsonValue := TTestNullableDoubleClass.AsJson;
+  try
+    Obj := TMarshalUnMarshal.FromJson(TTestNullableDoubleClass, JsonValue);
+  finally
+    JsonValue.Free;
+  end;
   CheckIs(Obj, TTestNullableDoubleClass);
 
   Actual := Obj as TTestNullableDoubleClass;
@@ -289,8 +303,14 @@ var
   Etalon: TTestNullableIntegerClass;
   Actual: TTestNullableIntegerClass;
   Obj: TObject;
+  JsonValue: TJSONValue;
 begin
-  Obj := TMarshalUnMarshal.FromJson(TTestNullableIntegerClass, TTestNullableIntegerClass.AsJson);
+  JsonValue := TTestNullableIntegerClass.AsJson;
+  try
+    Obj := TMarshalUnMarshal.FromJson(TTestNullableIntegerClass, JsonValue);
+  finally
+    JsonValue.Free;
+  end;
   CheckIs(Obj, TTestNullableIntegerClass);
 
   Actual := Obj as TTestNullableIntegerClass;
@@ -312,8 +332,14 @@ var
   Etalon: TTestNullableObjectClass;
   Actual: TTestNullableObjectClass;
   Obj: TObject;
+  JsonValue: TJSONValue;
 begin
-  Obj := TMarshalUnMarshal.FromJson(TTestNullableObjectClass, TTestNullableObjectClass.AsJson);
+  JsonValue := TTestNullableObjectClass.AsJson;
+  try
+    Obj := TMarshalUnMarshal.FromJson(TTestNullableObjectClass, JsonValue);
+  finally
+    JsonValue.Free;
+  end;
   CheckIs(Obj, TTestNullableObjectClass);
 
   Actual := Obj as TTestNullableObjectClass;
@@ -331,28 +357,19 @@ begin
   end;
 end;
 
-{var
-  op: TTestNullableObjectClass;
-begin
-  op := TTestNullableObjectClass.Create;
-  try
-    op.TestNull := NullableObject.Null;
-    op.TestNullButNotNeedSave := NullableObject.Null;
-    op.Test := op.MakeTestObject;
-
-    CheckEquals(op.AsJson, op.ToJsonString);
-  finally
-    op.Free;
-  end;
-end;  }
-
 procedure TTestUnmarshalNullable.TestNullableString;
 var
   Etalon: TTestUnmarshalNullableStringClass;
   Actual: TTestUnmarshalNullableStringClass;
   Obj: TObject;
+  JsonValue: TJSONValue;
 begin
-  Obj := TMarshalUnMarshal.FromJson(TTestUnmarshalNullableStringClass, TTestUnmarshalNullableStringClass.AsJson);
+  JsonValue := TTestUnmarshalNullableStringClass.AsJson;
+  try
+    Obj := TMarshalUnMarshal.FromJson(TTestUnmarshalNullableStringClass, JsonValue);
+  finally
+    JsonValue.Free;
+  end;
   CheckIs(Obj, TTestUnmarshalNullableStringClass);
 
   Actual := Obj as TTestUnmarshalNullableStringClass;
@@ -371,9 +388,10 @@ end;
 
 { TTestNullableIntegerClass }
 
-class function TTestNullableIntegerClass.AsJson: String;
+class function TTestNullableIntegerClass.AsJson: TJSONValue;
 begin
-  Result := '{"integer_null":null,"integer_not_null":123}';
+  Result := TJSONObject.ParseJSONValue(
+    '{"integer_null":null,"integer_not_null":123}');
 end;
 
 constructor TTestNullableIntegerClass.Create;
@@ -402,9 +420,10 @@ end;
 
 { TTestNullableDoubleClass }
 
-class function TTestNullableDoubleClass.AsJson: String;
+class function TTestNullableDoubleClass.AsJson: TJSONValue;
 begin
-  Result := '{"double_null":null,"double_not_null":123.456}';
+  Result := TJSONObject.ParseJSONValue(
+    '{"double_null":null,"double_not_null":123.456}');
 end;
 
 constructor TTestNullableDoubleClass.Create;
@@ -463,9 +482,10 @@ begin
     (Test = Other.Test);
 end;
 
-class function TTestNullableObjectClass.AsJson: String;
+class function TTestNullableObjectClass.AsJson: TJSONValue;
 begin
-  Result := '{"object_null":null,"object_not_null":{"intValue":123,"boolValue":true,"stringValue":"321","doubleValue":123.456,"arrayValue":[3,4,5]}}';
+  Result := TJSONObject.ParseJSONValue(
+    '{"object_null":null,"object_not_null":{"intValue":123,"boolValue":true,"stringValue":"321","doubleValue":123.456,"arrayValue":[3,4,5]}}');
 end;
 
 class function TTestNullableObjectClass.MakeTestObject: TObject;

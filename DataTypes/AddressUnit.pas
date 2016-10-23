@@ -4,6 +4,7 @@ interface
 
 uses
   REST.Json.Types, System.Generics.Collections, System.Rtti, Classes, SysUtils,
+  Generics.Defaults,
   JSONNullableAttributeUnit, JSONDictionaryInterceptorObjectUnit,
   NullableBasicTypesUnit;
 
@@ -278,7 +279,14 @@ type
 *)
   end;
 
+  TAddressesArray = TArray<TAddress>;
+
+  function SortAddresses(Addresses: TAddressesArray): TAddressesArray;
+
 implementation
+
+uses
+  Math;
 
 { TAddress }
 
@@ -375,6 +383,21 @@ begin
     (TimeWindowEnd2 = Other.TimeWindowEnd2) and
     (SequenceNo = Other.SequenceNo) and
     (CustomFields = Other.CustomFields);
+end;
+
+function SortAddresses(Addresses: TAddressesArray): TAddressesArray;
+begin
+  SetLength(Result, Length(Addresses));
+  TArray.Copy<TAddress>(Addresses, Result, Length(Addresses));
+  TArray.Sort<TAddress>(Result, TComparer<TAddress>.Construct(
+    function (const Address1, Address2: TAddress): Integer
+    begin
+      Result := IfThen(Address1.SequenceNo.IsNotNull, Address1.SequenceNo.Value, -1) -
+        IfThen(Address2.SequenceNo.IsNotNull, Address2.SequenceNo.Value, -1);
+      if (result = 0) then
+        Result := IfThen(Address1.IsDepot.IsNotNull and Address1.IsDepot.Value, 0, 1) -
+          IfThen(Address2.IsDepot.IsNotNull and Address2.IsDepot.Value, 0, 1)
+    end));
 end;
 
 end.

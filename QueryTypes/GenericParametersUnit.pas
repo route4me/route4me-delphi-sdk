@@ -18,7 +18,7 @@ type
     [JSONMarshalled(False)]
     FConvertBooleansToInteger: boolean;
   public
-    constructor Create;
+    constructor Create; virtual;
 
     function ToJsonString: String;
     function ToJsonValue: TJSONValue;
@@ -119,7 +119,7 @@ begin
           Continue;
       end;
 
-      FieldName := Field.Name;
+      FieldName := Attr.Name;
 
       Value := Field.GetValue(Self);
       if (Value.IsEmpty) then

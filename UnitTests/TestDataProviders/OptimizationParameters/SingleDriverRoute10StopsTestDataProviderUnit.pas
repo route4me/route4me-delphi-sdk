@@ -10,7 +10,7 @@ uses
 type
   TSingleDriverRoute10StopsTestDataProvider = class(TBaseOptimizationParametersProvider)
   protected
-    function MakeAddresses(): TArray<TAddress>; override;
+    function MakeAddresses(): TAddressesArray; override;
     function MakeRouteParameters(): TRouteParameters; override;
     procedure CorrectForResponce(OptimizationParameters: TOptimizationParameters); override;
   public
@@ -55,7 +55,7 @@ procedure TSingleDriverRoute10StopsTestDataProvider.CorrectForResponce(
   end;
 begin
   inherited;
-  OptimizationParameters.Parameters.IsUpload := 'false';
+  OptimizationParameters.Parameters.IsUpload := False;
   OptimizationParameters.Parameters.RT := False;
   OptimizationParameters.Parameters.DisableOptimization := False;
   OptimizationParameters.Parameters.StoreRoute := True;
@@ -153,12 +153,12 @@ begin
   OptimizationParameters.Addresses[Index(9)].CustomFields := TDictionaryStringIntermediateObject.Create;
 end;
 
-function TSingleDriverRoute10StopsTestDataProvider.MakeAddresses: TArray<TAddress>;
+function TSingleDriverRoute10StopsTestDataProvider.MakeAddresses: TAddressesArray;
 var
   FirstAddress: TAddress;
   i: integer;
 begin
-  Result := TArray<TAddress>.Create();
+  Result := TAddressesArray.Create();
 
   FirstAddress := TAddress.Create(
     Addresses[0].AddressString, Addresses[0].Latitude, Addresses[0].Longitude, 0);

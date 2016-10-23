@@ -27,12 +27,12 @@ type
     FShowDirections: NullableBoolean;
 
     [JSONNameAttribute('addresses')]
-    FAddresses: TArray<TAddress>;
+    FAddresses: TAddressesArray;
 
     [JSONNameAttribute('parameters')]
     FParameters: TRouteParameters;
 
-    function GetAddress(AddressString: String; Addresses: TArray<TAddress>): TAddress;
+    function GetAddress(AddressString: String; Addresses: TAddressesArray): TAddress;
   public
     constructor Create;
 
@@ -42,7 +42,7 @@ type
     property ReOptimize: NullableBoolean read FReOptimize write FReOptimize;
     property ShowDirections: NullableBoolean read FShowDirections write FShowDirections;
     property Parameters: TRouteParameters read FParameters write FParameters;
-    property Addresses: TArray<TAddress> read FAddresses write FAddresses;
+    property Addresses: TAddressesArray read FAddresses write FAddresses;
   end;
 
 implementation
@@ -103,7 +103,7 @@ begin
 end;
 
 function TOptimizationParameters.GetAddress(AddressString: String;
-  Addresses: TArray<TAddress>): TAddress;
+  Addresses: TAddressesArray): TAddress;
 var
   Address: TAddress;
 begin

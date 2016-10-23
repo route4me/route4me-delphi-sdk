@@ -9,7 +9,7 @@ uses
 type
   TSingleDriverRoundTripTestDataProvider = class(TBaseOptimizationParametersProvider)
   protected
-    function MakeAddresses(): TArray<TAddress>; override;
+    function MakeAddresses(): TAddressesArray; override;
     function MakeRouteParameters(): TRouteParameters; override;
   public
 
@@ -23,11 +23,11 @@ uses
   DateUtils,
   EnumsUnit, UtilsUnit;
 
-function TSingleDriverRoundTripTestDataProvider.MakeAddresses: TArray<TAddress>;
+function TSingleDriverRoundTripTestDataProvider.MakeAddresses: TAddressesArray;
 var
   FirstAddress: TAddress;
 begin
-  Result := TArray<TAddress>.Create();
+  Result := TAddressesArray.Create();
 
   FirstAddress := TAddress.Create(
     '754 5th Ave New York, NY 10019', 'Bergdorf Goodman', 40.7636197, -73.9744388, 0);

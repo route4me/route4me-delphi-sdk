@@ -3,7 +3,7 @@ unit DirectionLocationUnit;
 interface
 
 uses
-  REST.Json.Types;
+  REST.Json.Types, SysUtils;
 
 type
   TDirectionLocation = class
@@ -29,6 +29,8 @@ type
     [JSONName('error_code')]
     FErrorCode: integer;
   public
+    function Compare(Other: TDirectionLocation): integer;
+
     property Name: String read FName write FName;
 
     /// <summary>
@@ -44,5 +46,12 @@ type
   end;
 
 implementation
+
+{ TDirectionLocation }
+
+function TDirectionLocation.Compare(Other: TDirectionLocation): integer;
+begin
+  Result := String.Compare(Name, Other.Name);
+end;
 
 end.

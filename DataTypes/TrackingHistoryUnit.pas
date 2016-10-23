@@ -3,7 +3,8 @@ unit TrackingHistoryUnit;
 interface
 
 uses
-  REST.Json.Types, System.Rtti, Classes, SysUtils,
+  REST.Json.Types, System.Rtti, Classes, SysUtils, System.Generics.Collections,
+  Generics.Defaults,
   JSONNullableAttributeUnit,
   NullableBasicTypesUnit;
 
@@ -42,15 +43,55 @@ type
 
     function Equals(Obj: TObject): Boolean; override;
 
+    /// <summary>
+    ///  Speed at the time of the location transaction event
+    /// </summary>
     property Speed: NullableDouble read FSpeed write FSpeed;
+
+    /// <summary>
+    ///  Latitude at the time of the location transaction event
+    /// </summary>
     property Latitude: NullableDouble read FLatitude write FLatitude;
+
+    /// <summary>
+    ///  Longitude at the time of the location transaction event
+    /// </summary>
     property Longitude: NullableDouble read FLongitude write FLongitude;
-    property D: NullableString read FD write FD;
+
+    /// <summary>
+    ///  Direction/Heading at the time of the location transaction event
+    /// </summary>
+    property Direction: NullableString read FD write FD;
+
+    /// <summary>
+    ///  The original timestamp in unix timestamp format at the moment location transaction event
+    /// </summary>
     property TimeStamp: NullableString read FTimeStamp write FTimeStamp;
+
+    /// <summary>
+    ///  The original timestamp in a human readable timestamp format at the moment location transaction event
+    /// </summary>
     property TimeStampFriendly: NullableString read FTimeStampFriendly write FTimeStampFriendly;
   end;
 
+  TTrackingHistoryArray = TArray<TTrackingHistory>;
+
+function SortTrackingHistory(TrackingHistories: TTrackingHistoryArray): TTrackingHistoryArray;
+
 implementation
+
+function SortTrackingHistory(TrackingHistories: TTrackingHistoryArray): TTrackingHistoryArray;
+begin
+  SetLength(Result, Length(TrackingHistories));
+  TArray.Copy<TTrackingHistory>(TrackingHistories, Result, Length(TrackingHistories));
+  TArray.Sort<TTrackingHistory>(Result, TComparer<TTrackingHistory>.Construct(
+    function (const History1, History2: TTrackingHistory): Integer
+    begin
+      Result := History1.Latitude.Compare(History2.Latitude);
+      if (Result = 0) then
+        Result := History1.Longitude.Compare(History2.Longitude);
+    end));
+end;
 
 { TTrackingHistory }
 
@@ -78,7 +119,7 @@ begin
   Result := (Speed = Other.Speed) and
     (Latitude = Other.Latitude) and
     (Longitude = Other.Longitude) and
-    (D = Other.D) and
+    (Direction = Other.Direction) and
     (TimeStamp = Other.TimeStamp) and
     (TimeStampFriendly = Other.TimeStampFriendly);
 end;

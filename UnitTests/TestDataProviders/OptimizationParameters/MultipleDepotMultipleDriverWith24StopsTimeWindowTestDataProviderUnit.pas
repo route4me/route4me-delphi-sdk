@@ -9,7 +9,7 @@ uses
 type
   TMultipleDepotMultipleDriverWith24StopsTimeWindowTestDataProvider = class(TBaseOptimizationParametersProvider)
   protected
-    function MakeAddresses(): TArray<TAddress>; override;
+    function MakeAddresses(): TAddressesArray; override;
     function MakeRouteParameters(): TRouteParameters; override;
   public
 
@@ -23,11 +23,11 @@ uses
   DateUtils,
   EnumsUnit, UtilsUnit;
 
-function TMultipleDepotMultipleDriverWith24StopsTimeWindowTestDataProvider.MakeAddresses: TArray<TAddress>;
+function TMultipleDepotMultipleDriverWith24StopsTimeWindowTestDataProvider.MakeAddresses: TAddressesArray;
 var
   FirstAddress: TAddress;
 begin
-  Result := TArray<TAddress>.Create();
+  Result := TAddressesArray.Create();
 
   FirstAddress := TAddress.Create(
     '3634 W Market St, Fairlawn, OH 44333', 41.135762259364, -81.629313826561, 300);

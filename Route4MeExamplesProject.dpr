@@ -6,7 +6,6 @@ program Route4MeExamplesProject;
 
 uses
   System.SysUtils,
-  SingleDriverRoute10StopsUnit in 'Examples\SingleDriverRoute10StopsUnit.pas',
   Route4MeExamplesUnit in 'Examples\Route4MeExamplesUnit.pas',
   JSONDictionaryInterceptorObjectUnit in 'Nullabled\JSONDictionaryInterceptorObjectUnit.pas',
   JSONNullableAttributeUnit in 'Nullabled\JSONNullableAttributeUnit.pas',
@@ -46,12 +45,16 @@ uses
   DirectionPathPointUnit in 'DataTypes\DirectionPathPointUnit.pas',
   LinksUnit in 'DataTypes\LinksUnit.pas',
   TrackingHistoryUnit in 'DataTypes\TrackingHistoryUnit.pas',
-  HttpQueryMemberAttributeUnit in 'QueryTypes\HttpQueryMemberAttributeUnit.pas';
+  HttpQueryMemberAttributeUnit in 'QueryTypes\HttpQueryMemberAttributeUnit.pas',
+  RouteActionUnit in 'Actions\RouteActionUnit.pas',
+  AddressesOrderInfoUnit in 'AdditionalDataTypes\AddressesOrderInfoUnit.pas',
+  CommonTypesUnit in 'Common\CommonTypesUnit.pas';
 
 var
   Examples: TRoute4MeExamples;
   DataObject: TDataObject;
-
+  RouteSingleDriverRoute10Stops: TDataObjectRoute;
+  RouteId_SingleDriverRoute10Stops: NullableString;
 begin
   try
     Examples := TRoute4MeExamples.Create();
@@ -59,20 +62,19 @@ begin
 
     DataObject := Examples.SingleDriverRoute10Stops();
 
-(*    dataObject = dataObject1;
-    DataObjectRoute routeSingleDriverRoute10Stops = (dataObject != null && dataObject.Routes != null && dataObject.Routes.Length > 0) ? dataObject.Routes[0] : null;
-    string routeId_SingleDriverRoute10Stops = (routeSingleDriverRoute10Stops != null) ? routeSingleDriverRoute10Stops.RouteID : null;
-
-    if (routeSingleDriverRoute10Stops != null)
-      examples.ResequenceRouteDestinations(routeSingleDriverRoute10Stops);
+    if (DataObject <> nil) and (DataObject.Routes <> nil) and (Length(DataObject.Routes) > 0) then
+    begin
+      RouteSingleDriverRoute10Stops := DataObject.Routes[0];
+      RouteId_SingleDriverRoute10Stops := RouteSingleDriverRoute10Stops.RouteId;
+      Examples.ResequenceRouteDestinations(RouteSingleDriverRoute10Stops);
+    end
     else
-      System.Console.WriteLine("ResequenceRouteDestinations not called. routeSingleDriverRoute10Stops == null.");
+    begin
+      RouteSingleDriverRoute10Stops := nil;
+      RouteId_SingleDriverRoute10Stops := NullableString.Null;
+      WriteLn('ResequenceRouteDestinations not called. RouteSingleDriverRoute10Stops = null.');
+    end;
 
-    int[] destinationIds = examples.AddRouteDestinations(routeId_SingleDriverRoute10Stops);
-    if (destinationIds != null && destinationIds.Length > 0)
-    {
-      examples.RemoveRouteDestination(routeId_SingleDriverRoute10Stops, destinationIds[0]);
-    }*)
     ReadLn;
   except
     on E: Exception do

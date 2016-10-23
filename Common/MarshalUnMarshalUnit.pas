@@ -12,13 +12,12 @@ type
     class var ctx: TRttiContext;
     class var Marshal: TJSONMarshal;
 
-    class procedure InitIntermediateObject({AClass: TClass; }TypeInfo: Pointer; JsonObject: TJSONObject);
+    class procedure InitIntermediateObject(TypeInfo: Pointer; JsonObject: TJSONObject);
   public
     class function ToJson(GenericParameters: TGenericParameters): String;
     class function ToJsonValue(GenericParameters: TGenericParameters): TJSONValue;
-//    class function FromJson(JsonString: String): TGenericParameters; overload;
-    class function FromJson(AClass: TClass; JsonString: String): TObject; overload;
-    class function FromJson(AClass: TClass; JsonValue: TJsonValue): TObject; overload;
+
+    class function FromJson(AClass: TClass; JsonValue: TJsonValue): TObject;
   end;
 
 implementation
@@ -28,59 +27,6 @@ implementation
 uses JSONNullableConverterUnit, JSONNullableAttributeUnit,
   NullableInterceptorUnit;
 
-{class function TMarshalUnMarshal.FromJson(
-  JsonString: String): TGenericParameters;
-var
-  Unmarshal: TJSONUnMarshal;
-  JsonObject: TJSONObject;
-  ResultObject: TObject;
-begin
-  Unmarshal := TJSONUnMarshal.Create();
-  try
-    JsonObject := TJSONObject.ParseJSONValue(JSONString) as TJSONObject;
-    try
-      ResultObject := Unmarshal.CreateObject(TGenericParameters, JsonObject);
-      Result := ResultObject as TGenericParameters;
-    finally
-      JsonObject.Free;
-    end;
-  finally
-    Unmarshal.Free;
-  end;
-end;}
-
-class function TMarshalUnMarshal.FromJson(AClass: TClass; JsonString: String): TObject;
-var
-  Unmarshal: TJSONUnMarshal;
-  JsonObject: TJSONObject;
-  JsonValue: TJSONValue;
-begin
-  JsonValue := TJSONObject.ParseJSONValue(JSONString);
-  Result := FromJson(AClass, JsonValue);
-
-{  Unmarshal := TJSONUnMarshal.Create();
-  try
-    JsonObject := TJSONObject.ParseJSONValue(JSONString) as TJSONObject;
-    try
-
-      ctx := TRttiContext.Create;
-      Marshal := TJSONMarshal.Create;
-      try
-        InitIntermediateObject(AClass.ClassInfo, JsonObject);
-      finally
-        Marshal.Free;
-        ctx.Free;
-      end;
-
-      Result := Unmarshal.CreateObject(AClass, JsonObject);
-    finally
-      JsonObject.Free;
-    end;
-  finally
-    Unmarshal.Free;
-  end;}
-end;
-
 class function TMarshalUnMarshal.FromJson(AClass: TClass;
   JsonValue: TJsonValue): TObject;
 var
@@ -89,29 +35,25 @@ var
 begin
   Unmarshal := TJSONUnMarshal.Create();
   try
-    //JsonObject := TJSONObject.ParseJSONValue(JSONString) as TJSONObject;
     JsonObject := JsonValue as TJSONObject;
-    try
-      ctx := TRttiContext.Create;
-      Marshal := TJSONMarshal.Create;
-      try
-        InitIntermediateObject(AClass.ClassInfo, JsonObject);
-      finally
-        Marshal.Free;
-        ctx.Free;
-      end;
 
-      Result := Unmarshal.CreateObject(AClass, JsonObject);
+    ctx := TRttiContext.Create;
+    Marshal := TJSONMarshal.Create;
+    try
+      InitIntermediateObject(AClass.ClassInfo, JsonObject);
     finally
-      JsonObject.Free;
+      Marshal.Free;
+      ctx.Free;
     end;
+
+    Result := Unmarshal.CreateObject(AClass, JsonObject);
   finally
     Unmarshal.Free;
   end;
 end;
 
-class procedure TMarshalUnMarshal.InitIntermediateObject({AClass: TClass;}TypeInfo: Pointer;
-  JsonObject: TJSONObject);
+class procedure TMarshalUnMarshal.InitIntermediateObject(
+  TypeInfo: Pointer; JsonObject: TJSONObject);
 var
   RttiType: TRttiType;
 
@@ -142,11 +84,10 @@ var
   ObjectAsString: String;
   JSONValue: TJSONValue;
   ArrayItemObject: TJSONObject;
-//  ItemClass: TClass;
   ItemTypeInfo: Pointer;
   elementType: TRttiType;
 begin
-  RttiType := ctx.GetType(TypeInfo{AClass});
+  RttiType := ctx.GetType(TypeInfo);
   for i := JsonObject.Count - 1 downto 0 do
   begin
     Name := JsonObject.Pairs[i].JsonString.Value;
@@ -198,14 +139,7 @@ begin
       end;
       if (JSONValue is TJSONObject) then
       begin
-  {      RttiField.FieldType.Handle
-        if RttiField.FieldType is TRttiInstanceType then
-          elementType := TRttiInstanceType(RttiField.FieldType).elementType
-        else
-          elementType := TRttiDynamicArrayType(RttiField.FieldType).elementType;
-        ItemTypeInfo := elementType.Handle;}
         ItemTypeInfo := RttiField.FieldType.Handle;
-
         InitIntermediateObject(ItemTypeInfo, TJSONObject(JSONValue));
       end;
     except
