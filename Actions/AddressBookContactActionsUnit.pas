@@ -12,10 +12,8 @@ type
   TAddressBookContactActions = class(TBaseAction)
   private
   public
-    function Add(Contact: TAddressBookContact;
-      out errorString: String): boolean;
-    function Update(Contact: TAddressBookContact;
-      out errorString: String): boolean;
+    function Add(Contact: TAddressBookContact; out errorString: String): boolean;
+    function Update(Contact: TAddressBookContact; out errorString: String): boolean;
     function Remove(AddressId: String): boolean; overload;
     function Remove(AddressId: TArray<String>): boolean; overload;
     function Get(AddressBookParameters: TAddressBookParameters;

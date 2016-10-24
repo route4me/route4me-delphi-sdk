@@ -7,6 +7,9 @@ uses
 
 type
   TStringArray = TArray<String>;
+  TStringPair = TPair<String,String>;
+  TArrayStringPair = TArray<TStringPair>;
+  TListStringPair = TList<TStringPair>;
 
   function SortStringArray(Strings: TStringArray): TStringArray;
 

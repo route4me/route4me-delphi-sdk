@@ -37,7 +37,7 @@ type
 var
   Addresses: TArray<TAddressTag>;
 
-function GetAddressIndexByTag(Tag: TAddressTag; Addresses: TArray<TAddress>): integer;
+function GetAddressIndexByTag(Tag: TAddressTag; Addresses: TAddressesArray): integer;
 var
   i: integer;
 begin

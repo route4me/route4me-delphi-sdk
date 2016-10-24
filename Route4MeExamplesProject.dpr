@@ -48,34 +48,15 @@ uses
   HttpQueryMemberAttributeUnit in 'QueryTypes\HttpQueryMemberAttributeUnit.pas',
   RouteActionUnit in 'Actions\RouteActionUnit.pas',
   AddressesOrderInfoUnit in 'AdditionalDataTypes\AddressesOrderInfoUnit.pas',
-  CommonTypesUnit in 'Common\CommonTypesUnit.pas';
+  CommonTypesUnit in 'Common\CommonTypesUnit.pas',
+  MainExamplesUnit in 'Examples\MainExamplesUnit.pas',
+  RemoveRouteDestinationResponseUnit in 'AdditionalDataTypes\RemoveRouteDestinationResponseUnit.pas',
+  RemoveRouteDestinationRequestUnit in 'AdditionalDataTypes\RemoveRouteDestinationRequestUnit.pas',
+  AddRouteDestinationRequestUnit in 'AdditionalDataTypes\AddRouteDestinationRequestUnit.pas';
 
-var
-  Examples: TRoute4MeExamples;
-  DataObject: TDataObject;
-  RouteSingleDriverRoute10Stops: TDataObjectRoute;
-  RouteId_SingleDriverRoute10Stops: NullableString;
 begin
   try
-    Examples := TRoute4MeExamples.Create();
-//    Examples := TRoute4MeExamples.CreateDebug();
-
-    DataObject := Examples.SingleDriverRoute10Stops();
-
-    if (DataObject <> nil) and (DataObject.Routes <> nil) and (Length(DataObject.Routes) > 0) then
-    begin
-      RouteSingleDriverRoute10Stops := DataObject.Routes[0];
-      RouteId_SingleDriverRoute10Stops := RouteSingleDriverRoute10Stops.RouteId;
-      Examples.ResequenceRouteDestinations(RouteSingleDriverRoute10Stops);
-    end
-    else
-    begin
-      RouteSingleDriverRoute10Stops := nil;
-      RouteId_SingleDriverRoute10Stops := NullableString.Null;
-      WriteLn('ResequenceRouteDestinations not called. RouteSingleDriverRoute10Stops = null.');
-    end;
-
-    ReadLn;
+    TExamples.Run;
   except
     on E: Exception do
     begin

@@ -13,10 +13,6 @@ type
     class function ConvertToUnixTimestamp(Date: TDateTime): int64;
   end;
 
-  TStringPair = TPair<String,String>;
-  TArrayStringPair = TArray<TStringPair>;
-  TListStringPair = TList<TStringPair>;
-
 implementation
 
 uses

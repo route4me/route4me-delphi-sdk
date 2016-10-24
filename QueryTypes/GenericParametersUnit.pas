@@ -5,7 +5,7 @@ interface
 uses
   Classes, SysUtils, Rtti, System.Generics.Collections, System.JSON,
   REST.Json.Types, HttpQueryMemberAttributeUnit, JSONNullableAttributeUnit,
-  UtilsUnit;
+  CommonTypesUnit;
 
 type
 

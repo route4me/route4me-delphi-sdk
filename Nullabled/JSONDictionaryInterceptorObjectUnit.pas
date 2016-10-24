@@ -46,7 +46,7 @@ type
 
 implementation
 
-uses UtilsUnit;
+uses CommonTypesUnit;
 
 function GetPairs(JsonString: String): TArrayStringPair;
 var

@@ -11,6 +11,8 @@ type
       ResultClassType: TClass; out ErrorString: String): TObject;
     function Put(Url: String; Data: TGenericParameters;
       ResultClassType: TClass; out ErrorString: String): TObject;
+    function Delete(Url: String; Data: TGenericParameters;
+      ResultClassType: TClass; out ErrorString: String): TObject;
   end;
 
 implementation

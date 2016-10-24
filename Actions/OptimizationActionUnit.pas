@@ -2,7 +2,9 @@ unit OptimizationActionUnit;
 
 interface
 
-uses BaseActionUnit, DataObjectUnit, OptimizationParametersUnit;
+uses
+  BaseActionUnit,
+  DataObjectUnit, OptimizationParametersUnit;
 
 type
   TOptimizationActions = class(TBaseAction)
@@ -15,13 +17,15 @@ implementation
 
 { TOptimizationActions }
 
-uses SettingsUnit;
+uses
+  SettingsUnit;
 
 function TOptimizationActions.Run(
   OptimizationParameters: TOptimizationParameters;
   out ErrorString: String): TDataObject;
 begin
-  Result := FConnection.Post(TSettings.ApiHost, OptimizationParameters, TDataObject, errorString) as TDataObject;
+  Result := FConnection.Post(TSettings.ApiHost, OptimizationParameters,
+    TDataObject, errorString) as TDataObject;
 end;
 
 end.

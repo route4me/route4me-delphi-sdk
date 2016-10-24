@@ -9,9 +9,9 @@ uses
 type
   TBaseOptimizationParametersProvider = class abstract (TInterfacedObject, IOptimizationParametersProvider)
   protected
-    procedure AddAddress(Address: TAddress; var AddressArray: TArray<TAddress>);
+    procedure AddAddress(Address: TAddress; var AddressArray: TAddressesArray);
 
-    function MakeAddresses(): TArray<TAddress>; virtual; abstract;
+    function MakeAddresses(): TAddressesArray; virtual; abstract;
     function MakeRouteParameters(): TRouteParameters; virtual; abstract;
   public
     function OptimizationParameters: TOptimizationParameters;
@@ -22,7 +22,7 @@ implementation
 { TBaseOptimizationParametersProvider }
 
 procedure TBaseOptimizationParametersProvider.AddAddress(Address: TAddress;
-  var AddressArray: TArray<TAddress>);
+  var AddressArray: TAddressesArray);
 begin
     SetLength(AddressArray, Length(AddressArray) + 1);
     AddressArray[High(AddressArray)] := Address;

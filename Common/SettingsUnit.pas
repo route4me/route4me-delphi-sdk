@@ -29,7 +29,7 @@ type
     /// <summary>
     ///   Default timeout - 30 minutes
     /// </summary>
-    const DefaultTimeOut = 30;
+    const DefaultTimeOutMinutes = 30;
   end;
 
 implementation

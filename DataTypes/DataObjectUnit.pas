@@ -164,6 +164,8 @@ end;
 
 constructor TDataObject.Create;
 begin
+  FState := 0;
+  FIsSentToBackground := False;
   SetLength(FUserErrors, 0);
   SetLength(FAddresses, 0);
   FParameters := nil;
@@ -178,7 +180,6 @@ function TDataObject.Equals(Obj: TObject): Boolean;
 var
   Other: TDataObject;
   i: integer;
-  Index: integer;
   SortedAddresses1, SortedAddresses2: TAddressesArray;
   SortedUserErrors1, SortedUserErrors2: TStringArray;
   SortedRoutes1, SortedRoutes2: TDataObjectRouteArray;
@@ -192,7 +193,6 @@ begin
     Exit;
 
   Other := TDataObject(Obj);
-
 
   Result := (OptimizationProblemId = Other.OptimizationProblemId) and
     (State = Other.State) and

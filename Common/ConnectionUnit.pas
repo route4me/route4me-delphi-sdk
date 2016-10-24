@@ -4,15 +4,14 @@ interface
 
 uses
   Classes, SysUtils, System.JSON,
-  HTTPApp, IdHTTP,
+  //HTTPApp, IdHTTP,
   REST.Client, REST.Types, IPPeerCommon, IPPeerClient,
-  UtilsUnit,
-  IConnectionUnit, GenericParametersUnit, DataObjectUnit;
+  IConnectionUnit, GenericParametersUnit, DataObjectUnit, CommonTypesUnit;
 
 type
   TConnection = class(TInterfacedObject, IConnection)
   private
-    FHttp: TIdHTTP;
+//    FHttp: TIdHTTP;
     FClient: TRESTClient;
     FRESTRequest: TRESTRequest;
     FRESTResponce: TRESTResponse;
@@ -22,10 +21,6 @@ type
       Body: String; out ErrorString: String): TJsonValue;
 
     function UrlParameters(Parameters: TListStringPair): String;
-
-//    function InternalPost(Url: String; Request: String; out ErrorString: String): TJsonValue; overload;
-//    function InternalPost(Request: TJSONValue; Parameters: TListStringPair; out ErrorString: String): TJsonValue;
-//    function InternalPut(Request: TJSONValue; Parameters: TListStringPair; out ErrorString: String): TJsonValue;
   public
     constructor Create(ApiKey: String);
     destructor Destroy; override;
@@ -35,6 +30,8 @@ type
     function Post(Url: String; Data: TGenericParameters;
       ResultClassType: TClass; out ErrorString: String): TObject;
     function Put(Url: String; Data: TGenericParameters;
+      ResultClassType: TClass; out ErrorString: String): TObject;
+    function Delete(Url: String; Data: TGenericParameters;
       ResultClassType: TClass; out ErrorString: String): TObject;
   end;
 
@@ -66,7 +63,7 @@ begin
   begin
 {    st := TStringList.Create;
     st.Text := Responce.ToString;
-    st.SaveToFile('d:\1.json');
+    st.SaveToFile('d:\post.json');
     st.Free;}
     Result := TMarshalUnMarshal.FromJson(ResultClassType, Responce);
   end;
@@ -94,7 +91,7 @@ begin
   begin
 {    st := TStringList.Create;
     st.Text := Responce.ToString;
-    st.SaveToFile('d:\1.json');
+    st.SaveToFile('d:\put.json');
     st.Free;}
     Result := TMarshalUnMarshal.FromJson(ResultClassType, Responce);
   end;
@@ -104,21 +101,48 @@ constructor TConnection.Create(ApiKey: String);
 begin
   FApiKey := ApiKey;
 
-  FHttp := TIdHTTP.Create;
+{  FHttp := TIdHTTP.Create;
   FHttp.ProxyParams.BasicAuthentication := False;
 
-//  FHttp.Timeout := TSettings.DefaultTimeOut;
   FHttp.Request.CharSet := 'utf-8';
-  FHttp.Request.ContentType := 'application/json';
+  FHttp.Request.ContentType := 'application/json';}
 
   FRESTResponce := TRESTResponse.Create(nil);
   FClient := TRESTClient.Create(nil);
   FRESTRequest := TRESTRequest.Create(FClient);
-  FRESTRequest.Timeout := TSettings.DefaultTimeOut * 3600;
+  FRESTRequest.Timeout := TSettings.DefaultTimeOutMinutes * 3600;
   FRESTRequest.Response := FRESTResponce;
 
   FClient.HandleRedirects := False;
   FRESTRequest.HandleRedirects := False;
+end;
+
+function TConnection.Delete(Url: String; Data: TGenericParameters;
+  ResultClassType: TClass; out ErrorString: String): TObject;
+var
+  Responce: TJSONValue;
+  Parameters: TListStringPair;
+//  st: TStringList;
+  JsonString: String;
+begin
+  FClient.BaseURL := Url;
+  Parameters := Data.Serialize(FApiKey);
+  JsonString := Data.ToJsonValue.ToString;
+
+  Responce := InternalRequest(
+    FRESTRequest.Client.BaseURL + UrlParameters(Parameters),
+    TRESTRequestMethod.rmDELETE, JsonString, ErrorString);
+
+  if (Responce = nil) then
+    Result := nil
+  else
+  begin
+{    st := TStringList.Create;
+    st.Text := Responce.ToString;
+    st.SaveToFile('d:\delete.json');
+    st.Free;}
+    Result := TMarshalUnMarshal.FromJson(ResultClassType, Responce);
+  end;
 end;
 
 destructor TConnection.Destroy;
@@ -126,7 +150,7 @@ begin
   FRESTRequest.Free;
   FClient.Free;
   FRESTResponce.Free;
-  FHttp.Free;
+//  FHttp.Free;
   inherited;
 end;
 
@@ -166,7 +190,7 @@ function TConnection.InternalRequest(URL: String; Method: TRESTRequestMethod;
       if s.StartsWith(Name, True) then
       begin
         Result := s;
-        Delete(Result, 1, Length(Name) + 1);
+        System.Delete(Result, 1, Length(Name) + 1);
         Break;
       end;
   end;
@@ -221,11 +245,11 @@ end;}
 
 procedure TConnection.SetProxy(Host: String; Port: integer; Username, Password: String);
 begin
-  FHttp.ProxyParams.BasicAuthentication := True;
+{  FHttp.ProxyParams.BasicAuthentication := True;
   FHttp.ProxyParams.ProxyPassword := Password;
   FHttp.ProxyParams.ProxyPort := Port;
   FHttp.ProxyParams.ProxyServer := Host;
-  FHttp.ProxyParams.ProxyUsername := Username;
+  FHttp.ProxyParams.ProxyUsername := Username;}
 
   FClient.ProxyServer := Host;
   FClient.ProxyPort := Port;
@@ -245,7 +269,7 @@ begin
   if (Result <> EmptyStr) then
   begin
     Result := '?' + Result;
-    Delete(Result, Length(Result), 1);
+    System.Delete(Result, Length(Result), 1);
   end;
 end;
 
