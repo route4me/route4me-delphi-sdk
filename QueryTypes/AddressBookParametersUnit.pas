@@ -30,7 +30,7 @@ type
     [HttpQueryMember('display')]
     FDisplay: NullableString;
   public
-    constructor Create; overload;
+    constructor Create; overload; override;
     constructor Create(Limit: integer; Offset: integer); overload;
 
     property AddressId: NullableString read FAddressId write FAddressId;
@@ -55,13 +55,15 @@ end;
 
 constructor TAddressBookParameters.Create;
 begin
-    FAddressId := NullableString.Null;
-    FLimit := NullableInteger.Null;
-    FOffset := NullableInteger.Null;
-    FStart := NullableInteger.Null;
-    FQuery := NullableString.Null;
-    FFields := NullableString.Null;
-    FDisplay := NullableString.Null;
+  Inherited Create;
+
+  FAddressId := NullableString.Null;
+  FLimit := NullableInteger.Null;
+  FOffset := NullableInteger.Null;
+  FStart := NullableInteger.Null;
+  FQuery := NullableString.Null;
+  FFields := NullableString.Null;
+  FDisplay := NullableString.Null;
 end;
 
 end.

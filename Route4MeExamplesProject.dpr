@@ -4,7 +4,13 @@ program Route4MeExamplesProject;
 
 {$R *.res}
 
+//  FastMM4 in 'FastMM\FastMM4.pas',
+//  FastMM4Messages in 'FastMM\FastMM4Messages.pas',
+
 uses
+//  FastMM4 in 'FastMM\FastMM4.pas',
+//  FastMM4Messages in 'FastMM\FastMM4Messages.pas',
+
   System.SysUtils,
   Route4MeExamplesUnit in 'Examples\Route4MeExamplesUnit.pas',
   JSONDictionaryInterceptorObjectUnit in 'Nullabled\JSONDictionaryInterceptorObjectUnit.pas',
@@ -12,7 +18,6 @@ uses
   JSONNullableConverterUnit in 'Nullabled\JSONNullableConverterUnit.pas',
   NullableBasicTypesUnit in 'Nullabled\NullableBasicTypesUnit.pas',
   NullableInterceptorUnit in 'Nullabled\NullableInterceptorUnit.pas',
-  NullableTypesUnit in 'Nullabled\NullableTypesUnit.pas',
   ConnectionUnit in 'Common\ConnectionUnit.pas',
   IConnectionUnit in 'Common\IConnectionUnit.pas',
   MarshalUnMarshalUnit in 'Common\MarshalUnMarshalUnit.pas',
@@ -52,10 +57,20 @@ uses
   MainExamplesUnit in 'Examples\MainExamplesUnit.pas',
   RemoveRouteDestinationResponseUnit in 'AdditionalDataTypes\RemoveRouteDestinationResponseUnit.pas',
   RemoveRouteDestinationRequestUnit in 'AdditionalDataTypes\RemoveRouteDestinationRequestUnit.pas',
-  AddRouteDestinationRequestUnit in 'AdditionalDataTypes\AddRouteDestinationRequestUnit.pas';
+  AddRouteDestinationRequestUnit in 'AdditionalDataTypes\AddRouteDestinationRequestUnit.pas',
+  MoveDestinationToRouteResponseUnit in 'AdditionalDataTypes\MoveDestinationToRouteResponseUnit.pas',
+  MoveDestinationToRouteRequestUnit in 'AdditionalDataTypes\MoveDestinationToRouteRequestUnit.pas',
+  SingleDriverRoundTripGenericTestDataProviderUnit in 'TestDataProviders\OptimizationParameters\SingleDriverRoundTripGenericTestDataProviderUnit.pas',
+  SingleDriverRoundTripGenericRequestUnit in 'AdditionalDataTypes\SingleDriverRoundTripGenericRequestUnit.pas',
+  SingleDriverRoundTripGenericResponseUnit in 'AdditionalDataTypes\SingleDriverRoundTripGenericResponseUnit.pas',
+  IRoute4MeManagerUnit in 'IRoute4MeManagerUnit.pas',
+  RouteParametersQueryUnit in 'QueryTypes\RouteParametersQueryUnit.pas',
+  DataObjectOptimizationsResponseUnit in 'AdditionalDataTypes\DataObjectOptimizationsResponseUnit.pas',
+  RemoveDestinationFromOptimizationResponseUnit in 'AdditionalDataTypes\RemoveDestinationFromOptimizationResponseUnit.pas';
 
 begin
   try
+//    ReportMemoryLeaksOnShutdown := True;
     TExamples.Run;
   except
     on E: Exception do

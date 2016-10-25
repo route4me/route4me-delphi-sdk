@@ -18,7 +18,11 @@ type
     FApiKey: String;
 
     function InternalRequest(URL: String; Method: TRESTRequestMethod;
-      Body: String; out ErrorString: String): TJsonValue;
+      Body: String; out ErrorString: String): TJsonValue; overload;
+
+    function InternalRequest(Url: String; Data: TGenericParameters;
+      Method: TRESTRequestMethod; ResultClassType: TClass;
+      out ErrorString: String): TObject; overload;
 
     function UrlParameters(Parameters: TListStringPair): String;
   public
@@ -27,6 +31,8 @@ type
 
     procedure SetProxy(Host: String; Port: integer; Username, Password: String);
 
+    function Get(Url: String; Data: TGenericParameters;
+      ResultClassType: TClass; out ErrorString: String): TObject;
     function Post(Url: String; Data: TGenericParameters;
       ResultClassType: TClass; out ErrorString: String): TObject;
     function Put(Url: String; Data: TGenericParameters;
@@ -43,58 +49,14 @@ uses SettingsUnit, MarshalUnMarshalUnit;
 
 function TConnection.Post(Url: String; Data: TGenericParameters;
   ResultClassType: TClass; out ErrorString: String): TObject;
-var
-  Responce: TJSONValue;
-  Parameters: TListStringPair;
-//  st: TStringList;
-  JsonString: String;
 begin
-  FClient.BaseURL := Url;
-  Parameters := Data.Serialize(FApiKey);
-  JsonString := Data.ToJsonValue.ToString;
-
-  Responce := InternalRequest(
-    FRESTRequest.Client.BaseURL + UrlParameters(Parameters),
-    TRESTRequestMethod.rmPOST, JsonString, ErrorString);
-
-  if (Responce = nil) then
-    Result := nil
-  else
-  begin
-{    st := TStringList.Create;
-    st.Text := Responce.ToString;
-    st.SaveToFile('d:\post.json');
-    st.Free;}
-    Result := TMarshalUnMarshal.FromJson(ResultClassType, Responce);
-  end;
+  Result := InternalRequest(Url, Data, rmPOST, ResultClassType, ErrorString);
 end;
 
 function TConnection.Put(Url: String; Data: TGenericParameters;
   ResultClassType: TClass; out ErrorString: String): TObject;
-var
-  Responce: TJSONValue;
-  Parameters: TListStringPair;
-//  st: TStringList;
-  JsonString: String;
 begin
-  FClient.BaseURL := Url;
-  Parameters := Data.Serialize(FApiKey);
-  JsonString := Data.ToJsonValue.ToString;
-
-  Responce := InternalRequest(
-    FRESTRequest.Client.BaseURL + UrlParameters(Parameters),
-    TRESTRequestMethod.rmPUT, JsonString, ErrorString);
-
-  if (Responce = nil) then
-    Result := nil
-  else
-  begin
-{    st := TStringList.Create;
-    st.Text := Responce.ToString;
-    st.SaveToFile('d:\put.json');
-    st.Free;}
-    Result := TMarshalUnMarshal.FromJson(ResultClassType, Responce);
-  end;
+  Result := InternalRequest(Url, Data, rmPUT, ResultClassType, ErrorString);
 end;
 
 constructor TConnection.Create(ApiKey: String);
@@ -119,6 +81,28 @@ end;
 
 function TConnection.Delete(Url: String; Data: TGenericParameters;
   ResultClassType: TClass; out ErrorString: String): TObject;
+begin
+  Result := InternalRequest(Url, Data, rmDELETE, ResultClassType, ErrorString);
+end;
+
+destructor TConnection.Destroy;
+begin
+  FreeAndNil(FRESTRequest);
+  FreeAndNil(FClient);
+  FreeAndNil(FRESTResponce);
+//  FreeAndNil(FHttp);
+  inherited;
+end;
+
+function TConnection.Get(Url: String; Data: TGenericParameters;
+  ResultClassType: TClass; out ErrorString: String): TObject;
+begin
+  Result := InternalRequest(Url, Data, rmGET, ResultClassType, ErrorString);
+end;
+
+function TConnection.InternalRequest(Url: String; Data: TGenericParameters;
+  Method: TRESTRequestMethod; ResultClassType: TClass;
+  out ErrorString: String): TObject;
 var
   Responce: TJSONValue;
   Parameters: TListStringPair;
@@ -127,11 +111,15 @@ var
 begin
   FClient.BaseURL := Url;
   Parameters := Data.Serialize(FApiKey);
-  JsonString := Data.ToJsonValue.ToString;
+  try
+    JsonString := Data.ToJsonValue.ToString;
 
-  Responce := InternalRequest(
-    FRESTRequest.Client.BaseURL + UrlParameters(Parameters),
-    TRESTRequestMethod.rmDELETE, JsonString, ErrorString);
+    Responce := InternalRequest(
+      FRESTRequest.Client.BaseURL + UrlParameters(Parameters),
+      Method, JsonString, ErrorString);
+  finally
+    FreeAndNil(Parameters);
+  end;
 
   if (Responce = nil) then
     Result := nil
@@ -139,44 +127,11 @@ begin
   begin
 {    st := TStringList.Create;
     st.Text := Responce.ToString;
-    st.SaveToFile('d:\delete.json');
-    st.Free;}
+    st.SaveToFile('d:\post.json');
+    FreeAndNil(st);}
     Result := TMarshalUnMarshal.FromJson(ResultClassType, Responce);
   end;
 end;
-
-destructor TConnection.Destroy;
-begin
-  FRESTRequest.Free;
-  FClient.Free;
-  FRESTResponce.Free;
-//  FHttp.Free;
-  inherited;
-end;
-
-(*function TConnection.InternalPost(Request: TJSONValue; Parameters: TListStringPair;
-  out ErrorString: String): TJsonValue;
-begin
-  Result := InternalRequest(
-    FRESTRequest.Client.BaseURL + UrlParameters(Parameters),
-    TRESTRequestMethod.rmPOST, Request.ToString, ErrorString);
-
-{  Result := nil;
-  ErrorString := EmptyStr;
-
-  FRESTRequest.Client.BaseURL := FRESTRequest.Client.BaseURL + UrlParameters;
-  FRESTRequest.Method := TRESTRequestMethod.rmPOST;
-  FRESTRequest.AddBody(Request.ToString, TRESTContentType.ctTEXT_PLAIN);
-  FRESTRequest.Execute;
-  if (FRESTResponce.StatusCode = 200) then
-    Result := FRESTResponce.JSONValue
-  else
-  if (FRESTResponce.StatusCode = 303) then
-    Result := FRESTResponce.JSONValue
-  else
-    ErrorString := FRESTResponce.StatusText;}
-end;
-  *)
 
 function TConnection.InternalRequest(URL: String; Method: TRESTRequestMethod;
   Body: String; out ErrorString: String): TJsonValue;
@@ -212,36 +167,10 @@ begin
       GetHeaderValue('Location'), TRESTRequestMethod.rmGET, EmptyStr, ErrorString);
   end
   else
+// todo:  здесь есть ответ: {"errors":["Point is not allowed for test account"],"timestamp":1477405518}
+
     ErrorString := FRESTResponce.StatusText;
 end;
-
-{function TConnection.InternalPost(Url: String; Request: String;
-  out ErrorString: String): TJsonValue;
-var
-  ARequest: TStringList;
-begin
-  Result := nil;
-  ErrorString := EmptyStr;
-  ARequest := TStringList.Create;
-  try
-    ARequest.Text := Request;
-    try
-      FRESTRequest.Method := TRESTRequestMethod.rmPOST;
-      FRESTRequest.Execute;
-      if (FRESTResponce.StatusCode = 200) then
-        Result := FRESTResponce.JSONValue
-      else
-        ErrorString := FRESTResponce.StatusText;
-
-//      Result := FHttp.Post(Url, ARequest);
-    except
-      on e: Exception do
-        ErrorString := e.Message;
-    end;
-  finally
-    ARequest.Free;
-  end;
-end;}
 
 procedure TConnection.SetProxy(Host: String; Port: integer; Username, Password: String);
 begin

@@ -3,7 +3,7 @@ unit TestMarshalOptimizationParametersUnit;
 interface
 
 uses
-  TestFramework, TestBaseJsonMarshalUnit;
+  TestFramework, SysUtils, TestBaseJsonMarshalUnit;
 
 type
   TTestMarshalOptimizationParameters = class(TTestBaseJsonMarshal)
@@ -30,103 +30,118 @@ uses
   SingleDepotMultipleDriverNoTimeWindowTestDataProviderUnit,
   MultipleDepotMultipleDriverTestDataProviderUnit,
   MultipleDepotMultipleDriverTimeWindowTestDataProviderUnit,
-  MultipleDepotMultipleDriverWith24StopsTimeWindowTestDataProviderUnit;
+  MultipleDepotMultipleDriverWith24StopsTimeWindowTestDataProviderUnit,
+  OptimizationParametersUnit;
 
 procedure TTestMarshalOptimizationParameters.MultipleDepotMultipleDriver();
 var
   DataProvider: IOptimizationParametersProvider;
+  OptimizationParameters: TOptimizationParameters;
 begin
   DataProvider := TMultipleDepotMultipleDriverTestDataProvider.Create;
+  OptimizationParameters := DataProvider.OptimizationParametersForRequest;
   try
     CheckEquals(
       EtalonFilename('OptimizationParametersToJson\MultipleDepotMultipleDriver'),
-      DataProvider.OptimizationParametersForRequest.ToJsonString);
+      OptimizationParameters.ToJsonString);
   finally
-    DataProvider := nil;
+    FreeAndNil(OptimizationParameters);
   end;
 end;
 
 procedure TTestMarshalOptimizationParameters.MultipleDepotMultipleDriverTimeWindow;
 var
   DataProvider: IOptimizationParametersProvider;
+  OptimizationParameters: TOptimizationParameters;
 begin
   DataProvider := TMultipleDepotMultipleDriverTimeWindowTestDataProvider.Create;
+  OptimizationParameters := DataProvider.OptimizationParametersForRequest;
   try
     CheckEquals(
       EtalonFilename('OptimizationParametersToJson\MultipleDepotMultipleDriverTimeWindow'),
-      DataProvider.OptimizationParametersForRequest.ToJsonString);
+      OptimizationParameters.ToJsonString);
   finally
-    DataProvider := nil;
+    FreeAndNil(OptimizationParameters);
   end;
 end;
 
 procedure TTestMarshalOptimizationParameters.MultipleDepotMultipleDriverWith24StopsTimeWindow;
 var
   DataProvider: IOptimizationParametersProvider;
+  OptimizationParameters: TOptimizationParameters;
 begin
   DataProvider := TMultipleDepotMultipleDriverWith24StopsTimeWindowTestDataProvider.Create;
+  OptimizationParameters := DataProvider.OptimizationParametersForRequest;
   try
     CheckEquals(
       EtalonFilename('OptimizationParametersToJson\MultipleDepotMultipleDriverWith24StopsTimeWindow'),
-      DataProvider.OptimizationParametersForRequest.ToJsonString);
+      OptimizationParameters.ToJsonString);
   finally
-    DataProvider := nil;
+    FreeAndNil(OptimizationParameters);
   end;
 end;
 
 procedure TTestMarshalOptimizationParameters.SingleDepotMultipleDriverNoTimeWindow;
 var
   DataProvider: IOptimizationParametersProvider;
+  OptimizationParameters: TOptimizationParameters;
 begin
   DataProvider := TSingleDepotMultipleDriverNoTimeWindowTestDataProvider.Create;
+  OptimizationParameters := DataProvider.OptimizationParametersForRequest;
   try
     CheckEquals(
       EtalonFilename('OptimizationParametersToJson\SingleDepotMultipleDriverNoTimeWindow'),
-      DataProvider.OptimizationParametersForRequest.ToJsonString);
+      OptimizationParameters.ToJsonString);
   finally
-    DataProvider := nil;
+    FreeAndNil(OptimizationParameters);
   end;
 end;
 
 procedure TTestMarshalOptimizationParameters.SingleDriverMultipleTimeWindows;
 var
   DataProvider: IOptimizationParametersProvider;
+  OptimizationParameters: TOptimizationParameters;
 begin
   DataProvider := TSingleDriverMultipleTimeWindowsTestDataProvider.Create;
+  OptimizationParameters := DataProvider.OptimizationParametersForRequest;
   try
     CheckEquals(
       EtalonFilename('OptimizationParametersToJson\SingleDriverMultipleTimeWindows'),
-      DataProvider.OptimizationParametersForRequest.ToJsonString);
+      OptimizationParameters.ToJsonString);
   finally
-    DataProvider := nil;
+    FreeAndNil(OptimizationParameters);
   end;
 end;
 
 procedure TTestMarshalOptimizationParameters.SingleDriverRoundTrip;
 var
   DataProvider: IOptimizationParametersProvider;
+  OptimizationParameters: TOptimizationParameters;
 begin
   DataProvider := TSingleDriverRoundTripTestDataProvider.Create;
+  OptimizationParameters := DataProvider.OptimizationParametersForRequest;
   try
     CheckEquals(
       EtalonFilename('OptimizationParametersToJson\SingleDriverRoundTrip'),
-      DataProvider.OptimizationParametersForRequest.ToJsonString);
+      OptimizationParameters.ToJsonString);
   finally
-    DataProvider := nil;
+    FreeAndNil(OptimizationParameters);
   end;
 end;
 
 procedure TTestMarshalOptimizationParameters.SingleDriverRoute10Stops;
 var
   DataProvider: IOptimizationParametersProvider;
+  OptimizationParameters: TOptimizationParameters;
 begin
   DataProvider := TSingleDriverRoute10StopsTestDataProvider.Create;
+  OptimizationParameters := DataProvider.OptimizationParametersForRequest;
   try
     CheckEquals(
       EtalonFilename('OptimizationParametersToJson\SingleDriverRoute10Stops'),
-      DataProvider.OptimizationParametersForRequest.ToJsonString);
+      OptimizationParameters.ToJsonString);
   finally
-    DataProvider := nil;
+    FreeAndNil(OptimizationParameters);
   end;
 end;
 

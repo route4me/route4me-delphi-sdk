@@ -240,7 +240,7 @@ begin
     Obj := UnMarshal.CreateObject(Clazz, JsonValue as TJsonObject);
     Result := TValue.From(Obj);
   finally
-    JsonValue.Free;
+    FreeAndNil(JsonValue);
   end;
 end;
 
@@ -294,7 +294,6 @@ var
   RttiRecordField, IsNullField, ValueField: TRttiField;
   RttiMethodObject: TRttiMethod;
   RttiRecord: TRttiRecordType;
-  RttiRecordObject: TRttiRecordType;
   RecordValue: TValue;
   Attr: TCustomAttribute;
   Ptr: Pointer;
@@ -303,8 +302,6 @@ var
   Clazz: TClass;
   ObjectType: TRttiType;
   NullableAttribute: BaseJSONNullableAttribute;
-  FieldObject: TRttiField;
-  Obj: TObject;
 begin
   ctx := TRttiContext.Create;
   InternalUnMarshal := TInternalJSONUnMarshal.Create;
@@ -368,12 +365,11 @@ begin
 
     RttiRecordField.SetValue(Data, RecordValue);
   finally
-    InternalUnMarshal.Free;
+    FreeAndNil(InternalUnMarshal);
     ctx.Free;
   end;
 end;
 
 initialization
-//  GetLocaleFormatSettings(LOCALE_SYSTEM_DEFAULT, LocaleFormatSettings);
-  LocaleFormatSettings := TFormatSettings.Create(LOCALE_USER_DEFAULT);
+  LocaleFormatSettings := TFormatSettings.Create(LOCALE_USER_DEFAULT);
 end.

@@ -3,7 +3,7 @@ unit TestUnmarshalOptimizationParametersUnit;
 interface
 
 uses
-  TestFramework,
+  TestFramework, SysUtils,
   TestBaseJsonUnmarshalUnit,
   IOptimizationParametersProviderUnit;
 
@@ -52,18 +52,22 @@ begin
   try
     ActualList.LoadFromFile(JsonFilename);
 
-    JsonValue := TJSONObject.ParseJSONValue(ActualList.Text);
+    OptimizationParameters := Etalon.OptimizationParametersForResponce;
     try
-      OptimizationParameters := Etalon.OptimizationParametersForResponce;
-      Actual := TMarshalUnMarshal.FromJson(
-        OptimizationParameters.ClassType, {ActualList.Text}JsonValue) as TOptimizationParameters;
-    finally
-      JsonValue.Free;
-    end;
+      JsonValue := TJSONObject.ParseJSONValue(ActualList.Text);
+      try
+          Actual := TMarshalUnMarshal.FromJson(
+            OptimizationParameters.ClassType, JsonValue) as TOptimizationParameters;
+      finally
+        FreeAndNil(JsonValue);
+      end;
 
-    CheckTrue(OptimizationParameters.Equals(Actual));
+      CheckTrue(OptimizationParameters.Equals(Actual));
+    finally
+      FreeAndNil(OptimizationParameters);
+    end;
   finally
-    ActualList.Free;
+    FreeAndNil(ActualList);
   end;
   Etalon := nil;
 end;

@@ -5,6 +5,9 @@ program Route4MeProjectTests;
 {$ENDIF}
 
 uses
+  FastMM4 in '..\FastMM\FastMM4.pas',
+  FastMM4Messages in '..\FastMM\FastMM4Messages.pas',
+
   GUITestRunner,
   Route4MeManagerUnit in '..\Route4MeManagerUnit.pas',
   AddressUnit in '..\DataTypes\AddressUnit.pas',
@@ -70,7 +73,15 @@ uses
   SampleDataObjectRouteProviderUnit in 'TestDataProviders\DataObjectRoute\SampleDataObjectRouteProviderUnit.pas',
   BaseDataObjectRouteProviderUnit in 'TestDataProviders\DataObjectRoute\BaseDataObjectRouteProviderUnit.pas',
   DataObjectUnit in '..\DataTypes\DataObjectUnit.pas',
-  CommonTypesUnit in '..\Common\CommonTypesUnit.pas';
+  CommonTypesUnit in '..\Common\CommonTypesUnit.pas',
+  MoveDestinationToRouteRequestUnit in '..\AdditionalDataTypes\MoveDestinationToRouteRequestUnit.pas',
+  MoveDestinationToRouteResponseUnit in '..\AdditionalDataTypes\MoveDestinationToRouteResponseUnit.pas',
+  RemoveRouteDestinationRequestUnit in '..\AdditionalDataTypes\RemoveRouteDestinationRequestUnit.pas',
+  RemoveRouteDestinationResponseUnit in '..\AdditionalDataTypes\RemoveRouteDestinationResponseUnit.pas',
+  AddRouteDestinationRequestUnit in '..\AdditionalDataTypes\AddRouteDestinationRequestUnit.pas',
+  RouteParametersQueryUnit in '..\QueryTypes\RouteParametersQueryUnit.pas',
+  DataObjectOptimizationsResponseUnit in '..\AdditionalDataTypes\DataObjectOptimizationsResponseUnit.pas',
+  RemoveDestinationFromOptimizationResponseUnit in '..\AdditionalDataTypes\RemoveDestinationFromOptimizationResponseUnit.pas';
 
 {R *.RES}
 

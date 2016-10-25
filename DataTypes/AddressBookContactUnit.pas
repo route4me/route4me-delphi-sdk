@@ -85,7 +85,7 @@ type
     ///  Constructor with 0-arguments must be and be public.
     ///  For JSON-deserialization.
     /// </remarks>
-    constructor Create; overload;
+    constructor Create; overload; override;
 
     constructor Create(Address: String; Latitude, Longitude: Double); overload;
 
@@ -186,6 +186,8 @@ implementation
 
 constructor TAddressBookContact.Create;
 begin
+  Inherited Create;
+
   FId := NullableString.Null;
   FAddressGroup := NullableString.Null;
   FAlias := NullableString.Null;

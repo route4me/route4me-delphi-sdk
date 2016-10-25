@@ -3,7 +3,7 @@ unit TestUnmarshalNullableUnit;
 interface
 
 uses
-  TestFramework, REST.Json.Types, System.JSON, Types,
+  TestFramework, REST.Json.Types, System.JSON, Types, SysUtils,
   JSONNullableAttributeUnit,
   GenericParametersUnit,
   NullableBasicTypesUnit;
@@ -250,7 +250,7 @@ begin
   try
     Obj := TMarshalUnMarshal.FromJson(TTestNullableBooleanClass, JsonValue);
   finally
-    JsonValue.Free;
+    FreeAndNil(JsonValue);
   end;
   CheckIs(Obj, TTestNullableBooleanClass);
 
@@ -265,7 +265,7 @@ begin
 
     CheckTrue(Etalon.Equals(Actual));
   finally
-    Etalon.Free;
+    FreeAndNil(Etalon);
   end;
 end;
 
@@ -280,7 +280,7 @@ begin
   try
     Obj := TMarshalUnMarshal.FromJson(TTestNullableDoubleClass, JsonValue);
   finally
-    JsonValue.Free;
+    FreeAndNil(JsonValue);
   end;
   CheckIs(Obj, TTestNullableDoubleClass);
 
@@ -294,7 +294,7 @@ begin
 
     CheckTrue(Etalon.Equals(Actual));
   finally
-    Etalon.Free;
+    FreeAndNil(Etalon);
   end;
 end;
 
@@ -309,7 +309,7 @@ begin
   try
     Obj := TMarshalUnMarshal.FromJson(TTestNullableIntegerClass, JsonValue);
   finally
-    JsonValue.Free;
+    FreeAndNil(JsonValue);
   end;
   CheckIs(Obj, TTestNullableIntegerClass);
 
@@ -323,7 +323,7 @@ begin
 
     CheckTrue(Etalon.Equals(Actual));
   finally
-    Etalon.Free;
+    FreeAndNil(Etalon);
   end;
 end;
 
@@ -338,7 +338,7 @@ begin
   try
     Obj := TMarshalUnMarshal.FromJson(TTestNullableObjectClass, JsonValue);
   finally
-    JsonValue.Free;
+    FreeAndNil(JsonValue);
   end;
   CheckIs(Obj, TTestNullableObjectClass);
 
@@ -353,7 +353,7 @@ begin
 
     CheckTrue(Etalon.Equals(Actual));
   finally
-    Etalon.Free;
+    FreeAndNil(Etalon);
   end;
 end;
 
@@ -368,7 +368,7 @@ begin
   try
     Obj := TMarshalUnMarshal.FromJson(TTestUnmarshalNullableStringClass, JsonValue);
   finally
-    JsonValue.Free;
+    FreeAndNil(JsonValue);
   end;
   CheckIs(Obj, TTestUnmarshalNullableStringClass);
 
@@ -382,7 +382,7 @@ begin
 
     CheckTrue(Etalon.Equals(Actual));
   finally
-    Etalon.Free;
+    FreeAndNil(Etalon);
   end;
 end;
 
@@ -461,7 +461,8 @@ end;
 
 destructor TTestNullableObjectClass.Destroy;
 begin
-  FTest.Free;
+  FreeAndNil(FTest);
+
   inherited;
 end;
 

@@ -3,7 +3,7 @@ unit TestBaseJsonUnmarshalUnit;
 interface
 
 uses
-  TestFramework, Classes;
+  TestFramework, Classes, SysUtils;
 
 type
   TTestBaseJsonUnmarshal = class abstract(TTestCase)
@@ -28,9 +28,12 @@ var
   st: TStringList;
 begin
   st := TStringList.Create;
-  st.Text := s;
-  st.SaveToFile('TestData.txt');
-  st.Free;
+  try
+    st.Text := s;
+    st.SaveToFile('TestData.txt');
+  finally
+    FreeAndNil(st);
+  end;
 end;
 
 end.

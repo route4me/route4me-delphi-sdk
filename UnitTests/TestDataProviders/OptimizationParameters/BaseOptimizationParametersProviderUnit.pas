@@ -34,10 +34,13 @@ begin
 end;
 
 function TBaseOptimizationParametersProvider.OptimizationParametersForRequest: TOptimizationParameters;
+var
+  Address: TAddress;
 begin
   Result := TOptimizationParameters.Create;
   Result.Parameters := MakeRouteParameters;
-  Result.Addresses := MakeAddresses;
+  for Address in MakeAddresses do
+    Result.AddAddress(Address);
 end;
 
 function TBaseOptimizationParametersProvider.OptimizationParametersForResponce: TOptimizationParameters;

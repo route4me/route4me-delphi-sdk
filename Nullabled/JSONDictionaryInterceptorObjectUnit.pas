@@ -72,7 +72,7 @@ begin
       Result[High(Result)].Value := copy(Pair, j+1, Length(Pair) - j);
     end;
   finally
-    sl.Free;
+    FreeAndNil(sl);
   end;
 end;
 

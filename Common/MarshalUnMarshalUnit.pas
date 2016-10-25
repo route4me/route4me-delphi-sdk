@@ -10,7 +10,6 @@ type
   TMarshalUnMarshal = class
   private
     class var ctx: TRttiContext;
-    class var Marshal: TJSONMarshal;
 
     class procedure InitIntermediateObject(TypeInfo: Pointer; JsonObject: TJSONObject);
   public
@@ -30,6 +29,7 @@ uses JSONNullableConverterUnit, JSONNullableAttributeUnit,
 class function TMarshalUnMarshal.FromJson(AClass: TClass;
   JsonValue: TJsonValue): TObject;
 var
+  Marshal: TJSONMarshal;
   Unmarshal: TJSONUnMarshal;
   JsonObject: TJSONObject;
 begin
@@ -42,13 +42,13 @@ begin
     try
       InitIntermediateObject(AClass.ClassInfo, JsonObject);
     finally
-      Marshal.Free;
+      FreeAndNil(Marshal);
       ctx.Free;
     end;
 
     Result := Unmarshal.CreateObject(AClass, JsonObject);
   finally
-    Unmarshal.Free;
+    FreeAndNil(Unmarshal);
   end;
 end;
 
@@ -153,12 +153,18 @@ class function TMarshalUnMarshal.ToJson(
   GenericParameters: TGenericParameters): String;
 var
   Marshal: TJSONMarshal;
+  Value: TJSONValue;
 begin
   Marshal := TJSONMarshal.Create(TJSONNullableConverter.Create);
   try
-    Result := Marshal.Marshal(GenericParameters).ToString;
+    Value := Marshal.Marshal(GenericParameters);
+    try
+      Result := Value.ToString;
+    finally
+      FreeAndNil(Value);
+    end;
   finally
-    Marshal.Free;
+    FreeAndNil(Marshal);
   end;
 end;
 
@@ -171,7 +177,7 @@ begin
   try
     Result := Marshal.Marshal(GenericParameters);
   finally
-    Marshal.Free;
+    FreeAndNil(Marshal);
   end;
 end;
 

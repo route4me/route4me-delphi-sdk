@@ -3,7 +3,7 @@ unit OptimizationParametersUnit;
 interface
 
 uses
-  REST.Json.Types, System.Generics.Collections,
+  REST.Json.Types, System.Generics.Collections, SysUtils,
   JSONNullableAttributeUnit, HttpQueryMemberAttributeUnit,
   GenericParametersUnit, RouteParametersUnit, AddressUnit,
   NullableBasicTypesUnit;
@@ -34,7 +34,10 @@ type
 
     function GetAddress(AddressString: String; Addresses: TAddressesArray): TAddress;
   public
-    constructor Create;
+    constructor Create; override;
+    destructor Destroy; override;
+
+    procedure AddAddress(Address: TAddress);
 
     function Equals(Obj: TObject): Boolean; override;
 
@@ -42,12 +45,18 @@ type
     property ReOptimize: NullableBoolean read FReOptimize write FReOptimize;
     property ShowDirections: NullableBoolean read FShowDirections write FShowDirections;
     property Parameters: TRouteParameters read FParameters write FParameters;
-    property Addresses: TAddressesArray read FAddresses write FAddresses;
+    property Addresses: TAddressesArray read FAddresses;
   end;
 
 implementation
 
 { TOptimizationParameters }
+
+procedure TOptimizationParameters.AddAddress(Address: TAddress);
+begin
+  SetLength(FAddresses, Length(FAddresses) + 1);
+  FAddresses[High(FAddresses)] := Address;
+end;
 
 constructor TOptimizationParameters.Create;
 begin
@@ -58,7 +67,18 @@ begin
   FShowDirections := NullableBoolean.Null;
 
   SetLength(FAddresses, 0);
-  FParameters := TRouteParameters.Create;
+  FParameters := nil;
+end;
+
+destructor TOptimizationParameters.Destroy;
+var
+  i: integer;
+begin
+  for i := Length(FAddresses) - 1 downto 0 do
+    FreeAndNil(FAddresses[i]);
+  FreeAndNil(FParameters);
+
+  inherited;
 end;
 
 function TOptimizationParameters.Equals(Obj: TObject): Boolean;

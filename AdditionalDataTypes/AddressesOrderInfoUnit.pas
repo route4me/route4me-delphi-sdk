@@ -3,7 +3,7 @@ unit AddressesOrderInfoUnit;
 interface
 
 uses
-  REST.Json.Types,
+  REST.Json.Types, SysUtils,
   JSONNullableAttributeUnit, HttpQueryMemberAttributeUnit,
   GenericParametersUnit;
 
@@ -34,11 +34,12 @@ type
     FAddresses: TArray<TAddressInfo>;
   public
     constructor Create(RouteId: String); reintroduce;
+    destructor Destroy; override;
 
     procedure AddAddress(Address: TAddressInfo);
 
     property RouteId: String read FRouteId write FRouteId;
-    property Addresses: TArray<TAddressInfo> read FAddresses write FAddresses;
+    property Addresses: TArray<TAddressInfo> read FAddresses;
   end;
 
 implementation
@@ -57,6 +58,16 @@ begin
 
   FRouteId := RouteId;
   SetLength(FAddresses, 0);
+end;
+
+destructor TAddressesOrderInfo.Destroy;
+var
+  i: integer;
+begin
+  for i := Length(FAddresses) - 1 downto 0 do
+    FreeAndNil(FAddresses[i]);
+
+  inherited;
 end;
 
 end.

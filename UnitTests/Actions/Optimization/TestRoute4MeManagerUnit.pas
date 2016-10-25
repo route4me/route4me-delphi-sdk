@@ -3,7 +3,7 @@ unit TestRoute4MeManagerUnit;
 interface
 
 uses
-  TestFramework, System.Generics.Collections,
+  TestFramework, System.Generics.Collections, SysUtils,
   Route4MeManagerUnit,
   BaseRoute4MeTestUnit, DataObjectUnit,
   IOptimizationParametersProviderUnit, IRoute4MeManagerUnit;
@@ -24,15 +24,26 @@ type
 
 implementation
 
+uses OptimizationParametersUnit;
+
 procedure TTestOptimization.RunOptimization;
 var
-  errorString: String;
-  dataObject: TDataObject;
+  ErrorString: String;
+  DataObject: TDataObject;
+  OptimizationParameters: TOptimizationParameters;
 begin
-  dataObject := FRoute4MeManager.Optimization.Run(
-    FTestDataOptimizationParametersProvider.OptimizationParametersForRequest, errorString);
-
-  CheckResult(dataObject);
+  OptimizationParameters := FTestDataOptimizationParametersProvider.OptimizationParametersForRequest;
+  try
+    DataObject := FRoute4MeManager.Optimization.Run(
+      OptimizationParameters, ErrorString);
+    try
+      CheckResult(DataObject);
+    finally
+      FreeAndNil(DataObject);
+    end;
+  finally
+    FreeAndNil(OptimizationParameters);
+  end;
 end;
 
 procedure TTestOptimization.SetUp;

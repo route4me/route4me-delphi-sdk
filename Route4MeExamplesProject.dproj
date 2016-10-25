@@ -90,7 +90,6 @@
         <DCCReference Include="Nullabled\JSONNullableConverterUnit.pas"/>
         <DCCReference Include="Nullabled\NullableBasicTypesUnit.pas"/>
         <DCCReference Include="Nullabled\NullableInterceptorUnit.pas"/>
-        <DCCReference Include="Nullabled\NullableTypesUnit.pas"/>
         <DCCReference Include="Common\ConnectionUnit.pas"/>
         <DCCReference Include="Common\IConnectionUnit.pas"/>
         <DCCReference Include="Common\MarshalUnMarshalUnit.pas"/>
@@ -131,6 +130,15 @@
         <DCCReference Include="AdditionalDataTypes\RemoveRouteDestinationResponseUnit.pas"/>
         <DCCReference Include="AdditionalDataTypes\RemoveRouteDestinationRequestUnit.pas"/>
         <DCCReference Include="AdditionalDataTypes\AddRouteDestinationRequestUnit.pas"/>
+        <DCCReference Include="AdditionalDataTypes\MoveDestinationToRouteResponseUnit.pas"/>
+        <DCCReference Include="AdditionalDataTypes\MoveDestinationToRouteRequestUnit.pas"/>
+        <DCCReference Include="TestDataProviders\OptimizationParameters\SingleDriverRoundTripGenericTestDataProviderUnit.pas"/>
+        <DCCReference Include="AdditionalDataTypes\SingleDriverRoundTripGenericRequestUnit.pas"/>
+        <DCCReference Include="AdditionalDataTypes\SingleDriverRoundTripGenericResponseUnit.pas"/>
+        <DCCReference Include="IRoute4MeManagerUnit.pas"/>
+        <DCCReference Include="QueryTypes\RouteParametersQueryUnit.pas"/>
+        <DCCReference Include="AdditionalDataTypes\DataObjectOptimizationsResponseUnit.pas"/>
+        <DCCReference Include="AdditionalDataTypes\RemoveDestinationFromOptimizationResponseUnit.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -183,27 +191,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployClass Name="DependencyModule">
-                    <Platform Name="Win32">
-                        <Operation>0</Operation>
-                        <Extensions>.dll;.bpl</Extensions>
-                    </Platform>
+                <DeployClass Name="ProjectiOSDeviceResourceRules">
                     <Platform Name="iOSDevice64">
                         <Operation>1</Operation>
-                        <Extensions>.dylib</Extensions>
-                    </Platform>
-                    <Platform Name="OSX32">
-                        <RemoteDir>Contents\MacOS</RemoteDir>
-                        <Operation>1</Operation>
-                        <Extensions>.dylib</Extensions>
                     </Platform>
                     <Platform Name="iOSDevice32">
                         <Operation>1</Operation>
-                        <Extensions>.dylib</Extensions>
-                    </Platform>
-                    <Platform Name="iOSSimulator">
-                        <Operation>1</Operation>
-                        <Extensions>.dylib</Extensions>
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="ProjectOSXResource">
@@ -555,12 +548,27 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <DeployClass Name="ProjectiOSDeviceResourceRules">
+                <DeployClass Name="DependencyModule">
+                    <Platform Name="Win32">
+                        <Operation>0</Operation>
+                        <Extensions>.dll;.bpl</Extensions>
+                    </Platform>
                     <Platform Name="iOSDevice64">
                         <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
+                    </Platform>
+                    <Platform Name="OSX32">
+                        <RemoteDir>Contents\MacOS</RemoteDir>
+                        <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
                     </Platform>
                     <Platform Name="iOSDevice32">
                         <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
+                    </Platform>
+                    <Platform Name="iOSSimulator">
+                        <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
                     </Platform>
                 </DeployClass>
                 <ProjectRoot Platform="iOSDevice64" Name="$(PROJECTNAME).app"/>

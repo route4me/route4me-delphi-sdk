@@ -3,7 +3,7 @@ unit DeleteTestUnit1;
 interface
 
 uses
-  Classes,
+  Classes, SysUtils,
   TestFramework, IRoute4MeManagerUnit,
   DataObjectUnit;
 
@@ -56,12 +56,12 @@ begin
       CheckIs(obj, TDataObject);
       Etalon := GetEtalon;
     finally
-      JsonValue.Free;
+      FreeAndNil(JsonValue);
     end;
     try
       CheckTrue(obj.Equals(Etalon));
     finally
-      Etalon.Free;
+      FreeAndNil(Etalon);
     end;
   finally
     st.Free()

@@ -17,8 +17,14 @@ type
   protected
     [JSONMarshalled(False)]
     FConvertBooleansToInteger: boolean;
+
+    [JSONMarshalled(False)]
+    FParametersCollection: TListStringPair;
   public
     constructor Create; virtual;
+    destructor Destroy; override;
+
+    procedure AddParameter(Key, Value: String);
 
     function ToJsonString: String;
     function ToJsonValue: TJSONValue;
@@ -33,11 +39,24 @@ uses
   Math,
   MarshalUnMarshalUnit;
 
+procedure TGenericParameters.AddParameter(Key, Value: String);
+begin
+  FParametersCollection.Add(TStringPair.Create(Key, Value));
+end;
+
 constructor TGenericParameters.Create;
 begin
   Inherited;
 
   FConvertBooleansToInteger := True;
+  FParametersCollection := TListStringPair.Create;
+end;
+
+destructor TGenericParameters.Destroy;
+begin
+  FreeAndNil(FParametersCollection);
+
+  inherited;
 end;
 
 function TGenericParameters.Serialize(ApiKey: String): TListStringPair;
@@ -50,14 +69,18 @@ function TGenericParameters.Serialize(ApiKey: String): TListStringPair;
         if Attr is HttpQueryMemberAttribute then
           Exit(HttpQueryMemberAttribute(Attr));
   end;
-  function IsNullableField(Field: TRttiField): boolean;
+  function IsNullableField(Field: TRttiField; out IsRequired: boolean): boolean;
   var
     Attr: TCustomAttribute;
   begin
-      Result := False;
-      for Attr in Field.GetAttributes do
-        if Attr is NullableAttribute then
-          Exit(True);
+    IsRequired := False;
+    Result := False;
+    for Attr in Field.GetAttributes do
+      if Attr is NullableAttribute then
+      begin
+        IsRequired := NullableAttribute(Attr).IsRequired;
+        Exit(True);
+      end;
   end;
 
   function GetNullableFieldValue(Field: TRttiField): TValue;
@@ -86,7 +109,7 @@ function TGenericParameters.Serialize(ApiKey: String): TListStringPair;
         raise Exception.Create(Format(
           'Unsupported type (%d) of the field marked attribute "JSONNullableAttribute"', [Integer(IsNullField.FieldType.TypeKind)]))
     else
-      Result := ValueField;
+      Result := ValueField.GetValue(Ptr);
   end;
 var
   ctx: TRttiContext;
@@ -94,13 +117,17 @@ var
   Field: TRttiField;
   Value: TValue;
   Attr: HttpQueryMemberAttribute;
-  Pair: TStringPair;
   FieldName, FieldValue: String;
+  Param: TStringPair;
+  IsRequired: boolean;
 begin
   Result := TListStringPair.Create;
 
   if (ApiKey <> EmptyStr) then
     Result.Add(TStringPair.Create('api_key', ApiKey));
+
+  for Param in FParametersCollection do
+    Result.Add(Param);
 
   ctx := TRttiContext.Create;
   try
@@ -112,22 +139,27 @@ begin
       if (Attr = nil) then
         Continue;
 
-      if (IsNullableField(Field)) then
+      if (IsNullableField(Field, IsRequired)) then
       begin
         Value := GetNullableFieldValue(Field);
-        if Value.IsEmpty then
-          Continue;
+{        if Value.IsEmpty then
+          Continue;}
+      end
+      else
+      begin
+        Value := Field.GetValue(Self);
       end;
 
       FieldName := Attr.Name;
 
-      Value := Field.GetValue(Self);
       if (Value.IsEmpty) then
       begin
         if Attr.IsRequired then
-          FieldValue := Attr.DefaultValue;
+          FieldValue := Attr.DefaultValue
+        else
+          Continue;
 
-        FieldValue := 'null';
+//        FieldValue := 'null';
       end
       else
       begin

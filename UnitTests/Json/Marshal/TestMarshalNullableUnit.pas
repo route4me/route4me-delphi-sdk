@@ -3,7 +3,7 @@ unit TestMarshalNullableUnit;
 interface
 
 uses
-  TestFramework, REST.Json.Types,
+  TestFramework, REST.Json.Types, SysUtils,
   JSONNullableAttributeUnit,
   GenericParametersUnit,
   NullableBasicTypesUnit, TestBaseJsonMarshalUnit;
@@ -165,7 +165,7 @@ begin
 
     CheckEquals(op.Etalon, op.ToJsonString);
   finally
-    op.Free;
+    FreeAndNil(op);
   end;
 end;
 
@@ -181,7 +181,7 @@ begin
 
     CheckEquals(op.Etalon, op.ToJsonString);
   finally
-    op.Free;
+    FreeAndNil(op);
   end;
 end;
 
@@ -197,7 +197,7 @@ begin
 
     CheckEquals(op.Etalon, op.ToJsonString);
   finally
-    op.Free;
+    FreeAndNil(op);
   end;
 end;
 
@@ -213,7 +213,7 @@ begin
 
     CheckEquals(op.Etalon, op.ToJsonString);
   finally
-    op.Free;
+    FreeAndNil(op);
   end;
 end;
 
@@ -229,7 +229,7 @@ begin
 
     CheckEquals(op.Etalon, op.ToJsonString);
   finally
-    op.Free;
+    FreeAndNil(op);
   end;
 end;
 
@@ -251,7 +251,8 @@ end;
 
 destructor TTestNullableObjectClass.Destroy;
 begin
-  FTest.Free;
+  FreeAndNil(FTest);
+
   inherited;
 end;
 

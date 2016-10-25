@@ -3,7 +3,7 @@ unit RouteActionUnit;
 interface
 
 uses
-  BaseActionUnit,
+  SysUtils, BaseActionUnit,
   DataObjectUnit, RouteParametersUnit, AddressUnit,
   AddressesOrderInfoUnit;
 
@@ -36,6 +36,9 @@ type
 
     function Remove(RouteId: String; DestinationId: integer;
       out ErrorString: String): boolean;
+
+    function MoveDestinationToRoute(ToRouteId: String;
+      RouteDestinationId, AfterDestinationId: integer; out ErrorString: String): boolean;
   end;
 
 implementation
@@ -45,7 +48,8 @@ implementation
 uses
   System.Generics.Collections,
   SettingsUnit, RemoveRouteDestinationResponseUnit,
-  RemoveRouteDestinationRequestUnit, AddRouteDestinationRequestUnit;
+  RemoveRouteDestinationRequestUnit, AddRouteDestinationRequestUnit,
+  MoveDestinationToRouteResponseUnit, MoveDestinationToRouteRequestUnit;
 
 function TRouteActions.Add(RouteId: String; Addresses: TAddressesArray;
   OptimalPosition: boolean; out ErrorString: String): TArray<integer>;
@@ -83,11 +87,11 @@ begin
           end;
       Result := DestinationIds.ToArray;
     finally
-      DestinationIds.Free;
-      Responce.Free;
+      FreeAndNil(DestinationIds);
+      FreeAndNil(Responce);
     end;
   finally
-    Request.Free;
+    FreeAndNil(Request);
   end;
 end;
 
@@ -95,6 +99,38 @@ function TRouteActions.Add(RouteId: String; Addresses: TAddressesArray;
   out ErrorString: String): TArray<integer>;
 begin
   Result := Add(RouteId, Addresses, True, ErrorString);
+end;
+
+function TRouteActions.MoveDestinationToRoute(ToRouteId: String;
+  RouteDestinationId, AfterDestinationId: integer;
+  out ErrorString: String): boolean;
+var
+  Response: TMoveDestinationToRouteResponse;
+  Request: TMoveDestinationToRouteRequest;
+begin
+  Request := TMoveDestinationToRouteRequest.Create;
+  try
+    Request.ToRouteId := ToRouteId;
+    Request.RouteDestinationId := RouteDestinationId;
+    Request.AfterDestinationId := AfterDestinationId;
+
+    Response := FConnection.Post(TSettings.MoveRouteDestination,
+        Request, TMoveDestinationToRouteResponse, ErrorString) as TMoveDestinationToRouteResponse;
+    try
+      if (Response <> nil) then
+      begin
+        if (not Response.Success) and (Response.Error <> EmptyStr) then
+          ErrorString := Response.Error;
+        Result := Response.Success;
+      end
+      else
+        Result := False;
+    finally
+      FreeAndNil(Response);
+    end;
+  finally
+    FreeAndNil(Request);
+  end;
 end;
 
 function TRouteActions.Remove(RouteId: String;
@@ -113,10 +149,10 @@ begin
     try
       Result := (Response <> nil) and (Response.Deleted);
     finally
-      Response.Free;
+      FreeAndNil(Response);
     end;
   finally
-    Request.Free;
+    FreeAndNil(Request);
   end;
 end;
 

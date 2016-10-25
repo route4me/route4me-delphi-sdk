@@ -3,7 +3,7 @@ unit TestUnmarshalDataObjectRouteUnit;
 interface
 
 uses
-  TestFramework,
+  TestFramework, SysUtils,
   TestBaseJsonUnmarshalUnit, IDataObjectRouteProviderUnit;
 
 type
@@ -42,12 +42,12 @@ begin
       DataObjectRoute := Etalon.DataObjectRoute;
       Actual := TMarshalUnMarshal.FromJson(DataObjectRoute.ClassType, JsonValue) as TDataObjectRoute;
     finally
-      JsonValue.Free;
+      FreeAndNil(JsonValue);
     end;
 
     CheckTrue(DataObjectRoute.Equals(Actual));
   finally
-    ActualList.Free;
+    FreeAndNil(ActualList);
   end;
   Etalon := nil;
 end;

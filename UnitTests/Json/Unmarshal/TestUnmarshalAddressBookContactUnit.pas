@@ -3,7 +3,7 @@ unit TestUnmarshalAddressBookContactUnit;
 interface
 
 uses
-  TestFramework,
+  TestFramework, SysUtils,
   TestBaseJsonUnmarshalUnit,
   IAddressBookContactProviderUnit;
 
@@ -45,12 +45,12 @@ begin
       Actual := TMarshalUnMarshal.FromJson(
         AddressBookContact.ClassType, JsonValue) as TAddressBookContact;
     finally
-      JsonValue.Free;
+      FreeAndNil(JsonValue);
     end;
 
     CheckTrue(AddressBookContact.Equals(Actual));
   finally
-    ActualList.Free;
+    FreeAndNil(ActualList);
   end;
   Etalon := nil;
 end;

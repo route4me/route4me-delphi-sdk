@@ -85,6 +85,8 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
+        <DCCReference Include="..\FastMM\FastMM4.pas"/>
+        <DCCReference Include="..\FastMM\FastMM4Messages.pas"/>
         <DCCReference Include="..\Route4MeManagerUnit.pas"/>
         <DCCReference Include="..\DataTypes\AddressUnit.pas"/>
         <DCCReference Include="..\QueryTypes\OptimizationParametersUnit.pas"/>
@@ -150,6 +152,14 @@
         <DCCReference Include="TestDataProviders\DataObjectRoute\BaseDataObjectRouteProviderUnit.pas"/>
         <DCCReference Include="..\DataTypes\DataObjectUnit.pas"/>
         <DCCReference Include="..\Common\CommonTypesUnit.pas"/>
+        <DCCReference Include="..\AdditionalDataTypes\MoveDestinationToRouteRequestUnit.pas"/>
+        <DCCReference Include="..\AdditionalDataTypes\MoveDestinationToRouteResponseUnit.pas"/>
+        <DCCReference Include="..\AdditionalDataTypes\RemoveRouteDestinationRequestUnit.pas"/>
+        <DCCReference Include="..\AdditionalDataTypes\RemoveRouteDestinationResponseUnit.pas"/>
+        <DCCReference Include="..\AdditionalDataTypes\AddRouteDestinationRequestUnit.pas"/>
+        <DCCReference Include="..\QueryTypes\RouteParametersQueryUnit.pas"/>
+        <DCCReference Include="..\AdditionalDataTypes\DataObjectOptimizationsResponseUnit.pas"/>
+        <DCCReference Include="..\AdditionalDataTypes\RemoveDestinationFromOptimizationResponseUnit.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

@@ -70,7 +70,7 @@ begin
         CheckTrue((Id1 = AddressBookContacts[0].Id) or (Id1 = AddressBookContacts[0].Id));
         CheckTrue((Id2 = AddressBookContacts[0].Id) or (Id2 = AddressBookContacts[0].Id));
       finally
-        AddressBookContacts.Free;
+        FreeAndNil(AddressBookContacts);
       end;
 
       AddressBookContact2.Id := Id1;
@@ -85,14 +85,14 @@ begin
         CheckEquals(0, Total);
         CheckEquals(0, AddressBookContacts.Count);
       finally
-        AddressBookContacts.Free;
+        FreeAndNil(AddressBookContacts);
       end;
     finally
-      Parameters.Free;
+      FreeAndNil(Parameters);
     end;
   finally
-    AddressBookContact1.Free;
-    AddressBookContact2.Free;
+    FreeAndNil(AddressBookContact1);
+    FreeAndNil(AddressBookContact2);
   end;
 end;
 

@@ -3,7 +3,7 @@ unit TestBaseJsonMarshalUnit;
 interface
 
 uses
-  TestFramework, Classes;
+  TestFramework, Classes, SysUtils;
 
 type
   TTestBaseJsonMarshal = class abstract(TTestCase)
@@ -30,8 +30,8 @@ begin
     ActualList.Text := Actual;
     CheckTrue(EtalonList.Equals(ActualList));
   finally
-    ActualList.Free;
-    EtalonList.Free;
+    FreeAndNil(ActualList);
+    FreeAndNil(EtalonList);
   end;
 end;
 
@@ -45,9 +45,12 @@ var
   st: TStringList;
 begin
   st := TStringList.Create;
-  st.Text := s;
-  st.SaveToFile('TestData.txt');
-  st.Free;
+  try
+    st.Text := s;
+    st.SaveToFile('TestData.txt');
+  finally
+    FreeAndNil(st);
+  end;
 end;
 
 end.

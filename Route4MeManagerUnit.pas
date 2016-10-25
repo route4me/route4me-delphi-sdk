@@ -6,13 +6,13 @@ uses
   Classes, SysUtils,
   OptimizationParametersUnit, DataObjectUnit, IRoute4MeManagerUnit,
   AddressBookContactUnit, AddressBookContactActionsUnit, ConnectionUnit,
-  OptimizationActionUnit, RouteActionUnit;
+  OptimizationActionUnit, RouteActionUnit, IConnectionUnit;
 
 type
   TRoute4MeManager = class(TInterfacedObject, IRoute4MeManager)
   private
     FApiKey: String;
-    FConnection: TConnection;
+    FConnection: IConnection;
 
     FAddressBookContact: TAddressBookContactActions;
     FOptimization: TOptimizationActions;
@@ -26,6 +26,8 @@ type
     function Optimization: TOptimizationActions;
     function Route: TRouteActions;
     function AddressBookContact: TAddressBookContactActions;
+
+    function Connection: IConnection;
   end;
 
 implementation
@@ -33,6 +35,11 @@ implementation
 { TRoute4MeManager }
 
 uses EnumsUnit;
+
+function TRoute4MeManager.Connection: IConnection;
+begin
+  Result := FConnection;
+end;
 
 constructor TRoute4MeManager.Create(ApiKey: String);
 begin
@@ -47,14 +54,11 @@ end;
 
 destructor TRoute4MeManager.Destroy;
 begin
-  if (FRoute <> nil) then
-    FreeAndNil(FRoute);
-  if (FAddressBookContact <> nil) then
-    FreeAndNil(FAddressBookContact);
-  if (FOptimization <> nil) then
-    FreeAndNil(FOptimization);
+  FreeAndNil(FRoute);
+  FreeAndNil(FAddressBookContact);
+  FreeAndNil(FOptimization);
 
-  FConnection.Free;
+  FConnection := nil;
   inherited;
 end;
 
