@@ -50,11 +50,12 @@ type
     constructor Create(Value: String);
   end;
 
-  TNullableIntermediateObject = class
+  TNullableIntermediateObject = class(TInterfacedObject, IUnknown)
   private
     FNullableIntermediateObject: TBaseNullableIntermediateObject;
   public
     constructor Create(IntermediateObject: TBaseNullableIntermediateObject);
+    destructor Destroy; override;
   end;
 
   TNullableInterceptor = class(TJSONInterceptor)
@@ -218,6 +219,12 @@ constructor TNullableIntermediateObject.Create(
   IntermediateObject: TBaseNullableIntermediateObject);
 begin
   FNullableIntermediateObject := IntermediateObject;
+end;
+
+destructor TNullableIntermediateObject.Destroy;
+begin
+  FreeAndNil(FNullableIntermediateObject);
+  inherited;
 end;
 
 { TNullableObjectIntermediateObject }

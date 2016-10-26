@@ -5,7 +5,7 @@ interface
 uses
   SysUtils, BaseActionUnit,
   DataObjectUnit, RouteParametersUnit, AddressUnit,
-  AddressesOrderInfoUnit;
+  AddressesOrderInfoUnit, RouteParametersQueryUnit;
 
 type
   TRouteActions = class(TBaseAction)
@@ -36,6 +36,9 @@ type
 
     function Remove(RouteId: String; DestinationId: integer;
       out ErrorString: String): boolean;
+
+    function Update(RouteParameters: TRouteParametersQuery;
+      out ErrorString: String): TDataObjectRoute;
 
     function MoveDestinationToRoute(ToRouteId: String;
       RouteDestinationId, AfterDestinationId: integer; out ErrorString: String): boolean;
@@ -162,6 +165,13 @@ function TRouteActions.Resequence(
 begin
   Result := FConnection.Put(TSettings.RouteHost,
     AddressesOrderInfo, TDataObjectRoute, errorString) as TDataObjectRoute;
+end;
+
+function TRouteActions.Update(RouteParameters: TRouteParametersQuery;
+  out ErrorString: String): TDataObjectRoute;
+begin
+  Result := FConnection.Put(TSettings.RouteHost,
+    RouteParameters, TDataObjectRoute, errorString) as TDataObjectRoute;
 end;
 
 end.

@@ -18,8 +18,10 @@ type
   public
     procedure SetUp; override;
     procedure TearDown; override;
-  published
+
+    // todo: сделать тест
     procedure RunOptimization();
+  published
   end;
 
 implementation
@@ -27,12 +29,12 @@ implementation
 uses OptimizationParametersUnit;
 
 procedure TTestOptimization.RunOptimization;
-var
+{var
   ErrorString: String;
   DataObject: TDataObject;
-  OptimizationParameters: TOptimizationParameters;
+  OptimizationParameters: TOptimizationParameters;}
 begin
-  OptimizationParameters := FTestDataOptimizationParametersProvider.OptimizationParametersForRequest;
+{  OptimizationParameters := FTestDataOptimizationParametersProvider.OptimizationParameters;
   try
     DataObject := FRoute4MeManager.Optimization.Run(
       OptimizationParameters, ErrorString);
@@ -43,7 +45,7 @@ begin
     end;
   finally
     FreeAndNil(OptimizationParameters);
-  end;
+  end;}
 end;
 
 procedure TTestOptimization.SetUp;

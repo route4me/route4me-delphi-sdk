@@ -9,6 +9,9 @@ uses
   NullableBasicTypesUnit;
 
 type
+  /// <summary>
+  /// Address
+  /// </summary>
   TAddress = class
   private
     [JSONName('route_destination_id')]
@@ -91,9 +94,19 @@ type
 
     function Equals(Obj: TObject): Boolean; override;
 
+    /// <summary>
+    /// The route Address Line 1
+    /// </summary>
     property AddressString: String read FAddressString write FAddressString;
+
+    /// <summary>
+    /// Address Alias
+    /// </summary>
     property Alias: String read FAlias write FAlias;
 
+    /// <summary>
+    /// Internal unique address identifier
+    /// </summary>
     property RouteDestinationId: NullableInteger read FRouteDestinationId write FRouteDestinationId;
 
     /// <summary>

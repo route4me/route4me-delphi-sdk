@@ -4,10 +4,10 @@ program Route4MeProjectTests;
 {$APPTYPE CONSOLE}
 {$ENDIF}
 
-uses
-  FastMM4 in '..\FastMM\FastMM4.pas',
-  FastMM4Messages in '..\FastMM\FastMM4Messages.pas',
+//  FastMM4 in '..\FastMM\FastMM4.pas',
+//  FastMM4Messages in '..\FastMM\FastMM4Messages.pas',
 
+uses
   GUITestRunner,
   Route4MeManagerUnit in '..\Route4MeManagerUnit.pas',
   AddressUnit in '..\DataTypes\AddressUnit.pas',
@@ -15,7 +15,6 @@ uses
   GenericParametersUnit in '..\QueryTypes\GenericParametersUnit.pas',
   RouteParametersUnit in '..\DataTypes\RouteParametersUnit.pas',
   EnumsUnit in '..\DataTypes\EnumsUnit.pas',
-  Route4MeManagerStubUnit in 'Route4MeManager\Route4MeManagerStubUnit.pas',
   IRoute4MeManagerUnit in '..\IRoute4MeManagerUnit.pas',
   NullableBasicTypesUnit in '..\Nullabled\NullableBasicTypesUnit.pas',
   JSONNullableAttributeUnit in '..\Nullabled\JSONNullableAttributeUnit.pas',
@@ -31,18 +30,6 @@ uses
   TestSingleDriverRoundTripUnit in 'Actions\Optimization\TestSingleDriverRoundTripUnit.pas',
   TestSingleDriverRoute10StopsUnit in 'Actions\Optimization\TestSingleDriverRoute10StopsUnit.pas',
   TestRoute4MeManagerUnit in 'Actions\Optimization\TestRoute4MeManagerUnit.pas',
-  BaseOptimizationParametersProviderUnit in 'TestDataProviders\OptimizationParameters\BaseOptimizationParametersProviderUnit.pas',
-  IOptimizationParametersProviderUnit in 'TestDataProviders\OptimizationParameters\IOptimizationParametersProviderUnit.pas',
-  MultipleDepotMultipleDriverTestDataProviderUnit in 'TestDataProviders\OptimizationParameters\MultipleDepotMultipleDriverTestDataProviderUnit.pas',
-  MultipleDepotMultipleDriverTimeWindowTestDataProviderUnit in 'TestDataProviders\OptimizationParameters\MultipleDepotMultipleDriverTimeWindowTestDataProviderUnit.pas',
-  MultipleDepotMultipleDriverWith24StopsTimeWindowTestDataProviderUnit in 'TestDataProviders\OptimizationParameters\MultipleDepotMultipleDriverWith24StopsTimeWindowTestDataProviderUnit.pas',
-  SingleDepotMultipleDriverNoTimeWindowTestDataProviderUnit in 'TestDataProviders\OptimizationParameters\SingleDepotMultipleDriverNoTimeWindowTestDataProviderUnit.pas',
-  SingleDriverMultipleTimeWindowsTestDataProviderUnit in 'TestDataProviders\OptimizationParameters\SingleDriverMultipleTimeWindowsTestDataProviderUnit.pas',
-  SingleDriverRoundTripTestDataProviderUnit in 'TestDataProviders\OptimizationParameters\SingleDriverRoundTripTestDataProviderUnit.pas',
-  SingleDriverRoute10StopsTestDataProviderUnit in 'TestDataProviders\OptimizationParameters\SingleDriverRoute10StopsTestDataProviderUnit.pas',
-  IAddressBookContactProviderUnit in 'TestDataProviders\AddressBookContact\IAddressBookContactProviderUnit.pas',
-  FullAddressBookContactProviderUnit in 'TestDataProviders\AddressBookContact\FullAddressBookContactProviderUnit.pas',
-  DefaultAddressBookContactProviderUnit in 'TestDataProviders\AddressBookContact\DefaultAddressBookContactProviderUnit.pas',
   SettingsUnit in '..\Common\SettingsUnit.pas',
   UtilsUnit in '..\Common\UtilsUnit.pas',
   ConnectionUnit in '..\Common\ConnectionUnit.pas',
@@ -65,7 +52,6 @@ uses
   LinksUnit in '..\DataTypes\LinksUnit.pas',
   TrackingHistoryUnit in '..\DataTypes\TrackingHistoryUnit.pas',
   OptimizationActionUnit in '..\Actions\OptimizationActionUnit.pas',
-  DeleteTestUnit1 in 'DeleteTestUnit1.pas',
   RouteActionUnit in '..\Actions\RouteActionUnit.pas',
   AddressesOrderInfoUnit in '..\AdditionalDataTypes\AddressesOrderInfoUnit.pas',
   TestUnmarshalDataObjectRouteUnit in 'Json\Unmarshal\TestUnmarshalDataObjectRouteUnit.pas',
@@ -81,7 +67,26 @@ uses
   AddRouteDestinationRequestUnit in '..\AdditionalDataTypes\AddRouteDestinationRequestUnit.pas',
   RouteParametersQueryUnit in '..\QueryTypes\RouteParametersQueryUnit.pas',
   DataObjectOptimizationsResponseUnit in '..\AdditionalDataTypes\DataObjectOptimizationsResponseUnit.pas',
-  RemoveDestinationFromOptimizationResponseUnit in '..\AdditionalDataTypes\RemoveDestinationFromOptimizationResponseUnit.pas';
+  RemoveDestinationFromOptimizationResponseUnit in '..\AdditionalDataTypes\RemoveDestinationFromOptimizationResponseUnit.pas',
+  TestRoute4MeExamplesUnit in 'Examples\TestRoute4MeExamplesUnit.pas',
+  Route4MeExamplesUnit in '..\Examples\Route4MeExamplesUnit.pas',
+  SingleDriverRoundTripGenericRequestUnit in '..\AdditionalDataTypes\SingleDriverRoundTripGenericRequestUnit.pas',
+  SingleDriverRoundTripGenericResponseUnit in '..\AdditionalDataTypes\SingleDriverRoundTripGenericResponseUnit.pas',
+  BaseOptimizationParametersProviderUnit in '..\TestDataProviders\OptimizationParameters\BaseOptimizationParametersProviderUnit.pas',
+  IOptimizationParametersProviderUnit in '..\TestDataProviders\OptimizationParameters\IOptimizationParametersProviderUnit.pas',
+  MultipleDepotMultipleDriverTestDataProviderUnit in '..\TestDataProviders\OptimizationParameters\MultipleDepotMultipleDriverTestDataProviderUnit.pas',
+  MultipleDepotMultipleDriverTimeWindowTestDataProviderUnit in '..\TestDataProviders\OptimizationParameters\MultipleDepotMultipleDriverTimeWindowTestDataProviderUnit.pas',
+  MultipleDepotMultipleDriverWith24StopsTimeWindowTestDataProviderUnit in '..\TestDataProviders\OptimizationParameters\MultipleDepotMultipleDriverWith24StopsTimeWindowTestDataProviderUnit.pas',
+  SingleDepotMultipleDriverNoTimeWindowTestDataProviderUnit in '..\TestDataProviders\OptimizationParameters\SingleDepotMultipleDriverNoTimeWindowTestDataProviderUnit.pas',
+  SingleDriverMultipleTimeWindowsTestDataProviderUnit in '..\TestDataProviders\OptimizationParameters\SingleDriverMultipleTimeWindowsTestDataProviderUnit.pas',
+  SingleDriverRoundTripGenericTestDataProviderUnit in '..\TestDataProviders\OptimizationParameters\SingleDriverRoundTripGenericTestDataProviderUnit.pas',
+  SingleDriverRoundTripTestDataProviderUnit in '..\TestDataProviders\OptimizationParameters\SingleDriverRoundTripTestDataProviderUnit.pas',
+  SingleDriverRoute10StopsTestDataProviderUnit in '..\TestDataProviders\OptimizationParameters\SingleDriverRoute10StopsTestDataProviderUnit.pas',
+  DefaultAddressBookContactProviderUnit in '..\TestDataProviders\AddressBookContact\DefaultAddressBookContactProviderUnit.pas',
+  FullAddressBookContactProviderUnit in '..\TestDataProviders\AddressBookContact\FullAddressBookContactProviderUnit.pas',
+  IAddressBookContactProviderUnit in '..\TestDataProviders\AddressBookContact\IAddressBookContactProviderUnit.pas',
+  OutputUnit in '..\Common\OutputUnit.pas',
+  ConnectionStubUnit in 'Connection\ConnectionStubUnit.pas';
 
 {R *.RES}
 

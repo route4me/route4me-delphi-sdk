@@ -44,11 +44,15 @@ begin
       AddressBookContact := Etalon.AddressBookContact;
       Actual := TMarshalUnMarshal.FromJson(
         AddressBookContact.ClassType, JsonValue) as TAddressBookContact;
+      try
+        CheckTrue(AddressBookContact.Equals(Actual));
+      finally
+        FreeAndNil(Actual);
+        FreeAndNil(AddressBookContact);
+      end;
     finally
       FreeAndNil(JsonValue);
     end;
-
-    CheckTrue(AddressBookContact.Equals(Actual));
   finally
     FreeAndNil(ActualList);
   end;

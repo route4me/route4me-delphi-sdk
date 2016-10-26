@@ -249,23 +249,27 @@ begin
   JsonValue := TTestNullableBooleanClass.AsJson;
   try
     Obj := TMarshalUnMarshal.FromJson(TTestNullableBooleanClass, JsonValue);
+    try
+      CheckIs(Obj, TTestNullableBooleanClass);
+
+      Actual := Obj as TTestNullableBooleanClass;
+
+      Etalon := TTestNullableBooleanClass.Create;
+      try
+        Etalon.TestNull := NullableBoolean.Null;
+        Etalon.TestNullButNotNeedSave := NullableBoolean.Null;
+        Etalon.TestTrue := True;
+        Etalon.TestFalse := False;
+
+        CheckTrue(Etalon.Equals(Actual));
+      finally
+        FreeAndNil(Etalon);
+      end;
+    finally
+      FreeAndNil(Obj);
+    end;
   finally
     FreeAndNil(JsonValue);
-  end;
-  CheckIs(Obj, TTestNullableBooleanClass);
-
-  Actual := Obj as TTestNullableBooleanClass;
-
-  Etalon := TTestNullableBooleanClass.Create;
-  try
-    Etalon.TestNull := NullableBoolean.Null;
-    Etalon.TestNullButNotNeedSave := NullableBoolean.Null;
-    Etalon.TestTrue := True;
-    Etalon.TestFalse := False;
-
-    CheckTrue(Etalon.Equals(Actual));
-  finally
-    FreeAndNil(Etalon);
   end;
 end;
 
@@ -279,22 +283,26 @@ begin
   JsonValue := TTestNullableDoubleClass.AsJson;
   try
     Obj := TMarshalUnMarshal.FromJson(TTestNullableDoubleClass, JsonValue);
+    try
+      CheckIs(Obj, TTestNullableDoubleClass);
+
+      Actual := Obj as TTestNullableDoubleClass;
+
+      Etalon := TTestNullableDoubleClass.Create;
+      try
+        Etalon.TestNull := NullableDouble.Null;
+        Etalon.TestNullButNotNeedSave := NullableDouble.Null;
+        Etalon.Test := 123.456;
+
+        CheckTrue(Etalon.Equals(Actual));
+      finally
+        FreeAndNil(Etalon);
+      end;
+    finally
+      FreeAndNil(Obj);
+    end;
   finally
     FreeAndNil(JsonValue);
-  end;
-  CheckIs(Obj, TTestNullableDoubleClass);
-
-  Actual := Obj as TTestNullableDoubleClass;
-
-  Etalon := TTestNullableDoubleClass.Create;
-  try
-    Etalon.TestNull := NullableDouble.Null;
-    Etalon.TestNullButNotNeedSave := NullableDouble.Null;
-    Etalon.Test := 123.456;
-
-    CheckTrue(Etalon.Equals(Actual));
-  finally
-    FreeAndNil(Etalon);
   end;
 end;
 
@@ -308,22 +316,26 @@ begin
   JsonValue := TTestNullableIntegerClass.AsJson;
   try
     Obj := TMarshalUnMarshal.FromJson(TTestNullableIntegerClass, JsonValue);
+    try
+      CheckIs(Obj, TTestNullableIntegerClass);
+
+      Actual := Obj as TTestNullableIntegerClass;
+
+      Etalon := TTestNullableIntegerClass.Create;
+      try
+        Etalon.TestNull := NullableInteger.Null;
+        Etalon.TestNullButNotNeedSave := NullableInteger.Null;
+        Etalon.Test := 123;
+
+        CheckTrue(Etalon.Equals(Actual));
+      finally
+        FreeAndNil(Etalon);
+      end;
+    finally
+      FreeAndNil(Obj);
+    end;
   finally
     FreeAndNil(JsonValue);
-  end;
-  CheckIs(Obj, TTestNullableIntegerClass);
-
-  Actual := Obj as TTestNullableIntegerClass;
-
-  Etalon := TTestNullableIntegerClass.Create;
-  try
-    Etalon.TestNull := NullableInteger.Null;
-    Etalon.TestNullButNotNeedSave := NullableInteger.Null;
-    Etalon.Test := 123;
-
-    CheckTrue(Etalon.Equals(Actual));
-  finally
-    FreeAndNil(Etalon);
   end;
 end;
 
@@ -337,23 +349,27 @@ begin
   JsonValue := TTestNullableObjectClass.AsJson;
   try
     Obj := TMarshalUnMarshal.FromJson(TTestNullableObjectClass, JsonValue);
+    try
+      CheckIs(Obj, TTestNullableObjectClass);
+
+      Actual := Obj as TTestNullableObjectClass;
+
+      Etalon := TTestNullableObjectClass.Create;
+      try
+        Etalon.TestNull := NullableObject.Null;
+        Etalon.TestNullButNotNeedSave := NullableObject.Null;
+
+        Etalon.Test := TTestNullableObjectClass.MakeTestObject;
+
+        CheckTrue(Etalon.Equals(Actual));
+      finally
+        FreeAndNil(Etalon);
+      end;
+    finally
+      FreeAndNil(Obj);
+    end;
   finally
     FreeAndNil(JsonValue);
-  end;
-  CheckIs(Obj, TTestNullableObjectClass);
-
-  Actual := Obj as TTestNullableObjectClass;
-
-  Etalon := TTestNullableObjectClass.Create;
-  try
-    Etalon.TestNull := NullableObject.Null;
-    Etalon.TestNullButNotNeedSave := NullableObject.Null;
-
-    Etalon.Test := TTestNullableObjectClass.MakeTestObject;
-
-    CheckTrue(Etalon.Equals(Actual));
-  finally
-    FreeAndNil(Etalon);
   end;
 end;
 
@@ -367,22 +383,26 @@ begin
   JsonValue := TTestUnmarshalNullableStringClass.AsJson;
   try
     Obj := TMarshalUnMarshal.FromJson(TTestUnmarshalNullableStringClass, JsonValue);
+    try
+      CheckIs(Obj, TTestUnmarshalNullableStringClass);
+
+      Actual := Obj as TTestUnmarshalNullableStringClass;
+
+      Etalon := TTestUnmarshalNullableStringClass.Create;
+      try
+        Etalon.TestNull := NullableString.Null;
+        Etalon.TestNullButNotNeedSave := NullableString.Null;
+        Etalon.Test := '123';
+
+        CheckTrue(Etalon.Equals(Actual));
+      finally
+        FreeAndNil(Etalon);
+      end;
+    finally
+      FreeAndNil(Obj);
+    end;
   finally
     FreeAndNil(JsonValue);
-  end;
-  CheckIs(Obj, TTestUnmarshalNullableStringClass);
-
-  Actual := Obj as TTestUnmarshalNullableStringClass;
-
-  Etalon := TTestUnmarshalNullableStringClass.Create;
-  try
-    Etalon.TestNull := NullableString.Null;
-    Etalon.TestNullButNotNeedSave := NullableString.Null;
-    Etalon.Test := '123';
-
-    CheckTrue(Etalon.Equals(Actual));
-  finally
-    FreeAndNil(Etalon);
   end;
 end;
 

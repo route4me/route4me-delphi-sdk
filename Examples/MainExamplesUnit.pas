@@ -16,7 +16,12 @@ implementation
 uses
   System.Generics.Collections,
   DataObjectUnit, Route4MeExamplesUnit, NullableBasicTypesUnit, AddressUnit,
-  AddressBookContactUnit;
+  AddressBookContactUnit, OutputUnit, ConnectionUnit;
+
+const
+  //your api key
+  c_ApiKey = '11111111111111111111111111111111';
+
 
 class procedure TExamples.Run;
 var
@@ -45,7 +50,7 @@ var
   OrderIdsToRemove: TList<String>;
 begin
   try
-    Examples := TRoute4MeExamples.Create();
+    Examples := TRoute4MeExamples.Create(TOutputConsole.Create, TConnection.Create(c_ApiKey));
     try
 //      Examples := TRoute4MeExamples.CreateDebug();
       try

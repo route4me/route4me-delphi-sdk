@@ -76,49 +76,49 @@ procedure TTestUnmarshalOptimizationParameters.MultipleDepotMultipleDriver();
 begin
   CheckEquals(
     TMultipleDepotMultipleDriverTestDataProvider.Create,
-    'OptimizationParametersToJson\MultipleDepotMultipleDriver');
+    'OptimizationParametersFromJson\MultipleDepotMultipleDriver');
 end;
 
 procedure TTestUnmarshalOptimizationParameters.MultipleDepotMultipleDriverTimeWindow;
 begin
   CheckEquals(
     TMultipleDepotMultipleDriverTimeWindowTestDataProvider.Create,
-    'OptimizationParametersToJson\MultipleDepotMultipleDriverTimeWindow');
+    'OptimizationParametersFromJson\MultipleDepotMultipleDriverTimeWindow');
 end;
 
 procedure TTestUnmarshalOptimizationParameters.MultipleDepotMultipleDriverWith24StopsTimeWindow;
 begin
   CheckEquals(
     TMultipleDepotMultipleDriverWith24StopsTimeWindowTestDataProvider.Create,
-    'OptimizationParametersToJson\MultipleDepotMultipleDriverWith24StopsTimeWindow');
+    'OptimizationParametersFromJson\MultipleDepotMultipleDriverWith24StopsTimeWindow');
 end;
 
 procedure TTestUnmarshalOptimizationParameters.SingleDepotMultipleDriverNoTimeWindow;
 begin
   CheckEquals(
     TSingleDepotMultipleDriverNoTimeWindowTestDataProvider.Create,
-    'OptimizationParametersToJson\SingleDepotMultipleDriverNoTimeWindow');
+    'OptimizationParametersFromJson\SingleDepotMultipleDriverNoTimeWindow');
 end;
 
 procedure TTestUnmarshalOptimizationParameters.SingleDriverMultipleTimeWindows;
 begin
   CheckEquals(
     TSingleDriverMultipleTimeWindowsTestDataProvider.Create,
-    'OptimizationParametersToJson\SingleDriverMultipleTimeWindows');
+    'OptimizationParametersFromJson\SingleDriverMultipleTimeWindows');
 end;
 
 procedure TTestUnmarshalOptimizationParameters.SingleDriverRoundTrip;
 begin
   CheckEquals(
     TSingleDriverRoundTripTestDataProvider.Create,
-    'OptimizationParametersToJson\SingleDriverRoundTrip');
+    'OptimizationParametersFromJson\SingleDriverRoundTrip');
 end;
 
 procedure TTestUnmarshalOptimizationParameters.SingleDriverRoute10Stops;
 begin
   CheckEquals(
     TSingleDriverRoute10StopsTestDataProvider.Create,
-    'OptimizationParametersToJson\SingleDriverRoute10Stops');
+    'OptimizationParametersFromJson\SingleDriverRoute10Stops');
 end;
 
 initialization

@@ -11,8 +11,10 @@ type
   TTestAddressBookContactActions = class(TBaseRoute4MeTest)
   private
     function GetAddressBookContact(Provider: IAddressBookContactProvider): TAddressBookContact;
-  published
+
+    // todo: сделать тест
     procedure TestAddGetUpdateRemove;
+  published
   end;
 
 implementation
@@ -32,16 +34,16 @@ begin
 end;
 
 procedure TTestAddressBookContactActions.TestAddGetUpdateRemove;
-var
+{var
   AddressBookContact1: TAddressBookContact;
   AddressBookContact2: TAddressBookContact;
   Id1, Id2: String;
   AddressBookContacts: TObjectList<TAddressBookContact>;
   Parameters: TAddressBookParameters;
   Total: integer;
-  ErrorString: String;
+  ErrorString: String;         }
 begin
-  AddressBookContact1 := GetAddressBookContact(TDefaultAddressBookContactProvider.Create);
+{  AddressBookContact1 := GetAddressBookContact(TDefaultAddressBookContactProvider.Create);
   AddressBookContact2 := GetAddressBookContact(TFullAddressBookContactProvider.Create);
 
   try
@@ -93,7 +95,7 @@ begin
   finally
     FreeAndNil(AddressBookContact1);
     FreeAndNil(AddressBookContact2);
-  end;
+  end;}
 end;
 
 initialization

@@ -17,14 +17,16 @@ type
     FRESTResponce: TRESTResponse;
     FApiKey: String;
 
-    function InternalRequest(URL: String; Method: TRESTRequestMethod;
-      Body: String; out ErrorString: String): TJsonValue; overload;
-
-    function InternalRequest(Url: String; Data: TGenericParameters;
+    function ExecuteRequest(Url: String; Data: TGenericParameters;
       Method: TRESTRequestMethod; ResultClassType: TClass;
-      out ErrorString: String): TObject; overload;
+      out ErrorString: String): TObject;
+    function InternalRequest(URL: String; Method: TRESTRequestMethod;
+      Body: String; out ErrorString: String): TJsonValue;
 
     function UrlParameters(Parameters: TListStringPair): String;
+  protected
+    function RunRequest(URL: String; Method: TRESTRequestMethod;
+      Body: String; out ErrorString: String): TJsonValue; virtual;
   public
     constructor Create(ApiKey: String);
     destructor Destroy; override;
@@ -50,13 +52,13 @@ uses SettingsUnit, MarshalUnMarshalUnit;
 function TConnection.Post(Url: String; Data: TGenericParameters;
   ResultClassType: TClass; out ErrorString: String): TObject;
 begin
-  Result := InternalRequest(Url, Data, rmPOST, ResultClassType, ErrorString);
+  Result := ExecuteRequest(Url, Data, rmPOST, ResultClassType, ErrorString);
 end;
 
 function TConnection.Put(Url: String; Data: TGenericParameters;
   ResultClassType: TClass; out ErrorString: String): TObject;
 begin
-  Result := InternalRequest(Url, Data, rmPUT, ResultClassType, ErrorString);
+  Result := ExecuteRequest(Url, Data, rmPUT, ResultClassType, ErrorString);
 end;
 
 constructor TConnection.Create(ApiKey: String);
@@ -82,7 +84,7 @@ end;
 function TConnection.Delete(Url: String; Data: TGenericParameters;
   ResultClassType: TClass; out ErrorString: String): TObject;
 begin
-  Result := InternalRequest(Url, Data, rmDELETE, ResultClassType, ErrorString);
+  Result := ExecuteRequest(Url, Data, rmDELETE, ResultClassType, ErrorString);
 end;
 
 destructor TConnection.Destroy;
@@ -97,10 +99,10 @@ end;
 function TConnection.Get(Url: String; Data: TGenericParameters;
   ResultClassType: TClass; out ErrorString: String): TObject;
 begin
-  Result := InternalRequest(Url, Data, rmGET, ResultClassType, ErrorString);
+  Result := ExecuteRequest(Url, Data, rmGET, ResultClassType, ErrorString);
 end;
 
-function TConnection.InternalRequest(Url: String; Data: TGenericParameters;
+function TConnection.ExecuteRequest(Url: String; Data: TGenericParameters;
   Method: TRESTRequestMethod; ResultClassType: TClass;
   out ErrorString: String): TObject;
 var
@@ -114,7 +116,7 @@ begin
   try
     JsonString := Data.ToJsonValue.ToString;
 
-    Responce := InternalRequest(
+    Responce := RunRequest(
       FRESTRequest.Client.BaseURL + UrlParameters(Parameters),
       Method, JsonString, ErrorString);
   finally
@@ -131,6 +133,12 @@ begin
     FreeAndNil(st);}
     Result := TMarshalUnMarshal.FromJson(ResultClassType, Responce);
   end;
+end;
+
+function TConnection.RunRequest(URL: String; Method: TRESTRequestMethod;
+  Body: String; out ErrorString: String): TJsonValue;
+begin
+  Result := InternalRequest(URL, Method, Body, ErrorString);
 end;
 
 function TConnection.InternalRequest(URL: String; Method: TRESTRequestMethod;

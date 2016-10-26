@@ -39,7 +39,7 @@ var
   OptimizationParameters: TOptimizationParameters;
 begin
   DataProvider := TMultipleDepotMultipleDriverTestDataProvider.Create;
-  OptimizationParameters := DataProvider.OptimizationParametersForRequest;
+  OptimizationParameters := DataProvider.OptimizationParameters;
   try
     CheckEquals(
       EtalonFilename('OptimizationParametersToJson\MultipleDepotMultipleDriver'),
@@ -55,7 +55,7 @@ var
   OptimizationParameters: TOptimizationParameters;
 begin
   DataProvider := TMultipleDepotMultipleDriverTimeWindowTestDataProvider.Create;
-  OptimizationParameters := DataProvider.OptimizationParametersForRequest;
+  OptimizationParameters := DataProvider.OptimizationParameters;
   try
     CheckEquals(
       EtalonFilename('OptimizationParametersToJson\MultipleDepotMultipleDriverTimeWindow'),
@@ -71,7 +71,7 @@ var
   OptimizationParameters: TOptimizationParameters;
 begin
   DataProvider := TMultipleDepotMultipleDriverWith24StopsTimeWindowTestDataProvider.Create;
-  OptimizationParameters := DataProvider.OptimizationParametersForRequest;
+  OptimizationParameters := DataProvider.OptimizationParameters;
   try
     CheckEquals(
       EtalonFilename('OptimizationParametersToJson\MultipleDepotMultipleDriverWith24StopsTimeWindow'),
@@ -87,7 +87,7 @@ var
   OptimizationParameters: TOptimizationParameters;
 begin
   DataProvider := TSingleDepotMultipleDriverNoTimeWindowTestDataProvider.Create;
-  OptimizationParameters := DataProvider.OptimizationParametersForRequest;
+  OptimizationParameters := DataProvider.OptimizationParameters;
   try
     CheckEquals(
       EtalonFilename('OptimizationParametersToJson\SingleDepotMultipleDriverNoTimeWindow'),
@@ -103,7 +103,7 @@ var
   OptimizationParameters: TOptimizationParameters;
 begin
   DataProvider := TSingleDriverMultipleTimeWindowsTestDataProvider.Create;
-  OptimizationParameters := DataProvider.OptimizationParametersForRequest;
+  OptimizationParameters := DataProvider.OptimizationParameters;
   try
     CheckEquals(
       EtalonFilename('OptimizationParametersToJson\SingleDriverMultipleTimeWindows'),
@@ -119,7 +119,7 @@ var
   OptimizationParameters: TOptimizationParameters;
 begin
   DataProvider := TSingleDriverRoundTripTestDataProvider.Create;
-  OptimizationParameters := DataProvider.OptimizationParametersForRequest;
+  OptimizationParameters := DataProvider.OptimizationParameters;
   try
     CheckEquals(
       EtalonFilename('OptimizationParametersToJson\SingleDriverRoundTrip'),
@@ -135,7 +135,7 @@ var
   OptimizationParameters: TOptimizationParameters;
 begin
   DataProvider := TSingleDriverRoute10StopsTestDataProvider.Create;
-  OptimizationParameters := DataProvider.OptimizationParametersForRequest;
+  OptimizationParameters := DataProvider.OptimizationParameters;
   try
     CheckEquals(
       EtalonFilename('OptimizationParametersToJson\SingleDriverRoute10Stops'),

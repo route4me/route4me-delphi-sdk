@@ -86,8 +86,8 @@ type
     ///  For JSON-deserialization.
     /// </remarks>
     constructor Create; overload; override;
-
     constructor Create(Address: String; Latitude, Longitude: Double); overload;
+    destructor Destroy; override;
 
     procedure AddCustomData(Key: String; Value: String);
 
@@ -224,6 +224,13 @@ begin
   FAddress := Address;
   FLatitude := Latitude;
   FLongitude := Longitude;
+end;
+
+destructor TAddressBookContact.Destroy;
+begin
+  if FCustomData.IsNotNull then
+    FCustomData.Free;
+  inherited;
 end;
 
 function TAddressBookContact.Equals(Obj: TObject): Boolean;

@@ -11,7 +11,7 @@ type
     //your api key
     const c_ApiKey = '11111111111111111111111111111111';
   protected
-    FRoute4MeManager: IRoute4MeManager;
+//    FRoute4MeManager: IRoute4MeManager;
   public
     procedure SetUp; override;
     procedure TearDown; override;
@@ -28,12 +28,12 @@ begin
   inherited;
 
   // Create the manager with the api key
-  FRoute4MeManager := TRoute4MeManager.Create(c_ApiKey);
+//  FRoute4MeManager := TRoute4MeManager.Create(c_ApiKey);
 end;
 
 procedure TBaseRoute4MeTest.TearDown;
 begin
-  FRoute4MeManager := nil;
+//  FRoute4MeManager := nil;
 
   inherited;
 end;

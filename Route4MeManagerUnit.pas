@@ -11,14 +11,13 @@ uses
 type
   TRoute4MeManager = class(TInterfacedObject, IRoute4MeManager)
   private
-    FApiKey: String;
     FConnection: IConnection;
 
     FAddressBookContact: TAddressBookContactActions;
     FOptimization: TOptimizationActions;
     FRoute: TRouteActions;
   public
-    constructor Create(ApiKey: String);
+    constructor Create(Connection: IConnection);
     destructor Destroy; override;
 
     procedure SetConnectionProxy(Host: String; Port: integer; Username, Password: String);
@@ -41,15 +40,13 @@ begin
   Result := FConnection;
 end;
 
-constructor TRoute4MeManager.Create(ApiKey: String);
+constructor TRoute4MeManager.Create(Connection: IConnection);
 begin
-  FApiKey := ApiKey;
+  FConnection := Connection;
 
   FAddressBookContact := nil;
   FOptimization := nil;
   FRoute := nil;
-
-  FConnection := TConnection.Create(FApiKey);
 end;
 
 destructor TRoute4MeManager.Destroy;

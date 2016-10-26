@@ -8,9 +8,6 @@ program Route4MeExamplesProject;
 //  FastMM4Messages in 'FastMM\FastMM4Messages.pas',
 
 uses
-//  FastMM4 in 'FastMM\FastMM4.pas',
-//  FastMM4Messages in 'FastMM\FastMM4Messages.pas',
-
   System.SysUtils,
   Route4MeExamplesUnit in 'Examples\Route4MeExamplesUnit.pas',
   JSONDictionaryInterceptorObjectUnit in 'Nullabled\JSONDictionaryInterceptorObjectUnit.pas',
@@ -66,12 +63,13 @@ uses
   IRoute4MeManagerUnit in 'IRoute4MeManagerUnit.pas',
   RouteParametersQueryUnit in 'QueryTypes\RouteParametersQueryUnit.pas',
   DataObjectOptimizationsResponseUnit in 'AdditionalDataTypes\DataObjectOptimizationsResponseUnit.pas',
-  RemoveDestinationFromOptimizationResponseUnit in 'AdditionalDataTypes\RemoveDestinationFromOptimizationResponseUnit.pas';
+  RemoveDestinationFromOptimizationResponseUnit in 'AdditionalDataTypes\RemoveDestinationFromOptimizationResponseUnit.pas',
+  OutputUnit in 'Common\OutputUnit.pas';
 
 begin
   try
 //    ReportMemoryLeaksOnShutdown := True;
-    TExamples.Run;
+    TExamples.Run();
   except
     on E: Exception do
     begin

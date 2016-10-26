@@ -6,21 +6,22 @@ uses
   SysUtils, System.Generics.Collections,
   Route4MeManagerUnit, DataObjectUnit, NullableBasicTypesUnit, UtilsUnit,
   CommonTypesUnit, AddressBookContactUnit,
-  SingleDriverRoundTripTestDataProviderUnit, IRoute4MeManagerUnit;
+  SingleDriverRoundTripTestDataProviderUnit, IRoute4MeManagerUnit, OutputUnit,
+  IConnectionUnit, RouteParametersUnit;
 
 type
   TRoute4MeExamples = class
-    //your api key
-    const c_ApiKey = '11111111111111111111111111111111';
+  private
+    FOutput: IOutput;
+
+    procedure WriteLn(Message: String);
   protected
     Route4MeManager: IRoute4MeManager;
 
     procedure PrintExampleOptimizationResult(ExampleName: String;
       DataObject: TDataObject; ErrorString: String);
   public
-    constructor Create;
-    constructor CreateDebug;
-
+    constructor Create(Output: IOutput; Connection: IConnection); reintroduce;
     destructor Destroy; override;
 
     function SingleDriverRoute10Stops: TDataObject;
@@ -196,16 +197,12 @@ begin
   end;
 end;
 
-constructor TRoute4MeExamples.Create;
+constructor TRoute4MeExamples.Create(Output: IOutput; Connection: IConnection);
 begin
-  // Create the manager with the api key
-  Route4MeManager := TRoute4MeManager.Create(c_ApiKey);
-end;
+  FOutput := Output;
 
-constructor TRoute4MeExamples.CreateDebug;
-begin
-  Create;
-  Route4MeManager.SetConnectionProxy('irr-px01.rzdp.ru', 8080, 'BorzenkovIS', 'DocsVision33');
+  // Create the manager with the api key
+  Route4MeManager := TRoute4MeManager.Create(Connection);
 end;
 
 procedure TRoute4MeExamples.DeleteAvoidanceZone(TerritoryId: String);
@@ -220,6 +217,7 @@ end;
 
 destructor TRoute4MeExamples.Destroy;
 begin
+  FOutput := nil;
   Route4MeManager := nil;
 
   inherited;
@@ -282,7 +280,6 @@ begin
     OptimizationParameters.OptimizationProblemID := OptimizationProblemId;
 
     // Run the query
-//    DataObject := nil;
     DataObject := Route4MeManager.Optimization.Get(OptimizationParameters, ErrorString);
     try
       WriteLn('');
@@ -553,8 +550,29 @@ begin
 end;
 
 procedure TRoute4MeExamples.ReOptimization(OptimizationProblemId: String);
+var
+  OptimizationParameters: TOptimizationParameters;
+  ErrorString: String;
+  DataObject: TDataObject;
 begin
+  OptimizationParameters := TOptimizationParameters.Create;
+  OptimizationParameters.OptimizationProblemID := OptimizationProblemId;
+  OptimizationParameters.ReOptimize := True;
 
+      // Run the query
+  DataObject := Route4MeManager.Optimization.Update(OptimizationParameters, ErrorString);
+
+  WriteLn('');
+
+  if (DataObject <> nil) then
+  begin
+    WriteLn('ReOptimization executed successfully');
+
+    WriteLn(Format('Optimization Problem ID: %s', [DataObject.OptimizationProblemId]));
+    WriteLn(Format('State: %s', [TOptimizationDescription[TOptimizationState(DataObject.State)]]));
+  end
+  else
+    WriteLn(Format('ReOptimization error: "%s"', [ErrorString]));
 end;
 
 procedure TRoute4MeExamples.ReoptimizeRoute(RouteId: String);
@@ -782,8 +800,38 @@ begin
 end;
 
 procedure TRoute4MeExamples.UpdateRoute(RouteId: String);
+var
+  ParametersNew: TRouteParameters;
+  RouteParameters: TRouteParametersQuery;
+  ErrorString: String;
+  DataObject: TDataObjectRoute;
 begin
+  ParametersNew := TRouteParameters.Create;
+  ParametersNew.RouteName := 'New name of the route';
 
+  RouteParameters := TRouteParametersQuery.Create;
+  RouteParameters.RouteId := RouteId;
+  RouteParameters.Parameters := ParametersNew;
+
+  // Run the query
+  DataObject := Route4MeManager.Route.Update(RouteParameters, ErrorString);
+
+  WriteLn('');
+
+  if (DataObject <> nil) then
+  begin
+    WriteLn('UpdateRoute executed successfully');
+
+    WriteLn(Format('Route ID: %s', [DataObject.RouteId]));
+    WriteLn(Format('State: %s', [TOptimizationDescription[TOptimizationState(DataObject.State)]]));
+  end
+  else
+    WriteLn(Format('UpdateRoute error: %s', [ErrorString]));
+end;
+
+procedure TRoute4MeExamples.WriteLn(Message: String);
+begin
+  FOutput.Writeln(Message);
 end;
 
 end.

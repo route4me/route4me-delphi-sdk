@@ -13,9 +13,14 @@ type
 
     function MakeAddresses(): TAddressesArray; virtual; abstract;
     function MakeRouteParameters(): TRouteParameters; virtual; abstract;
+
+    /// <summary>
+    ///  After responce some fields are changed from request.
+    /// </summary>
+    procedure CorrectForResponce(OptimizationParameters: TOptimizationParameters); virtual; abstract;
   public
     function OptimizationParameters: TOptimizationParameters;
-
+    function OptimizationParametersForResponce: TOptimizationParameters;
   end;
 implementation
 
@@ -36,6 +41,12 @@ begin
   Result.Parameters := MakeRouteParameters;
   for Address in MakeAddresses do
     Result.AddAddress(Address);
+end;
+
+function TBaseOptimizationParametersProvider.OptimizationParametersForResponce: TOptimizationParameters;
+begin
+  Result := OptimizationParameters;
+  CorrectForResponce(Result);
 end;
 
 end.
