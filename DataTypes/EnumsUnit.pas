@@ -3,7 +3,46 @@ unit EnumsUnit;
 interface
 
 type
-//an optimization problem can be at one state at any given time
+  //if the actual polylines of the driving path between all the stops on the route should be returned
+  TRoutePathOutput = (
+    None,
+    Points
+  );
+
+  /// <summary>
+  /// Territory type (circle, rectangle, polygon)
+  /// </summary>
+  TTerritoryType = (
+    Circle,
+    Poly,
+    Rect
+  );
+
+  TStatusUpdateType = (
+    Pickup,
+    DropOff,
+    NoAnswer,
+    NotFound,
+    NotPaid,
+    Paid,
+    WrongDelivery,
+    WrongAddressRecipient,
+    NotPresent,
+    PartsMissing,
+    ServiceRendered,
+    FollowUp,
+    LeftInformation,
+    SpokeWithDecisionMaker,
+    SpokeWithDecisionInfluencer,
+    CompetitiveAccount,
+    ScheduledFollowUpMeeting,
+    ScheduledLunch,
+    ScheduledProductDemo,
+    ScheduledClinicalDemo,
+    NoOpportunity
+  );
+
+  //an optimization problem can be at one state at any given time
   //every state change invokes a socket notification to the associated member id
   //every state change invokes a callback webhook event invocation if it was provided during the initial optimization
   TOptimizationState = (
@@ -54,7 +93,15 @@ var
   TTravelModeDescription: array[TTravelMode] of String = ('Driving', 'Walking', 'Trucking');
   TOptimizationDescription: array[TOptimizationState] of String =
     ('Initial', 'MatrixProcessing', 'Optimizing', 'Optimized', 'Error', 'ComputingDirections');
+  TRoutePathOutputDescription: array[TRoutePathOutput] of String = ('None', 'Points');
 
+  TStatusUpdateTypeDescription: array[TStatusUpdateType] of String =
+    ('pickup', 'dropoff', 'noanswer', 'notfound', 'notpaid', 'paid', 'wrongdelivery',
+    'wrongaddressrecipient', 'notpresent', 'parts_missing', 'service_rendered',
+    'follow_up', 'left_information', 'spoke_with_decision_maker', 'spoke_with_decision_influencer',
+    'competitive_account', 'scheduled_follow_up_meeting', 'scheduled_lunch',
+    'scheduled_product_demo', 'scheduled_clinical_demo', 'no_opportunity');
+  TTerritoryTypeDescription: array[TTerritoryType] of String = ('circle', 'poly', 'rect');
 
 implementation
 

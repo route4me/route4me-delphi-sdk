@@ -3,7 +3,7 @@ unit AddressBookContactUnit;
 interface
 
 uses
-  REST.Json.Types, JSONNullableAttributeUnit,
+  REST.Json.Types, System.Generics.Collections, JSONNullableAttributeUnit,
   NullableBasicTypesUnit, GenericParametersUnit,
   JSONDictionaryInterceptorObjectUnit;
 
@@ -179,6 +179,8 @@ type
     /// </summary>
     property CustomData: NullableObject read FCustomData write FCustomData;
   end;
+
+  TAddressBookContactList = TList<TAddressBookContact>;
 
 implementation
 

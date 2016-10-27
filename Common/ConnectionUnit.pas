@@ -114,7 +114,10 @@ begin
   FClient.BaseURL := Url;
   Parameters := Data.Serialize(FApiKey);
   try
-    JsonString := Data.ToJsonValue.ToString;
+    if (Method = rmGET) then
+      JsonString := EmptyStr
+    else
+      JsonString := Data.ToJsonValue.ToString;
 
     Responce := RunRequest(
       FRESTRequest.Client.BaseURL + UrlParameters(Parameters),

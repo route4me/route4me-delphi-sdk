@@ -6,7 +6,7 @@ uses
   Classes, SysUtils,
   OptimizationParametersUnit, DataObjectUnit, IRoute4MeManagerUnit,
   AddressBookContactUnit, AddressBookContactActionsUnit, ConnectionUnit,
-  OptimizationActionUnit, RouteActionUnit, IConnectionUnit;
+  OptimizationActionUnit, RouteActionUnit, IConnectionUnit, UserActionUnit;
 
 type
   TRoute4MeManager = class(TInterfacedObject, IRoute4MeManager)
@@ -16,6 +16,7 @@ type
     FAddressBookContact: TAddressBookContactActions;
     FOptimization: TOptimizationActions;
     FRoute: TRouteActions;
+    FUser: TUserActions;
   public
     constructor Create(Connection: IConnection);
     destructor Destroy; override;
@@ -25,6 +26,7 @@ type
     function Optimization: TOptimizationActions;
     function Route: TRouteActions;
     function AddressBookContact: TAddressBookContactActions;
+    function User: TUserActions;
 
     function Connection: IConnection;
   end;
@@ -47,10 +49,12 @@ begin
   FAddressBookContact := nil;
   FOptimization := nil;
   FRoute := nil;
+  FUser := nil;
 end;
 
 destructor TRoute4MeManager.Destroy;
 begin
+  FreeAndNil(FUser);
   FreeAndNil(FRoute);
   FreeAndNil(FAddressBookContact);
   FreeAndNil(FOptimization);
@@ -76,6 +80,13 @@ end;
 procedure TRoute4MeManager.SetConnectionProxy(Host: String; Port: integer; Username, Password: String);
 begin
   FConnection.SetProxy(Host, Port, Username, Password);
+end;
+
+function TRoute4MeManager.User: TUserActions;
+begin
+  if (FUser = nil) then
+    FUser := TUserActions.Create(FConnection);
+  Result := FUser;
 end;
 
 function TRoute4MeManager.AddressBookContact: TAddressBookContactActions;

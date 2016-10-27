@@ -53,17 +53,21 @@ procedure TSingleDriverRoute10StopsTestDataProvider.CorrectForResponce(
   begin
     Result := GetAddressIndexByTag(Addresses[index], OptimizationParameters.Addresses);
   end;
+var
+  RouteParameters: TRouteParameters;
 begin
   inherited;
-  OptimizationParameters.Parameters.IsUpload := False;
-  OptimizationParameters.Parameters.RT := False;
-  OptimizationParameters.Parameters.DisableOptimization := False;
-  OptimizationParameters.Parameters.StoreRoute := True;
-  OptimizationParameters.Parameters.RouteDate := 0;
-  OptimizationParameters.Parameters.RouteMaxDuration := 86399;
-  OptimizationParameters.Parameters.TravelMode := 'Driving';
-  OptimizationParameters.Parameters.Metric := 4;
-  OptimizationParameters.Parameters.Parts := 10;
+
+  RouteParameters := OptimizationParameters.Parameters;
+  RouteParameters.IsUpload := False;
+  RouteParameters.RT := False;
+  RouteParameters.DisableOptimization := False;
+  RouteParameters.StoreRoute := True;
+  RouteParameters.RouteDate := 0;
+  RouteParameters.RouteMaxDuration := 86399;
+  RouteParameters.TravelMode := 'Driving';
+  RouteParameters.Metric := 4;
+  RouteParameters.Parts := 10;
 
   OptimizationParameters.Addresses[Index(0)].RouteDestinationId := 193721035;
   OptimizationParameters.Addresses[Index(0)].MemberId := '1';

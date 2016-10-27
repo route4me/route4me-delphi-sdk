@@ -42,6 +42,12 @@ type
 
     function MoveDestinationToRoute(ToRouteId: String;
       RouteDestinationId, AfterDestinationId: integer; out ErrorString: String): boolean;
+
+    function Get(RouteParameters: TRouteParametersQuery;
+      out ErrorString: String): TDataObjectRoute;
+
+    function GetList(RouteParameters: TRouteParametersQuery;
+      out ErrorString: String): TArray<TDataObjectRoute>;
   end;
 
 implementation
@@ -52,7 +58,8 @@ uses
   System.Generics.Collections,
   SettingsUnit, RemoveRouteDestinationResponseUnit,
   RemoveRouteDestinationRequestUnit, AddRouteDestinationRequestUnit,
-  MoveDestinationToRouteResponseUnit, MoveDestinationToRouteRequestUnit;
+  MoveDestinationToRouteResponseUnit,
+  GenericParametersUnit, CommonTypesUnit;
 
 function TRouteActions.Add(RouteId: String; Addresses: TAddressesArray;
   OptimalPosition: boolean; out ErrorString: String): TArray<integer>;
@@ -104,18 +111,42 @@ begin
   Result := Add(RouteId, Addresses, True, ErrorString);
 end;
 
+function TRouteActions.Get(RouteParameters: TRouteParametersQuery;
+  out ErrorString: String): TDataObjectRoute;
+begin
+  Result := FConnection.Get(TSettings.RouteHost,
+    RouteParameters, TDataObjectRoute, ErrorString) as TDataObjectRoute;
+end;
+
+function TRouteActions.GetList(RouteParameters: TRouteParametersQuery;
+  out ErrorString: String): TArray<TDataObjectRoute>;
+var
+  List: TDataObjectRouteList;
+begin
+  List := FConnection.Get(TSettings.RouteHost,
+    RouteParameters, TDataObjectRouteList, ErrorString) as TDataObjectRouteList;
+  try
+    if (List <> nil) then
+      Result := List.ToArray
+    else
+      SetLength(Result, 0);
+  finally
+    FreeAndNil(List);
+  end;
+end;
+
 function TRouteActions.MoveDestinationToRoute(ToRouteId: String;
   RouteDestinationId, AfterDestinationId: integer;
   out ErrorString: String): boolean;
 var
   Response: TMoveDestinationToRouteResponse;
-  Request: TMoveDestinationToRouteRequest;
+  Request: TGenericParameters;
 begin
-  Request := TMoveDestinationToRouteRequest.Create;
+  Request := TGenericParameters.Create;
   try
-    Request.ToRouteId := ToRouteId;
-    Request.RouteDestinationId := RouteDestinationId;
-    Request.AfterDestinationId := AfterDestinationId;
+    Request.AddParameter('to_route_id', ToRouteId);
+    Request.AddParameter('route_destination_id', IntToStr(RouteDestinationId));
+    Request.AddParameter('after_destination_id', IntToStr(AfterDestinationId));
 
     Response := FConnection.Post(TSettings.MoveRouteDestination,
         Request, TMoveDestinationToRouteResponse, ErrorString) as TMoveDestinationToRouteResponse;

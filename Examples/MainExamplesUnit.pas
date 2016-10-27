@@ -54,7 +54,7 @@ begin
     try
 //      Examples := TRoute4MeExamples.CreateDebug();
       try
-        {DataObject1 := Examples.SingleDriverRoute10Stops();
+        DataObject1 := Examples.SingleDriverRoute10Stops();
 
         if (DataObject1 <> nil) and (DataObject1.Routes <> nil) and (Length(DataObject1.Routes) > 0) then
         begin
@@ -101,15 +101,14 @@ begin
           AfterDestinationIdToMoveAfter := dataObject2.Routes[0].Addresses[0].RouteDestinationId.Value
         else
           AfterDestinationIdToMoveAfter := NullableInteger.Null;
-                             }
-{        if routeIdToMoveTo.IsNotNull and routeDestinationIdToMove.IsNotNull and
+
+        if routeIdToMoveTo.IsNotNull and routeDestinationIdToMove.IsNotNull and
           AfterDestinationIdToMoveAfter.IsNotNull then
           Examples.MoveDestinationToRoute(RouteIdToMoveTo, RouteDestinationIdToMove, AfterDestinationIdToMoveAfter)
         else
           WriteLn(Format(
             'MoveDestinationToRoute not called. routeDestinationId = %d, afterDestinationId = %d.',
             [routeDestinationIdToMove.Value, AfterDestinationIdToMoveAfter.Value]));
-        Exit;
 
         OptimizationProblemId := Examples.SingleDriverRoundTripGeneric();
 
@@ -132,7 +131,7 @@ begin
         finally
           FreeAndNil(DataObject);
         end;
-}
+
         DataObject := Examples.SingleDepotMultipleDriverNoTimeWindow();
         try
           if (DataObject <> nil) and (Length(DataObject.Routes) > 0) then
@@ -142,7 +141,7 @@ begin
         finally
           FreeAndNil(DataObject);
         end;
-exit;
+
         DataObject := Examples.MultipleDepotMultipleDriverWith24StopsTimeWindow();
         try
           if (DataObject <> nil) and (Length(DataObject.Routes) > 0) then

@@ -5,7 +5,7 @@ interface
 uses
   OptimizationParametersUnit, DataObjectUnit,
   AddressBookContactActionsUnit,
-  OptimizationActionUnit, RouteActionUnit, IConnectionUnit;
+  OptimizationActionUnit, RouteActionUnit, IConnectionUnit, UserActionUnit;
 
 type
   IRoute4MeManager = interface
@@ -13,6 +13,7 @@ type
     function Optimization: TOptimizationActions;
     function Route: TRouteActions;
     function AddressBookContact: TAddressBookContactActions;
+    function User: TUserActions;
 
     procedure SetConnectionProxy(Host: String; Port: integer; Username, Password: String);
     function Connection: IConnection;

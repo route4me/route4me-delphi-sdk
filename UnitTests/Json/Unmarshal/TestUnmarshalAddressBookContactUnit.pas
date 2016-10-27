@@ -10,10 +10,11 @@ uses
 type
   TTestUnmarshalAddressBookContact = class(TTestBaseJsonUnmarshal)
   private
-    procedure CheckEquals(Etalon: IAddressBookContactProvider; TestName: String);
+    procedure CheckEquals(Etalon: IAddressBookContactProvider; TestName: String); overload;
   published
     procedure DefaultAddressBookContact();
     procedure FullAddressBookContact();
+    procedure AddressBookContactList();
   end;
 
 implementation
@@ -24,6 +25,30 @@ uses
   Classes, System.JSON,
   DefaultAddressBookContactProviderUnit, FullAddressBookContactProviderUnit,
   AddressBookContactUnit, MarshalUnMarshalUnit;
+
+procedure TTestUnmarshalAddressBookContact.AddressBookContactList;
+var
+  JsonString: String;
+  JsonValue: TJSONValue;
+  ActualList: TAddressBookContactList;
+begin
+  JsonString := '[{"address_1":"First Address","cached_lat":40.7803123,"cached_lng":-73.9793079},{"address_1":"Second Address","cached_lat":40.7803123,"cached_lng":-73.9793079}]';
+
+  JsonValue := TJSONObject.ParseJSONValue(JsonString);
+  try
+    ActualList := TMarshalUnMarshal.FromJson(
+      TAddressBookContactList, JsonValue) as TAddressBookContactList;
+    try
+      CheckEquals(2, ActualList.Count);
+      CheckEquals('First Address', ActualList[0].Address);
+      CheckEquals('Second Address', ActualList[1].Address);
+    finally
+      FreeAndNil(ActualList);
+    end;
+  finally
+    FreeAndNil(JsonValue);
+  end;
+end;
 
 procedure TTestUnmarshalAddressBookContact.CheckEquals(
   Etalon: IAddressBookContactProvider; TestName: String);

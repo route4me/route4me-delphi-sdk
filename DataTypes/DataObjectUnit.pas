@@ -51,17 +51,19 @@ type
 
     function Equals(Obj: TObject): Boolean; override;
 
+    procedure AddAddress(Address: TAddress);
+
     property OptimizationProblemId: String read FOptimizationProblemId write FOptimizationProblemId;
     property State: Integer {TOptimizationState} read FState write FState;
     property UserErrors: TArray<String> read FUserErrors write FUserErrors;
     property IsSentToBackground: boolean read FIsSentToBackground write FIsSentToBackground;
-    property Addresses: TAddressesArray read FAddresses write FAddresses;
+    property Addresses: TAddressesArray read FAddresses;
     property Parameters: TRouteParameters read FParameters write FParameters;
     property Routes: TDataObjectRouteArray read FRoutes write FRoutes;
     property Links: TLinks read FLinks write FLinks;
     property TrackingHistories: TTrackingHistoryArray read FTrackingHistories write FTrackingHistories;
     property Directions: TDirectionArray read FDirections write FDirections;
-    property DirectionPathPoints: TDirectionPathPointArray read FDirectionPathPoints write FDirectionPathPoints;
+    property Path: TDirectionPathPointArray read FDirectionPathPoints write FDirectionPathPoints;
   end;
 
   TDataObjectRoute = class(TDataObject)
@@ -141,6 +143,7 @@ type
     property GasPrice: NullableDouble read FGasPrice write FGasPrice;
     property RouteDurationSec: NullableInteger read FRouteDurationSec write FRouteDurationSec;
   end;
+  TDataObjectRouteList = TList<TDataObjectRoute>;
 
   function SortRoutes(Routes: TDataObjectRouteArray): TDataObjectRouteArray;
 
@@ -161,6 +164,12 @@ begin
 end;
 
 { TDataObject }
+
+procedure TDataObject.AddAddress(Address: TAddress);
+begin
+  SetLength(FAddresses, Length(FAddresses) + 1);
+  FAddresses[High(FAddresses)] := Address;
+end;
 
 constructor TDataObject.Create;
 begin
@@ -208,7 +217,7 @@ begin
     (Length(Routes) <> Length(Other.Routes)) or
     (Length(TrackingHistories) <> Length(Other.TrackingHistories)) or
     (Length(Directions) <> Length(Other.Directions)) or
-    (Length(DirectionPathPoints) <> Length(Other.DirectionPathPoints)) then
+    (Length(Path) <> Length(Other.Path)) then
     Exit;
 
   SortedUserErrors1 := SortStringArray(UserErrors);
@@ -241,8 +250,8 @@ begin
     if (not SortedDirections1[i].Equals(SortedDirections2[i])) then
       Exit;
 
-  SortedDirectionPathPoints1 := DirectionPathPointUnit.SortDirectionPathPoints(DirectionPathPoints);
-  SortedDirectionPathPoints2 := DirectionPathPointUnit.SortDirectionPathPoints(Other.DirectionPathPoints);
+  SortedDirectionPathPoints1 := DirectionPathPointUnit.SortDirectionPathPoints(Path);
+  SortedDirectionPathPoints2 := DirectionPathPointUnit.SortDirectionPathPoints(Other.Path);
   for i := 0 to Length(SortedDirectionPathPoints1) - 1 do
     if (not SortedDirectionPathPoints1[i].Equals(SortedDirectionPathPoints2[i])) then
       Exit;

@@ -30,7 +30,9 @@ type
     FAddresses: TAddressesArray;
 
     [JSONNameAttribute('parameters')]
+//    [NullableObject(TRouteParameters)]
     FParameters: TRouteParameters;
+//    FParameters: NullableObject; todo: Если в NullableObject завернуть класс с Nullable-полями, то он не десериализуется
 
     function GetAddress(AddressString: String; Addresses: TAddressesArray): TAddress;
   public
@@ -44,7 +46,7 @@ type
     property OptimizationProblemID: NullableString read FOptimizationProblemID write FOptimizationProblemID;
     property ReOptimize: NullableBoolean read FReOptimize write FReOptimize;
     property ShowDirections: NullableBoolean read FShowDirections write FShowDirections;
-    property Parameters: TRouteParameters read FParameters write FParameters;
+    property Parameters: {NullableObject}TRouteParameters read FParameters write FParameters;
     property Addresses: TAddressesArray read FAddresses;
   end;
 
@@ -68,6 +70,7 @@ begin
 
   SetLength(FAddresses, 0);
   FParameters := nil;
+//  FParameters := NullableObject.Null;
 end;
 
 destructor TOptimizationParameters.Destroy;
@@ -110,6 +113,7 @@ begin
       Break;
   end;
 
+//  ParametersEquals := (FParameters = Other.Parameters);
   if ((FParameters <> nil) and (Other.Parameters = nil)) or
     ((FParameters = nil) and (Other.Parameters <> nil)) then
     Exit;

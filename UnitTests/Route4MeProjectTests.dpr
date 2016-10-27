@@ -60,7 +60,6 @@ uses
   BaseDataObjectRouteProviderUnit in 'TestDataProviders\DataObjectRoute\BaseDataObjectRouteProviderUnit.pas',
   DataObjectUnit in '..\DataTypes\DataObjectUnit.pas',
   CommonTypesUnit in '..\Common\CommonTypesUnit.pas',
-  MoveDestinationToRouteRequestUnit in '..\AdditionalDataTypes\MoveDestinationToRouteRequestUnit.pas',
   MoveDestinationToRouteResponseUnit in '..\AdditionalDataTypes\MoveDestinationToRouteResponseUnit.pas',
   RemoveRouteDestinationRequestUnit in '..\AdditionalDataTypes\RemoveRouteDestinationRequestUnit.pas',
   RemoveRouteDestinationResponseUnit in '..\AdditionalDataTypes\RemoveRouteDestinationResponseUnit.pas',
@@ -86,7 +85,9 @@ uses
   FullAddressBookContactProviderUnit in '..\TestDataProviders\AddressBookContact\FullAddressBookContactProviderUnit.pas',
   IAddressBookContactProviderUnit in '..\TestDataProviders\AddressBookContact\IAddressBookContactProviderUnit.pas',
   OutputUnit in '..\Common\OutputUnit.pas',
-  ConnectionStubUnit in 'Connection\ConnectionStubUnit.pas';
+  ConnectionStubUnit in 'Connection\ConnectionStubUnit.pas',
+  UserActionUnit in '..\Actions\UserActionUnit.pas',
+  UserUnit in '..\DataTypes\UserUnit.pas';
 
 {R *.RES}
 

@@ -155,6 +155,17 @@ constructor TRouteParametersQuery.Create;
 begin
   Inherited Create;
 
+  FRouteId := NullableString.Null;
+  FDirections := NullableBoolean.Null;
+  FRoutePathOutput := NullableString.Null;
+  FDeviceTrackingHistory := NullableBoolean.Null;
+  FLimit := NullableInteger.Null;
+  FOffset := NullableInteger.Null;
+  FOriginal := NullableBoolean.Null;
+  FNotes := NullableBoolean.Null;
+  FQuery := NullableString.Null;
+  FReOptimize := NullableBoolean.Null;
+  FRecomputeDirections := NullableBoolean.Null;
   FParameters := NullableObject.Null;
 end;
 

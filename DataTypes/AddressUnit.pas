@@ -77,6 +77,15 @@ type
     [JSONName('sequence_no')]
     [Nullable]
     FSequenceNo: NullableInteger;
+
+    [JSONName('original_route_id')]
+    [Nullable]
+    FOriginalRouteId: NullableString;
+
+    [JSONName('optimization_problem_id')]
+    [Nullable]
+    FOptimizationProblemId: NullableString;
+
   public
     /// <remarks>
     ///  Constructor with 0-arguments must be and be public.
@@ -163,14 +172,19 @@ type
 
     property SequenceNo: NullableInteger read FSequenceNo write FSequenceNo;
 
-(*
-    //if this route was duplicated from an existing route, this value would have the original route's id
+    /// <summary>
+    ///  if this route was duplicated from an existing route, this value would have the original route's id
+    /// </summary>
     [DataMember(Name = 'original_route_id', EmitDefaultValue = false)]
-    property string OriginalRouteId { get; set; }
+    property OriginalRouteId: NullableString read FOriginalRouteId write FOriginalRouteId;
 
-    //the id of the optimization request that was used to initially instantiate this route
+    /// <summary>
+    ///  the id of the optimization request that was used to initially instantiate this route
+    /// </summary>
     [DataMember(Name = 'optimization_problem_id', EmitDefaultValue = false)]
-    property string OptimizationProblemId { get; set; }
+    property OptimizationProblemId: NullableString read FOptimizationProblemId write FOptimizationProblemId;
+(*
+
 
     [DataMember(Name = 'geocoded', EmitDefaultValue = false)]
     property bool? Geocoded { get; set; }
@@ -347,6 +361,8 @@ begin
   FTimeWindowStart2 := NullableInteger.Null;
   FTimeWindowEnd2 := NullableInteger.Null;
   FSequenceNo := NullableInteger.Null;
+  FOriginalRouteId := NullableString.Null;
+  FOptimizationProblemId := NullableString.Null;
 
   FCustomFields := NullableObject.Null;
 end;
@@ -395,6 +411,9 @@ begin
     (TimeWindowStart2 = Other.TimeWindowStart2) and
     (TimeWindowEnd2 = Other.TimeWindowEnd2) and
     (SequenceNo = Other.SequenceNo) and
+    (OriginalRouteId = Other.OriginalRouteId) and
+    (OptimizationProblemId = Other.OptimizationProblemId) and
+
     (CustomFields = Other.CustomFields);
 end;
 

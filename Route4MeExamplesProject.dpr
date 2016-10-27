@@ -56,7 +56,6 @@ uses
   RemoveRouteDestinationRequestUnit in 'AdditionalDataTypes\RemoveRouteDestinationRequestUnit.pas',
   AddRouteDestinationRequestUnit in 'AdditionalDataTypes\AddRouteDestinationRequestUnit.pas',
   MoveDestinationToRouteResponseUnit in 'AdditionalDataTypes\MoveDestinationToRouteResponseUnit.pas',
-  MoveDestinationToRouteRequestUnit in 'AdditionalDataTypes\MoveDestinationToRouteRequestUnit.pas',
   SingleDriverRoundTripGenericTestDataProviderUnit in 'TestDataProviders\OptimizationParameters\SingleDriverRoundTripGenericTestDataProviderUnit.pas',
   SingleDriverRoundTripGenericRequestUnit in 'AdditionalDataTypes\SingleDriverRoundTripGenericRequestUnit.pas',
   SingleDriverRoundTripGenericResponseUnit in 'AdditionalDataTypes\SingleDriverRoundTripGenericResponseUnit.pas',
@@ -64,7 +63,9 @@ uses
   RouteParametersQueryUnit in 'QueryTypes\RouteParametersQueryUnit.pas',
   DataObjectOptimizationsResponseUnit in 'AdditionalDataTypes\DataObjectOptimizationsResponseUnit.pas',
   RemoveDestinationFromOptimizationResponseUnit in 'AdditionalDataTypes\RemoveDestinationFromOptimizationResponseUnit.pas',
-  OutputUnit in 'Common\OutputUnit.pas';
+  OutputUnit in 'Common\OutputUnit.pas',
+  UserActionUnit in 'Actions\UserActionUnit.pas',
+  UserUnit in 'DataTypes\UserUnit.pas';
 
 begin
   try
