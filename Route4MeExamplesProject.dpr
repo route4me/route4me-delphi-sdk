@@ -95,7 +95,9 @@ uses
   AvoidanceZoneQueryUnit in 'QueryTypes\AvoidanceZoneQueryUnit.pas',
   GPSParametersUnit in 'QueryTypes\GPSParametersUnit.pas',
   NoteParametersUnit in 'QueryTypes\NoteParametersUnit.pas',
-  OrderParametersUnit in 'QueryTypes\OrderParametersUnit.pas';
+  OrderParametersUnit in 'QueryTypes\OrderParametersUnit.pas',
+  ManifestUnit in 'DataTypes\ManifestUnit.pas',
+  GeocodingUnit in 'DataTypes\GeocodingUnit.pas';
 
 begin
   try

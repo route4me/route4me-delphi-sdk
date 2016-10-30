@@ -95,7 +95,7 @@ begin
           routeDestinationIdToMove := dataObject1.Routes[0].Addresses[1].RouteDestinationId.Value
         else
           routeDestinationIdToMove := NullableInteger.Null;
-(*
+
         if (DataObject2 <> nil) and (Length(DataObject2.Routes) > 0) and
           (Length(DataObject2.Routes[0].Addresses) > 1) and
           (DataObject1.Routes[0].Addresses[0].RouteDestinationId.IsNotNull) then
@@ -224,7 +224,7 @@ begin
           Examples.GetActivities(RouteId_SingleDriverRoute10Stops)
         else
           WriteLn('GetActivities not called. routeId_SingleDriverRoute10Stops is null.');
-*)
+
         if (routeIdToMoveTo.IsNotNull) and (RouteDestinationIdToMove <> 0) then
         begin
             examples.GetAddress(routeIdToMoveTo, routeDestinationIdToMove);
@@ -233,7 +233,7 @@ begin
         end
         else
           WriteLn('AddAddressNote, GetAddress, GetAddressNotes not called. routeIdToMoveTo == null || routeDestinationIdToMove == 0.');
-(*
+
         RouteId_DuplicateRoute := NullableString.Null;
         if (RouteId_SingleDriverRoute10Stops.IsNotNull) then
           RouteId_DuplicateRoute := Examples.DuplicateRoute(RouteId_SingleDriverRoute10Stops)
@@ -298,6 +298,7 @@ begin
           else
             WriteLn('contact1 = null. UpdateAddressBookContact not called.');
 
+{todo: разобраться с id
           AddressIdsToRemove := TList<String>.Create();
           try
             if (Contact1 <> nil) then
@@ -307,7 +308,7 @@ begin
             Examples.RemoveAddressBookContacts(AddressIdsToRemove.ToArray());
           finally
             FreeAndNil(AddressIdsToRemove);
-          end;
+          end;}
         finally
           FreeAndNil(Contact2);
           FreeAndNil(Contact1);
@@ -362,7 +363,6 @@ begin
 
         examples.GenericExample(Connection);
         examples.GenericExampleShortcut(Connection);
-        *)
       except
         on E: Exception do
           Writeln(E.ClassName, ': ', E.Message);
