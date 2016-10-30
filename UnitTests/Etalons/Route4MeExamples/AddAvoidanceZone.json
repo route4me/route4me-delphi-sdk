@@ -1,1 +1,1 @@
-{"member_id":null,"territory":{"data":["37.569752822786455,-77.47833251953125","5000"],"type":"circle"},"territory_color":"ff0000","territory_id":null,"territory_name":"Test Territory"}
+{"territory_name":"Test Territory","territory_color":"ff0000","territory":{"data":["37.569752822786455,-77.47833251953125","5000"],"type":"circle"}}

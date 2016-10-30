@@ -3,30 +3,41 @@ unit DirectionPathPointUnit;
 interface
 
 uses
-  REST.Json.Types, SysUtils, System.Generics.Collections, Generics.Defaults,
-  Math,
-  DirectionLocationUnit;
+  REST.Json.Types, System.Generics.Collections, Generics.Defaults,
+  JSONNullableAttributeUnit,
+  NullableBasicTypesUnit;
 
 type
   TDirectionPathPoint = class
   strict private
     [JSONName('lat')]
-    FLatitude: double;
+    [Nullable]
+    FLatitude: NullableDouble;
 
     [JSONName('lng')]
-    FLongitude: double;
+    [Nullable]
+    FLongitude: NullableDouble;
   public
+    /// <remarks>
+    ///  Constructor with 0-arguments must be and be public.
+    ///  For JSON-deserialization.
+    /// </remarks>
+    constructor Create;
+
+    function Equals(Obj: TObject): Boolean; override;
+
     /// <summary>
     ///  Latitude
     /// </summary>
-    property Latitude: double read FLatitude write FLatitude;
+    property Latitude: NullableDouble read FLatitude write FLatitude;
     /// <summary>
     ///  Longitude
     /// </summary>
-    property Longitude: double read FLongitude write FLongitude;
+    property Longitude: NullableDouble read FLongitude write FLongitude;
   end;
 
   TDirectionPathPointArray = TArray<TDirectionPathPoint>;
+  TDirectionPathPointList = TList<TDirectionPathPoint>;
 
 function SortDirectionPathPoints(DirectionPathPoints: TDirectionPathPointArray): TDirectionPathPointArray;
 
@@ -39,12 +50,36 @@ begin
   TArray.Sort<TDirectionPathPoint>(Result, TComparer<TDirectionPathPoint>.Construct(
     function (const Direction1, Direction2: TDirectionPathPoint): Integer
     begin
-      Result := CompareValue(Direction1.Latitude, Direction2.Latitude);
+      Result := Direction1.Latitude.Compare(Direction2.Latitude);
       if (Result = 0) then
-        Result := CompareValue(Direction1.Longitude, Direction2.Longitude);
+        Result := Direction1.Longitude.Compare(Direction2.Longitude);
     end));
 end;
 
 { TDirectionPathPoint }
+
+constructor TDirectionPathPoint.Create;
+begin
+  inherited;
+
+  FLatitude := NullableDouble.Null;
+  FLongitude := NullableDouble.Null;
+end;
+
+function TDirectionPathPoint.Equals(Obj: TObject): Boolean;
+var
+  Other: TDirectionPathPoint;
+begin
+  Result := False;
+
+  if not (Obj is TDirectionPathPoint) then
+    Exit;
+
+  Other := TDirectionPathPoint(Obj);
+
+  Result :=
+    (Latitude = Other.Latitude) and
+    (Longitude = Other.Longitude);
+end;
 
 end.

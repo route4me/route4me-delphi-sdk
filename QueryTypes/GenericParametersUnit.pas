@@ -25,6 +25,7 @@ type
     destructor Destroy; override;
 
     procedure AddParameter(Key, Value: String);
+    procedure ReplaceParameter(Key, Value: String);
 
     function ToJsonString: String;
     function ToJsonValue: TJSONValue;
@@ -57,6 +58,13 @@ begin
   FreeAndNil(FParametersCollection);
 
   inherited;
+end;
+
+procedure TGenericParameters.ReplaceParameter(Key, Value: String);
+begin
+
+  FParametersCollection.Add(TStringPair.Create(Key, Value));
+
 end;
 
 function TGenericParameters.Serialize(ApiKey: String): TListStringPair;

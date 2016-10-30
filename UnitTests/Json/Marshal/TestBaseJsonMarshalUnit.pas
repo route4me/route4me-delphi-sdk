@@ -28,6 +28,7 @@ begin
   try
     EtalonList.LoadFromFile(EtalonFilename);
     ActualList.Text := Actual;
+    SaveTestDataToFile(Actual);
     CheckTrue(EtalonList.Equals(ActualList));
   finally
     FreeAndNil(ActualList);

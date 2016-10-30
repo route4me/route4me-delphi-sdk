@@ -8,6 +8,9 @@ uses
   EnumsUnit, NullableBasicTypesUnit;
 
 type
+  /// <remarks>
+  ///  https://github.com/route4me/json-schemas/blob/master/RouteParameters.dtd
+  /// </remarks>
   TRouteParameters = class
   private
     [JSONName('is_upload')]
@@ -70,12 +73,6 @@ type
     [Nullable]
     FTravelMode: NullableString;
 
-    //1 = ROUTE4ME_METRIC_EUCLIDEAN (use euclidean distance when computing point to point distance)
-    //2 = ROUTE4ME_METRIC_MANHATTAN (use manhattan distance (taxicab geometry) when computing point to point distance)
-    //3 = ROUTE4ME_METRIC_GEODESIC (use geodesic distance when computing point to point distance)
-    //#4 is the default and suggested metric
-    //4 = ROUTE4ME_METRIC_MATRIX (use road network driving distance when computing point to point distance)
-    //5 = ROUTE4ME_METRIC_EXACT_2D (use exact rectilinear distance)
     [JSONName('metric')]
     [Nullable]
     FMetric: NullableInteger;
@@ -83,6 +80,114 @@ type
     [JSONName('parts')]
     [Nullable]
     FParts: NullableInteger;
+
+    [JSONName('dev_lng')]
+    [Nullable]
+    FDevLongitude: NullableDouble;
+
+    [JSONName('route_email')]
+    [Nullable]
+    FRouteEmail: NullableString;
+
+    [JSONName('dirm')]
+    [Nullable]
+    FDirm: NullableInteger;
+
+    [JSONName('dm')]
+    [Nullable]
+    FDM: NullableInteger;
+
+    [JSONName('member_id')]
+    [Nullable]
+    FMemberId: NullableString;
+
+    [JSONName('driver_id')]
+    [Nullable]
+    FDriverId: NullableString;
+
+    [JSONName('vehicle_id')]
+    [Nullable]
+    FVehicleId: NullableString;
+
+    [JSONName('route_type')]
+    [Nullable]
+    FRouteType: NullableString;
+
+    [JSONName('dev_lat')]
+    [Nullable]
+    FDevLatitude: NullableDouble;
+
+    [JSONName('ip')]
+    [Nullable]
+    FIp: NullableString;
+
+    [JSONName('device_id')]
+    [Nullable]
+    FDeviceId: NullableString;
+
+    [JSONName('lock_last')]
+    [Nullable]
+    FLockLast: NullableBoolean;
+
+    [JSONName('avoid')]
+    [Nullable]
+    FAvoid: NullableString;
+
+    [JSONName('truck_height_meters')]
+    [Nullable]
+    FTruckHeightMeters: NullableInteger;
+
+    [JSONName('truck_length_meters')]
+    [Nullable]
+    FTruckLengthMeters: NullableInteger;
+
+    [JSONName('has_trailer')]
+    [Nullable]
+    FHasTrailer: NullableBoolean;
+
+    [JSONName('max_tour_size')]
+    [Nullable]
+    FMaxTourSize: NullableInteger;
+
+    [JSONName('truck_width_meters')]
+    [Nullable]
+    FTruckWidthMeters: NullableInteger;
+
+    [JSONName('min_tour_size')]
+    [Nullable]
+    FMinTourSize: NullableInteger;
+
+    [JSONName('limited_weight_t')]
+    [Nullable]
+    FLimitedWeightT: NullableDouble;
+
+    [JSONName('optimization_quality')]
+    [Nullable]
+    FOptimizationQuality: NullableInteger;
+
+    [JSONName('trailer_weight_t')]
+    [Nullable]
+    FTrailerWeightT: NullableDouble;
+
+    [JSONName('weight_per_axle_t')]
+    [Nullable]
+    FWeightPerAxleT: NullableDouble;
+
+    function GetAlgorithmType: TAlgorithmType;
+    procedure SetAlgorithmType(const Value: TAlgorithmType);
+    function GetOptimize: TOptimize;
+    procedure SetOptimize(const Value: TOptimize);
+    function GetDistanceUnit: TDistanceUnit;
+    procedure SetDistanceUnit(const Value: TDistanceUnit);
+    function GetDeviceType: TDeviceType;
+    procedure SetDeviceType(const Value: TDeviceType);
+    function GetTravelMode: TTravelMode;
+    procedure SetTravelMode(const Value: TTravelMode);
+    function GetMetric: TMetric;
+    procedure SetMetric(const Value: TMetric);
+    function GetAvoid: TAvoid;
+    procedure SetAvoid(const Value: TAvoid);
+
   public
     /// <remarks>
     ///  Constructor with 0-arguments must be and be public.
@@ -92,119 +197,150 @@ type
 
     function Equals(Obj: TObject): Boolean; override;
 
-    //let the R4M api know if this sdk request is coming from a file upload within your environment (for analytics)
-//    [DataMember(Name = 'is_upload', EmitDefaultValue = false)]
+    /// <summary>
+    ///  Let the R4M api know if this sdk request is coming from a file upload within your environment (for analytics)
+    /// </summary>
     property IsUpload: NullableBoolean read FIsUpload write FIsUpload;
 
-    //the tour type of this route. rt is short for round trip, the optimization engine changes its behavior for round trip routes
-//    [DataMember(Name = 'rt', EmitDefaultValue = false)]
-    property RT: NullableBoolean read FRT write FRT; // nullable
+    /// <summary>
+    ///  The tour type of this route. rt is short for round trip, the optimization engine changes its behavior for round trip routes
+    /// </summary>
+    property RT: NullableBoolean read FRT write FRT;
 
-    //by disabling optimization, the route optimization engine will not resequence the stops in your
-//    [DataMember(Name = 'disable_optimization', EmitDefaultValue = false)]
-    property DisableOptimization: NullableBoolean read FDisableOptimization write FDisableOptimization; // nullable
+    /// <summary>
+    ///  By disabling optimization, the route optimization engine will not resequence the stops in your
+    /// </summary>
+    property DisableOptimization: NullableBoolean read FDisableOptimization write FDisableOptimization;
 
-    //the name of this route. this route name will be accessible in the search API, and also will be displayed on the mobile device of a user
-//    [DataMember(Name = 'route_name', EmitDefaultValue = false)]
+    /// <summary>
+    ///  The name of this route. this route name will be accessible in the search API, and also will be displayed on the mobile device of a user
+    /// </summary>
     property RouteName: NullableString read FRouteName write FRouteName;
 
-    //the type of algorithm to use when optimizing the route
-//    [DataMember(Name = 'algorithm_type', EmitDefaultValue = false)]
-    property AlgorithmType: NullableInteger read FAlgorithmType write FAlgorithmType;
+    /// <summary>
+    ///  The algorithm to be used
+    /// </summary>
+    property AlgorithmType: TAlgorithmType read GetAlgorithmType write SetAlgorithmType;
 
-    // deprecated
-    //all routes are stored by default at this time
-//    [DataMember(Name = 'store_route', EmitDefaultValue = false)]
-    property StoreRoute: NullableBoolean read FStoreRoute write FStoreRoute;  // nullable
+    /// <summary>
+    ///  Always true
+    /// </summary>
+    property StoreRoute: NullableBoolean read FStoreRoute write FStoreRoute;
 
-    //the route start date in UTC, unix timestamp seconds.
-    //used to show users when the route will begin, also used for reporting and analytics
-//    [DataMember(Name = 'route_date', EmitDefaultValue = false)]
-    property RouteDate: NullableInteger read FRouteDate write FRouteDate;  // nullable
+    /// <summary>
+    ///  The route start date in UTC, unix timestamp seconds. Used to show users when the route will begin, also used for reporting and analytics
+    /// </summary>
+    property RouteDate: NullableInteger read FRouteDate write FRouteDate;
 
-    //offset in seconds relative to the route start date (i.e. 9AM would be 60 * 60 * 9)
-//    [DataMember(Name = 'route_time', EmitDefaultValue = false)]
+    /// <summary>
+    ///  Time when the route starts (relative to route_date) (Seconds). UTC timezone as well
+    /// </summary>
     property RouteTime: NullableInteger read FRouteTime write FRouteTime;
 
-//    [DataMember(Name = 'optimize', EmitDefaultValue = false)]
-    property Optimize: NullableString read FOptimize write FOptimize;
+    /// <summary>
+    ///  The driving directions will be generated biased for this selection. This has no impact on route sequencing
+    /// </summary>
+    property Optimize: TOptimize read GetOptimize write SetOptimize;
 
-    //km or mi, the route4me api will convert all measurements into these units
-//    [DataMember(Name = 'distance_unit', EmitDefaultValue = false)]
-    property DistanceUnit: NullableString read FDistanceUnit write FDistanceUnit;
+    /// <summary>
+    ///  The distance measurement unit for the route
+    /// </summary>
+    property DistanceUnit: TDistanceUnit read GetDistanceUnit write SetDistanceUnit;
 
-    //the type of device making this request
-    //ENUM('web', 'iphone', 'ipad', 'android_phone', 'android_tablet')
-//    [DataMember(Name = 'device_type', EmitDefaultValue = false)]
-    property DeviceType: NullableString read FDeviceType write FDeviceType;
+    /// <summary>
+    ///  The type of the device that is creating this route
+    /// </summary>
+    property DeviceType: TDeviceType read GetDeviceType write SetDeviceType;
 
-    //when using a multiple driver algorithm, this is the maximum permissible duration of a generated route
-    //the optimization system will automatically create more routes when the route_max_duration is exceeded for a route
-    //however it will create an 'unrouted' list of addresses if the maximum number of drivers is exceeded
-//    [DataMember(Name = 'route_max_duration', EmitDefaultValue = false)]
+    /// <summary>
+    ///  How many seconds a route can last at most. Default is 24 hours = 86400 seconds
+    /// </summary>
     property RouteMaxDuration: NullableInteger read FRouteMaxDuration write FRouteMaxDuration; // nullable
 
-//    [DataMember(Name = 'vehicle_capacity', EmitDefaultValue = false)]
+    /// <summary>
+    ///  How much cargo can the vehicle carry (units, e.g. cubic meters)
+    /// </summary>
     property VehicleCapacity: NullableString read FVehicleCapacity write FVehicleCapacity;
 
-//    [DataMember(Name = 'vehicle_max_distance_mi', EmitDefaultValue = false)]
+    /// <summary>
+    ///  Max distance for a single vehicle in this route (always in miles)
+    /// </summary>
     property VehicleMaxDistanceMI: NullableString read FVehicleMaxDistanceMI write FVehicleMaxDistanceMI;
 
-//    [DataMember(Name = 'travel_mode', EmitDefaultValue = false)]
-    property TravelMode: NullableString read FTravelMode write FTravelMode;
+    /// <summary>
+    ///  The mode of travel that the directions should be optimized for
+    /// </summary>
+    property TravelMode: TTravelMode read GetTravelMode write SetTravelMode;
 
-    property Metric: NullableInteger read FMetric write FMetric;
+    /// <summary>
+    ///  Integer [1, 2, 3, 4, 5]
+    /// 1 = ROUTE4ME_METRIC_EUCLIDEAN (use euclidean distance when computing point to point distance)
+    /// 2 = ROUTE4ME_METRIC_MANHATTAN (use manhattan distance (taxicab geometry) when computing point to point distance)
+    /// 3 = ROUTE4ME_METRIC_GEODESIC (use geodesic distance when computing point to point distance)
+    /// #4 is the default and suggested metric
+    /// 4 = ROUTE4ME_METRIC_MATRIX (use road network driving distance when computing point to point distance)
+    /// 5 = ROUTE4ME_METRIC_EXACT_2D (use exact rectilinear distance)
+    /// </summary>
+    property Metric: TMetric read GetMetric write SetMetric;
 
+    /// <summary>
+    ///  Legacy feature which permits a user to request an example number of optimized routes
+    /// </summary>
     property Parts: NullableInteger read FParts write FParts;
 
-(*    //deprecated
-    //specify if the route can be viewed by unauthenticated users
-    [DataMember(Name = 'shared_propertyly', EmitDefaultValue = false)]
-    property string Sharedpropertyly { get; set; }
+    /// <summary>
+    ///  A flag to indicate if the last stop in the route should be fixed
+    /// </summary>
+    property LockLast: NullableBoolean read FLockLast write FLockLast;
 
-    //when the tour type is not round trip (rt = false), enable lock last so that the final destination is fixed
-    //example: driver leaves a depot, but must always arrive at home ( or a specific gas station) at the end of the route
-    [DataMember(Name = 'lock_last', EmitDefaultValue = false)]
-    property bool? LockLast { get; set; }
+    /// <summary>
+    ///  Options which let the user choose which road obstacles to avoid. This has no impact on route sequencing
+    /// </summary>
+    property Avoid: TAvoid read GetAvoid write SetAvoid;
 
-    [DataMember(Name = 'avoid', EmitDefaultValue = false)]
-    property string Avoid { get; set; }
+    /// <summary>
+    ///  The unique internal id of a vehicle
+    /// </summary>
+    property VehicleId: NullableString read FVehicleId write FVehicleId;
 
-    [DataMember(Name = 'vehicle_id', EmitDefaultValue = false)]
-    property string VehicleId { get; set; }
+    /// <summary>
+    ///  The unique internal id of a driver
+    /// </summary>
+    property DriverId: NullableString read FDriverId write FDriverId;
 
-    //deprecated, all new routes should be assigned to a member_id
-    [DataMember(Name = 'driver_id', EmitDefaultValue = false)]
-    property string DriverId { get; set; }
+    /// <summary>
+    ///  The latitude location of where a mobile device was located when it made a request to create the route
+    /// </summary>
+    property DevLatitude: NullableDouble read FDevLatitude write FDevLatitude;
 
-    //the latitude of the device making this sdk request
-    [DataMember(Name = 'dev_lat', EmitDefaultValue = false)]
-    property double? DevLatitude { get; set; }
+    /// <summary>
+    ///  The longitude location of where a mobile device was located when it made a request to create the route
+    /// </summary>
+    property DevLongitude: NullableDouble read FDevLongitude write FDevLongitude;
 
-    //the longitude of the device making this sdk request
-    [DataMember(Name = 'dev_lng', EmitDefaultValue = false)]
-    property double? DevLongitude { get; set; }
+    /// <summary>
+    ///  Addresses where this route was shared after completion
+    /// </summary>
+    property RouteEmail: NullableString read FRouteEmail write FRouteEmail;
 
-    //the email address to notify upon completion of an optimization request
-    [DataMember(Name = 'route_email', EmitDefaultValue = false)]
-    property string RouteEmail { get; set; }
+    /// <summary>
+    ///  Type of route being created: ENUM(api,null)
+    /// </summary>
+    property RouteType: NullableString read FRouteType write FRouteType;
 
-    //type of route being created: ENUM(api,null)
-    [DataMember(Name = 'route_type', EmitDefaultValue = false)]
-    property string RouteType { get; set; }
+    /// <summary>
+    ///  User ID who is assigned to the route
+    /// </summary>
+    property MemberId: NullableString read FMemberId write FMemberId;
 
-    //in order for users in your organization to have routes assigned to them,
-    //you must provide their member id within the route4me system
-    //a list of member ids can be retrieved with view_users api method
-    [DataMember(Name = 'member_id', EmitDefaultValue = false)]
-    property string MemberId { get; set; }
+    /// <summary>
+    ///  IP Address in decimal form of user who created the route
+    /// </summary>
+    property Ip: NullableString read FIp write FIp;
 
-
-    //specify the ip address of the remote user making this optimization request
-    [DataMember(Name = 'ip', EmitDefaultValue = false)]
-    property string Ip { get; set; }
-
-
+    /// <summary>
+    ///  Undocumented/not publicly shown
+    /// </summary>
     //the method to use when compute the distance between the points in a route
     //1 = DEFAULT (R4M PROPRIETARY ROUTING)
     //2 = DEPRECRATED
@@ -212,75 +348,78 @@ type
     //4 = DEPRECATED
     //5 = DEPRECATED
     //6 = TRUCKING
-    [DataMember(Name = 'dm', EmitDefaultValue = false)]
-    property int? DM { get; set; }
+    property DM: NullableInteger read FDM write FDM;
 
+    /// <summary>
+    ///  Undocumented/not publicly shown
+    /// </summary>
     //directions method
     //1 = DEFAULT (R4M PROPRIETARY INTERNAL NAVIGATION SYSTEM)
     //2 = DEPRECATED
     //3 = TRUCKING
     //4 = DEPRECATED
-    [DataMember(Name = 'dirm', EmitDefaultValue = false)]
-    property int? Dirm { get; set; }
+    property Dirm: NullableInteger read FDirm write FDirm;
 
-    //deprecated
-    [DataMember(Name = 'device_id', EmitDefaultValue = false)]
-    property object DeviceID { get; set; }
+    /// <summary>
+    ///  32 Character MD5 String ID of the device that was used to plan this route
+    /// </summary>
+    property DeviceId: NullableString read FDeviceId write FDeviceId;
 
-    //for routes that have trucking directions enabled, directions generated
-    //will ensure compliance so that road directions generated do not take the vehicle
-    //where trailers are prohibited
-    [DataMember(Name = 'has_trailer', EmitDefaultValue = false)]
-    property bool? HasTrailer { get; set; }
+    /// <summary>
+    ///  if True vehicle has trailer
+    /// </summary>
+    property HasTrailer: NullableBoolean read FHasTrailer write FHasTrailer;
 
-    //for routes that have trucking directions enabled, directions generated
-    //will ensure compliance so that road directions generated do not take the vehicle
-    //on roads where the weight of the vehicle in tons exceeds this value
-    [DataMember(Name = 'trailer_weight_t', EmitDefaultValue = false)]
-    property double? TrailerWeightT { get; set; }
+    /// <summary>
+    ///  If has_trailer = true, specifies the weight of the trailer (required)
+    /// </summary>
+    property TrailerWeightT: NullableDouble read FTrailerWeightT write FTrailerWeightT;
 
+    /// <summary>
+    ///  If travel_mode = 'Trucking', specifies the truck weight (required)
+    /// </summary>
+    property LimitedWeightT: NullableDouble read FLimitedWeightT write FLimitedWeightT;
 
-    [DataMember(Name = 'limited_weight_t', EmitDefaultValue = false)]
-    property double? LimitedWeightT { get; set; }
+    /// <summary>
+    ///  If travel_mode = 'Trucking', specifies the weight per axle (required)
+    /// </summary>
+    property WeightPerAxleT: NullableDouble read FWeightPerAxleT write FWeightPerAxleT;
 
-    //for routes that have trucking directions enabled, directions generated
-    //will ensure compliance so that road directions generated do not take the vehicle
-    //where the weight per axle in tons exceeds this value
-    [DataMember(Name = 'weight_per_axle_t', EmitDefaultValue = false)]
-    property double? WeightPerAxleT { get; set; }
+    /// <summary>
+    ///  If travel_mode = 'Trucking', specifies the truck height (required)
+    /// </summary>
+    property TruckHeightMeters: NullableInteger read FTruckHeightMeters write FTruckHeightMeters;
 
-    //for routes that have trucking directions enabled, directions generated
-    //will ensure compliance of this maximum height of truck when generating road network driving directions
-    [DataMember(Name = 'truck_height_meters', EmitDefaultValue = false)]
-    property int? TruckHeightMeters { get; set; }
+    /// <summary>
+    ///  If travel_mode = 'Trucking', specifies the truck width (required)
+    /// </summary>
+    property TruckWidthMeters: NullableInteger read FTruckWidthMeters write FTruckWidthMeters;
 
-    //for routes that have trucking directions enabled, directions generated
-    //will ensure compliance of this width of the truck when generating road network driving directions
-    [DataMember(Name = 'truck_width_meters', EmitDefaultValue = false)]
-    property int? TruckWidthMeters { get; set; }
+    /// <summary>
+    ///  If travel_mode = 'Trucking', specifies the truck length (required)
+    /// </summary>
+    property TruckLengthMeters: NullableInteger read FTruckLengthMeters write FTruckLengthMeters;
 
-    //for routes that have trucking directions enabled, directions generated
-    //will ensure compliance of this length of the truck when generating road network driving directions
-    [DataMember(Name = 'truck_length_meters', EmitDefaultValue = false)]
-    property int? TruckLengthMeters { get; set; }
-
-
+    /// <summary>
+    ///  Must be > 0; the minimum number of stops allowed in a subtour. null means there is no minimum
+    /// </summary>
     //the minimum number of stops permitted per created subroute
-    [DataMember(Name = 'min_tour_size', EmitDefaultValue = false)]
-    property int? MinTourSize { get; set; }
+    property MinTourSize: NullableInteger read FMinTourSize write FMinTourSize;
 
-    //the maximum number of stops permitted per created subroute
-    [DataMember(Name = 'max_tour_size', EmitDefaultValue = false)]
-    property int? MaxTourSize { get; set; }
+    /// <summary>
+    ///  Must be > 0; the maximum number of stops allowed in a subtour. null means there is no maximum
+    /// </summary>
+    property MaxTourSize: NullableInteger read FMaxTourSize write FMaxTourSize;
 
-    //there are 3 types of optimization qualities that are optimizations goals
-    //1 - Generate Optimized Routes As Quickly as Possible
-    //2 - Generate Routes That Look Better On A Map
-    //3 - Generate The Shortest And Quickest Possible Routes
-
-    [DataMember(Name = 'optimization_quality', EmitDefaultValue = false)]
-    property int? OptimizationQuality { get; set; }*)
+    /// <summary>
+    ///  there are 3 types of optimization qualities that are optimizations goals
+    ///  1 - Generate Optimized Routes As Quickly as Possible
+    ///  2 - Generate Routes That Look Better On A Map
+    ///  3 - Generate The Shortest And Quickest Possible Routes
+    /// </summary>
+    property OptimizationQuality: NullableInteger read FOptimizationQuality write FOptimizationQuality;
   end;
+
 implementation
 
 { TRouteParameters }
@@ -304,6 +443,29 @@ begin
     FTravelMode := NullableString.Null;
     FMetric := NullableInteger.Null;
     FParts := NullableInteger.Null;
+    FDevLongitude := NullableDouble.Null;
+    FRouteEmail := NullableString.Null;
+    FDirm := NullableInteger.Null;
+    FDM := NullableInteger.Null;
+    FMemberId := NullableString.Null;
+    FDriverId := NullableString.Null;
+    FVehicleId := NullableString.Null;
+    FRouteType := NullableString.Null;
+    FDevLatitude := NullableDouble.Null;
+    FIp := NullableString.Null;
+    FDeviceId := NullableString.Null;
+    FLockLast := NullableBoolean.Null;
+    FAvoid := NullableString.Null;
+    FTruckHeightMeters := NullableInteger.Null;
+    FTruckLengthMeters := NullableInteger.Null;
+    FHasTrailer := NullableBoolean.Null;
+    FMaxTourSize := NullableInteger.Null;
+    FTruckWidthMeters := NullableInteger.Null;
+    FMinTourSize := NullableInteger.Null;
+    FLimitedWeightT := NullableDouble.Null;
+    FOptimizationQuality := NullableInteger.Null;
+    FTrailerWeightT := NullableDouble.Null;
+    FWeightPerAxleT := NullableDouble.Null;
 end;
 
 function TRouteParameters.Equals(Obj: TObject): Boolean;
@@ -334,7 +496,141 @@ begin
     (VehicleMaxDistanceMI = Other.VehicleMaxDistanceMI) and
     (TravelMode = Other.TravelMode) and
     (Metric = Other.Metric) and
-    (Parts = Other.Parts);
+    (Parts = Other.Parts) and
+    (DevLatitude = Other.DevLatitude) and
+    (DevLongitude = Other.DevLongitude) and
+    (RouteEmail = Other.RouteEmail) and
+    (Dirm = Other.Dirm) and
+    (DM = Other.DM) and
+    (MemberId = Other.MemberId) and
+    (DriverId = Other.DriverId) and
+    (VehicleId = Other.VehicleId) and
+    (RouteType = Other.RouteType) and
+    (Ip = Other.Ip) and
+    (DeviceId = Other.DeviceId) and
+    (LockLast = Other.LockLast) and
+    (Avoid = Other.Avoid) and
+    (TruckHeightMeters = Other.TruckHeightMeters) and
+    (TruckLengthMeters = Other.TruckLengthMeters) and
+    (HasTrailer = Other.HasTrailer) and
+    (MaxTourSize = Other.MaxTourSize) and
+    (TruckWidthMeters = Other.TruckWidthMeters) and
+    (MinTourSize = Other.MinTourSize) and
+    (LimitedWeightT = Other.LimitedWeightT) and
+    (OptimizationQuality = Other.OptimizationQuality) and
+    (TrailerWeightT = Other.TrailerWeightT) and
+    (WeightPerAxleT = Other.WeightPerAxleT);
+end;
+
+function TRouteParameters.GetAlgorithmType: TAlgorithmType;
+begin
+  if FAlgorithmType.IsNull then
+    Result := TAlgorithmType.NoneAlgorithmType
+  else
+    Result := TAlgorithmType(FAlgorithmType.Value);
+end;
+
+function TRouteParameters.GetAvoid: TAvoid;
+var
+  Avoid: TAvoid;
+begin
+  if FAvoid.IsNull then
+    Exit(TAvoid.Empty);
+
+  for Avoid := Low(TAvoid) to High(TAvoid) do
+    if (FAvoid = TAvoidDescription[Avoid]) then
+      Exit(Avoid);
+end;
+
+function TRouteParameters.GetDeviceType: TDeviceType;
+var
+  DeviceType: TDeviceType;
+begin
+  if FDeviceType.IsNull then
+    Exit(TDeviceType.UnknownDevice);
+
+  for DeviceType := Low(TDeviceType) to High(TDeviceType) do
+    if (FDeviceType = TDeviceTypeDescription[DeviceType]) then
+      Exit(DeviceType);
+end;
+
+function TRouteParameters.GetDistanceUnit: TDistanceUnit;
+var
+  DistanceUnit: TDistanceUnit;
+begin
+  if FDistanceUnit.IsNull then
+    Exit(TDistanceUnit.Undefinded);
+
+  for DistanceUnit := Low(TDistanceUnit) to High(TDistanceUnit) do
+    if (FDistanceUnit = TDistanceUnitDescription[DistanceUnit]) then
+      Exit(DistanceUnit);
+end;
+
+function TRouteParameters.GetMetric: TMetric;
+begin
+  if FMetric.IsNull then
+    Result := TMetric.UndefinedMetric
+  else
+    Result := TMetric(FMetric.Value);
+end;
+
+function TRouteParameters.GetOptimize: TOptimize;
+var
+  Optimize: TOptimize;
+begin
+  if FOptimize.IsNull then
+    Exit(TOptimize.NoneOptimize);
+
+  for Optimize := Low(TOptimize) to High(TOptimize) do
+    if (FOptimize = TOptimizeDescription[Optimize]) then
+      Exit(Optimize);
+end;
+
+function TRouteParameters.GetTravelMode: TTravelMode;
+var
+  TravelMode: TTravelMode;
+begin
+  if FTravelMode.IsNull then
+    Exit(TTravelMode.UnknownMode);
+
+  for TravelMode := Low(TTravelMode) to High(TTravelMode) do
+    if (FTravelMode = TTravelModeDescription[TravelMode]) then
+      Exit(TravelMode);
+end;
+
+procedure TRouteParameters.SetAlgorithmType(const Value: TAlgorithmType);
+begin
+  FAlgorithmType := Integer(Value);
+end;
+
+procedure TRouteParameters.SetAvoid(const Value: TAvoid);
+begin
+  FAvoid := TAvoidDescription[Value];
+end;
+
+procedure TRouteParameters.SetDeviceType(const Value: TDeviceType);
+begin
+  FDeviceType := TDeviceTypeDescription[Value];
+end;
+
+procedure TRouteParameters.SetDistanceUnit(const Value: TDistanceUnit);
+begin
+  FDistanceUnit := TDistanceUnitDescription[Value];
+end;
+
+procedure TRouteParameters.SetMetric(const Value: TMetric);
+begin
+  FMetric := Integer(Value);
+end;
+
+procedure TRouteParameters.SetOptimize(const Value: TOptimize);
+begin
+  FOptimize := TOptimizeDescription[Value];
+end;
+
+procedure TRouteParameters.SetTravelMode(const Value: TTravelMode);
+begin
+  FTravelMode := TTravelModeDescription[Value];
 end;
 
 end.

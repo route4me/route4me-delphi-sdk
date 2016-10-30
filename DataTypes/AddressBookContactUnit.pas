@@ -11,10 +11,6 @@ type
 
   TAddressBookContact = class(TGenericParameters)
   private
-    [JSONName('address_id')]
-    [Nullable]
-    FId: NullableString;
-
     [JSONName('address_group')]
     [Nullable]
     FAddressGroup: NullableString;
@@ -68,6 +64,14 @@ type
     [JSONName('cached_lng')]
     FLongitude: Double;
 
+    [JSONName('curbside_lat')]
+    [Nullable]
+    FCurbsideLatitude: NullableDouble;
+
+    [JSONName('curbside_lng')]
+    [Nullable]
+    FCurbsideLongitude: NullableDouble;
+
     [JSONName('color')]
     [Nullable]
     FColor: NullableString;
@@ -80,6 +84,7 @@ type
     [NullableObject(TDictionaryStringIntermediateObject)]
     FCustomData: NullableObject;
 
+    function GetCustomData: TDictionaryStringIntermediateObject;
   public
     /// <remarks>
     ///  Constructor with 0-arguments must be and be public.
@@ -89,11 +94,8 @@ type
     constructor Create(Address: String; Latitude, Longitude: Double); overload;
     destructor Destroy; override;
 
-    procedure AddCustomData(Key: String; Value: String);
-
     function Equals(Obj: TObject): Boolean; override;
 
-    property Id: NullableString read FId write FId;
     /// <summary>
     ///  Address group
     /// </summary>
@@ -110,17 +112,17 @@ type
     property Address: String read FAddress write FAddress;
 
     /// <summary>
-    ///  The route Address Line 2
+    ///  The route Address Line 2 which is not used for geocoding
     /// </summary>
     property Address2: NullableString read FAddress2 write FAddress2;
 
     /// <summary>
-    ///  First name
+    ///  The first name of the receiving address
     /// </summary>
     property FirstName: NullableString read FFirstName write FFirstName;
 
     /// <summary>
-    ///  Last name
+    ///  The last name of the receiving party
     /// </summary>
     property LastName: NullableString read FLastName write FLastName;
 
@@ -130,27 +132,27 @@ type
     property Email: NullableString read FEmail write FEmail;
 
     /// <summary>
-    ///  Address phone number
+    ///  The phone number for the address
     /// </summary>
     property PhoneNumber: NullableString read FPhoneNumber write FPhoneNumber;
 
     /// <summary>
-    ///  Address city
+    ///  The city the address is located in
     /// </summary>
     property City: NullableString read FCity write FCity;
 
     /// <summary>
-    ///  Address state ID
+    ///  The state the address is located in
     /// </summary>
     property StateId: NullableString read FStateId write FStateId;
 
     /// <summary>
-    ///  Address country ID
+    ///  The country the address is located in
     /// </summary>
     property CountryId: NullableString read FCountryId write FCountryId;
 
     /// <summary>
-    ///  Address zip code
+    ///  The zip code the address is located in
     /// </summary>
     property Zip: NullableString read FZip write FZip;
 
@@ -165,6 +167,16 @@ type
     property Longitude: Double read FLongitude write FLongitude;
 
     /// <summary>
+    ///  Curbside latitude
+    /// </summary>
+    property CurbsideLatitude: NullableDouble read FCurbsideLatitude write FCurbsideLatitude;
+
+    /// <summary>
+    ///  Curbside longitude
+    /// </summary>
+    property CurbsideLongitude: NullableDouble read FCurbsideLongitude write FCurbsideLongitude;
+
+    /// <summary>
     ///  Color of an address
     /// </summary>
     property Color: NullableString read FColor write FColor;
@@ -177,10 +189,12 @@ type
     /// <summary>
     ///  Address custom data
     /// </summary>
-    property CustomData: NullableObject read FCustomData write FCustomData;
+    property CustomData: TDictionaryStringIntermediateObject read GetCustomData;
+    procedure AddCustomData(Key: String; Value: String);
   end;
 
   TAddressBookContactList = TList<TAddressBookContact>;
+  TAddressBookContactArray = TArray<TAddressBookContact>;
 
 implementation
 
@@ -190,7 +204,6 @@ constructor TAddressBookContact.Create;
 begin
   Inherited Create;
 
-  FId := NullableString.Null;
   FAddressGroup := NullableString.Null;
   FAlias := NullableString.Null;
   FAddress2 := NullableString.Null;
@@ -205,6 +218,9 @@ begin
   FColor := NullableString.Null;
   FAddressIcon := NullableString.Null;
   FCustomData := NullableObject.Null;
+  FCurbsideLatitude := NullableDouble.Null;
+  FCurbsideLongitude := NullableDouble.Null;
+
 end;
 
 { TAddressBookContact }
@@ -246,7 +262,7 @@ begin
 
   Other := TAddressBookContact(Obj);
 
-  Result := (Id = Other.Id) and
+  Result :=
     (AddressGroup = Other.AddressGroup) and
     (Alias = Other.Alias) and
     (Address = Other.Address) and
@@ -261,9 +277,19 @@ begin
     (Zip = Other.Zip) and
     (Latitude = Other.Latitude) and
     (Longitude = Other.Longitude) and
+    (CurbsideLatitude = Other.CurbsideLatitude) and
+    (CurbsideLongitude = Other.CurbsideLongitude) and
     (Color = Other.Color) and
     (AddressIcon = Other.AddressIcon) and
-    (CustomData = Other.CustomData);
+    (FCustomData = Other.FCustomData);
+end;
+
+function TAddressBookContact.GetCustomData: TDictionaryStringIntermediateObject;
+begin
+  if (FCustomData.IsNull) then
+    Result := nil
+  else
+    Result := FCustomData.Value as TDictionaryStringIntermediateObject;
 end;
 
 end.

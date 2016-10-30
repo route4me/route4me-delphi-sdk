@@ -9,7 +9,10 @@ uses
   JSONDictionaryInterceptorObjectUnit;
 
 type
-
+  // todo: привести в соответствии схеме
+  /// <remarks>
+  ///  https://github.com/route4me/json-schemas/blob/master/User_v4_response.dtd
+  /// </remarks>
   TUser = class(TGenericParameters)
   private
     [JSONName('member_id')]
@@ -25,16 +28,20 @@ type
     FMemberType: NullableString;
 
     [JSONName('member_first_name')]
-    FFirstName: String;
+    [Nullable]
+    FFirstName: NullableString;
 
     [JSONName('member_last_name')]
-    FLastName: String;
+    [Nullable]
+    FLastName: NullableString;
 
     [JSONName('member_email')]
-    FEmail: String;
+    [Nullable]
+    FEmail: NullableString;
 
     [JSONName('phone_number')]
-    FPhoneNumber: String;
+    [Nullable]
+    FPhoneNumber: NullableString;
 
     [JSONName('readonly_user')]
     [Nullable]
@@ -52,14 +59,49 @@ type
 
     function Equals(Obj: TObject): Boolean; override;
 
-    property FirstName: String read FFirstName write FFirstName;
-    property LastName: String read FLastName write FLastName;
-    property Email: String read FEmail write FEmail;
-    property PhoneNumber: String read FPhoneNumber write FPhoneNumber;
+    /// <summary>
+    ///  The first name of the user
+    /// </summary>
+    property FirstName: NullableString read FFirstName write FFirstName;
+
+    /// <summary>
+    ///  The last name of the user
+    /// </summary>
+    property LastName: NullableString read FLastName write FLastName;
+
+    /// <summary>
+    ///  E-mail address of the user that was used for website registration
+    /// </summary>
+    property Email: NullableString read FEmail write FEmail;
+
+    /// <summary>
+    ///  A phone number of the user
+    /// </summary>
+    property PhoneNumber: NullableString read FPhoneNumber write FPhoneNumber;
+
+    /// <summary>
+    ///  Member ID
+    /// </summary>
     property MemberId: NullableInteger read FMemberId write FMemberId;
+
+    /// <summary>
+    ///  a
+    /// </summary>
     property AccountTypeId: NullableInteger read FAccountTypeId write FAccountTypeId;
+
+    /// <summary>
+    ///  a
+    /// </summary>
     property MemberType: NullableString read FMemberType write FMemberType;
+
+    /// <summary>
+    ///  a
+    /// </summary>
     property ReadonlyUser: NullableBoolean read FReadonlyUser write FReadonlyUser;
+
+    /// <summary>
+    ///  a
+    /// </summary>
     property ShowSuperuserAddresses: NullableBoolean read FShowSuperuserAddresses write FShowSuperuserAddresses;
   end;
 

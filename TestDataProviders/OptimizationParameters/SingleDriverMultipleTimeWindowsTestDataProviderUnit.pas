@@ -94,14 +94,14 @@ end;
 function TSingleDriverMultipleTimeWindowsTestDataProvider.MakeRouteParameters: TRouteParameters;
 begin
   Result := TRouteParameters.Create();
-  Result.AlgorithmType := Integer(TAlgorithmType.TSP);
+  Result.AlgorithmType := TAlgorithmType.TSP;
   Result.StoreRoute := False;
   Result.RouteName := 'Single Driver Multiple TimeWindows 12 Stops';
   Result.RouteDate := 53583232;//TUtils.ConvertToUnixTimestamp(IncDay(Now, 1));
   Result.RouteTime := 5 * 3600 + 30 * 60;
-  Result.Optimize := TOptimizeDescription[Distance];
-  Result.DistanceUnit := TDistanceUnitDescription[MI];
-  Result.DeviceType := TDeviceTypeDescription[Web];
+  Result.Optimize := TOptimize.Distance;
+  Result.DistanceUnit := TDistanceUnit.MI;
+  Result.DeviceType := TDeviceType.Web;
 end;
 
 end.

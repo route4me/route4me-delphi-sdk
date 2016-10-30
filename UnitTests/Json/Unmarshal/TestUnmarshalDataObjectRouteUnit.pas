@@ -10,8 +10,6 @@ type
   TTestUnmarshalDataObjectRoute = class(TTestBaseJsonUnmarshal)
   private
     procedure CheckEquals(Etalon: IDataObjectRouteProvider; TestName: String);
-
-    // Ignore test
     procedure SampleDataObjectRoute();
   published
   end;
@@ -23,7 +21,8 @@ implementation
 uses
   Classes, System.JSON,
   SampleDataObjectRouteProviderUnit,
-  DataObjectUnit, MarshalUnMarshalUnit;
+  DataObjectUnit, MarshalUnMarshalUnit,
+  SingleDriverRoute10StopsResponseDataProviderUnit;
 
 procedure TTestUnmarshalDataObjectRoute.CheckEquals(
   Etalon: IDataObjectRouteProvider; TestName: String);

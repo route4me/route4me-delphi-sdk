@@ -3,7 +3,7 @@ unit LinksUnit;
 interface
 
 uses
-  REST.Json.Types, System.Generics.Collections, System.Rtti, Classes, SysUtils,
+  REST.Json.Types, System.Generics.Collections,
   JSONNullableAttributeUnit,
   NullableBasicTypesUnit;
 
@@ -11,24 +11,36 @@ type
   TLinks = class
   private
     [JSONName('route')]
-    FRoute: String;
+    [Nullable]
+    FRoute: NullableString;
 
     [JSONName('view')]
-    FView: String;
+    [Nullable]
+    FView: NullableString;
 
     [JSONName('optimization_problem_id')]
-    FOptimizationProblemId: String;
+    [Nullable]
+    FOptimizationProblemId: NullableString;
   public
+    constructor Create;
+
     function Equals(Obj: TObject): Boolean; override;
 
-    property Route: String read FRoute write FRoute;
-    property View: String read FView write FView;
-    property OptimizationProblemId: String read FOptimizationProblemId write FOptimizationProblemId;
+    property Route: NullableString read FRoute write FRoute;
+    property View: NullableString read FView write FView;
+    property OptimizationProblemId: NullableString read FOptimizationProblemId write FOptimizationProblemId;
   end;
 
 implementation
 
 { TLinks }
+
+constructor TLinks.Create;
+begin
+  FRoute := NullableString.Null;
+  FView := NullableString.Null;
+  FOptimizationProblemId := NullableString.Null;
+end;
 
 function TLinks.Equals(Obj: TObject): Boolean;
 var

@@ -290,7 +290,7 @@ end;
 function TSingleDepotMultipleDriverNoTimeWindowTestDataProvider.MakeRouteParameters: TRouteParameters;
 begin
   Result := TRouteParameters.Create();
-  Result.AlgorithmType := Integer(TAlgorithmType.CVRP_TW_MD);
+  Result.AlgorithmType := TAlgorithmType.CVRP_TW_MD;
   Result.RouteName := 'Single Depot, Multiple Driver, No Time Window';
   Result.StoreRoute := False;
   Result.RouteDate := 53583232; //TUtils.ConvertToUnixTimestamp(IncDay(Now, 1));
@@ -300,11 +300,11 @@ begin
   Result.VehicleCapacity := '20';
   Result.VehicleMaxDistanceMI := '99999';
   Result.Parts := 4;
-  Result.Optimize := TOptimizeDescription[Time];
-  Result.DistanceUnit := TDistanceUnitDescription[MI];
-  Result.DeviceType := TDeviceTypeDescription[Web];
-  Result.TravelMode := TTravelModeDescription[Driving];
-  Result.Metric := Integer(TMetric.Geodesic);
+  Result.Optimize := TOptimize.Time;
+  Result.DistanceUnit := TDistanceUnit.MI;
+  Result.DeviceType := TDeviceType.Web;
+  Result.TravelMode := TTravelMode.Driving;
+  Result.Metric := TMetric.Geodesic;
 end;
 
 end.

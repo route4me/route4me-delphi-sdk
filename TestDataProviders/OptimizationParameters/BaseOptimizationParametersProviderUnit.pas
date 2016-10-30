@@ -15,12 +15,12 @@ type
     function MakeRouteParameters(): TRouteParameters; virtual; abstract;
 
     /// <summary>
-    ///  After responce some fields are changed from request.
+    ///  After response some fields are changed from request.
     /// </summary>
-    procedure CorrectForResponce(OptimizationParameters: TOptimizationParameters); virtual; abstract;
+    procedure CorrectForResponse(OptimizationParameters: TOptimizationParameters); virtual; abstract;
   public
     function OptimizationParameters: TOptimizationParameters;
-    function OptimizationParametersForResponce: TOptimizationParameters;
+    function OptimizationParametersForResponse: TOptimizationParameters;
   end;
 implementation
 
@@ -43,10 +43,10 @@ begin
     Result.AddAddress(Address);
 end;
 
-function TBaseOptimizationParametersProvider.OptimizationParametersForResponce: TOptimizationParameters;
+function TBaseOptimizationParametersProvider.OptimizationParametersForResponse: TOptimizationParameters;
 begin
   Result := OptimizationParameters;
-  CorrectForResponce(Result);
+  CorrectForResponse(Result);
 end;
 
 end.

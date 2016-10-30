@@ -143,7 +143,6 @@ type
     /// (After a PUT there is no guarantee that the route_destination_id values are preserved!
     /// It may create copies resulting in new destination IDs, especially when dealing with multiple depots.)
     /// </summary>
-    [JSONName('parameters')]
     property Parameters: NullableObject {TRouteParameters} read FParameters write FParameters;
   end;
 

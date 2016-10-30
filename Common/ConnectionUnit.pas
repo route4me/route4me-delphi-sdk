@@ -14,7 +14,7 @@ type
 //    FHttp: TIdHTTP;
     FClient: TRESTClient;
     FRESTRequest: TRESTRequest;
-    FRESTResponce: TRESTResponse;
+    FRESTResponse: TRESTResponse;
     FApiKey: String;
 
     function ExecuteRequest(Url: String; Data: TGenericParameters;
@@ -71,11 +71,11 @@ begin
   FHttp.Request.CharSet := 'utf-8';
   FHttp.Request.ContentType := 'application/json';}
 
-  FRESTResponce := TRESTResponse.Create(nil);
+  FRESTResponse := TRESTResponse.Create(nil);
   FClient := TRESTClient.Create(nil);
   FRESTRequest := TRESTRequest.Create(FClient);
   FRESTRequest.Timeout := TSettings.DefaultTimeOutMinutes * 3600;
-  FRESTRequest.Response := FRESTResponce;
+  FRESTRequest.Response := FRESTResponse;
 
   FClient.HandleRedirects := False;
   FRESTRequest.HandleRedirects := False;
@@ -91,7 +91,7 @@ destructor TConnection.Destroy;
 begin
   FreeAndNil(FRESTRequest);
   FreeAndNil(FClient);
-  FreeAndNil(FRESTResponce);
+  FreeAndNil(FRESTResponse);
 //  FreeAndNil(FHttp);
   inherited;
 end;
@@ -108,7 +108,7 @@ function TConnection.ExecuteRequest(Url: String; Data: TGenericParameters;
 var
   Responce: TJSONValue;
   Parameters: TListStringPair;
-//  st: TStringList;
+  st: TStringList;
   JsonString: String;
 begin
   FClient.BaseURL := Url;
@@ -130,10 +130,10 @@ begin
     Result := nil
   else
   begin
-{    st := TStringList.Create;
+    st := TStringList.Create;
     st.Text := Responce.ToString;
     st.SaveToFile('d:\post.json');
-    FreeAndNil(st);}
+    FreeAndNil(st);
     Result := TMarshalUnMarshal.FromJson(ResultClassType, Responce);
   end;
 end;
@@ -152,7 +152,7 @@ function TConnection.InternalRequest(URL: String; Method: TRESTRequestMethod;
   begin
     Result := EmptyStr;
 
-    for s in FRESTResponce.Headers do
+    for s in FRESTResponse.Headers do
       if s.StartsWith(Name, True) then
       begin
         Result := s;
@@ -169,10 +169,10 @@ begin
   FRESTRequest.ClearBody;
   FRESTRequest.AddBody(Body, TRESTContentType.ctTEXT_PLAIN);
   FRESTRequest.Execute;
-  if (FRESTResponce.StatusCode = 200) then
-    Result := FRESTResponce.JSONValue
+  if (FRESTResponse.StatusCode = 200) then
+    Result := FRESTResponse.JSONValue
   else
-  if (FRESTResponce.StatusCode = 303) then
+  if (FRESTResponse.StatusCode = 303) then
   begin
     Result := InternalRequest(
       GetHeaderValue('Location'), TRESTRequestMethod.rmGET, EmptyStr, ErrorString);
@@ -180,7 +180,7 @@ begin
   else
 // todo:  здесь есть ответ: {"errors":["Point is not allowed for test account"],"timestamp":1477405518}
 
-    ErrorString := FRESTResponce.StatusText;
+    ErrorString := FRESTResponse.StatusText;
 end;
 
 procedure TConnection.SetProxy(Host: String; Port: integer; Username, Password: String);

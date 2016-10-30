@@ -5,10 +5,14 @@ interface
 uses
   SysUtils, BaseActionUnit,
   DataObjectUnit, RouteParametersUnit, AddressUnit,
-  AddressesOrderInfoUnit, RouteParametersQueryUnit;
+  AddressesOrderInfoUnit, RouteParametersQueryUnit,
+  CommonTypesUnit, NullableBasicTypesUnit;
 
 type
   TRouteActions = class(TBaseAction)
+  private
+    function GetRouteId(OptimizationProblemId: NullableString;
+      out ErrorString: String): NullableString;
   public
     function Resequence(AddressesOrderInfo: TAddressesOrderInfo;
       out ErrorString: String): TDataObjectRoute;
@@ -48,6 +52,12 @@ type
 
     function GetList(RouteParameters: TRouteParametersQuery;
       out ErrorString: String): TArray<TDataObjectRoute>;
+
+    function Delete(RouteIds: TStringArray;
+      out ErrorString: String): TStringArray;
+
+    function Duplicate(QueryParameters: TRouteParametersQuery;
+      out ErrorString: String): NullableString;
   end;
 
 implementation
@@ -55,18 +65,18 @@ implementation
 { TRouteActions }
 
 uses
-  System.Generics.Collections,
+  System.Generics.Collections, System.NetEncoding,
   SettingsUnit, RemoveRouteDestinationResponseUnit,
   RemoveRouteDestinationRequestUnit, AddRouteDestinationRequestUnit,
   MoveDestinationToRouteResponseUnit,
-  GenericParametersUnit, CommonTypesUnit;
+  GenericParametersUnit, DeleteRouteResponseUnit, DuplicateRouteResponseUnit;
 
 function TRouteActions.Add(RouteId: String; Addresses: TAddressesArray;
   OptimalPosition: boolean; out ErrorString: String): TArray<integer>;
 var
   Request: TAddRouteDestinationRequest;
-  Responce: TDataObject;
-  Address, AddressResponce: TAddress;
+  Response: TDataObject;
+  Address, AddressResponse: TAddress;
   DestinationIds: TList<integer>;
 begin
   Result := TArray<integer>.Create();
@@ -77,28 +87,28 @@ begin
     Request.Addresses := Addresses;
     Request.OptimalPosition := OptimalPosition;
 
-    Responce := FConnection.Put(TSettings.RouteHost,
+    Response := FConnection.Put(TSettings.RouteHost,
       Request, TDataObject, ErrorString) as TDataObject;
 
-    if (Responce = nil) then
+    if (Response = nil) then
       Exit;
 
     DestinationIds := TList<integer>.Create;
     try
       for Address in Addresses do
-        for AddressResponce in Responce.Addresses do
-          if (AddressResponce.AddressString = Address.AddressString) and
-            (AddressResponce.Latitude = Address.Latitude) and
-            (AddressResponce.Longitude = Address.Longitude) and
-            (AddressResponce.RouteDestinationId.IsNotNull) then
+        for AddressResponse in Response.Addresses do
+          if (AddressResponse.AddressString = Address.AddressString) and
+            (AddressResponse.Latitude = Address.Latitude) and
+            (AddressResponse.Longitude = Address.Longitude) and
+            (AddressResponse.RouteDestinationId.IsNotNull) then
           begin
-            DestinationIds.Add(AddressResponce.RouteDestinationId);
+            DestinationIds.Add(AddressResponse.RouteDestinationId);
             Break;
           end;
       Result := DestinationIds.ToArray;
     finally
       FreeAndNil(DestinationIds);
-      FreeAndNil(Responce);
+      FreeAndNil(Response);
     end;
   finally
     FreeAndNil(Request);
@@ -109,6 +119,58 @@ function TRouteActions.Add(RouteId: String; Addresses: TAddressesArray;
   out ErrorString: String): TArray<integer>;
 begin
   Result := Add(RouteId, Addresses, True, ErrorString);
+end;
+
+function TRouteActions.Delete(RouteIds: TStringArray;
+  out ErrorString: String): TStringArray;
+var
+  RouteIdsAsString: String;
+  RouteId: String;
+  Parameters: TGenericParameters;
+  Response: TDeleteRouteResponse;
+begin
+  SetLength(Result, 0);
+
+  RouteIdsAsString := EmptyStr;
+  for RouteId in RouteIds do
+  begin
+    if (RouteIdsAsString.Length > 0) then
+      RouteIdsAsString := RouteIdsAsString + ',';
+    RouteIdsAsString := RouteIdsAsString + RouteId;
+  end;
+  RouteIdsAsString := TURLEncoding.URL.Encode(RouteIdsAsString);
+
+  Parameters := TGenericParameters.Create;
+  try
+      Parameters.AddParameter('route_id', RouteIdsAsString);
+      Response := FConnection.Delete(TSettings.RouteHost,
+        Parameters, TDeleteRouteResponse, ErrorString) as TDeleteRouteResponse;
+
+      if (Response <> nil) then
+        Result := Response.RouteIds;
+  finally
+    FreeAndNil(Parameters);
+  end;
+end;
+
+function TRouteActions.Duplicate(QueryParameters: TRouteParametersQuery;
+  out ErrorString: String): NullableString;
+var
+  Response: TDuplicateRouteResponse;
+begin
+  Result := NullableString.Null;
+
+  QueryParameters.ReplaceParameter('to', 'none');
+  // Redirect to page or return json for none
+
+  Response := FConnection.Get(TSettings.DuplicateRoute,
+    QueryParameters, TDuplicateRouteResponse, ErrorString) as TDuplicateRouteResponse;
+  try
+      if (Response <> nil) and (Response.Success) then
+        Result := GetRouteId(Response.OptimizationProblemId, ErrorString);
+  finally
+    FreeAndNil(Response);
+  end;
 end;
 
 function TRouteActions.Get(RouteParameters: TRouteParametersQuery;
@@ -132,6 +194,34 @@ begin
       SetLength(Result, 0);
   finally
     FreeAndNil(List);
+  end;
+end;
+
+function TRouteActions.GetRouteId(OptimizationProblemId: NullableString;
+  out ErrorString: String): NullableString;
+var
+  GenericParameters: TGenericParameters;
+  Response: TDataObject;
+begin
+  Result := NullableString.Null;
+
+  if OptimizationProblemId.IsNull then
+    Exit;
+
+  GenericParameters := TGenericParameters.Create();
+  try
+    GenericParameters.AddParameter('optimization_problem_id', OptimizationProblemId);
+    GenericParameters.AddParameter('wait_for_final_state', '1');
+    Response := FConnection.Get(TSettings.ApiHost,
+      GenericParameters, TDataObject, ErrorString) as TDataObject;
+    try
+      if (Response <> nil) and (Length(Response.Routes) > 0) then
+        Result := Response.Routes[0].RouteID;
+    finally
+      FreeAndNil(Response);
+    end;
+  finally
+    FreeAndNil(GenericParameters);
   end;
 end;
 

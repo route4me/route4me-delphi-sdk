@@ -1,6 +1,7 @@
 unit NullableBasicTypesUnit;
 
 interface
+
 uses
     SysUtils, Math, Types;
 
@@ -18,6 +19,8 @@ type
         class operator Implicit(PValue: TObject): NullableObject;
         class operator Equal(A, B: NullableObject): boolean;
         class operator NotEqual(A, B: NullableObject): boolean;
+
+//        function Compare(Other: NullableObject): integer;
 
         class function Null: NullableObject; static;
 
@@ -52,6 +55,7 @@ type
         class operator GreaterThanOrEqual(A, B: NullableInteger): boolean;
 
         class function Null: NullableInteger; static;
+        function Compare(Other: NullableInteger): integer;
 
         function ToString(): String;
 
@@ -75,11 +79,11 @@ type
         function LessThenOrEqual(Another: NullableDouble): boolean;
         function GreaterThenOrEqual(Another: NullableDouble): boolean;
     public
-        constructor Create(PValue: double); 
+        constructor Create(PValue: double);
 
         class function NullIfNaN(Value: double): NullableDouble; static;
 
-        function Equals(OtherValue: NullableDouble; Epsilon: double): boolean;  
+        function Equals(OtherValue: NullableDouble; Epsilon: double): boolean;
 
         class operator Implicit(A: NullableDouble): double;
         class operator Implicit(PValue: double): NullableDouble;
@@ -119,6 +123,8 @@ type
         class operator Equal(A, B: NullableString): boolean;
         class operator NotEqual(A, B: NullableString): boolean;
 
+        function Compare(Other: NullableString): integer;
+
         class function Null: NullableString; static;
 
         function ToString(): String;
@@ -156,6 +162,23 @@ type
 implementation
 
 { NullableInteger }
+
+function NullableInteger.Compare(Other: NullableInteger): integer;
+begin
+  if (IsNull and Other.IsNotNull) then
+    Result := LessThanValue
+  else
+  if (IsNotNull and Other.IsNull) then
+    Result := GreaterThanValue
+  else
+  if (Self = Other) then
+    Result := EqualsValue
+  else
+  if (Self < Other) then
+    Result := LessThanValue
+  else
+    Result := GreaterThanValue;
+end;
 
 constructor NullableInteger.Create(PValue: integer);
 begin
@@ -535,6 +558,20 @@ end;
 
 { NullableString }
 
+function NullableString.Compare(Other: NullableString): integer;
+begin
+  if (IsNull and Other.IsNotNull) then
+    Result := LessThanValue
+  else
+  if (IsNotNull and Other.IsNull) then
+    Result := GreaterThanValue
+  else
+  if (Self = Other) then
+    Result := EqualsValue
+  else
+    Result := String.Compare(Self.Value, Other.Value);
+end;
+
 constructor NullableString.Create(PValue: String);
 begin
     FValue := PValue;
@@ -543,22 +580,16 @@ end;
 
 class operator NullableString.Equal(A, B: NullableString): boolean;
 begin
-    if (A.IsNull <> B.IsNull) then
-    begin
-        Result := False;
-    end
-    else
-    if (A.IsNull = B.IsNull) and (A.IsNull) then
-    begin
-        Result := True;
-    end
-    else
-    if (A.IsNull = B.IsNull) and (not A.IsNull) then
-    begin
-        Result := (A.Value = B.Value);
-    end
-    else
-        raise Exception.Create('Непредвиденный вариант сравнения');
+  if (A.IsNull <> B.IsNull) then
+    Result := False
+  else
+  if (A.IsNull = B.IsNull) and (A.IsNull) then
+    Result := True
+  else
+  if (A.IsNull = B.IsNull) and (not A.IsNull) then
+    Result := (A.Value = B.Value)
+  else
+    raise Exception.Create('Непредвиденный вариант сравнения');
 end;
 
 function NullableString.GetValue: String;
@@ -687,6 +718,28 @@ end;
 
 { NullableObject }
 
+(*function NullableObject.Compare(Other: NullableObject): integer;
+var
+  Value1, Value2: IComparable;
+begin
+  if (IsNull and Other.IsNotNull) then
+    Result := LessThanValue
+  else
+  if (IsNotNull and Other.IsNull) then
+    Result := GreaterThanValue
+  else
+  if (Self = Other) then
+    Result := EqualsValue
+  else
+  begin
+{    if not Self.Value.GetInterface(IComparable, Value1) then
+      raise Exception.Create('Self.Value does not implementing IComparable');
+    if not (Other.Value is IComparable) then
+      raise Exception.Create('Other.Value does not implementing IComparable');
+    Result := (Self.Value as IComparable).CompareTo(Other.Value as IComparable);}
+  end;
+end;*)
+
 constructor NullableObject.Create(PValue: TObject);
 begin
     FValue := PValue;
@@ -695,22 +748,16 @@ end;
 
 class operator NullableObject.Equal(A, B: NullableObject): boolean;
 begin
-    if (A.IsNull <> B.IsNull) then
-    begin
-        Result := False;
-    end
-    else
-    if (A.IsNull = B.IsNull) and (A.IsNull) then
-    begin
-        Result := True;
-    end
-    else
-    if (A.IsNull = B.IsNull) and (not A.IsNull) then
-    begin
-        Result := (A.Value.Equals(B.Value));
-    end
-    else
-        raise Exception.Create('Непредвиденный вариант сравнения');
+  if (A.IsNull <> B.IsNull) then
+    Result := False
+  else
+  if (A.IsNull = B.IsNull) and (A.IsNull) then
+    Result := True
+  else
+  if (A.IsNull = B.IsNull) and (not A.IsNull) then
+    Result := (A.Value.Equals(B.Value))
+  else
+    raise Exception.Create('Непредвиденный вариант сравнения');
 end;
 
 procedure NullableObject.Free;

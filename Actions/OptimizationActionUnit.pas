@@ -17,6 +17,7 @@ type
       out ErrorString: String): TArray<TDataObject>; overload;
     function Update(OptimizationParameters: TOptimizationParameters;
       out ErrorString: String): TDataObject;
+    function Remove(OptimizationId: String; out ErrorString: String): boolean;
     function RemoveDestination(OptimizationId: String; DestinationId: integer;
       out ErrorString: String): boolean;
   end;
@@ -28,7 +29,7 @@ implementation
 uses
   SettingsUnit, DataObjectOptimizationsResponseUnit,
   RemoveDestinationFromOptimizationResponseUnit, GenericParametersUnit,
-  CommonTypesUnit;
+  CommonTypesUnit, RemoveOptimizationResponseUnit;
 
 function TOptimizationActions.Get(
   OptimizationParameters: TOptimizationParameters;
@@ -53,6 +54,29 @@ begin
       Result := Response.Optimizations;
   finally
     FreeAndNil(Response);
+  end;
+end;
+
+function TOptimizationActions.Remove(OptimizationId: String;
+  out ErrorString: String): boolean;
+var
+  GenericParameters: TGenericParameters;
+  Response: TRemoveOptimizationResponse;
+begin
+  GenericParameters := TGenericParameters.Create();
+  try
+    GenericParameters.AddParameter('optimization_problem_id', OptimizationId);
+    Response := FConnection.Delete(TSettings.ApiHost, GenericParameters,
+      TRemoveOptimizationResponse, ErrorString) as TRemoveOptimizationResponse;
+    try
+      Result := (Response <> nil) and (Response.Status) and (Response.Removed);
+      if (not Result) and (ErrorString = EmptyStr) then
+        ErrorString := 'Error removing optimization';
+    finally
+      FreeAndNil(Response);
+    end;
+  finally
+    FreeAndNil(GenericParameters);
   end;
 end;
 

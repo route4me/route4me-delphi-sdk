@@ -92,7 +92,7 @@ function TMultipleDepotMultipleDriverTestDataProvider.MakeRouteParameters: TRout
 begin
   Result := TRouteParameters.Create();
   // specify capacitated vehicle routing with time windows and multiple depots, with multiple drivers
-  Result.AlgorithmType := Integer(TAlgorithmType.CVRP_TW_MD);
+  Result.AlgorithmType := TAlgorithmType.CVRP_TW_MD;
 
   // set an arbitrary route name
   // this value shows up in the website, and all the connected mobile device
@@ -105,11 +105,11 @@ begin
   Result.RouteMaxDuration := 86400;
   Result.VehicleCapacity := '1';
   Result.VehicleMaxDistanceMI := '10000';
-  Result.Optimize := TOptimizeDescription[Distance];
-  Result.DistanceUnit := TDistanceUnitDescription[MI];
-  Result.DeviceType := TDeviceTypeDescription[Web];
-  Result.TravelMode := TTravelModeDescription[Driving];
-  Result.Metric := Integer(TMetric.Geodesic);
+  Result.Optimize := TOptimize.Distance;
+  Result.DistanceUnit := TDistanceUnit.MI;
+  Result.DeviceType := TDeviceType.Web;
+  Result.TravelMode := TTravelMode.Driving;
+  Result.Metric := TMetric.Geodesic;
 end;
 
 end.

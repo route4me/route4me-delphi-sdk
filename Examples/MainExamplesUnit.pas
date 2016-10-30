@@ -16,7 +16,7 @@ implementation
 uses
   System.Generics.Collections,
   DataObjectUnit, Route4MeExamplesUnit, NullableBasicTypesUnit, AddressUnit,
-  AddressBookContactUnit, OutputUnit, ConnectionUnit;
+  AddressBookContactUnit, OutputUnit, ConnectionUnit, OrderUnit;
 
 const
   //your api key
@@ -46,13 +46,14 @@ var
   Contact1, Contact2: TAddressBookContact;
   AddressIdsToRemove: TList<String>;
   TerritoryId: NullableString;
-//  Order1, Order2: TOrder;
+  Order1, Order2: TOrder;
   OrderIdsToRemove: TList<String>;
+  Connection: TConnection;
 begin
   try
-    Examples := TRoute4MeExamples.Create(TOutputConsole.Create, TConnection.Create(c_ApiKey));
+    Connection := TConnection.Create(c_ApiKey);
+    Examples := TRoute4MeExamples.Create(TOutputConsole.Create, Connection);
     try
-//      Examples := TRoute4MeExamples.CreateDebug();
       try
         DataObject1 := Examples.SingleDriverRoute10Stops();
 
@@ -94,7 +95,7 @@ begin
           routeDestinationIdToMove := dataObject1.Routes[0].Addresses[1].RouteDestinationId.Value
         else
           routeDestinationIdToMove := NullableInteger.Null;
-
+(*
         if (DataObject2 <> nil) and (Length(DataObject2.Routes) > 0) and
           (Length(DataObject2.Routes[0].Addresses) > 1) and
           (DataObject1.Routes[0].Addresses[0].RouteDestinationId.IsNotNull) then
@@ -223,7 +224,7 @@ begin
           Examples.GetActivities(RouteId_SingleDriverRoute10Stops)
         else
           WriteLn('GetActivities not called. routeId_SingleDriverRoute10Stops is null.');
-
+*)
         if (routeIdToMoveTo.IsNotNull) and (RouteDestinationIdToMove <> 0) then
         begin
             examples.GetAddress(routeIdToMoveTo, routeDestinationIdToMove);
@@ -232,7 +233,7 @@ begin
         end
         else
           WriteLn('AddAddressNote, GetAddress, GetAddressNotes not called. routeIdToMoveTo == null || routeDestinationIdToMove == 0.');
-
+(*
         RouteId_DuplicateRoute := NullableString.Null;
         if (RouteId_SingleDriverRoute10Stops.IsNotNull) then
           RouteId_DuplicateRoute := Examples.DuplicateRoute(RouteId_SingleDriverRoute10Stops)
@@ -241,14 +242,13 @@ begin
 
         //disabled by default, not necessary for optimization tests
         //not all accounts are capable of storing gps data
-    (*      if (RouteId_SingleDriverRoute10Stops.IsNotNull) then
-        begin
-          Examples.SetGPSPosition(routeId_SingleDriverRoute10Stops);
-          Examples.TrackDeviceLastLocationHistory(routeId_SingleDriverRoute10Stops);
-        end
-        else
-          WriteLn('SetGPSPosition, TrackDeviceLastLocationHistory not called. routeId_SingleDriverRoute10Stops is null.');
-        }*)
+        //if (RouteId_SingleDriverRoute10Stops.IsNotNull) then
+        //begin
+        //  Examples.SetGPSPosition(routeId_SingleDriverRoute10Stops);
+        //  Examples.TrackDeviceLastLocationHistory(routeId_SingleDriverRoute10Stops);
+        //end
+        //else
+        //  WriteLn('SetGPSPosition, TrackDeviceLastLocationHistory not called. routeId_SingleDriverRoute10Stops is null.');
 
         RouteIdsToDelete := TList<String>.Create();
         try
@@ -286,8 +286,8 @@ begin
         Randomize;
 
         // Address Book
-        Contact1 := Examples.AddAddressBookContact();
-        Contact2 := Examples.AddAddressBookContact();
+        Contact1 := Examples.AddAddressBookContact('Test FirstName 1', 'Test Address 1');
+        Contact2 := Examples.AddAddressBookContact('Test FirstName 2', 'Test Address 2');
         try
           Examples.GetAddressBookContacts();
           if (Contact1 <> nil) then
@@ -332,7 +332,6 @@ begin
           WriteLn('DeleteAvoidanceZone not called. territoryId is null.');
 
 
-    (* TODO: Orders
         // Orders
         Order1 := Examples.AddOrder();
         Order2 := examples.AddOrder();
@@ -360,10 +359,10 @@ begin
           FreeAndNil(Order2);
           FreeAndNil(Order1);
         end;
-    *)
 
-        examples.GenericExample();
-        examples.GenericExampleShortcut();
+        examples.GenericExample(Connection);
+        examples.GenericExampleShortcut(Connection);
+        *)
       except
         on E: Exception do
           Writeln(E.ClassName, ': ', E.Message);

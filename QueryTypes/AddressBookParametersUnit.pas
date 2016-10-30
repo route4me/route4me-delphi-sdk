@@ -4,30 +4,37 @@ interface
 
 uses
   NullableBasicTypesUnit,
-  GenericParametersUnit, HttpQueryMemberAttributeUnit;
+  GenericParametersUnit, HttpQueryMemberAttributeUnit, JSONNullableAttributeUnit;
 
 type
   TAddressBookParameters = class(TGenericParameters)
   private
     [HttpQueryMember('address_id')]
+    [Nullable]
     FAddressId: NullableString;
 
     [HttpQueryMember('limit')]
+    [Nullable]
     FLimit: NullableInteger;
 
     [HttpQueryMember('offset')]
+    [Nullable]
     FOffset: NullableInteger;
 
     [HttpQueryMember('start')]
+    [Nullable]
     FStart: NullableInteger;
 
     [HttpQueryMember('query')]
+    [Nullable]
     FQuery: NullableString;
 
     [HttpQueryMember('fields')]
+    [Nullable]
     FFields: NullableString;
 
     [HttpQueryMember('display')]
+    [Nullable]
     FDisplay: NullableString;
   public
     constructor Create; overload; override;

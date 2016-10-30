@@ -3,55 +3,126 @@ unit DirectionLocationUnit;
 interface
 
 uses
-  REST.Json.Types, SysUtils;
+  REST.Json.Types, SysUtils,
+  JSONNullableAttributeUnit, NullableBasicTypesUnit;
 
 type
+  /// <remarks>
+  ///  https://github.com/route4me/json-schemas/blob/master/Direction.dtd
+  /// </remarks>
   TDirectionLocation = class
   private
     [JSONName('name')]
-    FName: String;
+    [Nullable]
+    FName: NullableString;
 
     [JSONName('time')]
-    FTime: integer;
+    [Nullable]
+    FTime: NullableInteger;
 
     [JSONName('segment_distance')]
-    FSegmentDistance: double;
+    [Nullable]
+    FSegmentDistance: NullableDouble;
 
     [JSONName('start_location')]
-    FStartLocation: String;
+    [Nullable]
+    FStartLocation: NullableString;
 
     [JSONName('end_location')]
-    FEndLocation: String;
+    [Nullable]
+    FEndLocation: NullableString;
 
     [JSONName('directions_error')]
-    FDirectionsError: String;
+    [Nullable]
+    FDirectionsError: NullableString;
 
     [JSONName('error_code')]
-    FErrorCode: integer;
+    [Nullable]
+    FErrorCode: NullableInteger;
   public
-    function Compare(Other: TDirectionLocation): integer;
+    constructor Create;
 
-    property Name: String read FName write FName;
+    function Equals(Obj: TObject): Boolean; override;
+
+    function CompareTo(Obj: TObject): Integer;
+
+    /// <summary>
+    ///  Direction name
+    /// </summary>
+    property Name: NullableString read FName write FName;
 
     /// <summary>
     ///  Segment time (seconds)
     /// </summary>
-    property Time: integer read FTime write FTime;
+    property Time: NullableInteger read FTime write FTime;
 
-    property SegmentDistance: double read FSegmentDistance write FSegmentDistance;
-    property StartLocation: String read FStartLocation write FStartLocation;
-    property EndLocation: String read FEndLocation write FEndLocation;
-    property DirectionsError: String read FDirectionsError write FDirectionsError;
-    property ErrorCode: integer read FErrorCode write FErrorCode;
+    /// <summary>
+    ///  Current segment length
+    /// </summary>
+    property SegmentDistance: NullableDouble read FSegmentDistance write FSegmentDistance;
+
+    /// <summary>
+    ///  Start location name
+    /// </summary>
+    property StartLocation: NullableString read FStartLocation write FStartLocation;
+
+    /// <summary>
+    ///  End location name
+    /// </summary>
+    property EndLocation: NullableString read FEndLocation write FEndLocation;
+
+    /// <summary>
+    ///  Directions error message
+    /// </summary>
+    property DirectionsError: NullableString read FDirectionsError write FDirectionsError;
+
+    /// <summary>
+    ///  Error code
+    /// </summary>
+    property ErrorCode: NullableInteger read FErrorCode write FErrorCode;
   end;
 
 implementation
 
 { TDirectionLocation }
 
-function TDirectionLocation.Compare(Other: TDirectionLocation): integer;
+function TDirectionLocation.CompareTo(Obj: TObject): Integer;
 begin
-  Result := String.Compare(Name, Other.Name);
+  Result := Name.Compare((Obj as TDirectionLocation).Name);
+end;
+
+constructor TDirectionLocation.Create;
+begin
+  Inherited;
+
+  FName := NullableString.Null;
+  FTime := NullableInteger.Null;
+  FSegmentDistance := NullableDouble.Null;
+  FStartLocation := NullableString.Null;
+  FEndLocation := NullableString.Null;
+  FDirectionsError := NullableString.Null;
+  FErrorCode := NullableInteger.Null;
+end;
+
+function TDirectionLocation.Equals(Obj: TObject): Boolean;
+var
+  Other: TDirectionLocation;
+begin
+  Result := False;
+
+  if not (Obj is TDirectionLocation) then
+    Exit;
+
+  Other := TDirectionLocation(Obj);
+
+  Result :=
+    (Name = Other.Name) and
+    (Time = Other.Time) and
+    (SegmentDistance = Other.SegmentDistance) and
+    (StartLocation = Other.StartLocation) and
+    (EndLocation = Other.EndLocation) and
+    (DirectionsError = Other.DirectionsError) and
+    (ErrorCode = Other.ErrorCode);
 end;
 
 end.

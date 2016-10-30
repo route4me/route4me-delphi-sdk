@@ -5,26 +5,30 @@ interface
 uses
   System.Generics.Collections, SysUtils, Generics.Defaults,
   REST.Json.Types, JSONNullableAttributeUnit,
-  EnumsUnit, AddressUnit, RouteParametersUnit, DirectionUnit,
+  EnumsUnit, AddressUnit, RouteParametersUnit, DirectionUnit, CommonTypesUnit,
   NullableBasicTypesUnit, LinksUnit, TrackingHistoryUnit, DirectionPathPointUnit;
 
 type
   TDataObjectRoute = class;
   TDataObjectRouteArray = TArray<TDataObjectRoute>;
 
+  /// <remarks>
+  ///  https://github.com/route4me/json-schemas/blob/master/Optimization_response.dtd
+  /// </remarks>
   TDataObject = class
   strict private
     [JSONName('optimization_problem_id')]
     FOptimizationProblemId: String;
 
     [JSONName('state')]
-    FState: Integer; //TOptimizationState;
+    FState: Integer;
 
     [JSONName('user_errors')]
-    FUserErrors: TArray<String>;
+    FUserErrors: TStringArray;
 
     [JSONName('sent_to_background')]
-    FIsSentToBackground: boolean;
+    [Nullable]
+    FIsSentToBackground: NullableBoolean;
 
     [JSONName('addresses')]
     FAddresses: TAddressesArray;
@@ -41,29 +45,67 @@ type
     [JSONName('tracking_history')]
     FTrackingHistories: TTrackingHistoryArray;
 
-    [JSONName('directions')]
-    FDirections: TDirectionArray;
-
-    [JSONName('path')]
-    FDirectionPathPoints: TDirectionPathPointArray;
+    function GetState: TOptimizationState;
+    procedure SetState(const Value: TOptimizationState);
   public
     constructor Create;
+    destructor Destroy; override;
 
     function Equals(Obj: TObject): Boolean; override;
 
     procedure AddAddress(Address: TAddress);
+    procedure AddRoute(Route: TDataObjectRoute);
 
+    /// <summary>
+    ///  Optimization which generated this route
+    /// </summary>
     property OptimizationProblemId: String read FOptimizationProblemId write FOptimizationProblemId;
-    property State: Integer {TOptimizationState} read FState write FState;
-    property UserErrors: TArray<String> read FUserErrors write FUserErrors;
-    property IsSentToBackground: boolean read FIsSentToBackground write FIsSentToBackground;
+
+    /// <summary>
+    ///  An optimization problem can be at one state at any given time
+    ///  Initial = 1
+    ///  MatrixProcessing = 2
+    ///  Optimizing = 3
+    ///  Optimized = 4
+    ///  Error = 5
+    ///  ComputingDirections = 6
+    /// </summary>
+    property State: TOptimizationState read GetState write SetState;
+
+    /// <summary>
+    ///  User Errors
+    /// </summary>
+    property UserErrors: TStringArray read FUserErrors write FUserErrors;
+
+    /// <summary>
+    ///  If true it means the solution was not returned (it is being computed in the background)
+    /// </summary>
+    property IsSentToBackground: NullableBoolean read FIsSentToBackground write FIsSentToBackground;
+
+    /// <summary>
+    ///  Route Addresses
+    /// </summary>
     property Addresses: TAddressesArray read FAddresses;
+
+    /// <summary>
+    ///  Route Parameters
+    /// </summary>
     property Parameters: TRouteParameters read FParameters write FParameters;
-    property Routes: TDataObjectRouteArray read FRoutes write FRoutes;
+
+    /// <summary>
+    ///  Routes
+    /// </summary>
+    property Routes: TDataObjectRouteArray read FRoutes;
+
+    /// <summary>
+    ///  Links to the GET operations for the optimization problem
+    /// </summary>
     property Links: TLinks read FLinks write FLinks;
+
+    /// <summary>
+    ///  A collection of device tracking data with coordinates, speed, and timestamps
+    /// </summary>
     property TrackingHistories: TTrackingHistoryArray read FTrackingHistories write FTrackingHistories;
-    property Directions: TDirectionArray read FDirections write FDirections;
-    property Path: TDirectionPathPointArray read FDirectionPathPoints write FDirectionPathPoints;
   end;
 
   TDataObjectRoute = class(TDataObject)
@@ -118,6 +160,12 @@ type
     [JSONName('route_duration_sec')]
     [Nullable]
     FRouteDurationSec: NullableInteger;
+
+    [JSONName('directions')]
+    FDirections: TDirectionArray;
+
+    [JSONName('path')]
+    FDirectionPathPoints: TDirectionPathPointArray;
   public
     /// <remarks>
     ///  Constructor with 0-arguments must be and be public.
@@ -142,6 +190,17 @@ type
     property TripDistance: NullableDouble read FTripDistance write FTripDistance;
     property GasPrice: NullableDouble read FGasPrice write FGasPrice;
     property RouteDurationSec: NullableInteger read FRouteDurationSec write FRouteDurationSec;
+
+    /// <summary>
+    ///  Edge by edge turn-by-turn directions.
+    ///  Note: For round-trip routes (parameters.rt = true), the return to the start address is returned as well
+    /// </summary>
+    property Directions: TDirectionArray read FDirections write FDirections;
+
+    /// <summary>
+    ///  Edge-wise path to be drawn on the map
+    /// </summary>
+    property Path: TDirectionPathPointArray read FDirectionPathPoints write FDirectionPathPoints;
   end;
   TDataObjectRouteList = TList<TDataObjectRoute>;
 
@@ -150,7 +209,7 @@ type
 implementation
 
 uses
-  Math, CommonTypesUnit;
+  Math;
 
 function SortRoutes(Routes: TDataObjectRouteArray): TDataObjectRouteArray;
 begin
@@ -171,18 +230,34 @@ begin
   FAddresses[High(FAddresses)] := Address;
 end;
 
+procedure TDataObject.AddRoute(Route: TDataObjectRoute);
+begin
+  SetLength(FRoutes, Length(FRoutes) + 1);
+  FRoutes[High(FRoutes)] := Route;
+end;
+
 constructor TDataObject.Create;
 begin
   FState := 0;
-  FIsSentToBackground := False;
+  FIsSentToBackground := NullableBoolean.Null;
   SetLength(FUserErrors, 0);
   SetLength(FAddresses, 0);
   FParameters := nil;
   SetLength(FRoutes, 0);
   FLinks := nil;
   SetLength(FTrackingHistories, 0);
-  SetLength(FDirections, 0);
-  SetLength(FDirectionPathPoints, 0);
+end;
+
+destructor TDataObject.Destroy;
+var
+  i: integer;
+begin
+  for i := Length(FAddresses) - 1 downto 0 do
+    FreeAndNil(FAddresses[i]);
+  for i := Length(FRoutes) - 1 downto 0 do
+    FreeAndNil(FRoutes[i]);
+
+  inherited;
 end;
 
 function TDataObject.Equals(Obj: TObject): Boolean;
@@ -193,8 +268,6 @@ var
   SortedUserErrors1, SortedUserErrors2: TStringArray;
   SortedRoutes1, SortedRoutes2: TDataObjectRouteArray;
   SortedTrackingHistory1, SortedTrackingHistory2: TTrackingHistoryArray;
-  SortedDirections1, SortedDirections2: TDirectionArray;
-  SortedDirectionPathPoints1, SortedDirectionPathPoints2: TDirectionPathPointArray;
 begin
   Result := False;
 
@@ -215,9 +288,7 @@ begin
   if (Length(UserErrors) <> Length(Other.UserErrors)) or
     (Length(Addresses) <> Length(Other.Addresses)) or
     (Length(Routes) <> Length(Other.Routes)) or
-    (Length(TrackingHistories) <> Length(Other.TrackingHistories)) or
-    (Length(Directions) <> Length(Other.Directions)) or
-    (Length(Path) <> Length(Other.Path)) then
+    (Length(TrackingHistories) <> Length(Other.TrackingHistories)) then
     Exit;
 
   SortedUserErrors1 := SortStringArray(UserErrors);
@@ -244,20 +315,20 @@ begin
     if (not SortedTrackingHistory1[i].Equals(SortedTrackingHistory2[i])) then
       Exit;
 
-  SortedDirections1 := DirectionUnit.SortDirections(Directions);
-  SortedDirections2 := DirectionUnit.SortDirections(Other.Directions);
-  for i := 0 to Length(SortedDirections1) - 1 do
-    if (not SortedDirections1[i].Equals(SortedDirections2[i])) then
-      Exit;
-
-  SortedDirectionPathPoints1 := DirectionPathPointUnit.SortDirectionPathPoints(Path);
-  SortedDirectionPathPoints2 := DirectionPathPointUnit.SortDirectionPathPoints(Other.Path);
-  for i := 0 to Length(SortedDirectionPathPoints1) - 1 do
-    if (not SortedDirectionPathPoints1[i].Equals(SortedDirectionPathPoints2[i])) then
-      Exit;
+  Result := True;
 end;
 
 { TDataObjectRoute }
+
+function TDataObject.GetState: TOptimizationState;
+begin
+  Result := TOptimizationState(FState);
+end;
+
+procedure TDataObject.SetState(const Value: TOptimizationState);
+begin
+  FState := Integer(Value);
+end;
 
 constructor TDataObjectRoute.Create;
 begin
@@ -274,6 +345,9 @@ begin
   FTripDistance := NullableDouble.Null;
   FGasPrice := NullableDouble.Null;
   FRouteDurationSec := NullableInteger.Null;
+
+  SetLength(FDirections, 0);
+  SetLength(FDirectionPathPoints, 0);
 end;
 
 { TDataObjectRoute }
@@ -288,6 +362,9 @@ end;
 function TDataObjectRoute.Equals(Obj: TObject): Boolean;
 var
   Other: TDataObjectRoute;
+  SortedDirections1, SortedDirections2: TDirectionArray;
+  SortedDirectionPathPoints1, SortedDirectionPathPoints2: TDirectionPathPointArray;
+  i: integer;
 begin
   Result := inherited Equals(Obj);
 
@@ -312,6 +389,27 @@ begin
     (TripDistance = Other.TripDistance) and
     (GasPrice = Other.GasPrice) and
     (RouteDurationSec = Other.RouteDurationSec);
+
+  if (not Result) then
+    Exit;
+
+  if (Length(Directions) <> Length(Other.Directions)) or
+    (Length(Path) <> Length(Other.Path)) then
+    Exit;
+
+  SortedDirections1 := DirectionUnit.SortDirections(Directions);
+  SortedDirections2 := DirectionUnit.SortDirections(Other.Directions);
+  for i := 0 to Length(SortedDirections1) - 1 do
+    if (not SortedDirections1[i].Equals(SortedDirections2[i])) then
+      Exit;
+
+  SortedDirectionPathPoints1 := DirectionPathPointUnit.SortDirectionPathPoints(Path);
+  SortedDirectionPathPoints2 := DirectionPathPointUnit.SortDirectionPathPoints(Other.Path);
+  for i := 0 to Length(SortedDirectionPathPoints1) - 1 do
+    if (not SortedDirectionPathPoints1[i].Equals(SortedDirectionPathPoints2[i])) then
+      Exit;
+
+  Result := True;
 end;
 
 end.

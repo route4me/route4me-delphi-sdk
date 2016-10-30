@@ -7,7 +7,7 @@ uses
   Route4MeManagerUnit, DataObjectUnit, NullableBasicTypesUnit, UtilsUnit,
   CommonTypesUnit, AddressBookContactUnit,
   SingleDriverRoundTripTestDataProviderUnit, IRoute4MeManagerUnit, OutputUnit,
-  IConnectionUnit, RouteParametersUnit;
+  IConnectionUnit, RouteParametersUnit, OrderUnit;
 
 type
   TRoute4MeExamples = class
@@ -55,31 +55,31 @@ type
     procedure GetRoutes();
 
     procedure GetUsers();
-    procedure LogCustomActivity(Message: String; RouteId: String);
+    function LogCustomActivity(Message: String; RouteId: String): boolean;
     procedure GetActivities(RouteId: String);
     procedure GetAddress(RouteId: String; RouteDestinationId: integer);
-    procedure AddAddressNote(RouteId: String; RouteDestinationId: integer);
+    procedure AddAddressNote(RouteId: String; AddressId: integer);
     procedure GetAddressNotes(RouteId: String; RouteDestinationId: integer);
     function DuplicateRoute(RouteId: String): NullableString;
     procedure SetGPSPosition(RouteId: String);
     procedure TrackDeviceLastLocationHistory(RouteId: String);
     procedure DeleteRoutes(RouteIds: TStringArray);
     procedure RemoveOptimization(OptimizationProblemId: String);
-    function AddAddressBookContact(): TAddressBookContact;
+    function AddAddressBookContact(FirstName, Address: String): TAddressBookContact;
     procedure GetAddressBookContacts;
     procedure UpdateAddressBookContact(Contact: TAddressBookContact);
-    procedure RemoveAddressBookContacts(ContactIds: TStringArray);
+    procedure RemoveAddressBookContacts(AddressIds: TStringArray);
     function AddAvoidanceZone: NullableString;
     procedure GetAvoidanceZones;
     procedure GetAvoidanceZone(TerritoryId: String);
     procedure UpdateAvoidanceZone(TerritoryId: String);
     procedure DeleteAvoidanceZone(TerritoryId: String);
-    function AddOrder: TOrder;
+    function AddOrder(): TOrder;
     procedure GetOrders;
     procedure UpdateOrder(Order: TOrder);
     procedure RemoveOrders(OrderIds: TStringArray);
-    procedure GenericExample();
-    procedure GenericExampleShortcut();
+    procedure GenericExample(Connection: IConnection);
+    procedure GenericExampleShortcut(Connection: IConnection);
   end;
 
 implementation
@@ -98,112 +98,126 @@ uses
   SingleDriverRoundTripGenericTestDataProviderUnit,
   SingleDriverRoundTripGenericRequestUnit,
   SingleDriverRoundTripGenericResponseUnit, SettingsUnit,
-  RouteParametersQueryUnit, UserUnit;
+  RouteParametersQueryUnit, UserUnit, NoteParametersUnit, AddressNoteUnit,
+  AvoidanceZoneParametersUnit, TerritoryUnit, AvoidanceZoneUnit,
+  AvoidanceZoneQueryUnit, ConnectionUnit, ActivityParametersUnit, ActivityUnit,
+  AddressParametersUnit, AddressBookParametersUnit, OrderParametersUnit,
+  GPSParametersUnit, TrackingHistoryUnit;
 
-function TRoute4MeExamples.AddAddressBookContact: TAddressBookContact;
+function TRoute4MeExamples.AddAddressBookContact(
+  FirstName, Address: String): TAddressBookContact;
 var
   ErrorString: String;
+  Contact: TAddressBookContact;
 begin
-  AddressBookContact contact = new AddressBookContact()
-  {
-    FirstName = "Test FirstName " + (new Random()).Next().ToString(),
-    Address1 = "Test Address1 " + (new Random()).Next().ToString(),
-    CachedLat = 38.024654,
-    CachedLng = -77.338814
-  };
+{todo: разобраться со свойством Result.Id. Написал Олегу
+  Contact := TAddressBookContact.Create();
+  try
+    Contact.FirstName := FirstName;
+    Contact.Address := Address;
+    Contact.Latitude := 38.024654;
+    Contact.Longitude := -77.338814;
 
-  // Run the query
-  AddressBookContact resultContact = Route4MeManager.AddAddressBookContact(contact, ErrorString);
+    // Run the query
+    Result := Route4MeManager.AddressBookContact.Add(Contact, ErrorString);
 
-  WriteLn('');
+    WriteLn('');
 
-  if (resultContact != null) then
-  begin
-    WriteLn('AddAddressBookContact executed successfully');
-
-    WriteLn(Format('AddressId: {0}", resultContact.AddressId);
-
-    return resultContact;
-  end
-  else
-  begin
-    WriteLn(Format('AddAddressBookContact error: "%s"', [ErrorString]));
-
-    return null;
-  end
+    if (Result <> nil) then
+    begin
+      WriteLn('AddAddressBookContact executed successfully');
+      WriteLn(Format('AddressId: %s', [Result.Id.Value]));
+    end
+    else
+      WriteLn(Format('AddAddressBookContact error: "%s"', [ErrorString]));
+  finally
+    FreeAndNil(Contact);
+  end;}
 end;
 
-procedure TRoute4MeExamples.AddAddressNote(RouteId: String; RouteDestinationId: integer);
+procedure TRoute4MeExamples.AddAddressNote(RouteId: String; AddressId: integer);
 var
   ErrorString: String;
+  Parameters: TNoteParameters;
+  Contents: String;
+  Note: TAddressNote;
 begin
-  NoteParameters noteParameters = new NoteParameters()
-  {
-    RouteId = routeId,
-    AddressId = addressId,
-    Latitude = 33.132675170898,
-    Longitude = -83.244743347168,
-    DeviceType = DeviceType.Web.Description(),
-    ActivityType = StatusUpdateType.DropOff.Description()
-  };
+  Parameters := TNoteParameters.Create();
+  try
+    Parameters.RouteId := RouteId;
+    Parameters.AddressId := AddressId;
+    Parameters.Latitude := 33.132675170898;
+    Parameters.Longitude := -83.244743347168;
+    Parameters.DeviceType := TDeviceTypeDescription[TDeviceType.Web];
+    Parameters.ActivityType := TStatusUpdateTypeDescription[TStatusUpdateType.DropOff];
 
-  // Run the query
-  string contents = "Test Note Contents " + DateTime.Now.ToString();
-  AddressNote note = Route4MeManager.AddAddressNote(noteParameters, contents, ErrorString);
+    // Run the query
+    Contents := 'Test Note Contents ' + DateTimeToStr(Now);
+    Note := Route4MeManager.AddressNote.Add(Parameters, Contents, ErrorString);
+    try
+      WriteLn('');
 
-  WriteLn('');
-
-  if (note != null) then
-  begin
-    WriteLn('AddAddressNote executed successfully');
-    WriteLn(Format('Note ID: {0}", note.NoteId);
-  end
-  else
-    WriteLn(Format('AddAddressNote error: "%s"', [ErrorString]));
+      if (Note <> nil) then
+      begin
+        WriteLn('AddAddressNote executed successfully');
+        WriteLn(Format('Note ID: %d', [Note.NoteId.Value]));
+      end
+      else
+        WriteLn(Format('AddAddressNote error: "%s"', [ErrorString]));
+    finally
+      FreeAndNil(Note);
+    end;
+  finally
+    FreeAndNil(Parameters);
+  end;
 end;
 
 function TRoute4MeExamples.AddAvoidanceZone: NullableString;
 var
   ErrorString: String;
+  Parameters: TAvoidanceZoneParameters;
+  Territory: TTerritory;
+  AvoidanceZone: TAvoidanceZone;
 begin
-  AvoidanceZoneParameters avoidanceZoneParameters = new AvoidanceZoneParameters()
-  {
-    TerritoryName = "Test Territory",
-    TerritoryColor = "ff0000",
-    Territory = new Territory()
-    {
-      Type = TerritoryType.Circle.Description(),
-      Data = new string[] { "37.569752822786455,-77.47833251953125",
-                            "5000"}
-    }
-  };
+  Result := NullableString.Null;
 
-  // Run the query
-  AvoidanceZone avoidanceZone = Route4MeManager.AddAvoidanceZone(avoidanceZoneParameters, ErrorString);
+  Parameters := TAvoidanceZoneParameters.Create();
+  try
+    Parameters.TerritoryName := 'Test Territory';
+    Parameters.TerritoryColor := 'ff0000';
+    Territory := TTerritory.Create;
+    Territory.TerritoryType := TTerritoryType.ttCircle;
+    Territory.AddDataItem('37.569752822786455,-77.47833251953125');
+    Territory.AddDataItem('5000');
+    Parameters.Territory := Territory;
 
-  WriteLn('');
+    // Run the query
+    AvoidanceZone := Route4MeManager.AvoidanceZone.Add(Parameters, ErrorString);
+    try
+      WriteLn('');
 
-  if (avoidanceZone != null) then
-  begin
-    WriteLn('AddAvoidanceZone executed successfully');
+      if (AvoidanceZone <> nil) then
+      begin
+        WriteLn('AddAvoidanceZone executed successfully');
+        WriteLn(Format('Territory ID: %s', [AvoidanceZone.TerritoryId.Value]));
 
-    WriteLn(Format('Territory ID: {0}", avoidanceZone.TerritoryId);
-
-    return avoidanceZone.TerritoryId;
-  end
-  else
-  begin
-    WriteLn(Format('AddAvoidanceZone error: "%s"', [ErrorString]));
-
-    return null;
-  end
+        Result := AvoidanceZone.TerritoryId;
+      end
+      else
+        WriteLn(Format('AddAvoidanceZone error: "%s"', [ErrorString]));
+    finally
+      FreeAndNil(AvoidanceZone);
+    end;
+  finally
+    FreeAndNil(Parameters);
+  end;
 end;
 
 function TRoute4MeExamples.AddDestinationToOptimization(
   OptimizationId: String; AndReOptimize: boolean): TDataObject;
 var
   Address: TAddress;
-  OptimizationParameters: TOptimizationParameters;
+  Parameters: TOptimizationParameters;
   ErrorString: String;
 begin
   // Prepare the address that we are going to add to an existing route optimization
@@ -215,62 +229,59 @@ begin
   Address.Time := 0;
 
   //Optionally change any route parameters, such as maximum route duration, maximum cubic constraints, etc.
-  OptimizationParameters := TOptimizationParameters.Create;
+  Parameters := TOptimizationParameters.Create;
   try
-    OptimizationParameters.OptimizationProblemID := OptimizationId;
-    OptimizationParameters.AddAddress(Address);
-    OptimizationParameters.ReOptimize := AndReOptimize;
+    Parameters.OptimizationProblemID := OptimizationId;
+    Parameters.AddAddress(Address);
+    Parameters.ReOptimize := AndReOptimize;
 
     // Execute the optimization to re-optimize and rebalance all the routes in this optimization
-    Result := Route4MeManager.Optimization.Update(OptimizationParameters, ErrorString);
+    Result := Route4MeManager.Optimization.Update(Parameters, ErrorString);
 
     WriteLn('');
 
     if (Result <> nil) then
     begin
       WriteLn('AddDestinationToOptimization executed successfully');
-
       WriteLn(Format('Optimization Problem ID: %s', [Result.OptimizationProblemId]));
       WriteLn(Format('State: %s', [TOptimizationDescription[TOptimizationState(Result.State)]]));
     end
     else
       WriteLn(Format('AddDestinationToOptimization error: %s', [ErrorString]));
   finally
-    FreeAndNil(OptimizationParameters);
+    FreeAndNil(Parameters);
   end;
 end;
 
-function TRoute4MeExamples.AddOrder: TOrder;
+function TRoute4MeExamples.AddOrder(): TOrder;
 var
   ErrorString: String;
+  Order: TOrder;
 begin
-  Order order = new Order()
-  {
-    Address1 = "Test Address1 " + (new Random()).Next().ToString(),
-    AddressAlias = "Test AddressAlias " + (new Random()).Next().ToString(),
-    CachedLatitude = 37.773972,
-    CachedLongitude = -122.431297
-  };
+  Result := nil;
 
-  // Run the query
-  Order resultOrder = Route4MeManager.AddOrder(order, ErrorString);
+  Order := TOrder.Create();
+  try
+    Order.Address1 := 'Test Address1';
+    Order.AddressAlias := 'Test AddressAlias';
+    Order.CachedLatitude := 37.773972;
+    Order.CachedLongitude := -122.431297;
 
-  WriteLn('');
+    // Run the query
+    Result := Route4MeManager.Order.Add(Order, ErrorString);
 
-  if (resultOrder != null) then
-  begin
-    WriteLn('AddOrder executed successfully');
+    WriteLn('');
 
-    WriteLn(Format('Order ID: {0}", resultOrder.OrderId);
-
-    return resultOrder;
-  end
-  else
-  begin
-    WriteLn(Format('AddOrder error: "%s"', [ErrorString]));
-
-    return null;
-  end
+    if (Result <> nil) then
+    begin
+      WriteLn('AddOrder executed successfully');
+      WriteLn(Format('Order ID: %s', [Result.OrderId.Value]));
+    end
+    else
+      WriteLn(Format('AddOrder error: "%s"', [ErrorString]));
+  finally
+    FreeAndNil(Order);
+  end;
 end;
 
 function TRoute4MeExamples.AddRouteDestinations(
@@ -326,44 +337,42 @@ end;
 procedure TRoute4MeExamples.DeleteAvoidanceZone(TerritoryId: String);
 var
   ErrorString: String;
+  Query: TAvoidanceZoneQuery;
 begin
-  AvoidanceZoneQuery avoidanceZoneQuery = new AvoidanceZoneQuery()
-  {
-    TerritoryId = territoryId
-  };
+  Query := TAvoidanceZoneQuery.Create();
+  try
+    Query.TerritoryId := TerritoryId;
 
-  // Run the query
-  Route4MeManager.DeleteAvoidanceZone(avoidanceZoneQuery, ErrorString);
+    // Run the query
+    Route4MeManager.AvoidanceZone.Delete(Query, ErrorString);
 
-  WriteLn('');
+    WriteLn('');
 
-  if (errorString == "") then
-  begin
-    WriteLn('DeleteAvoidanceZone executed successfully');
-
-    WriteLn(Format('Territory ID: {0}", territoryId);
-  end
-  else
-    WriteLn(Format('DeleteAvoidanceZone error: "%s"', [ErrorString]));
+    if (ErrorString = EmptyStr) then
+    begin
+      WriteLn('DeleteAvoidanceZone executed successfully');
+      WriteLn(Format('Territory ID: %s', [TerritoryId]));
+    end
+    else
+      WriteLn(Format('DeleteAvoidanceZone error: "%s"', [ErrorString]));
+  finally
+    FreeAndNil(Query);
+  end;
 end;
 
 procedure TRoute4MeExamples.DeleteRoutes(RouteIds: TStringArray);
 var
   ErrorString: String;
+  DeletedRouteIds: TStringArray;
 begin
-  // Create the manager with the api key
-  Route4MeManager route4Me = new Route4MeManager(c_ApiKey);
-
-  //routeIds = new string[] { "1" };
-
   // Run the query
-  string[] deletedRouteIds = Route4MeManager.DeleteRoutes(routeIds, ErrorString);
+  DeletedRouteIds := Route4MeManager.Route.Delete(RouteIds, ErrorString);
 
   WriteLn('');
 
-  if (deletedRouteIds != null) then
+  if (Length(DeletedRouteIds) > 0) then
   begin
-    WriteLn(Format('DeleteRoutes executed successfully, {0} routes deleted", deletedRouteIds.Length);
+    WriteLn(Format('DeleteRoutes executed successfully, %d routes deleted', [Length(DeletedRouteIds)]));
     WriteLn('');
   end
   else
@@ -381,267 +390,335 @@ end;
 function TRoute4MeExamples.DuplicateRoute(RouteId: String): NullableString;
 var
   ErrorString: String;
+  Parameters: TRouteParametersQuery;
 begin
-  RouteParametersQuery routeParameters = new RouteParametersQuery()
-  {
-    RouteId = routeId
-  };
+  Parameters := TRouteParametersQuery.Create;
+  try
+    Parameters.RouteId := RouteId;
 
-  // Run the query
-  string duplicatedRouteId = Route4MeManager.DuplicateRoute(routeParameters, ErrorString);
+    // Run the query
+    Result := Route4MeManager.Route.Duplicate(Parameters, ErrorString);
 
-  WriteLn('');
-
-  if (duplicatedRouteId != null) then
-  begin
-    WriteLn(Format('DuplicateRoute executed successfully, duplicated route ID: {0}", duplicatedRouteId);
     WriteLn('');
-  end
-  else
-    WriteLn(Format('DuplicateRoute error "%s"', [ErrorString]));
 
-  return duplicatedRouteId;
+    if (Result.IsNotNull) then
+    begin
+      WriteLn(Format('DuplicateRoute executed successfully, duplicated route ID: %s', [Result.Value]));
+      WriteLn('');
+    end
+    else
+      WriteLn(Format('DuplicateRoute error "%s"', [ErrorString]));
+  finally
+    FreeAndNil(Parameters);
+  end;
 end;
 
-procedure TRoute4MeExamples.GenericExample;
+procedure TRoute4MeExamples.GenericExample(Connection: IConnection);
 var
   ErrorString: String;
+  Parameters: TGenericParameters;
+  DataObjects: TDataObjectRouteList;
+  Route: TDataObjectRoute;
+  Uri: String;
+  Route4Me: TRoute4MeManager;
+  MyApiKey: String;
+  ErrorMessage: String;
 begin
-  const string uri = R4MEInfrastructureSettings.MainHost + "/api.v4/route.php";
+  Route4Me := TRoute4MeManager.Create(Connection);
+  try
+    Parameters := TGenericParameters.Create();
+    try
+      //number of records per page
+      Parameters.AddParameter('limit', '10');
+      //the page offset starting at zero
+      Parameters.AddParameter('Offset', '5');
 
-  //the api key of the account
-  //the api key must have hierarchical ownership of the route being viewed (api key can't view routes of others)
-  const string myApiKey = "11111111111111111111111111111111";
+      Uri := TSettings.MainHost + '/api.v4/route.php';
+      DataObjects := Route4Me.Connection.Get(
+        Uri, Parameters, TDataObjectRouteList, ErrorMessage) as TDataObjectRouteList;
+      try
+        WriteLn('');
 
-  Route4MeManager route4Me = new Route4MeManager(myApiKey);
+        if (DataObjects <> nil) then
+        begin
+          WriteLn(Format('GenericExample executed successfully, %d routes returned', [DataObjects.Count]));
+          WriteLn('');
 
-  GenericParameters genericParameters = new GenericParameters();
-
-  //number of records per page
-  genericParameters.ParametersCollection.Add("limit", "10');
-
-  //the page offset starting at zero
-  genericParameters.ParametersCollection.Add("Offset", "5');
-
-  DataObjectRoute[] dataObjects = Route4MeManager.GetJsonObjectFromAPI<DataObjectRoute[]>(genericParameters,
-                                                                                   uri,
-                                                                                   HttpMethodType.Get,
-                                                                                   out errorMessage);
-
-  WriteLn('');
-
-  if (dataObjects != null) then
-  begin
-    WriteLn(Format('GenericExample executed successfully, {0} routes returned", dataObjects.Length);
-    WriteLn('');
-
-    dataObjects.ForEach(dataObject =>
-    {
-      WriteLn('Optimization Problem ID: {0}", dataObject.OptimizationProblemId);
-      WriteLn(Format('RouteID: {0}", dataObject.RouteID);
-      WriteLn('');
-    });
-  end
-  else
-    WriteLn(Format('GenericExample error "%s"', [ErrorMessage);
+          for Route in DataObjects do
+          begin
+            WriteLn(Format('Optimization Problem ID: %s', [Route.OptimizationProblemId]));
+            WriteLn(Format('RouteID: %s', [Route.RouteID]));
+            WriteLn('');
+          end;
+        end
+        else
+          WriteLn(Format('GenericExample error "%s"', [ErrorMessage]));
+      finally
+        FreeAndNil(DataObjects);
+      end;
+    finally
+      FreeAndNil(Parameters);
+    end;
+  finally
+    FreeAndNil(Route4Me);
+  end;
 end;
 
-procedure TRoute4MeExamples.GenericExampleShortcut;
+procedure TRoute4MeExamples.GenericExampleShortcut(Connection: IConnection);
 var
-  ErrorString: String;
+  ErrorMessage: String;
+  Parameters: TRouteParametersQuery;
+  Routes: TArray<TDataObjectRoute>;
+  Route: TDataObjectRoute;
+  Route4Me: TRoute4MeManager;
+  MyApiKey: String;
 begin
-  Route4MeManager route4Me = new Route4MeManager(c_ApiKey);
+  Route4Me := TRoute4MeManager.Create(Connection);
+  try
+    Parameters := TRouteParametersQuery.Create();
+    try
+      Parameters.Limit := 10;
+      Parameters.Offset := 5;
 
-  RouteParametersQuery routeQueryParameters = new RouteParametersQuery()
-  {
-    Limit = 10,
-    Offset = 5
-  };
+      Routes := Route4Me.Route.GetList(Parameters, ErrorMessage);
 
-  DataObjectRoute[] dataObjects = Route4MeManager.GetRoutes(routeQueryParameters, ErrorMessage);
+      if (Length(Routes) > 0) then
+      begin
+        WriteLn(Format('GenericExampleShortcut executed successfully, %d routes returned', [Length(Routes)]));
+        WriteLn('');
 
-  if (dataObjects != null) then
-  begin
-    WriteLn(Format('GenericExampleShortcut executed successfully, {0} routes returned", dataObjects.Length);
-    WriteLn('');
-
-    dataObjects.ForEach(dataObject =>
-    {
-      WriteLn('Optimization Problem ID: {0}", dataObject.OptimizationProblemId);
-      WriteLn(Format('RouteID: {0}", dataObject.RouteID);
-      WriteLn('');
-    });
-  end
-  else
-    WriteLn(Format('GenericExampleShortcut error "%s"', [ErrorMessage);
+        for Route in Routes do
+        begin
+          WriteLn(Format('Optimization Problem ID: %s', [Route.OptimizationProblemId]));
+          WriteLn(Format('RouteID: %s', [Route.RouteId]));
+          WriteLn('');
+        end;
+      end
+      else
+        WriteLn(Format('GenericExampleShortcut error "%s"', [ErrorMessage]));
+    finally
+      FreeAndNil(Parameters);
+    end;
+  finally
+    FreeAndNil(Route4Me);
+  end;
 end;
 
 procedure TRoute4MeExamples.GetActivities(RouteId: String);
 var
   ErrorString: String;
+  Parameters: TActivityParameters;
+  Activities: TActivityArray;
+  Activity: TActivity;
+  i: integer;
 begin
-  ActivityParameters activityParameters = new ActivityParameters()
-  {
-    RouteId = routeId,
-    Limit = 10,
-    Offset = 0
-  };
+  Parameters := TActivityParameters.Create();
+  try
+    Parameters.RouteId := routeId;
+    Parameters.Limit := 10;
+    Parameters.Offset := 0;
 
-  // Run the query
-  Activity[] activities = Route4MeManager.GetActivityFeed(activityParameters, ErrorString);
+    // Run the query
+    Activities := Route4MeManager.Activity.GetActivityFeed(Parameters, ErrorString);
+    try
+      WriteLn('');
 
-  WriteLn('');
+      if (Length(Activities) > 0) then
+      begin
+        WriteLn(Format('GetActivities executed successfully, %d activities returned', [Length(Activities)]));
+        WriteLn('');
 
-  if (activities != null) then
-  begin
-    WriteLn(Format('GetActivities executed successfully, {0} activities returned", activities.Length);
-    WriteLn('');
+        for Activity in Activities do
+          WriteLn(Format('Activity ID: %s', [Activity.ActivityId.Value]));
 
-    activities.ForEach(activity =>
-    {
-      WriteLn('Activity ID: {0}", activity.ActivityId);
-    });
-    WriteLn('');
-  end
-  else
-    WriteLn(Format('GetActivities error: "%s"', [ErrorString]));
+        WriteLn('');
+      end
+      else
+        WriteLn(Format('GetActivities error: "%s"', [ErrorString]));
+    finally
+      for i := Length(Activities) - 1 downto 0 do
+        FreeAndNil(Activities[i]);
+    end;
+  finally
+    FreeAndNil(Parameters);
+  end;
 end;
 
 procedure TRoute4MeExamples.GetAddress(RouteId: String; RouteDestinationId: integer);
 var
   ErrorString: String;
+  Parameters: TAddressParameters;
+  Address: TAddress;
 begin
-  AddressParameters addressParameters = new AddressParameters()
-  {
-    RouteId = routeId,
-    RouteDestinationId = routeDestinationId,
-    Notes = true
-  };
+  Parameters := TAddressParameters.Create();
+  try
+    Parameters.RouteId := RouteId;
+    Parameters.RouteDestinationId := RouteDestinationId;
+    Parameters.Notes := True;
 
-  // Run the query
-  Address dataObject = Route4MeManager.GetAddress(addressParameters, ErrorString);
+    // Run the query
+    Address := Route4MeManager.Address.Get(Parameters, ErrorString);
+    try
+      WriteLn('');
 
-  WriteLn('');
-
-  if (dataObject != null) then
-  begin
-    WriteLn('GetAddress executed successfully');
-    WriteLn(Format('RouteId: {0}; RouteDestinationId: {1}", dataObject.RouteId, dataObject.RouteDestinationId);
-  end
-  else
-    WriteLn(Format('GetAddress error: "%s"', [ErrorString]));
-
-  WriteLn('');
+      if (Address <> nil) then
+      begin
+        WriteLn('GetAddress executed successfully');
+        WriteLn(Format('RouteId: %s; RouteDestinationId: %d', [Address.RouteId.Value, Address.RouteDestinationId.Value]));
+      end
+      else
+        WriteLn(Format('GetAddress error: "%s"', [ErrorString]));
+    finally
+      FreeAndNil(Address);
+    end;
+  finally
+    FreeAndNil(Parameters);
+  end;
 end;
 
 procedure TRoute4MeExamples.GetAddressBookContacts;
 var
   ErrorString: String;
+  Parameters: TAddressBookParameters;
+  Total: integer;
+  Contacts: TAddressBookContactArray;
+  i: integer;
 begin
-  AddressBookParameters addressBookParameters = new AddressBookParameters()
-  {
-    Limit = 10,
-    Offset = 0
-  };
+  Parameters := TAddressBookParameters.Create();
+  try
+    Parameters.Limit := 10;
+    Parameters.Offset := 0;
 
-  // Run the query
-  uint total;
-  AddressBookContact[] contacts = Route4MeManager.GetAddressBookContacts(addressBookParameters, out total, ErrorString);
+    // Run the query
+    Contacts := Route4MeManager.AddressBookContact.Get(Parameters, Total, ErrorString);
+    try
+      WriteLn('');
 
-  WriteLn('');
-
-  if (contacts != null) then
-  begin
-    WriteLn(Format('GetAddressBookContacts executed successfully, {0} contacts returned, total = {1}", contacts.Length, total);
-    WriteLn('');
-  end
-  else
-    WriteLn(Format('GetAddressBookContacts error: "%s"', [ErrorString]));
+      if (Length(Contacts) > 0) then
+      begin
+        WriteLn(Format('GetAddressBookContacts executed successfully, %d contacts returned, total = %d',
+          [Length(Contacts), Total]));
+        WriteLn('');
+      end
+      else
+        WriteLn(Format('GetAddressBookContacts error: "%s"', [ErrorString]));
+    finally
+      for i := Length(Contacts) - 1 downto 0 do
+        FreeAndNil(Contacts[i]);
+    end;
+  finally
+    FreeAndNil(Parameters);
+  end;
 end;
 
 procedure TRoute4MeExamples.GetAddressNotes(RouteId: String;
   RouteDestinationId: integer);
 var
   ErrorString: String;
+  Parameters: TNoteParameters;
+  Notes: TAddressNoteArray;
+  i: integer;
 begin
-  NoteParameters noteParameters = new NoteParameters()
-  {
-    RouteId = routeId,
-    AddressId = routeDestinationId
-  };
+  Parameters := TNoteParameters.Create();
+  try
+    Parameters.RouteId := RouteId;
+    Parameters.AddressId := RouteDestinationId;
 
-  // Run the query
-  AddressNote[] notes = Route4MeManager.GetAddressNotes(noteParameters, ErrorString);
+    // Run the query
+    Notes := Route4MeManager.AddressNote.Get(Parameters, ErrorString);
+    try
+      WriteLn('');
 
-  WriteLn('');
+      if (Notes <> nil) then
+        WriteLn(Format('GetAddressNotes executed successfully, %d notes returned', [Length(Notes)]))
+      else
+        WriteLn(Format('GetAddressNotes error: "%s"', [ErrorString]));
 
-  if (notes != null) then
-    WriteLn(Format('GetAddressNotes executed successfully, {0} notes returned", notes.Length)
-  else
-    WriteLn(Format('GetAddressNotes error: "%s"', [ErrorString]));
-
-  WriteLn('');
+      WriteLn('');
+    finally
+      for i := Length(Notes) - 1 downto 0 do
+        FreeAndNil(Notes[i]);
+    end;
+  finally
+    FreeAndNil(Parameters);
+  end;
 end;
 
 procedure TRoute4MeExamples.GetAvoidanceZone(TerritoryId: String);
 var
   ErrorString: String;
+  Query: TAvoidanceZoneQuery;
+  AvoidanceZone: TAvoidanceZone;
+  i: integer;
 begin
-  AvoidanceZoneQuery avoidanceZoneQuery = new AvoidanceZoneQuery()
-  {
+  Query := TAvoidanceZoneQuery.Create();
+  try
+    Query.TerritoryId := TerritoryId;
+    // Run the query
+    AvoidanceZone := Route4MeManager.AvoidanceZone.Get(Query, ErrorString);
+    try
+      WriteLn('');
 
-  };
-
-  // Run the query
-  AvoidanceZone[] avoidanceZones = Route4MeManager.GetAvoidanceZones(avoidanceZoneQuery, ErrorString);
-
-  WriteLn('');
-
-  if (avoidanceZones != null) then
-    WriteLn(Format('GetAvoidanceZones executed successfully, {0} zones returned", avoidanceZones.Length);
-  else
-    WriteLn(Format('GetAvoidanceZones error: "%s"', [ErrorString]));
+      if (AvoidanceZone <> nil) then
+      begin
+        WriteLn('GetAvoidanceZone executed successfully');
+        WriteLn(Format('Territory ID: %s', [AvoidanceZone.TerritoryId.Value]));
+      end
+      else
+        WriteLn(Format('GetAvoidanceZone error: %s', [ErrorString]));
+    finally
+      FreeAndNil(AvoidanceZone);
+    end;
+  finally
+    FreeAndNil(Query);
+  end;
 end;
 
 procedure TRoute4MeExamples.GetAvoidanceZones;
 var
   ErrorString: String;
+  Query: TAvoidanceZoneQuery;
+  AvoidanceZones: TAvoidanceZoneArray;
+  i: integer;
 begin
-  AvoidanceZoneQuery avoidanceZoneQuery = new AvoidanceZoneQuery()
-  {
+  Query := TAvoidanceZoneQuery.Create();
+  try
+    // Run the query
+    AvoidanceZones := Route4MeManager.AvoidanceZone.GetList(Query, ErrorString);
+    try
+      WriteLn('');
 
-  };
-
-  // Run the query
-  AvoidanceZone[] avoidanceZones = Route4MeManager.GetAvoidanceZones(avoidanceZoneQuery, ErrorString);
-
-  WriteLn('');
-
-  if (avoidanceZones != null) then
-    WriteLn(Format('GetAvoidanceZones executed successfully, {0} zones returned", avoidanceZones.Length);
-  else
-    WriteLn(Format('GetAvoidanceZones error: "%s"', [ErrorString]));
+      if (Length(AvoidanceZones) > 0) then
+        WriteLn(Format('GetAvoidanceZones executed successfully, %d zones returned', [Length(AvoidanceZones)]))
+      else
+        WriteLn(Format('GetAvoidanceZones error: "%s"', [ErrorString]));
+    finally
+      for i := Length(AvoidanceZones) - 1 downto 0 do
+        FreeAndNil(AvoidanceZones[i]);
+    end;
+  finally
+    FreeAndNil(Query);
+  end;
 end;
 
 procedure TRoute4MeExamples.GetOptimization(OptimizationProblemId: String);
 var
-  OptimizationParameters: TOptimizationParameters;
+  Parameters: TOptimizationParameters;
   DataObject: TDataObject;
   ErrorString: String;
 begin
-  OptimizationParameters := TOptimizationParameters.Create;
+  Parameters := TOptimizationParameters.Create;
   try
-    OptimizationParameters.OptimizationProblemID := OptimizationProblemId;
+    Parameters.OptimizationProblemID := OptimizationProblemId;
 
     // Run the query
-    DataObject := Route4MeManager.Optimization.Get(OptimizationParameters, ErrorString);
+    DataObject := Route4MeManager.Optimization.Get(Parameters, ErrorString);
     try
       WriteLn('');
 
       if (DataObject <> nil) then
       begin
           WriteLn('GetOptimization executed successfully');
-
           WriteLn(Format('Optimization Problem ID: %s', [DataObject.OptimizationProblemId]));
           WriteLn(Format('State: %s', [TOptimizationDescription[TOptimizationState(DataObject.State)]]));
       end
@@ -651,25 +728,25 @@ begin
       FreeAndNil(DataObject);
     end;
   finally
-    FreeAndNil(OptimizationParameters);
+    FreeAndNil(Parameters);
   end;
 end;
 
 procedure TRoute4MeExamples.GetOptimizations;
 var
-  QueryParameters: TRouteParametersQuery;
+  Parameters: TRouteParametersQuery;
   DataObjects: TArray<TDataObject>;
   DataObject: TDataObject;
   ErrorString: String;
   i: integer;
 begin
-  QueryParameters := TRouteParametersQuery.Create;
+  Parameters := TRouteParametersQuery.Create;
   try
-    QueryParameters.Limit := 10;
-    QueryParameters.Offset := 5;
+    Parameters.Limit := 10;
+    Parameters.Offset := 5;
 
     // Run the query
-    DataObjects := Route4MeManager.Optimization.Get(QueryParameters, ErrorString);
+    DataObjects := Route4MeManager.Optimization.Get(Parameters, ErrorString);
     try
       WriteLn('');
 
@@ -691,152 +768,174 @@ begin
         FreeAndNil(DataObjects[i]);
     end;
   finally
-    FreeAndNil(QueryParameters);
+    FreeAndNil(Parameters);
   end;
 end;
 
 procedure TRoute4MeExamples.GetOrders;
 var
   ErrorString: String;
+  Parameters: TOrderParameters;
+  Total: integer;
+  Orders: TOrderArray;
+  i: integer;
 begin
-  OrderParameters orderParameters = new OrderParameters()
-  {
-    Limit = 10
-  };
+  Parameters := TOrderParameters.Create();
+  try
+    Parameters.Limit := 10;
 
-  uint total;
-  Order[] orders = Route4MeManager.GetOrders(orderParameters, out total, ErrorString);
+    Orders := Route4MeManager.Order.Get(Parameters, Total, ErrorString);
+    try
+      WriteLn('');
 
-  WriteLn('');
-
-  if (orders != null) then
-    WriteLn(Format('GetOrders executed successfully, {0} orders returned, total = {1}", orders.Length, total);
-  else
-    WriteLn(Format('GetOrders error: "%s"', [ErrorString]));
+      if (Length(Orders) > 0) then
+        WriteLn(Format('GetOrders executed successfully, %d orders returned, total = %d',
+          [Length(Orders), Total]))
+      else
+        WriteLn(Format('GetOrders error: "%s"', [ErrorString]));
+    finally
+      for i := Length(Orders) - 1 downto 0 do
+        FreeAndNil(Orders[i]);
+    end;
+  finally
+    FreeAndNil(Parameters);
+  end;
 end;
 
 procedure TRoute4MeExamples.GetRoute(RouteId: String; GetRouteDirections,
   GetRoutePathPoints: boolean);
 var
-  RouteParameters: TRouteParametersQuery;
+  Parameters: TRouteParametersQuery;
   ErrorString: String;
-  DataObject: TDataObjectRoute;
+  Route: TDataObjectRoute;
 begin
-  RouteParameters := TRouteParametersQuery.Create;
+  Parameters := TRouteParametersQuery.Create;
   try
-    RouteParameters.RouteId := RouteId;
+    Parameters.RouteId := RouteId;
 
     if (GetRouteDirections) then
-      RouteParameters.Directions := True;
+      Parameters.Directions := True;
 
     if (GetRoutePathPoints) then
-      RouteParameters.RoutePathOutput := TRoutePathOutputDescription[TRoutePathOutput.Points];
+      Parameters.RoutePathOutput := TRoutePathOutputDescription[TRoutePathOutput.rpoPoints];
 
     // Run the query
-    DataObject := Route4MeManager.Route.Get(RouteParameters, ErrorString);
-
-    WriteLn('');
-
-    if (DataObject <> nil) then
-    begin
-      WriteLn('GetRoute executed successfully');
-
-      WriteLn(Format('Route ID: %s', [DataObject.RouteId]));
-      WriteLn(Format('State: %s', [TOptimizationDescription[TOptimizationState(DataObject.State)]]));
-      if (Length(DataObject.Directions) > 0) then
-        WriteLn(Format('Directions: length = %d', [Length(DataObject.Directions)]));
-      if (Length(DataObject.Path) > 0) then
-        WriteLn(Format('Path: length = %d', [Length(DataObject.Path)]));
-    end
-    else
-      WriteLn(Format('GetRoute error: "%s"', [ErrorString]));
+    Route := Route4MeManager.Route.Get(Parameters, ErrorString);
+    try
+      if (Route <> nil) then
+      begin
+        WriteLn('GetRoute executed successfully');
+        WriteLn(Format('Route ID: %s', [Route.RouteId]));
+        WriteLn(Format('State: %s', [TOptimizationDescription[TOptimizationState(Route.State)]]));
+        if (Length(Route.Directions) > 0) then
+          WriteLn(Format('Directions: length = %d', [Length(Route.Directions)]));
+        if (Length(Route.Path) > 0) then
+          WriteLn(Format('Path: length = %d', [Length(Route.Path)]));
+      end
+      else
+        WriteLn(Format('GetRoute error: "%s"', [ErrorString]));
+    finally
+      FreeAndNil(Route);
+    end;
   finally
-    FreeAndNil(RouteParameters);
+    FreeAndNil(Parameters);
   end;
 end;
 
 procedure TRoute4MeExamples.GetRoutes;
 var
-  RouteParameters: TRouteParametersQuery;
+  Parameters: TRouteParametersQuery;
   ErrorString: String;
-  DataObjects: TArray<TDataObjectRoute>;
-  DataObject: TDataObjectRoute;
+  Routes: TArray<TDataObjectRoute>;
+  Route: TDataObjectRoute;
+  i: integer;
 begin
-  RouteParameters := TRouteParametersQuery.Create();
-  RouteParameters.Limit := 10;
-  RouteParameters.Offset := 5;
+  Parameters := TRouteParametersQuery.Create();
+  try
+    Parameters.Limit := 10;
+    Parameters.Offset := 5;
 
-  // Run the query
-  DataObjects := Route4MeManager.Route.GetList(RouteParameters, ErrorString);
-
-  WriteLn('');
-
-  if (Length(DataObjects) > 0) then
-  begin
-    WriteLn(Format('GetRoutes executed successfully, %d routes returned', [Length(DataObjects)]));
-    WriteLn('');
-
-    for DataObject in DataObjects do
-    begin
-      WriteLn(Format('RouteId: %s', [DataObject.RouteId]));
+    // Run the query
+    Routes := Route4MeManager.Route.GetList(Parameters, ErrorString);
+    try
       WriteLn('');
+
+      if (Length(Routes) > 0) then
+      begin
+        WriteLn(Format('GetRoutes executed successfully, %d routes returned', [Length(Routes)]));
+        WriteLn('');
+
+        for Route in Routes do
+        begin
+          WriteLn(Format('RouteId: %s', [Route.RouteId]));
+          WriteLn('');
+        end;
+      end
+      else
+        WriteLn(Format('GetRoutes error "%s"', [ErrorString]));
+    finally
+      for i := Length(Routes) - 1 downto 0 do
+        FreeAndNil(Routes[i]);
     end;
-  end
-  else
-    WriteLn(Format('GetRoutes error "%s"', [ErrorString]));
+  finally
+    FreeAndNil(Parameters);
+  end;
 end;
 
 procedure TRoute4MeExamples.GetUsers;
 var
   Parameters: TGenericParameters;
   ErrorString: String;
-  DataObjects: TArray<TUser>;
+  Users: TArray<TUser>;
+  i: integer;
 begin
   Parameters := TGenericParameters.Create();
   try
     // Run the query
-    DataObjects := Route4MeManager.User.Get(Parameters, ErrorString);
-
-    WriteLn('');
-
-    if (Length(DataObjects) > 0) then
-    begin
-      WriteLn(Format('GetUsers executed successfully, %d users returned', [Length(DataObjects)]));
+    Users := Route4MeManager.User.Get(Parameters, ErrorString);
+    try
       WriteLn('');
-    end
-    else
-      WriteLn(Format('GetUsers error: "%s"', [ErrorString]));
+
+      if (Length(Users) > 0) then
+      begin
+        WriteLn(Format('GetUsers executed successfully, %d users returned', [Length(Users)]));
+        WriteLn('');
+      end
+      else
+        WriteLn(Format('GetUsers error: "%s"', [ErrorString]));
+    finally
+      for i := Length(Users) - 1 downto 0 do
+        FreeAndNil(Users[i]);
+    end;
   finally
     FreeAndNil(Parameters);
   end;
 end;
 
-procedure TRoute4MeExamples.LogCustomActivity(Message, RouteId: String);
+function TRoute4MeExamples.LogCustomActivity(Message, RouteId: String): boolean;
 var
   Activity: TActivity;
   ErrorString: String;
-  Added: boolean;
 begin
+{todo: разобраться с полем Activity.ActivityMessage. Спросил у Олега
   Activity := TActivity.Create();
-  Activity.ActivityType := 'user_message';
-  Activity.ActivityMessage := Message;
-  Activity.RouteId := routeId;
+  try
+    Activity.ActivityType := 'user_message';
+    Activity.ActivityMessage := Message;
+    Activity.RouteId := routeId;
 
-  // Run the query
-  Added := Route4MeManager.LogCustomActivity(activity, ErrorString);
+    // Run the query
+    Result := Route4MeManager.Activity.LogCustomActivity(Activity, ErrorString);
 
-  WriteLn('');
+    WriteLn('');
 
-  if (Added) then
-  begin
-    WriteLn('LogCustomActivity executed successfully');
-    return added;
-  end
-  else
-  begin
-    WriteLn(Format('LogCustomActivity error: "%s"', [ErrorString]));
-    return added;
-  end;
+    if (Result) then
+      WriteLn('LogCustomActivity executed successfully')
+    else
+      WriteLn(Format('LogCustomActivity error: "%s"', [ErrorString]));
+  finally
+    FreeAndNil(Activity);
+  end;}
 end;
 
 procedure TRoute4MeExamples.MoveDestinationToRoute(ToRouteId: String;
@@ -867,16 +966,16 @@ var
   DataProvider: IOptimizationParametersProvider;
   ErrorString: String;
   DataObject: TDataObject;
-  OptimizationParameters: TOptimizationParameters;
+  Parameters: TOptimizationParameters;
 begin
   DataProvider := TMultipleDepotMultipleDriverTestDataProvider.Create;
 
   // Run the query
-  OptimizationParameters := DataProvider.OptimizationParameters;
+  Parameters := DataProvider.OptimizationParameters;
   try
-    DataObject := Route4MeManager.Optimization.Run(OptimizationParameters, ErrorString);
+    DataObject := Route4MeManager.Optimization.Run(Parameters, ErrorString);
   finally
-    FreeAndNil(OptimizationParameters);
+    FreeAndNil(Parameters);
   end;
 
   // Output the result
@@ -890,16 +989,16 @@ var
   DataProvider: IOptimizationParametersProvider;
   ErrorString: String;
   DataObject: TDataObject;
-  OptimizationParameters: TOptimizationParameters;
+  Parameters: TOptimizationParameters;
 begin
   DataProvider := TMultipleDepotMultipleDriverTimeWindowTestDataProvider.Create;
 
   // Run the query
-  OptimizationParameters := DataProvider.OptimizationParameters;
+  Parameters := DataProvider.OptimizationParameters;
   try
-    DataObject := Route4MeManager.Optimization.Run(OptimizationParameters, ErrorString);
+    DataObject := Route4MeManager.Optimization.Run(Parameters, ErrorString);
   finally
-    FreeAndNil(OptimizationParameters);
+    FreeAndNil(Parameters);
   end;
 
   // Output the result
@@ -913,16 +1012,16 @@ var
   DataProvider: IOptimizationParametersProvider;
   ErrorString: String;
   DataObject: TDataObject;
-  OptimizationParameters: TOptimizationParameters;
+  Parameters: TOptimizationParameters;
 begin
   DataProvider := TMultipleDepotMultipleDriverWith24StopsTimeWindowTestDataProvider.Create;
 
   // Run the query
-  OptimizationParameters := DataProvider.OptimizationParameters;
+  Parameters := DataProvider.OptimizationParameters;
   try
-    DataObject := Route4MeManager.Optimization.Run(OptimizationParameters, ErrorString);
+    DataObject := Route4MeManager.Optimization.Run(Parameters, ErrorString);
   finally
-    FreeAndNil(OptimizationParameters);
+    FreeAndNil(Parameters);
   end;
 
   // Output the result
@@ -965,17 +1064,19 @@ begin
     WriteLn(Format('%s error: "%s"', [ExampleName, ErrorString]));
 end;
 
-procedure TRoute4MeExamples.RemoveAddressBookContacts(ContactIds: TStringArray);
+procedure TRoute4MeExamples.RemoveAddressBookContacts(AddressIds: TStringArray);
 var
   ErrorString: String;
+  Removed: boolean;
 begin
   // Run the query
-  bool removed = Route4MeManager.RemoveAddressBookContacts(addressIds, ErrorString);
+  Removed := Route4MeManager.AddressBookContact.Remove(AddressIds, ErrorString);
 
   WriteLn('');
 
   if (Removed) then
-    WriteLn(Format('RemoveAddressBookContacts executed successfully, {0} contacts deleted", addressIds.Length);
+    WriteLn(Format('RemoveAddressBookContacts executed successfully, %d contacts deleted',
+      [Length(AddressIds)]))
   else
     WriteLn(Format('RemoveAddressBookContacts error: "%s"', [ErrorString]));
 end;
@@ -994,7 +1095,6 @@ begin
   if (Removed) then
   begin
     WriteLn('RemoveAddressFromOptimization executed successfully');
-
     WriteLn(Format('Optimization Problem ID: %s, Destination ID: %d', [OptimizationId, DestinationId]));
   end
   else
@@ -1004,17 +1104,17 @@ end;
 procedure TRoute4MeExamples.RemoveOptimization(OptimizationProblemId: String);
 var
   ErrorString: String;
+  Removed: boolean;
 begin
   // Run the query
-  bool removed = Route4MeManager.RemoveOptimization(optimizationProblemID, ErrorString);
+  Removed := Route4MeManager.Optimization.Remove(OptimizationProblemID, ErrorString);
 
   WriteLn('');
 
-  if (removed) then
+  if (Removed) then
   begin
     WriteLn('RemoveOptimization executed successfully');
-
-    WriteLn(Format('Optimization Problem ID: {0}", optimizationProblemID);
+    WriteLn(Format('Optimization Problem ID: %s', [OptimizationProblemID]));
   end
   else
     WriteLn(Format('RemoveOptimization error: "%s"', [ErrorString]));
@@ -1023,14 +1123,15 @@ end;
 procedure TRoute4MeExamples.RemoveOrders(OrderIds: TStringArray);
 var
   ErrorString: String;
+  Removed: boolean;
 begin
   // Run the query
-  bool removed = Route4MeManager.RemoveOrders(orderIds, ErrorString);
+  Removed := Route4MeManager.Order.Remove(OrderIds, ErrorString);
 
   WriteLn('');
 
-  if (removed) then
-    WriteLn(Format('RemoveOrders executed successfully, {0} orders removed", orderIds.Length);
+  if (Removed) then
+    WriteLn(Format('RemoveOrders executed successfully, %d orders removed', [Length(OrderIds)]))
   else
     WriteLn(Format('RemoveOrders error: "%s"', [ErrorString]));
 end;
@@ -1057,57 +1158,61 @@ end;
 
 procedure TRoute4MeExamples.ReOptimization(OptimizationProblemId: String);
 var
-  OptimizationParameters: TOptimizationParameters;
+  Parameters: TOptimizationParameters;
   ErrorString: String;
   DataObject: TDataObject;
 begin
-  OptimizationParameters := TOptimizationParameters.Create;
-  OptimizationParameters.OptimizationProblemID := OptimizationProblemId;
-  OptimizationParameters.ReOptimize := True;
+  Parameters := TOptimizationParameters.Create;
+  try
+    Parameters.OptimizationProblemID := OptimizationProblemId;
+    Parameters.ReOptimize := True;
 
-  // Run the query
-  DataObject := Route4MeManager.Optimization.Update(OptimizationParameters, ErrorString);
-
-  WriteLn('');
-
-  if (DataObject <> nil) then
-  begin
-    WriteLn('ReOptimization executed successfully');
-
-    WriteLn(Format('Optimization Problem ID: %s', [DataObject.OptimizationProblemId]));
-    WriteLn(Format('State: %s', [TOptimizationDescription[TOptimizationState(DataObject.State)]]));
-  end
-  else
-    WriteLn(Format('ReOptimization error: "%s"', [ErrorString]));
+    // Run the query
+    DataObject := Route4MeManager.Optimization.Update(Parameters, ErrorString);
+    try
+      if (DataObject <> nil) then
+      begin
+        WriteLn('ReOptimization executed successfully');
+        WriteLn(Format('Optimization Problem ID: %s', [DataObject.OptimizationProblemId]));
+        WriteLn(Format('State: %s', [TOptimizationDescription[TOptimizationState(DataObject.State)]]));
+      end
+      else
+        WriteLn(Format('ReOptimization error: "%s"', [ErrorString]));
+    finally
+      FreeAndNil(DataObject);
+    end;
+  finally
+    FreeAndNil(Parameters);
+  end;
 end;
 
 procedure TRoute4MeExamples.ReoptimizeRoute(RouteId: String);
 var
-  RouteParameters: TRouteParametersQuery;
+  Parameters: TRouteParametersQuery;
   ErrorString: String;
-  DataObject: TDataObjectRoute;
+  Route: TDataObjectRoute;
 begin
-  RouteParameters := TRouteParametersQuery.Create;
+  Parameters := TRouteParametersQuery.Create;
   try
-    RouteParameters.RouteId := RouteId;
-    RouteParameters.ReOptimize := True;
+    Parameters.RouteId := RouteId;
+    Parameters.ReOptimize := True;
 
     // Run the query
-    DataObject := Route4MeManager.Route.Update(RouteParameters, ErrorString);
-
-    WriteLn('');
-
-    if (DataObject <> nil) then
-    begin
-      WriteLn('ReoptimizeRoute executed successfully');
-
-      WriteLn(Format('Route ID: %s', [DataObject.RouteId]));
-      WriteLn(Format('State: %s', [TOptimizationDescription[TOptimizationState(DataObject.State)]]));
-    end
-    else
-      WriteLn(Format('ReoptimizeRoute error: "%s"', [ErrorString]));
+    Route := Route4MeManager.Route.Update(Parameters, ErrorString);
+    try
+      if (Route <> nil) then
+      begin
+        WriteLn('ReoptimizeRoute executed successfully');
+        WriteLn(Format('Route ID: %s', [Route.RouteId]));
+        WriteLn(Format('State: %s', [TOptimizationDescription[TOptimizationState(Route.State)]]));
+      end
+      else
+        WriteLn(Format('ReoptimizeRoute error: "%s"', [ErrorString]));
+    finally
+      FreeAndNil(Route);
+    end;
   finally
-    FreeAndNil(RouteParameters);
+    FreeAndNil(Parameters);
   end;
 end;
 
@@ -1168,30 +1273,34 @@ end;
 procedure TRoute4MeExamples.SetGPSPosition(RouteId: String);
 var
   ErrorString: String;
+  Parameters: TGPSParameters;
+  Response: String;
 begin
   // Create the gps parametes
-  GPSParameters gpsParameters = new GPSParameters()
-  {
-    Format = Format.Csv.Description(),
-    RouteId = routeId,
-    Latitude = 33.14384,
-    Longitude = -83.22466,
-    Course = 1,
-    Speed = 120,
-    DeviceType = DeviceType.IPhone.Description(),
-    MemberId = 1,
-    DeviceGuid = "TEST_GPS",
-    DeviceTimestamp = "2014-06-14 17:43:35"
-  };
+  Parameters := TGPSParameters.Create();
+  try
+    Parameters.Format := TFormatDescription[TFormatEnum.Csv];
+    Parameters.RouteId := RouteId;
+    Parameters.Latitude := 33.14384;
+    Parameters.Longitude := -83.22466;
+    Parameters.Course := 1;
+    Parameters.Speed := 120;
+    Parameters.DeviceType := TDeviceTypeDescription[TDeviceType.IPhone];
+    Parameters.MemberId := 1;
+    Parameters.DeviceGuid := 'TEST_GPS';
+    Parameters.DeviceTimestamp := '2014-06-14 17:43:35';
 
-  string response = Route4MeManager.SetGPS(gpsParameters, ErrorString);
+    Response := Route4MeManager.Tracking.SetGPS(Parameters, ErrorString);
 
-  WriteLn('');
+    WriteLn('');
 
-  if (string.IsNullOrEmpty(errorString)) then
-    WriteLn(Format('SetGps response: {0}", response)
-  else
-    WriteLn(Format('SetGps error: "%s"', [ErrorString]));
+    if (ErrorString = EmptyStr) then
+      WriteLn(Format('SetGps response: %s', [Response]))
+    else
+      WriteLn(Format('SetGps error: "%s"', [ErrorString]));
+  finally
+    FreeAndNil(Parameters);
+  end;
 end;
 
 function TRoute4MeExamples.SingleDepotMultipleDriverNoTimeWindow: TDataObject;
@@ -1199,16 +1308,16 @@ var
   DataProvider: IOptimizationParametersProvider;
   ErrorString: String;
   DataObject: TDataObject;
-  OptimizationParameters: TOptimizationParameters;
+  Parameters: TOptimizationParameters;
 begin
   DataProvider := TSingleDepotMultipleDriverNoTimeWindowTestDataProvider.Create;
 
   // Run the query
-  OptimizationParameters := DataProvider.OptimizationParameters;
+  Parameters := DataProvider.OptimizationParameters;
   try
-    DataObject := Route4MeManager.Optimization.Run(OptimizationParameters, ErrorString);
+    DataObject := Route4MeManager.Optimization.Run(Parameters, ErrorString);
   finally
-    FreeAndNil(OptimizationParameters);
+    FreeAndNil(Parameters);
   end;
 
   // Output the result
@@ -1222,16 +1331,16 @@ var
   DataProvider: IOptimizationParametersProvider;
   ErrorString: String;
   DataObject: TDataObject;
-  OptimizationParameters: TOptimizationParameters;
+  Parameters: TOptimizationParameters;
 begin
   DataProvider := TSingleDriverMultipleTimeWindowsTestDataProvider.Create;
 
   // Run the query
-  OptimizationParameters := DataProvider.OptimizationParameters;
+  Parameters := DataProvider.OptimizationParameters;
   try
-    DataObject := Route4MeManager.Optimization.Run(OptimizationParameters, ErrorString);
+    DataObject := Route4MeManager.Optimization.Run(Parameters, ErrorString);
   finally
-    FreeAndNil(OptimizationParameters);
+    FreeAndNil(Parameters);
   end;
 
   // Output the result
@@ -1245,16 +1354,16 @@ var
   DataProvider: IOptimizationParametersProvider;
   ErrorString: String;
   DataObject: TDataObject;
-  OptimizationParameters: TOptimizationParameters;
+  Parameters: TOptimizationParameters;
 begin
   DataProvider := TSingleDriverRoundTripTestDataProvider.Create;
 
   // Run the query
-  OptimizationParameters := DataProvider.OptimizationParameters;
+  Parameters := DataProvider.OptimizationParameters;
   try
-    DataObject := Route4MeManager.Optimization.Run(OptimizationParameters, ErrorString);
+    DataObject := Route4MeManager.Optimization.Run(Parameters, ErrorString);
   finally
-    FreeAndNil(OptimizationParameters);
+    FreeAndNil(Parameters);
   end;
 
   // Output the result
@@ -1268,47 +1377,50 @@ var
   DataProvider: IOptimizationParametersProvider;
   ErrorString: String;
   Request: TSingleDriverRoundTripGenericRequest;
-  Responce: TSingleDriverRoundTripGenericResponse;
+  Response: TSingleDriverRoundTripGenericResponse;
   Address: TAddress;
-  OptimizationParameters: TOptimizationParameters;
+  Parameters: TOptimizationParameters;
 begin
   Result := NullableString.Null;
 
   DataProvider := TSingleDriverRoundTripGenericTestDataProvider.Create;
   Request := TSingleDriverRoundTripGenericRequest.Create;
   try
-    OptimizationParameters := DataProvider.OptimizationParameters;
+    Parameters := DataProvider.OptimizationParameters;
     try
-      Request.Parameters := OptimizationParameters.Parameters;
-      Request.Addresses := OptimizationParameters.Addresses;
+      Request.Parameters := Parameters.Parameters;
+      Request.Addresses := Parameters.Addresses;
 
       // Run the query
-      Responce := Route4MeManager.Connection.Post(TSettings.ApiHost, Request,
+      Response := Route4MeManager.Connection.Post(TSettings.ApiHost, Request,
         TSingleDriverRoundTripGenericResponse, errorString) as TSingleDriverRoundTripGenericResponse;
-
-      WriteLn('');
-
-      if (Responce <> nil) then
-      begin
-        WriteLn('SingleDriverRoundTripGeneric executed successfully');
+      try
         WriteLn('');
 
-        WriteLn(Format('Optimization Problem ID: %s', [Responce.OptimizationProblemId]));
-        WriteLn(Format('State: %s', [TOptimizationDescription[TOptimizationState(Responce.MyState)]]));
-        WriteLn('');
-
-        for Address in Responce.Addresses do
+        if (Response <> nil) then
         begin
-          WriteLn(Format('Address: %s', [Address.AddressString]));
-          WriteLn(Format('Route ID: %s', [Address.RouteId.ToString]));
-        end;
+          WriteLn('SingleDriverRoundTripGeneric executed successfully');
+          WriteLn('');
 
-        Result := Responce.OptimizationProblemId;
-      end
-      else
-        WriteLn(Format('SingleDriverRoundTripGeneric error "%s"', [ErrorString]));
+          WriteLn(Format('Optimization Problem ID: %s', [Response.OptimizationProblemId]));
+          WriteLn(Format('State: %s', [TOptimizationDescription[TOptimizationState(Response.MyState)]]));
+          WriteLn('');
+
+          for Address in Response.Addresses do
+          begin
+            WriteLn(Format('Address: %s', [Address.AddressString]));
+            WriteLn(Format('Route ID: %s', [Address.RouteId.ToString]));
+          end;
+
+          Result := Response.OptimizationProblemId;
+        end
+        else
+          WriteLn(Format('SingleDriverRoundTripGeneric error "%s"', [ErrorString]));
+      finally
+        FreeAndNil(Response);
+      end;
     finally
-      FreeAndNil(OptimizationParameters);
+      FreeAndNil(Parameters);
     end;
   finally
     FreeAndNil(Request);
@@ -1320,16 +1432,16 @@ var
   DataProvider: IOptimizationParametersProvider;
   ErrorString: String;
   DataObject: TDataObject;
-  OptimizationParameters: TOptimizationParameters;
+  Parameters: TOptimizationParameters;
 begin
   DataProvider := TSingleDriverRoute10StopsTestDataProvider.Create;
 
   // Run the query
-  OptimizationParameters := DataProvider.OptimizationParameters;
+  Parameters := DataProvider.OptimizationParameters;
   try
-    DataObject := Route4MeManager.Optimization.Run(OptimizationParameters, ErrorString);
+    DataObject := Route4MeManager.Optimization.Run(Parameters, ErrorString);
   finally
-    FreeAndNil(OptimizationParameters);
+    FreeAndNil(Parameters);
   end;
 
   // Output the result
@@ -1341,124 +1453,151 @@ end;
 procedure TRoute4MeExamples.TrackDeviceLastLocationHistory(RouteId: String);
 var
   ErrorString: String;
+  Parameters: TGPSParameters;
+  GenericParameters: TGenericParameters;
+  Response: String;
+  DataObject: TDataObject;
+  HistoryStep: TTrackingHistory;
 begin
   // Create the gps parametes
-  GPSParameters gpsParameters = new GPSParameters()
-  {
-    Format          = Format.Csv.Description(),
-    RouteId         = routeId,
-    Latitude        = 33.14384,
-    Longitude       = -83.22466,
-    Course          = 1,
-    Speed           = 120,
-    DeviceType      = DeviceType.IPhone.Description(),
-    MemberId        = 1,
-    DeviceGuid      = "TEST_GPS",
-    DeviceTimestamp = "2014-06-14 17:43:35"
-  };
+  Parameters := TGPSParameters.Create();
+  try
+    Parameters.Format := TFormatDescription[TFormatEnum.Csv];
+    Parameters.RouteId := RouteId;
+    Parameters.Latitude := 33.14384;
+    Parameters.Longitude := -83.22466;
+    Parameters.Course := 1;
+    Parameters.Speed := 120;
+    Parameters.DeviceType := TDeviceTypeDescription[TDeviceType.IPhone];
+    Parameters.MemberId := 1;
+    Parameters.DeviceGuid := 'TEST_GPS';
+    Parameters.DeviceTimestamp := '2014-06-14 17:43:35';
 
-  string response = Route4MeManager.SetGPS(gpsParameters, ErrorString);
+    Response := Route4MeManager.Tracking.SetGPS(Parameters, ErrorString);
 
-  if (!string.IsNullOrEmpty(errorString)) then
-  begin
-    WriteLn('SetGps error: "%s"', [ErrorString]));
-    return;
+    if (ErrorString <> EmptyStr) then
+    begin
+      WriteLn(Format('SetGps error: "%s"', [ErrorString]));
+      Exit;
+    end;
+
+    WriteLn(Format('SetGps response: %s', [Response]));
+
+    GenericParameters := TGenericParameters.Create();
+    try
+      GenericParameters.AddParameter('route_id', RouteId);
+      GenericParameters.AddParameter('device_tracking_history', '1');
+
+      DataObject := Route4MeManager.Tracking.GetLastLocation(GenericParameters, ErrorString);
+      try
+        WriteLn('');
+
+        if (DataObject <> nil) then
+        begin
+          WriteLn('TrackDeviceLastLocationHistory executed successfully');
+          WriteLn('');
+
+          WriteLn(Format('Optimization Problem ID: %s', [DataObject.OptimizationProblemId]));
+            WriteLn(Format('State: %s', [TOptimizationDescription[TOptimizationState(DataObject.State)]]));
+          WriteLn('');
+
+          for HistoryStep in DataObject.TrackingHistories do
+          begin
+            WriteLn(Format('Speed: %f', [HistoryStep.Speed.Value]));
+            WriteLn(Format('Longitude: %f', [HistoryStep.Longitude.Value]));
+            WriteLn(Format('Latitude: %f', [HistoryStep.Latitude.Value]));
+            WriteLn(Format('Time Stamp: %s', [HistoryStep.TimeStamp.Value]));
+            WriteLn('');
+          end;
+        end
+        else
+          WriteLn(Format('TrackDeviceLastLocationHistory error: "%s"', [ErrorString]));
+      finally
+        FreeAndNil(DataObject);
+      end;
+    finally
+      FreeAndNil(GenericParameters);
+    end;
+  finally
+    FreeAndNil(Parameters);
   end;
-
-  WriteLn(Format('SetGps response: {0}", response);
-
-  GenericParameters genericParameters = new GenericParameters();
-  genericParameters.ParametersCollection.Add("route_id", routeId);
-  genericParameters.ParametersCollection.Add("device_tracking_history", "1');
-
-  var dataObject = Route4MeManager.GetLastLocation(genericParameters, ErrorString);
-
-  WriteLn('');
-
-  if (dataObject != null) then
-  begin
-    WriteLn('TrackDeviceLastLocationHistory executed successfully');
-    WriteLn('');
-
-    WriteLn(Format('Optimization Problem ID: {0}", dataObject.OptimizationProblemId);
-    WriteLn(Format('State: {0}", dataObject.State);
-    WriteLn('');
-
-    dataObject.TrackingHistory.ForEach(th =>
-    {
-      WriteLn(Format('Speed: {0}",      th.Speed);
-      WriteLn(Format('Longitude: {0}",  th.Longitude);
-      WriteLn(Format('Latitude: {0}",   th.Latitude);
-      WriteLn(Format('Time Stamp: {0}", th.TimeStampFriendly);
-      WriteLn('');
-    });
-  end
-  else
-    WriteLn(Format('TrackDeviceLastLocationHistory error: "%s"', [ErrorString]));
 end;
 
 procedure TRoute4MeExamples.UpdateAddressBookContact(
   Contact: TAddressBookContact);
 var
   ErrorString: String;
+  UpdatedContact: TAddressBookContact;
 begin
   // Run the query
-  AddressBookContact updatedContact = Route4MeManager.UpdateAddressBookContact(
-    Contact, ErrorString);
+  UpdatedContact := Route4MeManager.AddressBookContact.Update(Contact, ErrorString);
+  try
+    WriteLn('');
 
-  WriteLn('');
-
-  if (updatedContact != null) then
-    WriteLn('UpdateAddressBookContact executed successfully')
-  else
-    WriteLn(Format('UpdateAddressBookContact error: "%s"', [ErrorString]));
+    if (UpdatedContact <> nil) then
+      WriteLn('UpdateAddressBookContact executed successfully')
+    else
+      WriteLn(Format('UpdateAddressBookContact error: "%s"', [ErrorString]));
+  finally
+    FreeAndNil(UpdatedContact);
+  end;
 end;
 
 procedure TRoute4MeExamples.UpdateAvoidanceZone(TerritoryId: String);
 var
   ErrorString: String;
+  Parameters: TAvoidanceZoneParameters;
+  Territory: TTerritory;
+  AvoidanceZone: TAvoidanceZone;
 begin
-  AvoidanceZoneParameters avoidanceZoneParameters = new AvoidanceZoneParameters()
-  {
-    TerritoryId = territoryId,
-    TerritoryName = "Test Territory Updated",
-    TerritoryColor = "ff00ff",
-    Territory = new Territory()
-    {
-      Type = TerritoryType.Circle.Description(),
-      Data = new string[] { "38.41322259056806,-78.501953234",
-                            "3000"}
-    }
-  };
+  Parameters := TAvoidanceZoneParameters.Create();
+  try
+    Parameters.TerritoryId := TerritoryId;
+    Parameters.TerritoryName := 'Test Territory Updated';
+    Parameters.TerritoryColor := 'ff00ff';
+    Territory := TTerritory.Create();
+    Territory.TerritoryType := TTerritoryType.ttCircle;
+    Territory.AddDataItem('38.41322259056806,-78.501953234');
+    Territory.AddDataItem('3000');
+    Parameters.Territory := Territory;
 
-  // Run the query
-  AvoidanceZone avoidanceZone = Route4MeManager.UpdateAvoidanceZone(avoidanceZoneParameters, ErrorString);
+    // Run the query
+    AvoidanceZone := Route4MeManager.AvoidanceZone.Update(Parameters, ErrorString);
+    try
+      WriteLn('');
 
-  WriteLn('');
-
-  if (avoidanceZone != null) then
-  begin
-    WriteLn('UpdateAvoidanceZone executed successfully');
-
-    WriteLn(Format('Territory ID: {0}", avoidanceZone.TerritoryId);
-  end
-  else
-    WriteLn(Format('UpdateAvoidanceZone error: "%s"', [ErrorString]));
+      if (AvoidanceZone <> nil) then
+      begin
+        WriteLn('UpdateAvoidanceZone executed successfully');
+        WriteLn(Format('Territory ID: %s', [AvoidanceZone.TerritoryId.Value]));
+      end
+      else
+        WriteLn(Format('UpdateAvoidanceZone error: "%s"', [ErrorString]));
+    finally
+      FreeAndNil(AvoidanceZone);
+    end;
+  finally
+    FreeAndNil(Parameters);
+  end;
 end;
 
 procedure TRoute4MeExamples.UpdateOrder(Order: TOrder);
 var
   ErrorString: String;
+  UpdatedOrder: TOrder;
 begin
   // Run the query
-  Order updatedOrder = Route4MeManager.UpdateOrder(order, ErrorString);
+  UpdatedOrder := Route4MeManager.Order.Update(Order, ErrorString);
+  try
+    WriteLn('');
 
-  WriteLn('');
-
-  if (updatedOrder != null) then
-    WriteLn('UpdateOrder executed successfully');
-  else
-    WriteLn(Format('UpdateOrder error: "%s"', [ErrorString]));
+    if (UpdatedOrder <> nil) then
+      WriteLn('UpdateOrder executed successfully')
+    else
+      WriteLn(Format('UpdateOrder error: "%s"', [ErrorString]));
+  finally
+    FreeAndNil(UpdatedOrder);
+  end;
 end;
 
 procedure TRoute4MeExamples.UpdateRoute(RouteId: String);
@@ -1466,29 +1605,37 @@ var
   ParametersNew: TRouteParameters;
   RouteParameters: TRouteParametersQuery;
   ErrorString: String;
-  DataObject: TDataObjectRoute;
+  Route: TDataObjectRoute;
 begin
   ParametersNew := TRouteParameters.Create;
-  ParametersNew.RouteName := 'New name of the route';
+  try
+    ParametersNew.RouteName := 'New name of the route';
 
-  RouteParameters := TRouteParametersQuery.Create;
-  RouteParameters.RouteId := RouteId;
-  RouteParameters.Parameters := ParametersNew;
+    RouteParameters := TRouteParametersQuery.Create;
+    try
+      RouteParameters.RouteId := RouteId;
+      RouteParameters.Parameters := ParametersNew;
 
-  // Run the query
-  DataObject := Route4MeManager.Route.Update(RouteParameters, ErrorString);
-
-  WriteLn('');
-
-  if (DataObject <> nil) then
-  begin
-    WriteLn('UpdateRoute executed successfully');
-
-    WriteLn(Format('Route ID: %s', [DataObject.RouteId]));
-    WriteLn(Format('State: %s', [TOptimizationDescription[TOptimizationState(DataObject.State)]]));
-  end
-  else
-    WriteLn(Format('UpdateRoute error: %s', [ErrorString]));
+      // Run the query
+      Route := Route4MeManager.Route.Update(RouteParameters, ErrorString);
+      try
+        if (Route <> nil) then
+        begin
+          WriteLn('UpdateRoute executed successfully');
+          WriteLn(Format('Route ID: %s', [Route.RouteId]));
+          WriteLn(Format('State: %s', [TOptimizationDescription[TOptimizationState(Route.State)]]));
+        end
+        else
+          WriteLn(Format('UpdateRoute error: %s', [ErrorString]));
+      finally
+        FreeAndNil(Route);
+      end;
+    finally
+      FreeAndNil(RouteParameters);
+    end;
+  finally
+    FreeAndNil(ParametersNew);
+  end;
 end;
 
 procedure TRoute4MeExamples.WriteLn(Message: String);

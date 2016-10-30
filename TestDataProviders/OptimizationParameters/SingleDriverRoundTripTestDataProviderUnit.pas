@@ -65,7 +65,7 @@ end;
 function TSingleDriverRoundTripTestDataProvider.MakeRouteParameters: TRouteParameters;
 begin
   Result := TRouteParameters.Create();
-  Result.AlgorithmType := Integer(TAlgorithmType.TSP);
+  Result.AlgorithmType := TAlgorithmType.TSP;
   Result.StoreRoute := False;
   Result.RouteName := 'Single Driver Round Trip';
   Result.RouteDate := 53583232;//TUtils.ConvertToUnixTimestamp(IncDay(Now, 1));
@@ -73,10 +73,10 @@ begin
   Result.RouteMaxDuration := 86400;
   Result.VehicleCapacity := '1';
   Result.VehicleMaxDistanceMI := '10000';
-  Result.Optimize := TOptimizeDescription[Distance];
-  Result.DistanceUnit := TDistanceUnitDescription[MI];
-  Result.DeviceType := TDeviceTypeDescription[Web];
-  Result.TravelMode := TTravelModeDescription[Driving];
+  Result.Optimize := TOptimize.Distance;
+  Result.DistanceUnit := TDistanceUnit.MI;
+  Result.DeviceType := TDeviceType.Web;
+  Result.TravelMode := TTravelMode.Driving;
 end;
 
 end.

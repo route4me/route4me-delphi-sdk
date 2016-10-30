@@ -52,7 +52,7 @@ begin
   try
     ActualList.LoadFromFile(JsonFilename);
 
-    OptimizationParameters := Etalon.OptimizationParametersForResponce;
+    OptimizationParameters := Etalon.OptimizationParametersForResponse;
     try
       JsonValue := TJSONObject.ParseJSONValue(ActualList.Text);
       try
