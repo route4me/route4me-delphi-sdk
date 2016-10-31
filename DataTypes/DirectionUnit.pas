@@ -18,7 +18,7 @@ type
     FLocation: NullableObject;
 
     [JSONName('steps')]
-    [NullableObject(TDirectionStepList)]
+    [NullableObject(TDirectionStepListClass)]
     FSteps: NullableObject;
 
     function GetLocation: TDirectionLocation;
@@ -38,6 +38,7 @@ type
 
   TDirectionArray = TArray<TDirection>;
   TDirectionList = TList<TDirection>;
+  TDirectionListClass = class(TDirectionList);
 
 function SortDirections(Directions: TDirectionArray): TDirectionArray;
 

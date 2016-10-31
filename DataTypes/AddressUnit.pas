@@ -152,7 +152,7 @@ type
     FFailedGeocoding: NullableBoolean;
 
     [JSONName('geocodings')]
-    [NullableObject(TGeocoding)]
+    [NullableObject(TGeocodingListClass)]
     FGeocodings: NullableObject;
 
     [JSONName('contact_id')]
@@ -272,11 +272,11 @@ type
     FGeneratedTimeWindowEnd: NullableInteger;
 
     [JSONName('path_to_next')]
-    [NullableObject(TDirectionPathPointList)]
+    [NullableObject(TDirectionPathPointListClass)]
     FPathToNext: NullableObject;
 
     [JSONName('directions')]
-    [NullableObject(TDirectionList)]
+    [NullableObject(TDirectionListClass)]
     FDirections: NullableObject;
 
     [JSONName('manifest')]
@@ -284,7 +284,7 @@ type
     FManifest: NullableObject;
 
     [JSONName('notes')]
-    [NullableObject(TAddressNoteList)]
+    [NullableObject(TAddressNoteListClass)]
     FNotes: NullableObject;
 
     function GetCustomFields: TDictionaryStringIntermediateObject;
@@ -660,6 +660,8 @@ type
   end;
 
   TAddressesArray = TArray<TAddress>;
+  TAddressesList = TList<TAddress>;
+  TAddressesListClass = class(TAddressesList);
 
   function SortAddresses(Addresses: TAddressesArray): TAddressesArray;
 
@@ -819,6 +821,7 @@ var
   SortedPathToNext1, SortedPathToNext2: TDirectionPathPointArray;
   SortedDirections1, SortedDirections2: TDirectionArray;
   SortedNotes1, SortedNotes2: TAddressNoteArray;
+  SortedGeocodings1, SortedGeocodings2: TGeocodingArray;
 begin
   Result := False;
 
@@ -827,71 +830,70 @@ begin
 
   Other := TAddress(Obj);
 
-  Result := (AddressString = Other.AddressString) and
-    (Alias = Other.Alias) and
-    (RouteDestinationId = Other.RouteDestinationId) and
-    (MemberId = Other.MemberId) and
-    (IsDepot = Other.IsDepot) and
-    (Latitude = Other.Latitude) and
-    (Longitude = Other.Longitude) and
-    (RouteId = Other.RouteId) and
-    (Time = Other.Time) and
-    (CurbsideLatitude = Other.CurbsideLatitude) and
-    (CurbsideLongitude = Other.CurbsideLongitude) and
-    (TimeWindowStart = Other.TimeWindowStart) and
-    (TimeWindowEnd = Other.TimeWindowEnd) and
-    (TimeWindowStart2 = Other.TimeWindowStart2) and
-    (TimeWindowEnd2 = Other.TimeWindowEnd2) and
-    (SequenceNo = Other.SequenceNo) and
-    (OriginalRouteId = Other.OriginalRouteId) and
-    (OptimizationProblemId = Other.OptimizationProblemId) and
-    (TimeframeViolationState = Other.TimeframeViolationState) and
-    (TimeframeViolationTime = Other.TimeframeViolationTime) and
-    (TimeframeViolationRate = Other.TimeframeViolationRate) and
-    (Priority = Other.Priority) and
-    (AddressStopType = Other.AddressStopType) and
-    (GeofenceDetectedVisitedTimestamp = Other.GeofenceDetectedVisitedTimestamp) and
-    (GeofenceDetectedDepartedTimestamp = Other.GeofenceDetectedDepartedTimestamp) and
-    (GeofenceDetectedServiceTime = Other.GeofenceDetectedServiceTime) and
-    (TimeframeViolationRate = Other.TimeframeViolationRate) and
-    (GeofenceDetectedVisitedLat = Other.GeofenceDetectedVisitedLat) and
-    (GeofenceDetectedVisitedLng = Other.GeofenceDetectedVisitedLng) and
-    (GeofenceDetectedDepartedLat = Other.GeofenceDetectedDepartedLat) and
-    (GeofenceDetectedDepartedLng = Other.GeofenceDetectedDepartedLng) and
-    (RouteName = Other.RouteName) and
-    (Geocoded = Other.Geocoded) and
-    (PreferredGeocoding = Other.PreferredGeocoding) and
-    (FailedGeocoding = Other.FailedGeocoding) and
-    (FGeocodings = Other.FGeocodings) and
-    (ContactId = Other.ContactId) and
-    (IsVisited = Other.IsVisited) and
-    (IsDeparted = Other.IsDeparted) and
-    (VisitedLat = Other.VisitedLat) and
-    (VisitedLng = Other.VisitedLng) and
-    (DepartedLat = Other.DepartedLat) and
-    (DepartedLng = Other.DepartedLng) and
-    (TimestampLastVisited = Other.TimestampLastVisited) and
-    (TimestampLastDeparted = Other.TimestampLastDeparted) and
-    (CustomerPo = Other.CustomerPo) and
-    (InvoiceNo = Other.InvoiceNo) and
-    (ReferenceNo = Other.ReferenceNo) and
-    (AccountNo = Other.AccountNo) and
-    (OrderNo = Other.OrderNo) and
-    (TrackingNumber = Other.TrackingNumber) and
-    (Weight = Other.Weight) and
-    (Cost = Other.Cost) and
-    (Revenue = Other.Revenue) and
-    (Cube = Other.Cube) and
-    (Pieces = Other.Pieces) and
-    (Email = Other.Email) and
-    (Phone = Other.Phone) and
-    (DestinationNoteCount = Other.DestinationNoteCount) and
-    (DriveTimeToNextDestination = Other.DriveTimeToNextDestination) and
-    (AbnormalTrafficTimeToNextDestination = Other.AbnormalTrafficTimeToNextDestination) and
-    (UncongestedTimeToNextDestination = Other.UncongestedTimeToNextDestination) and
-    (DistanceToNextDestination = Other.DistanceToNextDestination) and
-    (GeneratedTimeWindowStart = Other.GeneratedTimeWindowStart) and
-    (GeneratedTimeWindowEnd = Other.GeneratedTimeWindowEnd) and
+  Result := (FAddressString = Other.FAddressString) and
+    (FAlias = Other.FAlias) and
+    (FRouteDestinationId = Other.FRouteDestinationId) and
+    (FMemberId = Other.FMemberId) and
+    (FIsDepot = Other.FIsDepot) and
+    (FLatitude = Other.FLatitude) and
+    (FLongitude = Other.FLongitude) and
+    (FRouteId = Other.FRouteId) and
+    (FTime = Other.FTime) and
+    (FCurbsideLatitude = Other.FCurbsideLatitude) and
+    (FCurbsideLongitude = Other.FCurbsideLongitude) and
+    (FTimeWindowStart = Other.FTimeWindowStart) and
+    (FTimeWindowEnd = Other.FTimeWindowEnd) and
+    (FTimeWindowStart2 = Other.FTimeWindowStart2) and
+    (FTimeWindowEnd2 = Other.FTimeWindowEnd2) and
+    (FSequenceNo = Other.FSequenceNo) and
+    (FOriginalRouteId = Other.FOriginalRouteId) and
+    (FOptimizationProblemId = Other.FOptimizationProblemId) and
+    (FTimeframeViolationState = Other.FTimeframeViolationState) and
+    (FTimeframeViolationTime = Other.FTimeframeViolationTime) and
+    (FTimeframeViolationRate = Other.FTimeframeViolationRate) and
+    (FPriority = Other.FPriority) and
+    (FAddressStopType = Other.FAddressStopType) and
+    (FGeofenceDetectedVisitedTimestamp = Other.FGeofenceDetectedVisitedTimestamp) and
+    (FGeofenceDetectedDepartedTimestamp = Other.FGeofenceDetectedDepartedTimestamp) and
+    (FGeofenceDetectedServiceTime = Other.FGeofenceDetectedServiceTime) and
+    (FTimeframeViolationRate = Other.FTimeframeViolationRate) and
+    (FGeofenceDetectedVisitedLat = Other.FGeofenceDetectedVisitedLat) and
+    (FGeofenceDetectedVisitedLng = Other.FGeofenceDetectedVisitedLng) and
+    (FGeofenceDetectedDepartedLat = Other.FGeofenceDetectedDepartedLat) and
+    (FGeofenceDetectedDepartedLng = Other.FGeofenceDetectedDepartedLng) and
+    (FRouteName = Other.FRouteName) and
+    (FGeocoded = Other.FGeocoded) and
+    (FPreferredGeocoding = Other.FPreferredGeocoding) and
+    (FFailedGeocoding = Other.FFailedGeocoding) and
+    (FContactId = Other.FContactId) and
+    (FIsVisited = Other.FIsVisited) and
+    (FIsDeparted = Other.FIsDeparted) and
+    (FVisitedLat = Other.FVisitedLat) and
+    (FVisitedLng = Other.FVisitedLng) and
+    (FDepartedLat = Other.FDepartedLat) and
+    (FDepartedLng = Other.FDepartedLng) and
+    (FTimestampLastVisited = Other.FTimestampLastVisited) and
+    (FTimestampLastDeparted = Other.FTimestampLastDeparted) and
+    (FCustomerPo = Other.FCustomerPo) and
+    (FInvoiceNo = Other.FInvoiceNo) and
+    (FReferenceNo = Other.FReferenceNo) and
+    (FAccountNo = Other.FAccountNo) and
+    (FOrderNo = Other.FOrderNo) and
+    (FTrackingNumber = Other.FTrackingNumber) and
+    (FWeight = Other.FWeight) and
+    (FCost = Other.FCost) and
+    (FRevenue = Other.FRevenue) and
+    (FCube = Other.FCube) and
+    (FPieces = Other.FPieces) and
+    (FEmail = Other.FEmail) and
+    (FPhone = Other.FPhone) and
+    (FDestinationNoteCount = Other.FDestinationNoteCount) and
+    (FDriveTimeToNextDestination = Other.FDriveTimeToNextDestination) and
+    (FAbnormalTrafficTimeToNextDestination = Other.FAbnormalTrafficTimeToNextDestination) and
+    (FUncongestedTimeToNextDestination = Other.FUncongestedTimeToNextDestination) and
+    (FDistanceToNextDestination = Other.FDistanceToNextDestination) and
+    (FGeneratedTimeWindowStart = Other.FGeneratedTimeWindowStart) and
+    (FGeneratedTimeWindowEnd = Other.FGeneratedTimeWindowEnd) and
     (FManifest = Other.FManifest) and
     (FCustomFields = Other.FCustomFields);
 
@@ -902,6 +904,8 @@ begin
     (FPathToNext.IsNotNull and Other.FPathToNext.IsNull) or
     (FDirections.IsNull and Other.FDirections.IsNotNull) or
     (FDirections.IsNotNull and Other.FDirections.IsNull) or
+    (FGeocodings.IsNull and Other.FGeocodings.IsNotNull) or
+    (FGeocodings.IsNotNull and Other.FGeocodings.IsNull) or
     (FNotes.IsNull and Other.FNotes.IsNotNull) or
     (FNotes.IsNotNull and Other.FNotes.IsNull) then
     Exit;
@@ -915,6 +919,18 @@ begin
     SortedDirections2 := DirectionUnit.SortDirections(Other.Directions.ToArray);
     for i := 0 to Length(SortedDirections1) - 1 do
       if (not SortedDirections1[i].Equals(SortedDirections2[i])) then
+        Exit;
+  end;
+
+  if (Geocodings <> nil) then
+  begin
+    if (Geocodings.Count <> Other.Geocodings.Count) then
+      Exit;
+
+    SortedGeocodings1 := GeocodingUnit.SortGeocodings(Geocodings.ToArray);
+    SortedGeocodings2 := GeocodingUnit.SortGeocodings(Other.Geocodings.ToArray);
+    for i := 0 to Length(SortedGeocodings1) - 1 do
+      if (not SortedGeocodings1[i].Equals(SortedGeocodings2[i])) then
         Exit;
   end;
 

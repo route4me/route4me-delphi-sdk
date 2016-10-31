@@ -38,6 +38,7 @@ type
 
   TDirectionPathPointArray = TArray<TDirectionPathPoint>;
   TDirectionPathPointList = TList<TDirectionPathPoint>;
+  TDirectionPathPointListClass = class(TDirectionPathPointList);
 
 function SortDirectionPathPoints(DirectionPathPoints: TDirectionPathPointArray): TDirectionPathPointArray;
 
@@ -78,8 +79,8 @@ begin
   Other := TDirectionPathPoint(Obj);
 
   Result :=
-    (Latitude = Other.Latitude) and
-    (Longitude = Other.Longitude);
+    (FLatitude = Other.FLatitude) and
+    (FLongitude = Other.FLongitude);
 end;
 
 end.

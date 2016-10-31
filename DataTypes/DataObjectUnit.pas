@@ -276,11 +276,11 @@ begin
 
   Other := TDataObject(Obj);
 
-  Result := (OptimizationProblemId = Other.OptimizationProblemId) and
-    (State = Other.State) and
-    (IsSentToBackground = Other.IsSentToBackground) and
-    (Parameters.Equals(Other.Parameters)) and
-    (Links.Equals(Other.Links));
+  Result := (FOptimizationProblemId = Other.FOptimizationProblemId) and
+    (FState = Other.FState) and
+    (FIsSentToBackground = Other.FIsSentToBackground) and
+    (FParameters.Equals(Other.FParameters)) and
+    (FLinks.Equals(Other.FLinks));
 
   if (not Result) then
     Exit;

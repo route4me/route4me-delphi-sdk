@@ -141,8 +141,9 @@ type
     property DeviceType: TDeviceType read GetDeviceType write SetDeviceType;
   end;
 
-  TAddressNoteList = TList<TAddressNote>;
   TAddressNoteArray = TArray<TAddressNote>;
+  TAddressNoteList = TList<TAddressNote>;
+  TAddressNoteListClass = class(TAddressNoteList);
 
 function SortAddressNotes(AddressNotes: TAddressNoteArray): TAddressNoteArray;
 
@@ -193,19 +194,19 @@ begin
   Other := TAddressNote(Obj);
 
   Result :=
-    (NoteId = Other.NoteId) and
-    (RouteId = Other.RouteId) and
-    (RouteDestinationId = Other.RouteDestinationId) and
-    (UploadId = Other.UploadId) and
-    (TimestampAdded = Other.TimestampAdded) and
-    (Latitude = Other.Latitude) and
-    (Longitude = Other.Longitude) and
-    (ActivityType = Other.ActivityType) and
-    (Contents = Other.Contents) and
-    (UploadType = Other.UploadType) and
-    (UploadUrl = Other.UploadUrl) and
-    (UploadExtension = Other.UploadExtension) and
-    (DeviceType = Other.DeviceType);
+    (FNoteId = Other.FNoteId) and
+    (FRouteId = Other.FRouteId) and
+    (FRouteDestinationId = Other.FRouteDestinationId) and
+    (FUploadId = Other.FUploadId) and
+    (FTimestampAdded = Other.FTimestampAdded) and
+    (FLatitude = Other.FLatitude) and
+    (FLongitude = Other.FLongitude) and
+    (FActivityType = Other.FActivityType) and
+    (FContents = Other.FContents) and
+    (FUploadType = Other.FUploadType) and
+    (FUploadUrl = Other.FUploadUrl) and
+    (FUploadExtension = Other.FUploadExtension) and
+    (FDeviceType = Other.FDeviceType);
 end;
 
 function TAddressNote.GetDeviceType: TDeviceType;

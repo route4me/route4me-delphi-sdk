@@ -197,9 +197,10 @@ begin
   AddressId := 194622711;
   FRoute4MeExamples.AddAddressNote(RouteId, AddressId);
 
-  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('{}', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/actions/addRouteNotes.php?api_key=11111111111111111111111111111111&' +
     'route_id=585D2628AE1C5A4FBD7B4050CB9D9601&address_id=194622711&dev_lat=33%2c132675170898&dev_lng=-83%2c244743347168&device_type=web&strUpdateType=dropoff', FConnection.Url);
+
   CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
 // todo: как параметры, а не JSON strUpdateType=dropoff&strNoteContents=Test+Note+Contents+27.10.2016+19%3A24%3A04
 end;
@@ -725,6 +726,15 @@ begin
   else
 
 
+
+function TTypeMarshaller<TSerial>.MarshalSimpleField(rttiField: TRttiField; Data: Pointer): Boolean;
+1. rttiField.Name='FAddresses'
+procedure TTypeMarshaller<TSerial>.MarshalValue(Value: TValue; fieldRTTI: TRttiField);
+function TValue.GetIsEmpty: Boolean;
+2. FData.FTypeInfo	$6A0480
+3. FData.FValueData	= TValueDataImpl($3787E54) as IValueData
+4. FData.FTypeInfo^.Kind = tkDynArray, ушел в Else, Result := False;
+Поэтому Value.IsEmpty = False
 
 *)
 

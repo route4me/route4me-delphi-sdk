@@ -8,50 +8,30 @@ uses
   GenericParametersUnit, NullableBasicTypesUnit, EnumsUnit;
 
 type
+  /// <remarks>
+  ///  https://github.com/route4me/json-schemas/blob/master/Activity.dtd
+  /// </remarks>
   TActivity = class(TGenericParameters)
   private
-    [JSONName('device_id')]
+    [JSONName('route_id')]
     [Nullable]
-    FDeviceId: NullableString;
+    FRouteId: NullableString;
 
-    [JSONName('activity_id')]
+    [JSONName('route_destination_id')]
     [Nullable]
-    FActivityId: NullableString;
+    FRouteDestinationId: NullableInteger;
 
     [JSONName('activity_type')]
     [Nullable]
     FActivityType: NullableString;
 
-    [JSONName('offset')]
-    [Nullable]
-    FOffset: NullableInteger;
-
-    [JSONName('team')]
-    [Nullable]
-    FTeam: NullableString;
-
     [JSONName('member_id')]
     [Nullable]
-    FMemberId: NullableString;
+    FMemberId: NullableInteger;
 
-    [JSONName('route_id')]
+    [JSONName('activity_message')]
     [Nullable]
-    FRouteId: NullableString;
-
-    [JSONName('start')]
-    [Nullable]
-    FStartTime: NullableInteger;
-
-    [JSONName('end')]
-    [Nullable]
-    FEndTime: NullableInteger;
-
-    [JSONName('format')]
-    [Nullable]
-    FFormat: NullableString;
-
-    function GetFormat: TFormatEnum;
-    procedure SetFormat(const Value: TFormatEnum);
+    FActivityMessage: NullableString;
   public
     /// <remarks>
     ///  Constructor with 0-arguments must be and be public.
@@ -62,14 +42,19 @@ type
     function Equals(Obj: TObject): Boolean; override;
 
     /// <summary>
-    /// Device ID
+    /// Route ID
     /// </summary>
-    property DeviceId: NullableString read FDeviceId write FDeviceId;
+    property RouteId: NullableString read FRouteId write FRouteId;
 
     /// <summary>
-    /// Activity Id
+    /// Route destination ID
     /// </summary>
-    property ActivityId: NullableString read FActivityId write FActivityId;
+    property RouteDestinationId: NullableInteger read FRouteDestinationId write FRouteDestinationId;
+
+    /// <summary>
+    /// Member Id
+    /// </summary>
+    property MemberId: NullableInteger read FMemberId write FMemberId;
 
     /// <summary>
     /// delete-destination - remove address from route;
@@ -90,39 +75,9 @@ type
     property ActivityType: NullableString read FActivityType write FActivityType;
 
     /// <summary>
-    /// Start position for searching
+    /// Activity message
     /// </summary>
-    property Offset: NullableInteger read FOffset write FOffset;
-
-    /// <summary>
-    /// 1 - include team
-    /// </summary>
-    property Team: NullableString read FTeam write FTeam;
-
-    /// <summary>
-    /// Member Id
-    /// </summary>
-    property MemberId: NullableString read FMemberId write FMemberId;
-
-    /// <summary>
-    /// Parent route
-    /// </summary>
-    property RouteId: NullableString read FRouteId write FRouteId;
-
-    /// <summary>
-    /// Start time
-    /// </summary>
-    property StartTime: NullableInteger read FStartTime write FStartTime;
-
-    /// <summary>
-    /// End time
-    /// </summary>
-    property EndTime: NullableInteger read FEndTime write FEndTime;
-
-    /// <summary>
-    /// Response format
-    /// </summary>
-    property Format: TFormatEnum read GetFormat write SetFormat;
+    property ActivityMessage: NullableString read FActivityMessage write FActivityMessage;
   end;
 
   TActivityArray = TArray<TActivity>;
@@ -135,16 +90,11 @@ constructor TActivity.Create;
 begin
   Inherited;
 
-  FDeviceId := NullableString.Null;
-  FActivityId := NullableString.Null;
-  FActivityType := NullableString.Null;
-  FOffset := NullableInteger.Null;
-  FTeam := NullableString.Null;
-  FMemberId := NullableString.Null;
   FRouteId := NullableString.Null;
-  FStartTime := NullableInteger.Null;
-  FEndTime := NullableInteger.Null;
-  FFormat := NullableString.Null;
+  FRouteDestinationId := NullableInteger.Null;
+  FActivityType := NullableString.Null;
+  FMemberId := NullableInteger.Null;
+  FActivityMessage := NullableString.Null;
 end;
 
 function TActivity.Equals(Obj: TObject): Boolean;
@@ -159,33 +109,11 @@ begin
   Other := TActivity(Obj);
 
   Result :=
-    (DeviceId = Other.DeviceId) and
-    (ActivityId = Other.ActivityId) and
-    (ActivityType = Other.ActivityType) and
-    (Offset = Other.Offset) and
-    (Team = Other.Team) and
-    (MemberId = Other.MemberId) and
-    (RouteId = Other.RouteId) and
-    (StartTime = Other.StartTime) and
-    (EndTime = Other.EndTime) and
-    (Format = Other.Format);
-end;
-
-function TActivity.GetFormat: TFormatEnum;
-var
-  Format: TFormatEnum;
-begin
-  if FFormat.IsNull then
-    Exit(TFormatEnum.UndefinedFormat);
-
-  for Format := Low(TFormatEnum) to High(TFormatEnum) do
-    if (FFormat = TFormatDescription[Format]) then
-      Exit(Format);
-end;
-
-procedure TActivity.SetFormat(const Value: TFormatEnum);
-begin
-  FFormat := TFormatDescription[Value];
+    (FRouteId = Other.FRouteId) and
+    (FRouteDestinationId = Other.FRouteDestinationId) and
+    (FActivityType = Other.FActivityType) and
+    (FMemberId = Other.FMemberId) and
+    (FActivityMessage = Other.FActivityMessage);
 end;
 
 end.

@@ -23,7 +23,7 @@ type
     FName: NullableString;
 
     [JSONName('bbox')]
-    [NullableObject(TDirectionPathPointList)]
+    [NullableObject(TDirectionPathPointListClass)]
     FBoundaryBox: NullableObject;
 
     [JSONName('lat')]
@@ -51,7 +51,7 @@ type
     FCountryRegion: NullableString;
 
     [JSONName('curbside_coordinates')]
-    [NullableObject(TDirectionPathPointList)]
+    [NullableObject(TDirectionPathPointListClass)]
     FCurbsideCoordinates: NullableObject;
 
     function GetBoundaryBox: TDirectionPathPointList;
@@ -116,9 +116,24 @@ type
     property CurbsideCoordinates: TDirectionPathPointList read GetCurbsideCoordinates write SetCurbsideCoordinates;
   end;
 
+  TGeocodingArray = TArray<TGeocoding>;
   TGeocodingList = TList<TGeocoding>;
+  TGeocodingListClass = class(TGeocodingList);
+
+function SortGeocodings(Geocodings: TGeocodingArray): TGeocodingArray;
 
 implementation
+
+function SortGeocodings(Geocodings: TGeocodingArray): TGeocodingArray;
+begin
+  SetLength(Result, Length(Geocodings));
+  TArray.Copy<TGeocoding>(Geocodings, Result, Length(Geocodings));
+  TArray.Sort<TGeocoding>(Result, TComparer<TGeocoding>.Construct(
+    function (const Geocoding1, Geocoding2: TGeocoding): Integer
+    begin
+      Result := Geocoding1.Key.Compare(Geocoding2.Key);
+    end));
+end;
 
 { TGeocoding }
 
@@ -161,13 +176,13 @@ begin
   Other := TGeocoding(Obj);
 
   Result :=
-    (Key = Other.Key) and
-    (Name = Other.Name) and
-    (Longitude = Other.Longitude) and
-    (Confidence = Other.Confidence) and
-    (Type_ = Other.Type_) and
-    (PostalCode = Other.PostalCode) and
-    (CountryRegion = Other.CountryRegion);
+    (FKey = Other.FKey) and
+    (FName = Other.FName) and
+    (FLongitude = Other.FLongitude) and
+    (FConfidence = Other.FConfidence) and
+    (FType = Other.FType) and
+    (FPostalCode = Other.FPostalCode) and
+    (FCountryRegion = Other.FCountryRegion);
 
   if not Result then
     Exit;

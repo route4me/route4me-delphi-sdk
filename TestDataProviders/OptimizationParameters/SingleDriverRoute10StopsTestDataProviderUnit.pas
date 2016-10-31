@@ -51,7 +51,7 @@ procedure TSingleDriverRoute10StopsTestDataProvider.CorrectForResponse(
   OptimizationParameters: TOptimizationParameters);
   function Index(index: integer): integer;
   begin
-    Result := GetAddressIndexByTag(Addresses[index], OptimizationParameters.Addresses);
+    Result := GetAddressIndexByTag(Addresses[index], OptimizationParameters.Addresses.ToArray);
   end;
 var
   RouteParameters: TRouteParameters;

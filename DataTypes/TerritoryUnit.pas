@@ -76,7 +76,8 @@ begin
 
   Other := TTerritory(Obj);
 
-  Result := (TerritoryType = Other.TerritoryType);
+  Result :=
+    (FType = Other.FType);
 
   if (not Result) then
     Exit;

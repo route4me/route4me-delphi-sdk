@@ -254,25 +254,25 @@ begin
 
   Other := TOrder(Obj);
 
-  Result := (OrderId = Other.OrderId) and
-    (Address1 = Other.Address1) and
-    (Address2 = Other.Address2) and
-    (AddressAlias = Other.AddressAlias) and
-    (MemberId = Other.MemberId) and
-    (CachedLatitude = Other.CachedLatitude) and
-    (CachedLongitude = Other.CachedLongitude) and
-    (CurbsideLatitude = Other.CurbsideLatitude) and
-    (CurbsideLongitude = Other.CurbsideLongitude) and
-    (AddressCity = Other.AddressCity) and
-    (AddressStateId = Other.AddressStateId) and
-    (AddressCountryId = Other.AddressCountryId) and
-    (AddressZIP = Other.AddressZIP) and
-    (OrderStatusId = Other.OrderStatusId) and
-    (MemberId = Other.MemberId) and
-    (FirstName = Other.FirstName) and
-    (LastName = Other.LastName) and
-    (Email = Other.Email) and
-    (Phone = Other.Phone) and
+  Result := (FOrderId = Other.FOrderId) and
+    (FAddress1 = Other.FAddress1) and
+    (FAddress2 = Other.FAddress2) and
+    (FAddressAlias = Other.FAddressAlias) and
+    (FMemberId = Other.FMemberId) and
+    (FCachedLatitude = Other.FCachedLatitude) and
+    (FCachedLongitude = Other.FCachedLongitude) and
+    (FCurbsideLatitude = Other.FCurbsideLatitude) and
+    (FCurbsideLongitude = Other.FCurbsideLongitude) and
+    (FAddressCity = Other.FAddressCity) and
+    (FAddressStateId = Other.FAddressStateId) and
+    (FAddressCountryId = Other.FAddressCountryId) and
+    (FAddressZIP = Other.FAddressZIP) and
+    (FOrderStatusId = Other.FOrderStatusId) and
+    (FMemberId = Other.FMemberId) and
+    (FFirstName = Other.FFirstName) and
+    (FLastName = Other.FLastName) and
+    (FEmail = Other.FEmail) and
+    (FPhone = Other.FPhone) and
     (FCustomData = Other.FCustomData);
 end;
 

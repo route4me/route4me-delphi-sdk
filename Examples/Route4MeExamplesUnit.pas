@@ -110,7 +110,6 @@ var
   ErrorString: String;
   Contact: TAddressBookContact;
 begin
-{todo: разобраться со свойством Result.Id. Написал Олегу
   Contact := TAddressBookContact.Create();
   try
     Contact.FirstName := FirstName;
@@ -126,13 +125,13 @@ begin
     if (Result <> nil) then
     begin
       WriteLn('AddAddressBookContact executed successfully');
-      WriteLn(Format('AddressId: %s', [Result.Id.Value]));
+      WriteLn(Format('Address: %s', [Result.Address]));
     end
     else
       WriteLn(Format('AddAddressBookContact error: "%s"', [ErrorString]));
   finally
     FreeAndNil(Contact);
-  end;}
+  end;
 end;
 
 procedure TRoute4MeExamples.AddAddressNote(RouteId: String; AddressId: integer);
@@ -529,7 +528,7 @@ begin
         WriteLn('');
 
         for Activity in Activities do
-          WriteLn(Format('Activity ID: %s', [Activity.ActivityId.Value]));
+          WriteLn(Format('Activity message: %s', [Activity.ActivityMessage.Value]));
 
         WriteLn('');
       end
@@ -917,7 +916,6 @@ var
   Activity: TActivity;
   ErrorString: String;
 begin
-{todo: разобраться с полем Activity.ActivityMessage. Спросил у Олега
   Activity := TActivity.Create();
   try
     Activity.ActivityType := 'user_message';
@@ -935,7 +933,7 @@ begin
       WriteLn(Format('LogCustomActivity error: "%s"', [ErrorString]));
   finally
     FreeAndNil(Activity);
-  end;}
+  end;
 end;
 
 procedure TRoute4MeExamples.MoveDestinationToRoute(ToRouteId: String;
@@ -1389,7 +1387,7 @@ begin
     Parameters := DataProvider.OptimizationParameters;
     try
       Request.Parameters := Parameters.Parameters;
-      Request.Addresses := Parameters.Addresses;
+      Request.Addresses := Parameters.Addresses.ToArray;
 
       // Run the query
       Response := Route4MeManager.Connection.Post(TSettings.ApiHost, Request,

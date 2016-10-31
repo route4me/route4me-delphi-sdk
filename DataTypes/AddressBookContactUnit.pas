@@ -193,8 +193,8 @@ type
     procedure AddCustomData(Key: String; Value: String);
   end;
 
-  TAddressBookContactList = TList<TAddressBookContact>;
   TAddressBookContactArray = TArray<TAddressBookContact>;
+  TAddressBookContactList = TList<TAddressBookContact>;
 
 implementation
 
@@ -263,24 +263,24 @@ begin
   Other := TAddressBookContact(Obj);
 
   Result :=
-    (AddressGroup = Other.AddressGroup) and
-    (Alias = Other.Alias) and
-    (Address = Other.Address) and
-    (Address2 = Other.Address2) and
-    (FirstName = Other.FirstName) and
-    (LastName = Other.LastName) and
-    (Email = Other.Email) and
-    (PhoneNumber = Other.PhoneNumber) and
-    (City = Other.City) and
-    (StateId = Other.StateId) and
-    (CountryId = Other.CountryId) and
-    (Zip = Other.Zip) and
-    (Latitude = Other.Latitude) and
-    (Longitude = Other.Longitude) and
-    (CurbsideLatitude = Other.CurbsideLatitude) and
-    (CurbsideLongitude = Other.CurbsideLongitude) and
-    (Color = Other.Color) and
-    (AddressIcon = Other.AddressIcon) and
+    (FAddressGroup = Other.FAddressGroup) and
+    (FAlias = Other.FAlias) and
+    (FAddress = Other.FAddress) and
+    (FAddress2 = Other.FAddress2) and
+    (FFirstName = Other.FFirstName) and
+    (FLastName = Other.FLastName) and
+    (FEmail = Other.FEmail) and
+    (FPhoneNumber = Other.FPhoneNumber) and
+    (FCity = Other.FCity) and
+    (FStateId = Other.FStateId) and
+    (FCountryId = Other.FCountryId) and
+    (FZip = Other.FZip) and
+    (FLatitude = Other.FLatitude) and
+    (FLongitude = Other.FLongitude) and
+    (FCurbsideLatitude = Other.FCurbsideLatitude) and
+    (FCurbsideLongitude = Other.FCurbsideLongitude) and
+    (FColor = Other.FColor) and
+    (FAddressIcon = Other.FAddressIcon) and
     (FCustomData = Other.FCustomData);
 end;
 

@@ -122,6 +122,17 @@ type
     FDoubleValue: double;
     FArrayValue: TIntegerDynArray;
 
+    [JSONName('nullableobject_null_optional')]
+    [NullableObject(TTestObject)]
+    FOptionalNullObject: NullableObject;
+
+    [JSONName('nullableobject_null')]
+    [NullableObject(TTestObject,True)]
+    FNullObject: NullableObject;
+
+    [JSONName('nullableobject_not_null')]
+    [NullableObject(TTestObject,True)]
+    FNotNullObject: NullableObject;
   public
     function Equals(Obj: TObject): Boolean; override;
 
@@ -130,6 +141,9 @@ type
     property StringValue: String read FStringValue;
     property DoubleValue: double read FDoubleValue;
     property ArrayValue: TIntegerDynArray read FArrayValue;
+    property OptionalNullObject: NullableObject read FOptionalNullObject;
+    property NullObject: NullableObject read FNullObject;
+    property NotNullObject: NullableObject read FNotNullObject;
   end;
 
   TTestNullableObjectClass = class(TGenericParameters)
@@ -505,13 +519,21 @@ end;
 
 class function TTestNullableObjectClass.AsJson: TJSONValue;
 begin
+//  Result := TJSONObject.ParseJSONValue(
+//    '{"object_null":null,"object_not_null":{"intValue":123,"boolValue":true,"stringValue":"321","doubleValue":123.456,"arrayValue":[3,4,5]}}');
   Result := TJSONObject.ParseJSONValue(
-    '{"object_null":null,"object_not_null":{"intValue":123,"boolValue":true,"stringValue":"321","doubleValue":123.456,"arrayValue":[3,4,5]}}');
+    '{"object_null":null,' +
+    '"object_not_null":{"intValue":123,"boolValue":true,"stringValue":"321",' +
+    '"doubleValue":123.456,"arrayValue":[3,4,5],"nullableobject_null":null,' +
+    '"nullableobject_not_null":{"intValue":111111,"boolValue":false,' +
+    '"stringValue":"22222","doubleValue":789.123,"arrayValue":[8],' +
+    '"nullableobject_null":null,"nullableobject_not_null":null}}}');
 end;
 
 class function TTestNullableObjectClass.MakeTestObject: TObject;
 var
   Res: TTestObject;
+  SubObject: TTestObject;
 begin
   Res := TTestObject.Create;
   Res.FIntValue := 123;
@@ -522,6 +544,20 @@ begin
   Res.FArrayValue[0] := 3;
   Res.FArrayValue[1] := 4;
   Res.FArrayValue[2] := 5;
+
+  Res.FOptionalNullObject := NullableObject.Null;
+  Res.FNullObject := NullableObject.Null;
+  SubObject := TTestObject.Create;
+  SubObject.FIntValue := 111111;
+  SubObject.FBoolValue := False;
+  SubObject.FStringValue := '22222';
+  SubObject.FDoubleValue := 789.123;
+  SetLength(SubObject.FArrayValue, 1);
+  SubObject.FArrayValue[0] := 8;
+  SubObject.FOptionalNullObject := NullableObject.Null;
+  SubObject.FNullObject := NullableObject.Null;
+  SubObject.FNotNullObject := NullableObject.Null;
+  Res.FNotNullObject := SubObject;
 
   Result := Res;
 end;
@@ -541,10 +577,13 @@ begin
   Other := TTestObject(Obj);
 
   Result :=
-    (IntValue = Other.IntValue) and
-    (BoolValue = Other.BoolValue) and
-    (StringValue = Other.StringValue) and
-    (DoubleValue = Other.DoubleValue);
+    (FIntValue = Other.FIntValue) and
+    (FBoolValue = Other.FBoolValue) and
+    (FStringValue = Other.FStringValue) and
+    (FDoubleValue = Other.FDoubleValue) and
+    (FNullObject = Other.FNullObject) and
+    (FNotNullObject = Other.FNotNullObject) and
+    (FOptionalNullObject = Other.FOptionalNullObject);
 
   if Result then
   begin

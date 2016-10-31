@@ -101,10 +101,10 @@ begin
   Other := TAvoidanceZone(Obj);
 
   Result :=
-    (TerritoryId = Other.TerritoryId) and
-    (TerritoryName = Other.TerritoryName) and
-    (TerritoryColor = Other.TerritoryColor) and
-    (MemberId = Other.MemberId) and
+    (FTerritoryId = Other.FTerritoryId) and
+    (FTerritoryName = Other.FTerritoryName) and
+    (FTerritoryColor = Other.FTerritoryColor) and
+    (FMemberId = Other.FMemberId) and
     (FTerritory = Other.FTerritory);
 end;
 

@@ -116,13 +116,13 @@ begin
   Other := TDirectionLocation(Obj);
 
   Result :=
-    (Name = Other.Name) and
-    (Time = Other.Time) and
-    (SegmentDistance = Other.SegmentDistance) and
-    (StartLocation = Other.StartLocation) and
-    (EndLocation = Other.EndLocation) and
-    (DirectionsError = Other.DirectionsError) and
-    (ErrorCode = Other.ErrorCode);
+    (FName = Other.FName) and
+    (FTime = Other.FTime) and
+    (FSegmentDistance = Other.FSegmentDistance) and
+    (FStartLocation = Other.FStartLocation) and
+    (FEndLocation = Other.FEndLocation) and
+    (FDirectionsError = Other.FDirectionsError) and
+    (FErrorCode = Other.FErrorCode);
 end;
 
 end.

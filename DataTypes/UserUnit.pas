@@ -140,15 +140,16 @@ begin
 
   Other := TUser(Obj);
 
-  Result := (MemberId = Other.MemberId) and
-    (AccountTypeId = Other.AccountTypeId) and
-    (Email = Other.Email) and
-    (MemberId = Other.MemberId) and
-    (ReadonlyUser = Other.ReadonlyUser) and
-    (ShowSuperuserAddresses = Other.ShowSuperuserAddresses) and
-    (FirstName = Other.FirstName) and
-    (LastName = Other.LastName) and
-    (PhoneNumber = Other.PhoneNumber);
+  Result :=
+    (FMemberId = Other.FMemberId) and
+    (FAccountTypeId = Other.FAccountTypeId) and
+    (FEmail = Other.FEmail) and
+    (FMemberId = Other.FMemberId) and
+    (FReadonlyUser = Other.FReadonlyUser) and
+    (FShowSuperuserAddresses = Other.FShowSuperuserAddresses) and
+    (FFirstName = Other.FFirstName) and
+    (FLastName = Other.FLastName) and
+    (FPhoneNumber = Other.FPhoneNumber);
 end;
 
 end.

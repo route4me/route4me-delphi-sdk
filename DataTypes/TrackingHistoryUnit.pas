@@ -116,12 +116,13 @@ begin
 
   Other := TTrackingHistory(Obj);
 
-  Result := (Speed = Other.Speed) and
-    (Latitude = Other.Latitude) and
-    (Longitude = Other.Longitude) and
-    (Direction = Other.Direction) and
-    (TimeStamp = Other.TimeStamp) and
-    (TimeStampFriendly = Other.TimeStampFriendly);
+  Result :=
+    (FSpeed = Other.FSpeed) and
+    (FLatitude = Other.FLatitude) and
+    (FLongitude = Other.FLongitude) and
+    (FD = Other.FD) and
+    (FTimeStamp = Other.FTimeStamp) and
+    (FTimeStampFriendly = Other.FTimeStampFriendly);
 end;
 
 end.

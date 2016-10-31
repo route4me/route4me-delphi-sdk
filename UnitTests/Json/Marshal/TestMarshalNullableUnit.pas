@@ -97,11 +97,24 @@ type
   private
   type
     TTestObject = class
-      IntValue: integer;
-      BoolValue: boolean;
-      StringValue: String;
-      DoubleValue: double;
-      ArrayValue: array of integer;
+    private
+      FIntValue: integer;
+      FBoolValue: boolean;
+      FStringValue: String;
+      FDoubleValue: double;
+      FArrayValue: array of integer;
+
+      [JSONName('nullableobject_null_optional')]
+      [NullableObject(TTestObject)]
+      FOptionalNullObject: NullableObject;
+
+      [JSONName('nullableobject_null')]
+      [NullableObject(TTestObject,True)]
+      FNullObject: NullableObject;
+
+      [JSONName('nullableobject_not_null')]
+      [NullableObject(TTestObject,True)]
+      FNotNullObject: NullableObject;
     end;
   var
     [JSONName('object_null')]
@@ -258,22 +271,42 @@ end;
 
 function TTestNullableObjectClass.Etalon: String;
 begin
-  Result := '{"object_null":null,"object_not_null":{"intValue":123,"boolValue":true,"stringValue":"321","doubleValue":123.456,"arrayValue":[3,4,5]}}';
+  Result := '{"object_null":null,' +
+    '"object_not_null":{"intValue":123,"boolValue":true,"stringValue":"321",' +
+    '"doubleValue":123.456,"arrayValue":[3,4,5],"nullableobject_null":null,' +
+    '"nullableobject_not_null":{"intValue":111111,"boolValue":false,' +
+    '"stringValue":"22222","doubleValue":789.123,"arrayValue":[8],' +
+    '"nullableobject_null":null,"nullableobject_not_null":null}}}';
 end;
 
 function TTestNullableObjectClass.MakeTestObject: TObject;
 var
   Res: TTestObject;
+  SubObject: TTestObject;
 begin
   Res := TTestObject.Create;
-  Res.IntValue := 123;
-  Res.BoolValue := True;
-  Res.StringValue := '321';
-  Res.DoubleValue := 123.456;
-  SetLength(Res.ArrayValue, 3);
-  Res.ArrayValue[0] := 3;
-  Res.ArrayValue[1] := 4;
-  Res.ArrayValue[2] := 5;
+  Res.FIntValue := 123;
+  Res.FBoolValue := True;
+  Res.FStringValue := '321';
+  Res.FDoubleValue := 123.456;
+  SetLength(Res.FArrayValue, 3);
+  Res.FArrayValue[0] := 3;
+  Res.FArrayValue[1] := 4;
+  Res.FArrayValue[2] := 5;
+
+  Res.FOptionalNullObject := NullableObject.Null;
+  Res.FNullObject := NullableObject.Null;
+  SubObject := TTestObject.Create;
+  SubObject.FIntValue := 111111;
+  SubObject.FBoolValue := False;
+  SubObject.FStringValue := '22222';
+  SubObject.FDoubleValue := 789.123;
+  SetLength(SubObject.FArrayValue, 1);
+  SubObject.FArrayValue[0] := 8;
+  SubObject.FOptionalNullObject := NullableObject.Null;
+  SubObject.FNullObject := NullableObject.Null;
+  SubObject.FNotNullObject := NullableObject.Null;
+  Res.FNotNullObject := SubObject;
 
   Result := Res;
 end;

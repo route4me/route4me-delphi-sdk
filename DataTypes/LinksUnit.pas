@@ -53,9 +53,10 @@ begin
 
   Other := TLinks(Obj);
 
-  Result := (Route = Other.Route) and
-    (View = Other.View) and
-    (OptimizationProblemId = Other.OptimizationProblemId);
+  Result :=
+    (FRoute = Other.FRoute) and
+    (FView = Other.FView) and
+    (FOptimizationProblemId = Other.FOptimizationProblemId);
 end;
 
 end.

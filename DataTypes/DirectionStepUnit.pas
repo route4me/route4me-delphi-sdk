@@ -103,8 +103,9 @@ type
     property ManeuverPoint: TDirectionPathPoint read GetManeuverPoint write SetManeuverPoint;
   end;
 
-  TDirectionStepList = TList<TDirectionStep>;
   TDirectionStepArray = TArray<TDirectionStep>;
+  TDirectionStepList = TList<TDirectionStep>;
+  TDirectionStepListClass = class(TDirectionStepList);
 
   function SortDirectionSteps(DirectionSteps: TDirectionStepArray): TDirectionStepArray;
 
@@ -153,13 +154,13 @@ begin
   Other := TDirectionStep(Obj);
 
   Result :=
-    (Direction = Other.Direction) and
-    (Directions = Other.Directions) and
-    (Distance = Other.Distance) and
-    (DistanceUnit = Other.DistanceUnit) and
-    (ManeuverType = Other.ManeuverType) and
-    (CompassDirection = Other.CompassDirection) and
-    (DurationSec = Other.DurationSec) and
+    (FDirection = Other.FDirection) and
+    (FDirections = Other.FDirections) and
+    (FDistance = Other.FDistance) and
+    (FDistanceUnit = Other.FDistanceUnit) and
+    (FManeuverType = Other.FManeuverType) and
+    (FCompassDirection = Other.FCompassDirection) and
+    (FDurationSec = Other.FDurationSec) and
     (FManeuverPoint = Other.FManeuverPoint);
 end;
 

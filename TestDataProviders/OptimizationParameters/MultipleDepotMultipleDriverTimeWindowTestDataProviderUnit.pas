@@ -42,7 +42,7 @@ begin
   AddAddress(FirstAddress, Result);
 
   AddAddress(TAddress.Create('1604 PARKRIDGE PKWY, Louisville, KY, 40214', 38.141598, -85.793846, 300, 30477, 33406), Result);
-  AddAddress(TAddress.Create('1407 א53MCCOY, Louisville, KY, 40215', 38.202496, -85.786514, 300, 33406, 36228), Result);
+  AddAddress(TAddress.Create('1407 53MCCOY, Louisville, KY, 40215', 38.202496, -85.786514, 300, 33406, 36228), Result);
   AddAddress(TAddress.Create('4805 BELLEVUE AVE, Louisville, KY, 40215', 38.178844, -85.774864, 300, 36228, 37518), Result);
   AddAddress(TAddress.Create('730 CECIL AVENUE, Louisville, KY, 40211', 38.248684, -85.821121, 300, 37518, 39550), Result);
   AddAddress(TAddress.Create('650 SOUTH 29TH ST UNIT 315, Louisville, KY, 40211', 38.251923, -85.800034, 300, 39550, 41348), Result);
