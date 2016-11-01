@@ -103,11 +103,13 @@ begin
         begin
           JsonObject.RemovePair(Name);
           JsonObject.AddPair(Name, 'true');
+          Continue;
         end;
         if (Value is TJSONFalse) then
         begin
           JsonObject.RemovePair(Name);
           JsonObject.AddPair(Name, 'false');
+          Continue;
         end;
 
         if (Value is TJSONObject) then
@@ -115,6 +117,7 @@ begin
           ObjectAsString := TJSONObject(Value).ToString;
           JsonObject.RemovePair(Name);
           JsonObject.AddPair(Name, ObjectAsString);
+          Continue;
         end;
       end;
 

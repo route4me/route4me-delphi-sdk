@@ -38,7 +38,7 @@ type
 
   TDirectionPathPointArray = TArray<TDirectionPathPoint>;
   TDirectionPathPointList = TList<TDirectionPathPoint>;
-  TDirectionPathPointListClass = class(TDirectionPathPointList);
+//  TDirectionPathPointListClass = class(TDirectionPathPointList);
 
 function SortDirectionPathPoints(DirectionPathPoints: TDirectionPathPointArray): TDirectionPathPointArray;
 

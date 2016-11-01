@@ -6,7 +6,7 @@ uses
   REST.Json.Types, System.Generics.Collections, Classes, SysUtils,
   Generics.Defaults, JSONNullableAttributeUnit,
   NullableBasicTypesUnit, GenericParametersUnit,
-  JSONDictionaryInterceptorObjectUnit, EnumsUnit;
+  EnumsUnit;
 
 type
 
@@ -143,7 +143,7 @@ type
 
   TAddressNoteArray = TArray<TAddressNote>;
   TAddressNoteList = TList<TAddressNote>;
-  TAddressNoteListClass = class(TAddressNoteList);
+//  TAddressNoteListClass = class(TAddressNoteList);
 
 function SortAddressNotes(AddressNotes: TAddressNoteArray): TAddressNoteArray;
 

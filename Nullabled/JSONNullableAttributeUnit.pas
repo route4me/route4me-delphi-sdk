@@ -24,6 +24,13 @@ type
   NullableAttribute = class(BaseJSONNullableAttribute)
   end;
 
+  NullableArrayAttribute = class(JsonReflectAttribute)
+  private
+    FIsRequired: boolean;
+  public
+    constructor Create(IsRequired: boolean = False); reintroduce;
+  end;
+
   NullableObjectAttribute = class(NullableAttribute)
   private
     FClass: TClass;
@@ -39,7 +46,7 @@ type
 
 implementation
 
-uses NullableInterceptorUnit;
+uses NullableInterceptorUnit, NullableArrayInterceptorUnit;
 
 { NullableObjectAttribute }
 
@@ -61,6 +68,14 @@ end;
 constructor BaseJSONNullableAttribute.CreateCommon;
 begin
   Inherited Create(ctObject, rtString, TNullableInterceptor);
+end;
+
+{ NullableArrayAttribute }
+
+constructor NullableArrayAttribute.Create(IsRequired: boolean);
+begin
+  FIsRequired := IsRequired;
+  Inherited Create(ctObject, rtStrings, TNullableArrayInterceptor);
 end;
 
 end.

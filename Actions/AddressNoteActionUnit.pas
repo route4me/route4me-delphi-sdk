@@ -97,7 +97,7 @@ begin
     Address := (FRoute4MeManager as IRoute4MeManager).Address.Get(AddressParameters, ErrorString);
     try
       if (Address <> nil) then
-        Result := Address.Notes.ToArray;
+        Result := Address.Notes;
     finally
       FreeAndNil(Address);
     end;

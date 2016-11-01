@@ -10,7 +10,7 @@ program Route4MeExamplesProject;
 uses
   System.SysUtils,
   Route4MeExamplesUnit in 'Examples\Route4MeExamplesUnit.pas',
-  JSONDictionaryInterceptorObjectUnit in 'Nullabled\JSONDictionaryInterceptorObjectUnit.pas',
+  JSONDictionaryIntermediateObjectUnit in 'Nullabled\JSONDictionaryIntermediateObjectUnit.pas',
   JSONNullableAttributeUnit in 'Nullabled\JSONNullableAttributeUnit.pas',
   JSONNullableConverterUnit in 'Nullabled\JSONNullableConverterUnit.pas',
   NullableBasicTypesUnit in 'Nullabled\NullableBasicTypesUnit.pas',
@@ -97,7 +97,8 @@ uses
   NoteParametersUnit in 'QueryTypes\NoteParametersUnit.pas',
   OrderParametersUnit in 'QueryTypes\OrderParametersUnit.pas',
   ManifestUnit in 'DataTypes\ManifestUnit.pas',
-  GeocodingUnit in 'DataTypes\GeocodingUnit.pas';
+  GeocodingUnit in 'DataTypes\GeocodingUnit.pas',
+  NullableArrayInterceptorUnit in 'Nullabled\NullableArrayInterceptorUnit.pas';
 
 begin
   try

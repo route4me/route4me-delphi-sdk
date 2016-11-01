@@ -1387,7 +1387,7 @@ begin
     Parameters := DataProvider.OptimizationParameters;
     try
       Request.Parameters := Parameters.Parameters;
-      Request.Addresses := Parameters.Addresses.ToArray;
+      Request.Addresses := Parameters.Addresses;
 
       // Run the query
       Response := Route4MeManager.Connection.Post(TSettings.ApiHost, Request,

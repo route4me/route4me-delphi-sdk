@@ -91,7 +91,7 @@ type
 implementation
 
 uses
-  JSONNullableAttributeUnit;
+  JSONNullableAttributeUnit, MarshalUnMarshalUnit;
 
 var
   LocaleFormatSettings: TFormatSettings;
@@ -244,10 +244,11 @@ var
 begin
   JsonValue := TJsonObject.ParseJSONValue(s);
   try
-    Obj := UnMarshal.CreateObject(Clazz, JsonValue as TJsonObject);
+    //Obj := UnMarshal.CreateObject(Clazz, JsonValue as TJsonObject);
+    Obj := TMarshalUnMarshal.FromJson(Clazz, JsonValue);
     Result := TValue.From(Obj);
   finally
-    FreeAndNil(JsonValue);
+    FreeAndNil(JsonValue)
   end;
 end;
 
@@ -293,8 +294,7 @@ begin
   end;
 end;
 
-procedure TNullableInterceptor.StringReverter(Data: TObject; Field,
-  Arg: string);
+procedure TNullableInterceptor.StringReverter(Data: TObject; Field, Arg: String);
 var
   ctx: TRttiContext;
   RttiType, RttiTypeObject: TRttiType;

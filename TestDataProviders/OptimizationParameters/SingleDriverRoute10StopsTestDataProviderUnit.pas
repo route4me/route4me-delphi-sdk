@@ -22,7 +22,7 @@ implementation
 
 uses
   DateUtils,
-  EnumsUnit, UtilsUnit, JSONDictionaryInterceptorObjectUnit;
+  EnumsUnit, UtilsUnit;
 
 type
   TAddressTag = record
@@ -51,7 +51,7 @@ procedure TSingleDriverRoute10StopsTestDataProvider.CorrectForResponse(
   OptimizationParameters: TOptimizationParameters);
   function Index(index: integer): integer;
   begin
-    Result := GetAddressIndexByTag(Addresses[index], OptimizationParameters.Addresses.ToArray);
+    Result := GetAddressIndexByTag(Addresses[index], OptimizationParameters.Addresses);
   end;
 var
   RouteParameters: TRouteParameters;

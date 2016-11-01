@@ -23,8 +23,8 @@ type
     FName: NullableString;
 
     [JSONName('bbox')]
-    [NullableObject(TDirectionPathPointListClass)]
-    FBoundaryBox: NullableObject;
+//    [NullableObject(TDirectionPathPointListClass)]
+    FBoundaryBox: TDirectionPathPointArray;//NullableObject;
 
     [JSONName('lat')]
     [Nullable]
@@ -51,13 +51,13 @@ type
     FCountryRegion: NullableString;
 
     [JSONName('curbside_coordinates')]
-    [NullableObject(TDirectionPathPointListClass)]
-    FCurbsideCoordinates: NullableObject;
+//    [NullableObject(TDirectionPathPointListClass)]
+    FCurbsideCoordinates: TDirectionPathPointArray;//NullableObject;
 
-    function GetBoundaryBox: TDirectionPathPointList;
+{    function GetBoundaryBox: TDirectionPathPointList;
     function GetCurbsideCoordinates: TDirectionPathPointList;
     procedure SetBoundaryBox(const Value: TDirectionPathPointList);
-    procedure SetCurbsideCoordinates(const Value: TDirectionPathPointList);
+    procedure SetCurbsideCoordinates(const Value: TDirectionPathPointList);}
 
   public
     constructor Create;
@@ -78,7 +78,9 @@ type
     /// <summary>
     ///  Boundary box
     /// </summary>
-    property BoundaryBox: TDirectionPathPointList read GetBoundaryBox write SetBoundaryBox;
+//    property BoundaryBox: TDirectionPathPointList read GetBoundaryBox write SetBoundaryBox;
+    property BoundaryBox: TDirectionPathPointArray read FBoundaryBox;
+    procedure AddBoundaryBox(Value: TDirectionPathPoint);
 
     /// <summary>
     ///  Latitude
@@ -113,12 +115,14 @@ type
     /// <summary>
     ///  Curbside Coordinates
     /// </summary>
-    property CurbsideCoordinates: TDirectionPathPointList read GetCurbsideCoordinates write SetCurbsideCoordinates;
+//    property CurbsideCoordinates: TDirectionPathPointList read GetCurbsideCoordinates write SetCurbsideCoordinates;
+    property CurbsideCoordinates: TDirectionPathPointArray read FCurbsideCoordinates;
+    procedure AddCurbsideCoordinate(Value: TDirectionPathPoint);
   end;
 
   TGeocodingArray = TArray<TGeocoding>;
   TGeocodingList = TList<TGeocoding>;
-  TGeocodingListClass = class(TGeocodingList);
+//  TGeocodingListClass = class(TGeocodingList);
 
 function SortGeocodings(Geocodings: TGeocodingArray): TGeocodingArray;
 
@@ -137,26 +141,47 @@ end;
 
 { TGeocoding }
 
+procedure TGeocoding.AddBoundaryBox(Value: TDirectionPathPoint);
+begin
+  SetLength(FBoundaryBox, Length(FBoundaryBox) + 1);
+  FBoundaryBox[High(FBoundaryBox)] := Value;
+end;
+
+procedure TGeocoding.AddCurbsideCoordinate(Value: TDirectionPathPoint);
+begin
+  SetLength(FCurbsideCoordinates, Length(FCurbsideCoordinates) + 1);
+  FCurbsideCoordinates[High(FCurbsideCoordinates)] := Value;
+end;
+
 constructor TGeocoding.Create;
 begin
   Inherited;
 
   FKey := NullableString.Null;
   FName := NullableString.Null;
-  FBoundaryBox := NullableObject.Null;
   FLatitude := NullableDouble.Null;
   FLongitude := NullableDouble.Null;
   FConfidence := NullableString.Null;
   FType := NullableString.Null;
   FPostalCode := NullableString.Null;
   FCountryRegion := NullableString.Null;
-  FCurbsideCoordinates := NullableObject.Null;
+
+//  FBoundaryBox := NullableObject.Null;
+//  FCurbsideCoordinates := NullableObject.Null;
+  SetLength(FBoundaryBox, 0);
+  SetLength(FCurbsideCoordinates, 0);
 end;
 
 destructor TGeocoding.Destroy;
+var
+  i: integer;
 begin
-  FCurbsideCoordinates.Free;
-  FBoundaryBox.Free;
+  for i := Length(FBoundaryBox) - 1 downto 0 do
+    FBoundaryBox[i].Free;
+  for i := Length(FCurbsideCoordinates) - 1 downto 0 do
+    FCurbsideCoordinates[i].Free;
+//  FBoundaryBox.Free;
+//  FCurbsideCoordinates.Free;
 
   inherited;
 end;
@@ -187,7 +212,23 @@ begin
   if not Result then
     Exit;
 
-  if (FBoundaryBox.IsNull and Other.FBoundaryBox.IsNotNull) or
+  if (Length(FBoundaryBox) <> Length(Other.FBoundaryBox)) or
+    (Length(FCurbsideCoordinates) <> Length(Other.FCurbsideCoordinates)) then
+    Exit;
+
+  SortedBoundaryBox1 := DirectionPathPointUnit.SortDirectionPathPoints(BoundaryBox);
+  SortedBoundaryBox2 := DirectionPathPointUnit.SortDirectionPathPoints(Other.BoundaryBox);
+  for i := 0 to Length(SortedBoundaryBox1) - 1 do
+    if (not SortedBoundaryBox1[i].Equals(SortedBoundaryBox2[i])) then
+      Exit;
+
+  SortedCurbsideCoordinates1 := DirectionPathPointUnit.SortDirectionPathPoints(CurbsideCoordinates);
+  SortedCurbsideCoordinates2 := DirectionPathPointUnit.SortDirectionPathPoints(Other.CurbsideCoordinates);
+  for i := 0 to Length(SortedCurbsideCoordinates1) - 1 do
+    if (not SortedCurbsideCoordinates1[i].Equals(SortedCurbsideCoordinates2[i])) then
+      Exit;
+
+{  if (FBoundaryBox.IsNull and Other.FBoundaryBox.IsNotNull) or
     (FBoundaryBox.IsNotNull and Other.FBoundaryBox.IsNull) or
     (FCurbsideCoordinates.IsNull and Other.FCurbsideCoordinates.IsNotNull) or
     (FCurbsideCoordinates.IsNotNull and Other.FCurbsideCoordinates.IsNull) then
@@ -215,12 +256,12 @@ begin
     for i := 0 to Length(SortedCurbsideCoordinates1) - 1 do
       if (not SortedCurbsideCoordinates1[i].Equals(SortedCurbsideCoordinates2[i])) then
         Exit;
-  end;
+  end;}
 
-  Result := true;
+  Result := True;
 end;
 
-function TGeocoding.GetBoundaryBox: TDirectionPathPointList;
+{function TGeocoding.GetBoundaryBox: TDirectionPathPointList;
 begin
   if (FBoundaryBox.IsNull) then
     Result := nil
@@ -245,5 +286,5 @@ procedure TGeocoding.SetCurbsideCoordinates(const Value: TDirectionPathPointList
 begin
   FCurbsideCoordinates := Value;
 end;
-
+ }
 end.

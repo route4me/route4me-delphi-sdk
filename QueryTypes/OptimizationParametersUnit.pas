@@ -21,14 +21,16 @@ type
     [Nullable]
     FReOptimize: NullableBoolean;
 
-    [JSONNameAttribute('addresses')]
-    [NullableObject(TAddressesListClass)]
-    FAddresses: NullableObject;//TAddressesArray;
-
     [JSONNameAttribute('parameters')]
 //    [NullableObject(TRouteParameters)]
     FParameters: TRouteParameters;
 //    FParameters: NullableObject; todo: Если в NullableObject завернуть класс с Nullable-полями, то он не десериализуется
+
+    [JSONNameAttribute('addresses')]
+//    [NullableObject(TAddressesListClass)]
+//    [Nullable]
+    [NullableArray]
+    FAddresses: TAddressesArray;//NullableObject;//TAddressesArray;
 
     [JSONNameAttribute('directions')]
     [Nullable]
@@ -46,7 +48,8 @@ type
     [Nullable]
     FOptimizedCallbackUrl: NullableString;
 
-    function GetAddresses: TAddressesList;
+//    function GetAddresses: TAddressesList;
+    function GetAddress(AddressString: String; Addresses: TAddressesArray): TAddress;
 
     function GetFormatEnum: TOptimizationParametersFormat;
     procedure SetFormatEnum(const Value: TOptimizationParametersFormat);
@@ -76,7 +79,8 @@ type
     /// <summary>
     ///  Route Addresses. POST data
     /// </summary>
-    property Addresses: TAddressesList read GetAddresses;
+//    property Addresses: TAddressesList read GetAddresses;
+    property Addresses: TAddressesArray read FAddresses;
     procedure AddAddress(Address: TAddress);
 
     /// <summary>
@@ -115,9 +119,11 @@ implementation
 
 procedure TOptimizationParameters.AddAddress(Address: TAddress);
 begin
-  if (FAddresses.IsNull) then
+{  if (FAddresses.IsNull) then
     FAddresses := TAddressesList.Create();
-  (FAddresses.Value as TAddressesList).Add(Address);
+  (FAddresses.Value as TAddressesList).Add(Address);}
+  SetLength(FAddresses, Length(FAddresses) + 1);
+  FAddresses[High(FAddresses)] := Address;
 end;
 
 constructor TOptimizationParameters.Create;
@@ -130,7 +136,8 @@ begin
   FFormat := NullableString.Null;
   FRoutePathOutput := NullableString.Null;
   FOptimizedCallbackUrl := NullableString.Null;
-  FAddresses := NullableObject.Null;
+//  FAddresses := NullableObject.Null;
+  SetLength(FAddresses, 0);
 
   FParameters := nil;
 //  FParameters := NullableObject.Null;
@@ -140,9 +147,11 @@ destructor TOptimizationParameters.Destroy;
 var
   i: integer;
 begin
-  for i := Addresses.Count - 1 downto 0 do
+{  for i := Addresses.Count - 1 downto 0 do
     Addresses[i].Free;
-  FAddresses.Free;
+  FAddresses.Free;}
+  for i := Length(FAddresses) - 1 downto 0 do
+    FAddresses[i].Free;
 
   FreeAndNil(FParameters);
 
@@ -153,8 +162,10 @@ function TOptimizationParameters.Equals(Obj: TObject): Boolean;
 var
   Other: TOptimizationParameters;
   ParametersEquals: boolean;
-  SortedAddresses1, SortedAddresses2: TAddressesArray;
-  i: integer;
+//  SortedAddresses1, SortedAddresses2: TAddressesArray;
+//  i: integer;
+  Address, OtherAddress: TAddress;
+  AddressEquals: boolean;
 begin
   Result := False;
 
@@ -174,7 +185,22 @@ begin
   if (not Result) then
     Exit;
 
-  if (FAddresses.IsNull and Other.FAddresses.IsNotNull) or
+  if (Length(FAddresses) <> Length(Other.Addresses)) then
+    Exit;
+
+  AddressEquals := True;
+  for Address in FAddresses do
+  begin
+    OtherAddress := GetAddress(Address.AddressString, Other.Addresses);
+    if (OtherAddress = nil) then
+      Exit;
+
+    AddressEquals := AddressEquals and Address.Equals(OtherAddress);
+    if not AddressEquals then
+      Break;
+  end;
+
+{  if (FAddresses.IsNull and Other.FAddresses.IsNotNull) or
     (FAddresses.IsNotNull and Other.FAddresses.IsNull) then
     Exit;
 
@@ -188,7 +214,7 @@ begin
     for i := 0 to Length(SortedAddresses1) - 1 do
       if (not SortedAddresses1[i].Equals(SortedAddresses2[i])) then
         Exit;
-  end;
+  end;}
 
 //  ParametersEquals := (FParameters = Other.Parameters);
   if ((FParameters <> nil) and (Other.Parameters = nil)) or
@@ -203,12 +229,23 @@ begin
   Result := ParametersEquals;
 end;
 
-function TOptimizationParameters.GetAddresses: TAddressesList;
+{function TOptimizationParameters.GetAddresses: TAddressesList;
 begin
   if FAddresses.IsNull then
     Result := nil
   else
     Result := FAddresses.Value as TAddressesList;
+end;}
+
+function TOptimizationParameters.GetAddress(AddressString: String;
+  Addresses: TAddressesArray): TAddress;
+var
+  Address: TAddress;
+begin
+  Result := nil;
+  for Address in Addresses do
+    if (Address.AddressString = AddressString) then
+      Exit(Address);
 end;
 
 function TOptimizationParameters.GetFormatEnum: TOptimizationParametersFormat;

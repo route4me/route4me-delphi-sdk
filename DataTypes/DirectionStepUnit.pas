@@ -105,7 +105,7 @@ type
 
   TDirectionStepArray = TArray<TDirectionStep>;
   TDirectionStepList = TList<TDirectionStep>;
-  TDirectionStepListClass = class(TDirectionStepList);
+//  TDirectionStepListClass = class(TDirectionStepList);
 
   function SortDirectionSteps(DirectionSteps: TDirectionStepArray): TDirectionStepArray;
 

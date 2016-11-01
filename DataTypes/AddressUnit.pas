@@ -5,9 +5,10 @@ interface
 uses
   REST.Json.Types, System.Generics.Collections, System.Rtti, Classes, SysUtils,
   Generics.Defaults,
-  JSONNullableAttributeUnit, JSONDictionaryInterceptorObjectUnit,
+  JSONNullableAttributeUnit,
   NullableBasicTypesUnit, AddressNoteUnit, EnumsUnit,
-  DirectionUnit, ManifestUnit, DirectionPathPointUnit, GeocodingUnit;
+  DirectionUnit, ManifestUnit, DirectionPathPointUnit, GeocodingUnit,
+  JSONDictionaryIntermediateObjectUnit;
 
 type
   /// <summary>
@@ -152,8 +153,9 @@ type
     FFailedGeocoding: NullableBoolean;
 
     [JSONName('geocodings')]
-    [NullableObject(TGeocodingListClass)]
-    FGeocodings: NullableObject;
+//    [NullableObject(TGeocodingListClass)]
+    [NullableArray]
+    FGeocodings: TGeocodingArray;//NullableObject;
 
     [JSONName('contact_id')]
     [Nullable]
@@ -272,29 +274,32 @@ type
     FGeneratedTimeWindowEnd: NullableInteger;
 
     [JSONName('path_to_next')]
-    [NullableObject(TDirectionPathPointListClass)]
-    FPathToNext: NullableObject;
+//    [NullableObject(TDirectionPathPointListClass)]
+    [NullableArray]
+    FPathToNext: TDirectionPathPointArray;//NullableObject;
 
     [JSONName('directions')]
-    [NullableObject(TDirectionListClass)]
-    FDirections: NullableObject;
+//    [NullableObject(TDirectionListClass)]
+    [NullableArray]
+    FDirections: TDirectionArray; //NullableObject;
 
     [JSONName('manifest')]
     [NullableObject(TManifest)]
     FManifest: NullableObject;
 
     [JSONName('notes')]
-    [NullableObject(TAddressNoteListClass)]
-    FNotes: NullableObject;
+//    [NullableObject(TAddressNoteListClass)]
+    [NullableArray]
+    FNotes: TAddressNoteArray; //NullableObject;
 
     function GetCustomFields: TDictionaryStringIntermediateObject;
     function GetAddressStopType: TAddressStopType;
     procedure SetAddressStopType(const Value: TAddressStopType);
-    function GetGeocodings: TGeocodingList;
-    function GetDirections: TDirectionList;
+//    function GetGeocodings: TGeocodingList;
+//    function GetDirections: TDirectionList;
+//    function GetNotes: TAddressNoteList;
+//    function GetPathToNext: TDirectionPathPointList;
     function GetManifest: TManifest;
-    function GetNotes: TAddressNoteList;
-    function GetPathToNext: TDirectionPathPointList;
     procedure SetManifest(const Value: TManifest);
   public
     /// <remarks>
@@ -489,7 +494,8 @@ type
     /// <summary>
     ///  Geocodings ID
     /// </summary>
-    property Geocodings: TGeocodingList read GetGeocodings;
+//    property Geocodings: TGeocodingList read GetGeocodings;
+    property Geocodings: TGeocodingArray read FGeocodings;
     procedure AddGeocoding(Geocoding: TGeocoding);
 
     /// <summary>
@@ -639,12 +645,14 @@ type
 
     /// <summary>
     /// </summary>
-    property PathToNext: TDirectionPathPointList read GetPathToNext;
+//    property PathToNext: TDirectionPathPointList read GetPathToNext;
+    property PathToNext: TDirectionPathPointArray read FPathToNext;
     procedure AddPathToNext(DirectionPathPoint: TDirectionPathPoint);
 
     /// <summary>
     /// </summary>
-    property Directions: TDirectionList read GetDirections;
+    property Directions: TDirectionArray read FDirections;
+//    property Directions: TDirectionList read GetDirections;
     procedure AddDirection(Direction: TDirection);
 
     /// <summary>
@@ -655,13 +663,14 @@ type
     /// <summary>
     ///  Notes
     /// </summary>
-    property Notes: TAddressNoteList read GetNotes;
+//    property Notes: TAddressNoteList read GetNotes;
+    property Notes: TAddressNoteArray read FNotes;
     procedure AddNote(Note: TAddressNote);
   end;
 
   TAddressesArray = TArray<TAddress>;
   TAddressesList = TList<TAddress>;
-  TAddressesListClass = class(TAddressesList);
+//  TAddressesListClass = class(TAddressesList);
 
   function SortAddresses(Addresses: TAddressesArray): TAddressesArray;
 
@@ -734,7 +743,6 @@ begin
   FGeocoded := NullableBoolean.Null;
   FPreferredGeocoding := NullableInteger.Null;
   FFailedGeocoding := NullableBoolean.Null;
-  FGeocodings := NullableObject.Null;
   FContactId := NullableInteger.Null;
   FIsVisited := NullableBoolean.Null;
   FIsDeparted := NullableBoolean.Null;
@@ -764,11 +772,17 @@ begin
   FDistanceToNextDestination := NullableDouble.Null;
   FGeneratedTimeWindowStart := NullableInteger.Null;
   FGeneratedTimeWindowEnd := NullableInteger.Null;
-  FPathToNext := NullableObject.Null;
-  FDirections := NullableObject.Null;
   FManifest := NullableObject.Null;
   FCustomFields := NullableObject.Null;
+
+  SetLength(FGeocodings, 0);
+  SetLength(FNotes, 0);
+  SetLength(FPathToNext, 0);
+  SetLength(FDirections, 0);
+{  FGeocodings := NullableObject.Null;
   FNotes := NullableObject.Null;
+  FPathToNext := NullableObject.Null;
+  FDirections := NullableObject.Null;}
 end;
 
 constructor TAddress.Create(AddressString: String; Latitude, Longitude: double;
@@ -781,16 +795,20 @@ end;
 
 procedure TAddress.AddNote(Note: TAddressNote);
 begin
-  if (FNotes.IsNull) then
+{  if (FNotes.IsNull) then
     FNotes := TAddressNoteList.Create();
-  (FNotes.Value as TAddressNoteList).Add(Note);
+  (FNotes.Value as TAddressNoteList).Add(Note);}
+  SetLength(FNotes, Length(FNotes) + 1);
+  FNotes[High(FNotes)] := Note;
 end;
 
 procedure TAddress.AddPathToNext(DirectionPathPoint: TDirectionPathPoint);
 begin
-  if (FPathToNext.IsNull) then
+{  if (FPathToNext.IsNull) then
     FPathToNext := TDirectionPathPointList.Create();
-  (FPathToNext.Value as TDirectionPathPointList).Add(DirectionPathPoint);
+  (FPathToNext.Value as TDirectionPathPointList).Add(DirectionPathPoint);}
+  SetLength(FPathToNext, Length(FPathToNext) + 1);
+  FPathToNext[High(FPathToNext)] := DirectionPathPoint;
 end;
 
 constructor TAddress.Create(AddressString: String; Latitude, Longitude: double;
@@ -803,13 +821,28 @@ begin
 end;
 
 destructor TAddress.Destroy;
+var
+  i: integer;
 begin
-  FPathToNext.Free;
+{  FPathToNext.Free;
   FDirections.Free;
-  FManifest.Free;
   FGeocodings.Free;
+  FNotes.Free;}
+
+  for i := Length(FPathToNext) - 1 downto 0 do
+    FPathToNext[i].Free;
+
+  for i := Length(FDirections) - 1 downto 0 do
+    FDirections[i].Free;
+
+  for i := Length(FGeocodings) - 1 downto 0 do
+    FGeocodings[i].Free;
+
+  for i := Length(FNotes) - 1 downto 0 do
+    FNotes[i].Free;
+
+  FManifest.Free;
   FCustomFields.Free;
-  FNotes.Free;
 
   inherited;
 end;
@@ -900,7 +933,37 @@ begin
   if not Result then
     Exit;
 
-  if (FPathToNext.IsNull and Other.FPathToNext.IsNotNull) or
+  if (Length(FPathToNext) <> Length(Other.FPathToNext)) or
+    (Length(FDirections) <> Length(Other.FDirections)) or
+    (Length(FGeocodings) <> Length(Other.FGeocodings)) or
+    (Length(FNotes) <> Length(Other.FNotes)) then
+    Exit;
+
+  SortedDirections1 := DirectionUnit.SortDirections(Directions);
+  SortedDirections2 := DirectionUnit.SortDirections(Other.Directions);
+  for i := 0 to Length(SortedDirections1) - 1 do
+    if (not SortedDirections1[i].Equals(SortedDirections2[i])) then
+      Exit;
+
+  SortedGeocodings1 := GeocodingUnit.SortGeocodings(Geocodings);
+  SortedGeocodings2 := GeocodingUnit.SortGeocodings(Other.Geocodings);
+  for i := 0 to Length(SortedGeocodings1) - 1 do
+    if (not SortedGeocodings1[i].Equals(SortedGeocodings2[i])) then
+      Exit;
+
+  SortedNotes1 := AddressNoteUnit.SortAddressNotes(Notes);
+  SortedNotes2 := AddressNoteUnit.SortAddressNotes(Other.Notes);
+  for i := 0 to Length(SortedNotes1) - 1 do
+    if (not SortedNotes1[i].Equals(SortedNotes2[i])) then
+      Exit;
+
+  SortedPathToNext1 := DirectionPathPointUnit.SortDirectionPathPoints(PathToNext);
+  SortedPathToNext2 := DirectionPathPointUnit.SortDirectionPathPoints(Other.PathToNext);
+  for i := 0 to Length(SortedPathToNext1) - 1 do
+    if (not SortedPathToNext1[i].Equals(SortedPathToNext2[i])) then
+      Exit;
+
+{  if (FPathToNext.IsNull and Other.FPathToNext.IsNotNull) or
     (FPathToNext.IsNotNull and Other.FPathToNext.IsNull) or
     (FDirections.IsNull and Other.FDirections.IsNotNull) or
     (FDirections.IsNotNull and Other.FDirections.IsNull) or
@@ -957,7 +1020,7 @@ begin
       if (not SortedPathToNext1[i].Equals(SortedPathToNext2[i])) then
         Exit;
   end;
-
+               }
   Result := True;
 end;
 
@@ -981,7 +1044,7 @@ begin
     Result := FCustomFields.Value as TDictionaryStringIntermediateObject;
 end;
 
-function TAddress.GetDirections: TDirectionList;
+{function TAddress.GetDirections: TDirectionList;
 begin
   if FDirections.IsNull then
     Result := nil
@@ -996,7 +1059,7 @@ begin
   else
     Result := FGeocodings.Value as TGeocodingList;
 end;
-
+ }
 function TAddress.GetManifest: TManifest;
 begin
   if (FManifest.IsNull) then
@@ -1005,7 +1068,7 @@ begin
     Result := FManifest.Value as TManifest;
 end;
 
-function TAddress.GetNotes: TAddressNoteList;
+{function TAddress.GetNotes: TAddressNoteList;
 begin
   if (FNotes.IsNull) then
     Result := nil
@@ -1020,7 +1083,7 @@ begin
   else
     Result := FPathToNext.Value as TDirectionPathPointList;
 end;
-
+ }
 procedure TAddress.SetAddressStopType(const Value: TAddressStopType);
 begin
   FAddressStopType := TAddressStopTypeDescription[Value];
@@ -1033,16 +1096,20 @@ end;
 
 procedure TAddress.AddDirection(Direction: TDirection);
 begin
-  if (FDirections.IsNull) then
+{  if (FDirections.IsNull) then
     FDirections := TDirectionList.Create();
-  (FDirections.Value as TDirectionList).Add(Direction);
+  (FDirections.Value as TDirectionList).Add(Direction);}
+  SetLength(FDirections, Length(FDirections) + 1);
+  FDirections[High(FDirections)] := Direction;
 end;
 
 procedure TAddress.AddGeocoding(Geocoding: TGeocoding);
 begin
-  if (FGeocodings.IsNull) then
+{  if (FGeocodings.IsNull) then
     FGeocodings := TGeocodingList.Create();
-  (FGeocodings.Value as TGeocodingList).Add(Geocoding);
+  (FGeocodings.Value as TGeocodingList).Add(Geocoding);}
+  SetLength(FGeocodings, Length(FGeocodings) + 1);
+  FGeocodings[High(FGeocodings)] := Geocoding;
 end;
 
 function SortAddresses(Addresses: TAddressesArray): TAddressesArray;

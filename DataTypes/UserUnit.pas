@@ -5,8 +5,7 @@ interface
 uses
   SysUtils, System.Generics.Collections,
   REST.Json.Types, JSONNullableAttributeUnit,
-  NullableBasicTypesUnit, GenericParametersUnit,
-  JSONDictionaryInterceptorObjectUnit;
+  NullableBasicTypesUnit, GenericParametersUnit;
 
 type
   // todo: привести в соответствии схеме

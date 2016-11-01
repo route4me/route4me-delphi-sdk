@@ -19,7 +19,7 @@ implementation
 
 uses
   DateUtils,
-  EnumsUnit, UtilsUnit, JSONDictionaryInterceptorObjectUnit,
+  EnumsUnit, UtilsUnit, JSONDictionaryIntermediateObjectUnit,
   RouteParametersUnit, LinksUnit, AddressUnit;
 
 function TSingleDriverRoute10StopsResponseDataProvider.MakeDataObject: TDataObject;
@@ -96,6 +96,7 @@ begin
   Route.AddAddress(Address8);
   Route.AddAddress(Address9);
   Route.AddAddress(Address10);
+  Route.Links := TLinks.Create;
   Route.Links.Route := 'http://www.route4me.com/api.v4/route.php?route_id=E8266C1041A28310B1068070EF050158&api_key=11111111111111111111111111111111&member_id=1&device_tracking_history=0&original=0&notes=0';
   Route.Links.OptimizationProblemId := 'http://www.route4me.com/api.v4/optimization_problem.php?optimization_problem_id=85DA4196C5F5EC5EF6779DA8E83E6AEC&api_key=11111111111111111111111111111111&member_id=1';
 

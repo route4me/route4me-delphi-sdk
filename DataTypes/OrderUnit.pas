@@ -5,7 +5,8 @@ interface
 uses
   REST.Json.Types, Classes, SysUtils, System.Generics.Collections,
   JSONNullableAttributeUnit,
-  GenericParametersUnit, NullableBasicTypesUnit, JSONDictionaryInterceptorObjectUnit;
+  GenericParametersUnit, NullableBasicTypesUnit,
+  JSONDictionaryIntermediateObjectUnit;
 
 type
   TOrder = class(TGenericParameters)

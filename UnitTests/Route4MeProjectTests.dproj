@@ -96,7 +96,7 @@
         <DCCReference Include="..\Nullabled\JSONNullableAttributeUnit.pas"/>
         <DCCReference Include="..\Nullabled\NullableInterceptorUnit.pas"/>
         <DCCReference Include="..\Nullabled\JSONNullableConverterUnit.pas"/>
-        <DCCReference Include="..\Nullabled\JSONDictionaryInterceptorObjectUnit.pas"/>
+        <DCCReference Include="..\Nullabled\JSONDictionaryIntermediateObjectUnit.pas"/>
         <DCCReference Include="..\DataTypes\AddressBookContactUnit.pas"/>
         <DCCReference Include="Route4MeManager\BaseRoute4MeTestUnit.pas"/>
         <DCCReference Include="..\Actions\AddressBookContactActionsUnit.pas"/>
@@ -200,6 +200,7 @@
         <DCCReference Include="Json\Unmarshal\TestUnmarshalDataObjectUnit.pas"/>
         <DCCReference Include="..\DataTypes\GeocodingUnit.pas"/>
         <DCCReference Include="..\DataTypes\ManifestUnit.pas"/>
+        <DCCReference Include="..\Nullabled\NullableArrayInterceptorUnit.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

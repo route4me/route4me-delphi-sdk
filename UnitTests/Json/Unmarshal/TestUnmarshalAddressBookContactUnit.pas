@@ -11,10 +11,12 @@ type
   TTestUnmarshalAddressBookContact = class(TTestBaseJsonUnmarshal)
   private
     procedure CheckEquals(Etalon: IAddressBookContactProvider; TestName: String); overload;
+
+    // todo: подумать нужно ли нам будет парсить лист
+    procedure AddressBookContactList();
   published
     procedure DefaultAddressBookContact();
     procedure FullAddressBookContact();
-    procedure AddressBookContactList();
   end;
 
 implementation
@@ -32,7 +34,9 @@ var
   JsonValue: TJSONValue;
   ActualList: TAddressBookContactList;
 begin
-  JsonString := '[{"address_1":"First Address","cached_lat":40.7803123,"cached_lng":-73.9793079},{"address_1":"Second Address","cached_lat":40.7803123,"cached_lng":-73.9793079}]';
+  JsonString :=
+    '[{"address_1":"First Address","cached_lat":40.7803123,"cached_lng":-73.9793079},' +
+     '{"address_1":"Second Address","cached_lat":40.7803123,"cached_lng":-73.9793079}]';
 
   JsonValue := TJSONObject.ParseJSONValue(JsonString);
   try

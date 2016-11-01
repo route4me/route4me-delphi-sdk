@@ -19,7 +19,7 @@ implementation
 
 uses
   DateUtils,
-  EnumsUnit, UtilsUnit, JSONDictionaryInterceptorObjectUnit,
+  EnumsUnit, UtilsUnit, JSONDictionaryIntermediateObjectUnit,
   RouteParametersUnit, LinksUnit, AddressUnit;
 
 function TSampleDataObjectRouteTestDataProvider.MakeDataObjectRoute: TDataObjectRoute;

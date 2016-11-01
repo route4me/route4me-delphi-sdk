@@ -14,6 +14,8 @@ type
 
     function IsNullableObject(JSONAncestor: TJSONAncestor;
       out IsRequired: boolean; out Value: TValue; out IsNull: boolean): boolean;
+    function IsNullableArray(JSONAncestor: TJSONAncestor;
+      out IsRequired: boolean; out Value: TJSONValue): boolean;
     function IsDictionaryIntermediateObject(JSONAncestor: TJSONAncestor;
       out Pairs: TArray<TJSONPair>): boolean;
   protected
@@ -25,7 +27,7 @@ implementation
 { TJSONNullableConverter }
 
 uses
-  NullableInterceptorUnit;
+  NullableInterceptorUnit, NullableArrayInterceptorUnit;
 
 function TJSONNullableConverter.GetSerializedData: TJSONValue;
 begin
@@ -68,6 +70,31 @@ begin
 
         Exit(True);
       end;
+    end;
+  end;
+end;
+
+function TJSONNullableConverter.IsNullableArray(JSONAncestor: TJSONAncestor;
+  out IsRequired: boolean; out Value: TJSONValue): boolean;
+var
+  JSONObject: TJSONObject;
+  JSONPair: TJSONPair;
+begin
+  Result := False;
+
+  if (JSONAncestor is TJSONObject) then
+  begin
+    JSONObject := TJSONObject(JSONAncestor);
+    if (JSONObject.Count = 1) and (JSONObject.Pairs[0].JsonString <> nil) then
+    begin
+      JSONPair := JSONObject.Pairs[0];
+      Result := ('T' + JSONPair.JsonString.Value.ToUpper = TNullableArrayIntermediateObject.ClassName.ToUpper);
+      if not Result then
+        Exit;
+
+      JSONObject := TJSONObject(JSONPair.JsonValue);
+      Value := JSONObject.GetValue('value');
+      IsRequired := (JSONObject.GetValue('isRequired') as TJSONBool).AsBoolean;
     end;
   end;
 end;
@@ -162,6 +189,21 @@ begin
         JSONValue := (Value.AsObject as TJsonValue).Clone as TJsonValue;
         JSONObject.RemovePair(JSONObject.Pairs[i].JsonString.Value);
 
+        if (not IsNull) then
+          JSONObject.AddPair(Name, JSONValue)
+        else
+        if IsRequired then
+          JSONObject.AddPair(Name, TJSONNull.Create);
+      end
+      else
+      if IsNullableArray(JSONObject.Pairs[i].JsonValue, IsRequired, JSONValue) then
+      begin
+        Name := JSONObject.Pairs[i].JsonString.Value;
+        JSONValue := JSONValue.Clone as TJsonValue;
+        JSONObject.RemovePair(JSONObject.Pairs[i].JsonString.Value);
+
+        IsNull := (JSONValue is TJSONNull) or (
+          (JSONValue is TJSONArray) and (TJSONArray(JSONValue).Count = 0));
         if (not IsNull) then
           JSONObject.AddPair(Name, JSONValue)
         else

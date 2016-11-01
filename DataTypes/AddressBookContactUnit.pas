@@ -5,7 +5,7 @@ interface
 uses
   REST.Json.Types, System.Generics.Collections, JSONNullableAttributeUnit,
   NullableBasicTypesUnit, GenericParametersUnit,
-  JSONDictionaryInterceptorObjectUnit;
+  JSONDictionaryIntermediateObjectUnit;
 
 type
 

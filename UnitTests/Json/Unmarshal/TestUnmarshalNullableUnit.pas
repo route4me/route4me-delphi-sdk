@@ -134,6 +134,8 @@ type
     [NullableObject(TTestObject,True)]
     FNotNullObject: NullableObject;
   public
+    constructor Create();
+
     function Equals(Obj: TObject): Boolean; override;
 
     property IntValue: integer read FIntValue;
@@ -172,6 +174,18 @@ type
     property Test: NullableObject read FTest write FTest;
   end;
 
+  TTestSimpleObjectClass = class(TGenericParameters)
+  private
+    FIntValue: integer;
+    FBoolValue: boolean;
+    FStringValue: String;
+    FDoubleValue: double;
+    FObjectValue: TTestSimpleObjectClass;
+  public
+    class function AsJson: TJSONValue;
+    function Equals(Obj: TObject): Boolean; override;
+  end;
+
   TTestUnmarshalNullable = class(TTestCase)
   published
     procedure TestNullableBoolean();
@@ -179,6 +193,7 @@ type
     procedure TestNullableInteger();
     procedure TestNullableDouble();
     procedure TestNullableObject();
+    procedure TestSimpleObject();
   end;
 
 implementation
@@ -420,6 +435,46 @@ begin
   end;
 end;
 
+procedure TTestUnmarshalNullable.TestSimpleObject;
+var
+  Etalon: TTestSimpleObjectClass;
+  Actual: TTestSimpleObjectClass;
+  Obj: TObject;
+  JsonValue: TJSONValue;
+begin
+  JsonValue := TTestSimpleObjectClass.AsJson;
+  try
+    Obj := TMarshalUnMarshal.FromJson(TTestSimpleObjectClass, JsonValue);
+    try
+      CheckIs(Obj, TTestSimpleObjectClass);
+
+      Actual := Obj as TTestSimpleObjectClass;
+
+      Etalon := TTestSimpleObjectClass.Create;
+      try
+        Etalon.FIntValue := 123;
+        Etalon.FBoolValue := True;
+        Etalon.FStringValue := '321';
+        Etalon.FDoubleValue := 123.456;
+        Etalon.FObjectValue := TTestSimpleObjectClass.Create;
+        Etalon.FObjectValue.FIntValue := 111111;
+        Etalon.FObjectValue.FBoolValue := False;
+        Etalon.FObjectValue.FStringValue := '22222';
+        Etalon.FObjectValue.FDoubleValue := 789.123;
+        Etalon.FObjectValue.FObjectValue := nil;
+
+        CheckTrue(Etalon.Equals(Actual));
+      finally
+        FreeAndNil(Etalon);
+      end;
+    finally
+      FreeAndNil(Obj);
+    end;
+  finally
+    FreeAndNil(JsonValue);
+  end;
+end;
+
 { TTestNullableIntegerClass }
 
 class function TTestNullableIntegerClass.AsJson: TJSONValue;
@@ -564,6 +619,13 @@ end;
 
 { TTestObject }
 
+constructor TTestObject.Create;
+begin
+  FOptionalNullObject := NullableObject.Null;
+  FNullObject := NullableObject.Null;
+  FNotNullObject := NullableObject.Null;
+end;
+
 function TTestObject.Equals(Obj: TObject): Boolean;
 var
   Other: TTestObject;
@@ -592,6 +654,38 @@ begin
     for i := 0 to High(ArrayValue) do
       Result := Result and (ArrayValue[i] = Other.ArrayValue[i]);
   end;
+end;
+
+{ TTestSimpleObjectClass }
+
+class function TTestSimpleObjectClass.AsJson: TJSONValue;
+begin
+  Result := TJSONObject.ParseJSONValue(
+    '{"intValue":123,"boolValue":true,"stringValue":"321",' +
+    '"doubleValue":123.456,"objectValue":{"intValue":111111,"boolValue":false,' +
+    '"stringValue":"22222","doubleValue":789.123,"objectValue":null}}');
+end;
+
+function TTestSimpleObjectClass.Equals(Obj: TObject): Boolean;
+var
+  Other: TTestSimpleObjectClass;
+begin
+  Result := False;
+
+  if not (Obj is TTestSimpleObjectClass) then
+    Exit;
+
+  Other := TTestSimpleObjectClass(Obj);
+
+  Result :=
+    (FIntValue = Other.FIntValue) and
+    (FBoolValue = Other.FBoolValue) and
+    (FStringValue = Other.FStringValue) and
+    (FDoubleValue = Other.FDoubleValue) and
+    (FObjectValue.FIntValue = Other.FObjectValue.FIntValue) and
+    (FObjectValue.FBoolValue = Other.FObjectValue.FBoolValue) and
+    (FObjectValue.FStringValue = Other.FObjectValue.FStringValue) and
+    (FObjectValue.FDoubleValue = Other.FObjectValue.FDoubleValue);
 end;
 
 initialization

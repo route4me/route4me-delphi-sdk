@@ -1,4 +1,4 @@
-unit JSONDictionaryInterceptorObjectUnit;
+unit JSONDictionaryIntermediateObjectUnit;
 
 interface
 

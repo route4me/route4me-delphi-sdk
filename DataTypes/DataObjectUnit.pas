@@ -47,6 +47,7 @@ type
 
     function GetState: TOptimizationState;
     procedure SetState(const Value: TOptimizationState);
+
   public
     constructor Create;
     destructor Destroy; override;

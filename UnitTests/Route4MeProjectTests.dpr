@@ -20,7 +20,7 @@ uses
   JSONNullableAttributeUnit in '..\Nullabled\JSONNullableAttributeUnit.pas',
   NullableInterceptorUnit in '..\Nullabled\NullableInterceptorUnit.pas',
   JSONNullableConverterUnit in '..\Nullabled\JSONNullableConverterUnit.pas',
-  JSONDictionaryInterceptorObjectUnit in '..\Nullabled\JSONDictionaryInterceptorObjectUnit.pas',
+  JSONDictionaryIntermediateObjectUnit in '..\Nullabled\JSONDictionaryIntermediateObjectUnit.pas',
   AddressBookContactUnit in '..\DataTypes\AddressBookContactUnit.pas',
   BaseRoute4MeTestUnit in 'Route4MeManager\BaseRoute4MeTestUnit.pas',
   AddressBookContactActionsUnit in '..\Actions\AddressBookContactActionsUnit.pas',
@@ -123,7 +123,8 @@ uses
   IDataObjectProviderUnit in 'TestDataProviders\DataObject\IDataObjectProviderUnit.pas',
   TestUnmarshalDataObjectUnit in 'Json\Unmarshal\TestUnmarshalDataObjectUnit.pas',
   GeocodingUnit in '..\DataTypes\GeocodingUnit.pas',
-  ManifestUnit in '..\DataTypes\ManifestUnit.pas';
+  ManifestUnit in '..\DataTypes\ManifestUnit.pas',
+  NullableArrayInterceptorUnit in '..\Nullabled\NullableArrayInterceptorUnit.pas';
 
 {R *.RES}
 
