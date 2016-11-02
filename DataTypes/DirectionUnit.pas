@@ -48,6 +48,9 @@ implementation
 function SortDirections(Directions: TDirectionArray): TDirectionArray;
 begin
   SetLength(Result, Length(Directions));
+  if Length(Directions) = 0 then
+    Exit;
+  
   TArray.Copy<TDirection>(Directions, Result, Length(Directions));
   TArray.Sort<TDirection>(Result, TComparer<TDirection>.Construct(
     function (const Direction1, Direction2: TDirection): Integer

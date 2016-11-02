@@ -22,7 +22,7 @@ implementation
 
 uses
   DateUtils,
-  EnumsUnit, UtilsUnit;
+  EnumsUnit, UtilsUnit, JSONDictionaryIntermediateObjectUnit;
 
 type
   TAddressTag = record
@@ -55,6 +55,7 @@ procedure TSingleDriverRoute10StopsTestDataProvider.CorrectForResponse(
   end;
 var
   RouteParameters: TRouteParameters;
+  i: integer;
 begin
   inherited;
 
@@ -68,12 +69,23 @@ begin
   RouteParameters.TravelMode := TTravelMode.Driving;
   RouteParameters.Metric := TMetric.Matrix;
   RouteParameters.Parts := 10;
+  RouteParameters.Dirm := 5;
+  RouteParameters.DM := 1;
+  RouteParameters.MemberId := '1';
+  RouteParameters.LockLast := False;
+  RouteParameters.Avoid := TAvoid.Empty;
+  RouteParameters.HasTrailer := False;
+  RouteParameters.MinTourSize := 0;
+  RouteParameters.OptimizationQuality := 1;
+  RouteParameters.Ip := '2998453096';
 
   OptimizationParameters.Addresses[Index(0)].RouteDestinationId := 193721035;
   OptimizationParameters.Addresses[Index(0)].MemberId := '1';
   OptimizationParameters.Addresses[Index(0)].CurbsideLatitude := 33.1326752;
   OptimizationParameters.Addresses[Index(0)].CurbsideLongitude := -83.2447433;
   OptimizationParameters.Addresses[Index(0)].SequenceNo := 0;
+  OptimizationParameters.Addresses[Index(0)].DriveTimeToNextDestination := 48;
+  OptimizationParameters.Addresses[Index(0)].DistanceToNextDestination := 0.21;
 
   OptimizationParameters.Addresses[Index(1)].RouteDestinationId := 193721036;
   OptimizationParameters.Addresses[Index(1)].MemberId := '1';
@@ -82,7 +94,10 @@ begin
   OptimizationParameters.Addresses[Index(1)].SequenceNo := 1;
   OptimizationParameters.Addresses[Index(1)].IsDepot := False;
   OptimizationParameters.Addresses[Index(1)].RouteId := 'FC3D90EDECBAA80F46C37EAFBE4ADB36';
-//  OptimizationParameters.Addresses[Index(1)].CustomFields := TDictionaryStringIntermediateObject.Create;
+  OptimizationParameters.Addresses[Index(1)].DriveTimeToNextDestination := 312;
+  OptimizationParameters.Addresses[Index(1)].DistanceToNextDestination := 1.4;
+  OptimizationParameters.Addresses[Index(1)].TrackingNumber := 'NR173QRE';
+  OptimizationParameters.Addresses[Index(1)].CustomFields := TDictionaryStringIntermediateObject.Create;
 
   OptimizationParameters.Addresses[Index(2)].RouteDestinationId := 193721037;
   OptimizationParameters.Addresses[Index(2)].MemberId := '1';
@@ -91,7 +106,10 @@ begin
   OptimizationParameters.Addresses[Index(2)].SequenceNo := 8;
   OptimizationParameters.Addresses[Index(2)].IsDepot := False;
   OptimizationParameters.Addresses[Index(2)].RouteId := 'FC3D90EDECBAA80F46C37EAFBE4ADB36';
-//  OptimizationParameters.Addresses[Index(2)].CustomFields := TDictionaryStringIntermediateObject.Create;
+  OptimizationParameters.Addresses[Index(2)].DriveTimeToNextDestination := 921;
+  OptimizationParameters.Addresses[Index(2)].DistanceToNextDestination := 5.86;
+  OptimizationParameters.Addresses[Index(2)].TrackingNumber := 'X70P9K70';
+  OptimizationParameters.Addresses[Index(2)].CustomFields := TDictionaryStringIntermediateObject.Create;
 
   OptimizationParameters.Addresses[Index(3)].RouteDestinationId := 193721038;
   OptimizationParameters.Addresses[Index(3)].MemberId := '1';
@@ -100,7 +118,10 @@ begin
   OptimizationParameters.Addresses[Index(3)].SequenceNo := 3;
   OptimizationParameters.Addresses[Index(3)].IsDepot := False;
   OptimizationParameters.Addresses[Index(3)].RouteId := 'FC3D90EDECBAA80F46C37EAFBE4ADB36';
-//  OptimizationParameters.Addresses[Index(3)].CustomFields := TDictionaryStringIntermediateObject.Create;
+  OptimizationParameters.Addresses[Index(3)].DriveTimeToNextDestination := 29;
+  OptimizationParameters.Addresses[Index(3)].DistanceToNextDestination := 0.13;
+  OptimizationParameters.Addresses[Index(3)].TrackingNumber := 'Q76PXM7V';
+  OptimizationParameters.Addresses[Index(3)].CustomFields := TDictionaryStringIntermediateObject.Create;
 
   OptimizationParameters.Addresses[Index(4)].RouteDestinationId := 193721039;
   OptimizationParameters.Addresses[Index(4)].MemberId := '1';
@@ -109,7 +130,10 @@ begin
   OptimizationParameters.Addresses[Index(4)].SequenceNo := 7;
   OptimizationParameters.Addresses[Index(4)].IsDepot := False;
   OptimizationParameters.Addresses[Index(4)].RouteId := 'FC3D90EDECBAA80F46C37EAFBE4ADB36';
-//  OptimizationParameters.Addresses[Index(4)].CustomFields := TDictionaryStringIntermediateObject.Create;
+  OptimizationParameters.Addresses[Index(4)].DriveTimeToNextDestination := 380;
+  OptimizationParameters.Addresses[Index(4)].DistanceToNextDestination := 1.85;
+  OptimizationParameters.Addresses[Index(4)].TrackingNumber := 'RQEPR8QN';
+  OptimizationParameters.Addresses[Index(4)].CustomFields := TDictionaryStringIntermediateObject.Create;
 
   OptimizationParameters.Addresses[Index(5)].RouteDestinationId := 193721040;
   OptimizationParameters.Addresses[Index(5)].MemberId := '1';
@@ -118,7 +142,10 @@ begin
   OptimizationParameters.Addresses[Index(5)].SequenceNo := 6;
   OptimizationParameters.Addresses[Index(5)].IsDepot := False;
   OptimizationParameters.Addresses[Index(5)].RouteId := 'FC3D90EDECBAA80F46C37EAFBE4ADB36';
-//  OptimizationParameters.Addresses[Index(5)].CustomFields := TDictionaryStringIntermediateObject.Create;
+  OptimizationParameters.Addresses[Index(5)].DriveTimeToNextDestination := 14;
+  OptimizationParameters.Addresses[Index(5)].DistanceToNextDestination := 0.06;
+  OptimizationParameters.Addresses[Index(5)].TrackingNumber := 'Y3NPGE3Q';
+  OptimizationParameters.Addresses[Index(5)].CustomFields := TDictionaryStringIntermediateObject.Create;
 
   OptimizationParameters.Addresses[Index(6)].RouteDestinationId := 193721041;
   OptimizationParameters.Addresses[Index(6)].MemberId := '1';
@@ -127,7 +154,10 @@ begin
   OptimizationParameters.Addresses[Index(6)].SequenceNo := 5;
   OptimizationParameters.Addresses[Index(6)].IsDepot := False;
   OptimizationParameters.Addresses[Index(6)].RouteId := 'FC3D90EDECBAA80F46C37EAFBE4ADB36';
-//  OptimizationParameters.Addresses[Index(6)].CustomFields := TDictionaryStringIntermediateObject.Create;
+  OptimizationParameters.Addresses[Index(6)].DriveTimeToNextDestination := 24;
+  OptimizationParameters.Addresses[Index(6)].DistanceToNextDestination := 0.11;
+  OptimizationParameters.Addresses[Index(6)].TrackingNumber := 'ZLDPVNLY';
+  OptimizationParameters.Addresses[Index(6)].CustomFields := TDictionaryStringIntermediateObject.Create;
 
   OptimizationParameters.Addresses[Index(7)].RouteDestinationId := 193721042;
   OptimizationParameters.Addresses[Index(7)].MemberId := '1';
@@ -136,7 +166,10 @@ begin
   OptimizationParameters.Addresses[Index(7)].SequenceNo := 2;
   OptimizationParameters.Addresses[Index(7)].IsDepot := False;
   OptimizationParameters.Addresses[Index(7)].RouteId := 'FC3D90EDECBAA80F46C37EAFBE4ADB36';
-//  OptimizationParameters.Addresses[Index(7)].CustomFields := TDictionaryStringIntermediateObject.Create;
+  OptimizationParameters.Addresses[Index(7)].DriveTimeToNextDestination := 0;
+  OptimizationParameters.Addresses[Index(7)].DistanceToNextDestination := 0;
+  OptimizationParameters.Addresses[Index(7)].TrackingNumber := 'PLKP0DLM';
+  OptimizationParameters.Addresses[Index(7)].CustomFields := TDictionaryStringIntermediateObject.Create;
 
   OptimizationParameters.Addresses[Index(8)].RouteDestinationId := 193721043;
   OptimizationParameters.Addresses[Index(8)].MemberId := '1';
@@ -145,7 +178,10 @@ begin
   OptimizationParameters.Addresses[Index(8)].SequenceNo := 4;
   OptimizationParameters.Addresses[Index(8)].IsDepot := False;
   OptimizationParameters.Addresses[Index(8)].RouteId := 'FC3D90EDECBAA80F46C37EAFBE4ADB36';
-//  OptimizationParameters.Addresses[Index(8)].CustomFields := TDictionaryStringIntermediateObject.Create;
+  OptimizationParameters.Addresses[Index(8)].DriveTimeToNextDestination := 44;
+  OptimizationParameters.Addresses[Index(8)].DistanceToNextDestination := 0.2;
+  OptimizationParameters.Addresses[Index(8)].TrackingNumber := 'LGM3KQGK';
+  OptimizationParameters.Addresses[Index(8)].CustomFields := TDictionaryStringIntermediateObject.Create;
 
   OptimizationParameters.Addresses[Index(9)].RouteDestinationId := 193721044;
   OptimizationParameters.Addresses[Index(9)].MemberId := '1';
@@ -154,6 +190,28 @@ begin
   OptimizationParameters.Addresses[Index(9)].SequenceNo := 9;
   OptimizationParameters.Addresses[Index(9)].IsDepot := False;
   OptimizationParameters.Addresses[Index(9)].RouteId := 'FC3D90EDECBAA80F46C37EAFBE4ADB36';
+  OptimizationParameters.Addresses[Index(9)].TrackingNumber := 'DQ9MGE6V';
+  OptimizationParameters.Addresses[Index(9)].CustomFields := TDictionaryStringIntermediateObject.Create;
+
+  for i := 0 to 9 do
+  begin
+    OptimizationParameters.Addresses[Index(i)].OptimizationProblemId := 'E589A245F11E3E1E82457703BFAAB14D';
+    OptimizationParameters.Addresses[Index(i)].TimeframeViolationTime := 0;
+    OptimizationParameters.Addresses[Index(i)].TimeframeViolationRate := 0;
+    OptimizationParameters.Addresses[Index(i)].AddressStopType := astDelivery;
+    OptimizationParameters.Addresses[Index(i)].Geocoded := False;
+    OptimizationParameters.Addresses[Index(i)].FailedGeocoding := False;
+    OptimizationParameters.Addresses[Index(i)].IsVisited := False;
+    OptimizationParameters.Addresses[Index(i)].IsDeparted := False;
+    OptimizationParameters.Addresses[Index(i)].Weight := 0;
+    OptimizationParameters.Addresses[Index(i)].Cost := 0;
+    OptimizationParameters.Addresses[Index(i)].Revenue := 0;
+    OptimizationParameters.Addresses[Index(i)].Cube := 0;
+    OptimizationParameters.Addresses[Index(i)].Pieces := 0;
+    OptimizationParameters.Addresses[Index(i)].DestinationNoteCount := 0;
+
+  end;
+
 //  OptimizationParameters.Addresses[Index(9)].CustomFields := TDictionaryStringIntermediateObject.Create;
 end;
 

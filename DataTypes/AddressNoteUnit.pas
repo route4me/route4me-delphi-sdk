@@ -152,6 +152,9 @@ implementation
 function SortAddressNotes(AddressNotes: TAddressNoteArray): TAddressNoteArray;
 begin
   SetLength(Result, Length(AddressNotes));
+  if Length(AddressNotes) = 0 then
+    Exit;
+
   TArray.Copy<TAddressNote>(AddressNotes, Result, Length(AddressNotes));
   TArray.Sort<TAddressNote>(Result, TComparer<TAddressNote>.Construct(
     function (const AddressNote1, AddressNote2: TAddressNote): Integer

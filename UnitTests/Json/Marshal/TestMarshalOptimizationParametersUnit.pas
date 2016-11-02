@@ -8,6 +8,7 @@ uses
 type
   TTestMarshalOptimizationParameters = class(TTestBaseJsonMarshal)
   published
+    // todo: устранить утечки памяти
     procedure MultipleDepotMultipleDriver();
     procedure MultipleDepotMultipleDriverTimeWindow();
     procedure MultipleDepotMultipleDriverWith24StopsTimeWindow();

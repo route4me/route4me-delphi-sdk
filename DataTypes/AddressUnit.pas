@@ -154,7 +154,7 @@ type
 
     [JSONName('geocodings')]
 //    [NullableObject(TGeocodingListClass)]
-    [NullableArray]
+    [NullableArray(TGeocoding)]
     FGeocodings: TGeocodingArray;//NullableObject;
 
     [JSONName('contact_id')]
@@ -275,12 +275,12 @@ type
 
     [JSONName('path_to_next')]
 //    [NullableObject(TDirectionPathPointListClass)]
-    [NullableArray]
+    [NullableArray(TDirectionPathPoint)]
     FPathToNext: TDirectionPathPointArray;//NullableObject;
 
     [JSONName('directions')]
 //    [NullableObject(TDirectionListClass)]
-    [NullableArray]
+    [NullableArray(TDirection)]
     FDirections: TDirectionArray; //NullableObject;
 
     [JSONName('manifest')]
@@ -289,10 +289,11 @@ type
 
     [JSONName('notes')]
 //    [NullableObject(TAddressNoteListClass)]
-    [NullableArray]
+    [NullableArray(TAddressNote)]
     FNotes: TAddressNoteArray; //NullableObject;
 
     function GetCustomFields: TDictionaryStringIntermediateObject;
+    procedure SetCustomFields(const Value: TDictionaryStringIntermediateObject);
     function GetAddressStopType: TAddressStopType;
     procedure SetAddressStopType(const Value: TAddressStopType);
 //    function GetGeocodings: TGeocodingList;
@@ -362,7 +363,7 @@ type
     /// </summary>
     property Time: NullableInteger read FTime write FTime;
 
-    property CustomFields: TDictionaryStringIntermediateObject read GetCustomFields;
+    property CustomFields: TDictionaryStringIntermediateObject read GetCustomFields write SetCustomFields;
     procedure AddCustomField(Key: String; Value: String);
 
     /// <summary>
@@ -933,6 +934,8 @@ begin
   if not Result then
     Exit;
 
+  Result := False;
+
   if (Length(FPathToNext) <> Length(Other.FPathToNext)) or
     (Length(FDirections) <> Length(Other.FDirections)) or
     (Length(FGeocodings) <> Length(Other.FGeocodings)) or
@@ -1089,6 +1092,12 @@ begin
   FAddressStopType := TAddressStopTypeDescription[Value];
 end;
 
+procedure TAddress.SetCustomFields(
+  const Value: TDictionaryStringIntermediateObject);
+begin
+  FCustomFields := Value;
+end;
+
 procedure TAddress.SetManifest(const Value: TManifest);
 begin
   FManifest := Value;
@@ -1115,6 +1124,9 @@ end;
 function SortAddresses(Addresses: TAddressesArray): TAddressesArray;
 begin
   SetLength(Result, Length(Addresses));
+  if Length(Addresses) = 0 then
+    Exit;
+
   TArray.Copy<TAddress>(Addresses, Result, Length(Addresses));
   TArray.Sort<TAddress>(Result, TComparer<TAddress>.Construct(
     function (const Address1, Address2: TAddress): Integer

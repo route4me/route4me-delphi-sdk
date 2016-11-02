@@ -174,6 +174,72 @@ type
     property Test: NullableObject read FTest write FTest;
   end;
 
+//  TTestArrayObjectArray = TArray<TTestObject>;
+  TTestArrayObjectArray = array of TTestObject;
+
+  TTestNullableArrayObjectClass = class(TGenericParameters)
+  private
+    [JSONName('array_empty')]
+    [NullableArray(TTestObject,True)]
+    FTestNull: TTestArrayObjectArray;
+
+    [JSONName('array_empty_but_not_need_save')]
+    [NullableArray(TTestObject)]
+    FTestNullButNotNeedSave: TTestArrayObjectArray;
+
+    [JSONName('array_not_empty')]
+    [NullableArray(TTestObject)]
+    FTest: TTestArrayObjectArray;
+  public
+    constructor Create;
+    destructor Destroy; override;
+
+    function Equals(Obj: TObject): Boolean; override;
+    class function MakeTestArray: TTestArrayObjectArray;
+
+    class function AsJson: TJSONValue;
+
+    property TestNull: TTestArrayObjectArray read FTestNull;
+    property TestNullButNotNeedSave: TTestArrayObjectArray read FTestNullButNotNeedSave;
+    property Test: TTestArrayObjectArray read FTest;
+  end;
+
+  TTestIntegerObject = class
+  private
+    [JSONName('value')]
+    FValue: integer;
+  public
+    constructor Create(Value: integer);
+  end;
+  TTestIntegerObjectArray = array of TTestIntegerObject;
+
+  TTestArrayObjectClass = class(TGenericParameters)
+  private
+    [JSONName('array_empty')]
+    FEmptyArray: TTestIntegerObjectArray;
+
+    [JSONName('array_not_empty')]
+    FNotEmptyArray: TTestIntegerObjectArray;
+
+    [JSONName('nullable_array_empty')]
+    [NullableArray(TTestIntegerObject,True)]
+    FNullableEmptyArray: TTestIntegerObjectArray;
+
+    [JSONName('nullable_array_empty_but_not_need_save')]
+    [NullableArray(TTestIntegerObject)]
+    FNullableEmptyArrayNotForSaving: TTestIntegerObjectArray;
+
+    [JSONName('nullable_array_not_empty')]
+    [NullableArray(TTestIntegerObject)]
+    FNullableNotEmptyArray: TTestIntegerObjectArray;
+  public
+    constructor Create;
+
+    function Equals(Obj: TObject): Boolean; override;
+
+    class function AsJson: TJSONValue;
+  end;
+
   TTestSimpleObjectClass = class(TGenericParameters)
   private
     FIntValue: integer;
@@ -194,6 +260,8 @@ type
     procedure TestNullableDouble();
     procedure TestNullableObject();
     procedure TestSimpleObject();
+    procedure TestNullableArrayObject();
+    procedure TestArrayObject();
   end;
 
 implementation
@@ -267,6 +335,77 @@ begin
 end;
 
 { TTestUnmarshalNullable }
+
+procedure TTestUnmarshalNullable.TestArrayObject;
+var
+  Etalon: TTestArrayObjectClass;
+  Actual: TTestArrayObjectClass;
+  Obj: TObject;
+  JsonValue: TJSONValue;
+begin
+  JsonValue := TTestArrayObjectClass.AsJson;
+  try
+    Obj := TMarshalUnMarshal.FromJson(TTestArrayObjectClass, JsonValue);
+    try
+      CheckIs(Obj, TTestArrayObjectClass);
+
+      Actual := Obj as TTestArrayObjectClass;
+
+      Etalon := TTestArrayObjectClass.Create;
+      try
+        SetLength(Etalon.FNotEmptyArray, 3);
+        Etalon.FNotEmptyArray[0] := TTestIntegerObject.Create(1);
+        Etalon.FNotEmptyArray[1] := TTestIntegerObject.Create(2);
+        Etalon.FNotEmptyArray[2] := TTestIntegerObject.Create(3);
+
+        SetLength(Etalon.FNullableNotEmptyArray, 4);
+        Etalon.FNullableNotEmptyArray[0] := TTestIntegerObject.Create(8);
+        Etalon.FNullableNotEmptyArray[1] := TTestIntegerObject.Create(7);
+        Etalon.FNullableNotEmptyArray[2] := TTestIntegerObject.Create(6);
+        Etalon.FNullableNotEmptyArray[3] := TTestIntegerObject.Create(5);
+
+        CheckTrue(Etalon.Equals(Actual));
+      finally
+        FreeAndNil(Etalon);
+      end;
+    finally
+      FreeAndNil(Obj);
+    end;
+  finally
+    FreeAndNil(JsonValue);
+  end;
+end;
+
+procedure TTestUnmarshalNullable.TestNullableArrayObject;
+var
+  Etalon: TTestNullableArrayObjectClass;
+  Actual: TTestNullableArrayObjectClass;
+  Obj: TObject;
+  JsonValue: TJSONValue;
+begin
+  JsonValue := TTestNullableArrayObjectClass.AsJson;
+  try
+    Obj := TMarshalUnMarshal.FromJson(TTestNullableArrayObjectClass, JsonValue);
+    try
+      CheckIs(Obj, TTestNullableArrayObjectClass);
+
+      Actual := Obj as TTestNullableArrayObjectClass;
+
+      Etalon := TTestNullableArrayObjectClass.Create;
+      try
+        Etalon.FTest := TTestNullableArrayObjectClass.MakeTestArray;
+
+        CheckTrue(Etalon.Equals(Actual));
+      finally
+        FreeAndNil(Etalon);
+      end;
+    finally
+      FreeAndNil(Obj);
+    end;
+  finally
+    FreeAndNil(JsonValue);
+  end;
+end;
 
 procedure TTestUnmarshalNullable.TestNullableBoolean;
 var
@@ -543,9 +682,9 @@ end;
 
 constructor TTestNullableObjectClass.Create;
 begin
-    FTestNull := NullableObject.Null;
-    FTestNullButNotNeedSave := NullableObject.Null;
-    FTest := NullableObject.Null;
+  FTestNull := NullableObject.Null;
+  FTestNullButNotNeedSave := NullableObject.Null;
+  FTest := NullableObject.Null;
 end;
 
 destructor TTestNullableObjectClass.Destroy;
@@ -686,6 +825,221 @@ begin
     (FObjectValue.FBoolValue = Other.FObjectValue.FBoolValue) and
     (FObjectValue.FStringValue = Other.FObjectValue.FStringValue) and
     (FObjectValue.FDoubleValue = Other.FObjectValue.FDoubleValue);
+end;
+
+{ TTestNullableArrayObjectClass }
+
+class function TTestNullableArrayObjectClass.AsJson: TJSONValue;
+begin
+  Result := TJSONObject.ParseJSONValue(
+    '{"array_empty":[],' +
+    '"array_not_empty":[' +
+    '{"intValue":123,"boolValue":true,"stringValue":"321",' +
+    '"doubleValue":123.456,"arrayValue":[3,4,5],"nullableobject_null":null,' +
+    '"nullableobject_not_null":{"intValue":111111,"boolValue":false,' +
+    '"stringValue":"22222","doubleValue":789.123,"arrayValue":[8],' +
+    '"nullableobject_null":null,"nullableobject_not_null":null}}' +
+    ',' +
+    '{"intValue":756,"boolValue":true,"stringValue":"qwe",' +
+    '"doubleValue":573.5,"arrayValue":[2,1],"nullableobject_null":null,' +
+    '"nullableobject_not_null":{"intValue":85,"boolValue":true,' +
+    '"stringValue":"asd","doubleValue":147.16,"arrayValue":[1,5,7],' +
+    '"nullableobject_null":null,"nullableobject_not_null":null}}' +
+    ']}');
+end;
+
+constructor TTestNullableArrayObjectClass.Create;
+begin
+  SetLength(FTestNull, 0);
+  SetLength(FTestNullButNotNeedSave, 0);
+  SetLength(FTest, 0);
+end;
+
+destructor TTestNullableArrayObjectClass.Destroy;
+var
+  i: integer;
+begin
+  for i := Length(FTestNull) - 1 downto 0 do
+    FreeAndNil(FTestNull[i]);
+  for i := Length(FTestNullButNotNeedSave) - 1 downto 0 do
+    FreeAndNil(FTestNullButNotNeedSave[i]);
+  for i := Length(FTest) - 1 downto 0 do
+    FreeAndNil(FTest[i]);
+
+  inherited;
+end;
+
+function TTestNullableArrayObjectClass.Equals(Obj: TObject): Boolean;
+var
+  Other: TTestNullableArrayObjectClass;
+  i: integer;
+begin
+  Result := False;
+
+  if not (Obj is TTestNullableArrayObjectClass) then
+    Exit;
+
+  Other := TTestNullableArrayObjectClass(Obj);
+
+  Result :=
+    (Length(FTestNull) = Length(Other.FTestNull)) and
+    (Length(FTestNullButNotNeedSave) = Length(Other.FTestNullButNotNeedSave)) and
+    (Length(FTest) = Length(Other.FTest));
+
+  if not Result then
+    Exit;
+
+  Result := False;
+
+  for i := 0 to Length(FTestNull) - 1 do
+    if not FTestNull[i].Equals(Other.FTestNull[i]) then
+      Exit;
+
+  for i := 0 to Length(FTestNullButNotNeedSave) - 1 do
+    if not FTestNullButNotNeedSave[i].Equals(Other.FTestNullButNotNeedSave[i]) then
+      Exit;
+
+  for i := 0 to Length(FTest) - 1 do
+    if not FTest[i].Equals(Other.FTest[i]) then
+      Exit;
+
+  Result := True;
+end;
+
+class function TTestNullableArrayObjectClass.MakeTestArray(): TTestArrayObjectArray;
+var
+  Res: TTestObject;
+  SubObject: TTestObject;
+begin
+  SetLength(Result, 2);
+
+  Res := TTestObject.Create;
+  Res.FIntValue := 123;
+  Res.FBoolValue := True;
+  Res.FStringValue := '321';
+  Res.FDoubleValue := 123.456;
+  SetLength(Res.FArrayValue, 3);
+  Res.FArrayValue[0] := 3;
+  Res.FArrayValue[1] := 4;
+  Res.FArrayValue[2] := 5;
+
+  Res.FOptionalNullObject := NullableObject.Null;
+  Res.FNullObject := NullableObject.Null;
+  SubObject := TTestObject.Create;
+  SubObject.FIntValue := 111111;
+  SubObject.FBoolValue := False;
+  SubObject.FStringValue := '22222';
+  SubObject.FDoubleValue := 789.123;
+  SetLength(SubObject.FArrayValue, 1);
+  SubObject.FArrayValue[0] := 8;
+  SubObject.FOptionalNullObject := NullableObject.Null;
+  SubObject.FNullObject := NullableObject.Null;
+  SubObject.FNotNullObject := NullableObject.Null;
+  Res.FNotNullObject := SubObject;
+
+  Result[0] := Res;
+
+  Res := TTestObject.Create;
+  Res.FIntValue := 756;
+  Res.FBoolValue := True;
+  Res.FStringValue := 'qwe';
+  Res.FDoubleValue := 573.5;
+  SetLength(Res.FArrayValue, 2);
+  Res.FArrayValue[0] := 2;
+  Res.FArrayValue[1] := 1;
+
+  Res.FOptionalNullObject := NullableObject.Null;
+  Res.FNullObject := NullableObject.Null;
+  SubObject := TTestObject.Create;
+  SubObject.FIntValue := 85;
+  SubObject.FBoolValue := True;
+  SubObject.FStringValue := 'asd';
+  SubObject.FDoubleValue := 147.16;
+  SetLength(SubObject.FArrayValue, 3);
+  SubObject.FArrayValue[0] := 1;
+  SubObject.FArrayValue[1] := 5;
+  SubObject.FArrayValue[2] := 7;
+  SubObject.FOptionalNullObject := NullableObject.Null;
+  SubObject.FNullObject := NullableObject.Null;
+  SubObject.FNotNullObject := NullableObject.Null;
+  Res.FNotNullObject := SubObject;
+
+  Result[1] := Res;
+
+end;
+
+{ TTestArrayObjectClass }
+
+class function TTestArrayObjectClass.AsJson: TJSONValue;
+begin
+  Result := TJSONObject.ParseJSONValue(
+    '{"array_empty":[],' +
+    '"array_not_empty":[{"value":1},{"value":2},{"value":3}],' +
+    '"nullable_array_empty":[],' +
+    '"nullable_array_not_empty":[{"value":8},{"value":7},{"value":6},{"value":5}]}');
+end;
+
+constructor TTestArrayObjectClass.Create;
+begin
+  SetLength(FEmptyArray, 0);
+  SetLength(FNotEmptyArray, 0);
+  SetLength(FNullableEmptyArray, 0);
+  SetLength(FNullableEmptyArrayNotForSaving, 0);
+  SetLength(FNullableNotEmptyArray, 0);
+end;
+
+function TTestArrayObjectClass.Equals(Obj: TObject): Boolean;
+var
+  Other: TTestArrayObjectClass;
+  i: integer;
+begin
+  Result := False;
+
+  if not (Obj is TTestArrayObjectClass) then
+    Exit;
+
+  Other := TTestArrayObjectClass(Obj);
+
+  Result :=
+    (Length(FEmptyArray) = Length(Other.FEmptyArray)) and
+    (Length(FNotEmptyArray) = Length(Other.FNotEmptyArray)) and
+    (Length(FNullableEmptyArray) = Length(Other.FNullableEmptyArray)) and
+    (Length(FNullableEmptyArrayNotForSaving) = Length(Other.FNullableEmptyArrayNotForSaving)) and
+    (Length(FNullableNotEmptyArray) = Length(Other.FNullableNotEmptyArray));
+
+  if not Result then
+    Exit;
+
+  Result := False;
+
+  for i := 0 to Length(FEmptyArray) - 1 do
+    if (FEmptyArray[i].FValue <> Other.FEmptyArray[i].FValue) then
+      Exit;
+
+  for i := 0 to Length(FNotEmptyArray) - 1 do
+    if (FNotEmptyArray[i].FValue <> Other.FNotEmptyArray[i].FValue) then
+      Exit;
+
+  for i := 0 to Length(FNullableEmptyArray) - 1 do
+    if (FNullableEmptyArray[i].FValue <> Other.FNullableEmptyArray[i].FValue) then
+      Exit;
+
+  for i := 0 to Length(FNullableEmptyArrayNotForSaving) - 1 do
+    if (FNullableEmptyArrayNotForSaving[i].FValue <> Other.FNullableEmptyArrayNotForSaving[i].FValue) then
+      Exit;
+
+        for i := 0 to Length(FNullableNotEmptyArray) - 1 do
+    if (FNullableNotEmptyArray[i].FValue <> Other.FNullableNotEmptyArray[i].FValue) then
+      Exit;
+
+  Result := True;
+end;
+
+{ TTestIntegerObject }
+
+constructor TTestIntegerObject.Create(Value: integer);
+begin
+  FValue := Value;
 end;
 
 initialization

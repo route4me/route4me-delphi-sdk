@@ -131,6 +131,9 @@ implementation
 function SortGeocodings(Geocodings: TGeocodingArray): TGeocodingArray;
 begin
   SetLength(Result, Length(Geocodings));
+  if Length(Geocodings) = 0 then
+    Exit;
+
   TArray.Copy<TGeocoding>(Geocodings, Result, Length(Geocodings));
   TArray.Sort<TGeocoding>(Result, TComparer<TGeocoding>.Construct(
     function (const Geocoding1, Geocoding2: TGeocoding): Integer
@@ -211,6 +214,8 @@ begin
 
   if not Result then
     Exit;
+
+  Result := False;
 
   if (Length(FBoundaryBox) <> Length(Other.FBoundaryBox)) or
     (Length(FCurbsideCoordinates) <> Length(Other.FCurbsideCoordinates)) then

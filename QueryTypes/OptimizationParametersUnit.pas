@@ -29,7 +29,7 @@ type
     [JSONNameAttribute('addresses')]
 //    [NullableObject(TAddressesListClass)]
 //    [Nullable]
-    [NullableArray]
+    [NullableArray(TAddress)]
     FAddresses: TAddressesArray;//NullableObject;//TAddressesArray;
 
     [JSONNameAttribute('directions')]
@@ -184,6 +184,8 @@ begin
 
   if (not Result) then
     Exit;
+
+  Result := False;
 
   if (Length(FAddresses) <> Length(Other.Addresses)) then
     Exit;

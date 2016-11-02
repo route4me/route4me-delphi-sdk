@@ -18,6 +18,9 @@ implementation
 function SortStringArray(Strings: TStringArray): TStringArray;
 begin
   SetLength(Result, Length(Strings));
+  if Length(Strings) = 0 then
+    Exit;
+
   TArray.Copy<String>(Strings, Result, Length(Strings));
   TArray.Sort<String>(Result, TComparer<String>.Construct(
     function (const String1, String2: String): Integer

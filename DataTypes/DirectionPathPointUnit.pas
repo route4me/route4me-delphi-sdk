@@ -47,6 +47,9 @@ implementation
 function SortDirectionPathPoints(DirectionPathPoints: TDirectionPathPointArray): TDirectionPathPointArray;
 begin
   SetLength(Result, Length(DirectionPathPoints));
+  if Length(DirectionPathPoints) = 0 then
+    Exit;
+
   TArray.Copy<TDirectionPathPoint>(DirectionPathPoints, Result, Length(DirectionPathPoints));
   TArray.Sort<TDirectionPathPoint>(Result, TComparer<TDirectionPathPoint>.Construct(
     function (const Direction1, Direction2: TDirectionPathPoint): Integer

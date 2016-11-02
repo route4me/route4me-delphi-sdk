@@ -23,7 +23,7 @@ implementation
 
 { TMarshalUnMarshal }
 
-uses JSONNullableConverterUnit, JSONNullableAttributeUnit,
+uses JSONNullableMarshalConverterUnit, JSONNullableAttributeUnit,
   NullableInterceptorUnit;
 
 class function TMarshalUnMarshal.FromJson(AClass: TClass;
@@ -76,6 +76,19 @@ var
             end;
         end;
   end;
+  function IsNullabledArrayAttribute(Name: String): boolean;
+  var
+    RttiField: TRttiField;
+    Attr, Attr1: TCustomAttribute;
+  begin
+    Result := False;
+    for RttiField in RttiType.GetFields do
+      for Attr in RttiField.GetAttributes do
+        if (Attr is JSONNameAttribute) and (JSONNameAttribute(Attr).Name = Name) then
+          for Attr1 in RttiField.GetAttributes do
+            if (Attr1 is NullableArrayAttribute) then
+              Exit(True);
+  end;
 var
   i, j: integer;
   Name: String;
@@ -86,6 +99,9 @@ var
   ArrayItemObject: TJSONObject;
   ItemTypeInfo: Pointer;
   elementType: TRttiType;
+  ArraysItems: TArray<TJSONString>;
+  JSONArray: TJSONArray;
+  IsNullabledArrayAttr: boolean;
 begin
   RttiType := ctx.GetType(TypeInfo);
   for i := JsonObject.Count - 1 downto 0 do
@@ -127,18 +143,37 @@ begin
       JSONValue := JsonObject.Pairs[i].JsonValue;
       if (JSONValue is TJSONArray) then
       begin
+        JSONArray := TJSONArray(JSONValue);
         if RttiField.FieldType is TRttiArrayType then
           elementType := TRttiArrayType(RttiField.FieldType).elementType
         else
           elementType := TRttiDynamicArrayType(RttiField.FieldType).elementType;
         ItemTypeInfo := elementType.Handle;
 
-        for j := 0 to TJSONArray(JSONValue).Count - 1 do
-          if TJSONArray(JSONValue).Items[j] is TJSONObject then
+        SetLength(ArraysItems, 0);
+        IsNullabledArrayAttr := IsNullabledArrayAttribute(Name);
+        for j := JSONArray.Count - 1 downto 0 do
+          if JSONArray.Items[j] is TJSONObject then
           begin
-            ArrayItemObject := TJSONObject(TJSONArray(JSONValue).Items[j]);
-            InitIntermediateObject(ItemTypeInfo, ArrayItemObject);
+            ArrayItemObject := TJSONObject(JSONArray.Items[j]);
+
+            if IsNullabledArrayAttr then
+            begin
+              ObjectAsString := ArrayItemObject.ToString;
+              JSONArray.Remove(j);
+
+              SetLength(ArraysItems, Length(ArraysItems) + 1);
+              ArraysItems[High(ArraysItems)] := TJSONString.Create(ObjectAsString);
+  //            JSONArray.AddElement(TJSONString.Create(ObjectAsString));
+            end
+            else
+              InitIntermediateObject(ItemTypeInfo, ArrayItemObject);
           end;
+
+        if IsNullabledArrayAttr then
+          for j := Length(ArraysItems) - 1 downto 0 do
+            JSONArray.AddElement(ArraysItems[j]);
+
       end;
       if (JSONValue is TJSONObject) then
       begin

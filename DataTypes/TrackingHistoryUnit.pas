@@ -83,6 +83,9 @@ implementation
 function SortTrackingHistory(TrackingHistories: TTrackingHistoryArray): TTrackingHistoryArray;
 begin
   SetLength(Result, Length(TrackingHistories));
+  if Length(TrackingHistories) = 0 then
+    Exit;
+
   TArray.Copy<TTrackingHistory>(TrackingHistories, Result, Length(TrackingHistories));
   TArray.Sort<TTrackingHistory>(Result, TComparer<TTrackingHistory>.Construct(
     function (const History1, History2: TTrackingHistory): Integer

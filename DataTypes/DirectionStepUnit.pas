@@ -114,6 +114,9 @@ implementation
 function SortDirectionSteps(DirectionSteps: TDirectionStepArray): TDirectionStepArray;
 begin
   SetLength(Result, Length(DirectionSteps));
+  if Length(DirectionSteps) = 0 then
+    Exit;
+
   TArray.Copy<TDirectionStep>(DirectionSteps, Result, Length(DirectionSteps));
   TArray.Sort<TDirectionStep>(Result, TComparer<TDirectionStep>.Construct(
     function (const DirectionStep1, DirectionStep2: TDirectionStep): Integer

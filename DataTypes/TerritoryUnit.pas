@@ -82,6 +82,8 @@ begin
   if (not Result) then
     Exit;
 
+  Result := False;
+
   if (Length(Data) <> Length(Other.Data)) then
     Exit;
 

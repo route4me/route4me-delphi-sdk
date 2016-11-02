@@ -66,7 +66,7 @@ type
     IsNullFieldCaption = 'FIsNull';
     ValueFieldCaption = 'FValue';
   var
-    function GetObjectValue(s: String; Clazz: TClass; UnMarshal: TInternalJSONUnMarshal): TValue;
+    function GetObjectValue(s: String; Clazz: TClass): TValue;
   public
     /// <summary>Converters that transforms a field value into an
     /// intermediate object</summary>
@@ -236,15 +236,13 @@ end;
 
 { TNullableNumberAndStringInterceptor }
 
-function TNullableInterceptor.GetObjectValue(s: String;
-  Clazz: TClass; UnMarshal: TInternalJSONUnMarshal): TValue;
+function TNullableInterceptor.GetObjectValue(s: String; Clazz: TClass): TValue;
 var
   Obj: TObject;
   JsonValue: TJsonValue;
 begin
   JsonValue := TJsonObject.ParseJSONValue(s);
   try
-    //Obj := UnMarshal.CreateObject(Clazz, JsonValue as TJsonObject);
     Obj := TMarshalUnMarshal.FromJson(Clazz, JsonValue);
     Result := TValue.From(Obj);
   finally
@@ -355,7 +353,7 @@ begin
           Value := RttiMethodObject.Invoke(Clazz, [Arg]);
         end
         else
-          Value := GetObjectValue(Arg, Clazz, InternalUnMarshal);
+          Value := GetObjectValue(Arg, Clazz);
       end
       else
       begin

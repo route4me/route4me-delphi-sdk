@@ -215,6 +215,9 @@ uses
 function SortRoutes(Routes: TDataObjectRouteArray): TDataObjectRouteArray;
 begin
   SetLength(Result, Length(Routes));
+  if Length(Routes) = 0 then
+    Exit;
+
   TArray.Copy<TDataObjectRoute>(Routes, Result, Length(Routes));
   TArray.Sort<TDataObjectRoute>(Result, TComparer<TDataObjectRoute>.Construct(
     function (const Route1, Route2: TDataObjectRoute): Integer
@@ -285,6 +288,8 @@ begin
 
   if (not Result) then
     Exit;
+
+  Result := False;
 
   if (Length(UserErrors) <> Length(Other.UserErrors)) or
     (Length(Addresses) <> Length(Other.Addresses)) or

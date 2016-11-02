@@ -26,9 +26,11 @@ type
 
   NullableArrayAttribute = class(JsonReflectAttribute)
   private
+    FClass: TClass;
     FIsRequired: boolean;
   public
-    constructor Create(IsRequired: boolean = False); reintroduce;
+    constructor Create(Clazz: TClass; IsRequired: boolean = False); reintroduce;
+    property Clazz: TClass read FClass;
   end;
 
   NullableObjectAttribute = class(NullableAttribute)
@@ -72,10 +74,12 @@ end;
 
 { NullableArrayAttribute }
 
-constructor NullableArrayAttribute.Create(IsRequired: boolean);
+constructor NullableArrayAttribute.Create(Clazz: TClass; IsRequired: boolean);
 begin
-  FIsRequired := IsRequired;
   Inherited Create(ctObject, rtStrings, TNullableArrayInterceptor);
+
+  FIsRequired := IsRequired;
+  FClass := Clazz;
 end;
 
 end.
