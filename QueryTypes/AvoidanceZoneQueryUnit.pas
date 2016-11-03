@@ -3,8 +3,8 @@ unit AvoidanceZoneQueryUnit;
 interface
 
 uses
-  REST.Json.Types, NullableBasicTypesUnit,
-  GenericParametersUnit, HttpQueryMemberAttributeUnit, JSONNullableAttributeUnit;
+  HttpQueryMemberAttributeUnit, JSONNullableAttributeUnit,
+  NullableBasicTypesUnit, GenericParametersUnit;
 
 type
   TAvoidanceZoneQuery = class(TGenericParameters)

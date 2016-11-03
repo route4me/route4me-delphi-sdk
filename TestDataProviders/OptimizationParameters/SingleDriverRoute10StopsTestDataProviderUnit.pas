@@ -59,7 +59,7 @@ var
 begin
   inherited;
 
-  RouteParameters := OptimizationParameters.Parameters;
+  RouteParameters := OptimizationParameters.Parameters.Value as TRouteParameters;
   RouteParameters.IsUpload := False;
   RouteParameters.RT := False;
   RouteParameters.DisableOptimization := False;

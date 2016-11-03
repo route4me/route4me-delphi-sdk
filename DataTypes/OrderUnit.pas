@@ -9,6 +9,12 @@ uses
   JSONDictionaryIntermediateObjectUnit;
 
 type
+  /// <summary>
+  ///  Json schema for an Order class, which is used for keeping client order information at certain address.
+  /// </summary>
+  /// <remarks>
+  ///  https://github.com/route4me/json-schemas/blob/master/Order.dtd
+  /// </remarks>
   TOrder = class(TGenericParameters)
   private
     [JSONName('Order_id')]
@@ -89,7 +95,7 @@ type
     /// </remarks>
     constructor Create; overload; override;
     constructor Create(Address: String; AddressAlias: String;
-      Latitude, Longitude: double); overload;
+      Latitude, Longitude: double); reintroduce; overload;
 
     function Equals(Obj: TObject): Boolean; override;
 
@@ -191,7 +197,6 @@ type
   end;
 
   TOrderArray = TArray<TOrder>;
-//  TOrderList = TList<TOrder>;
 
 implementation
 

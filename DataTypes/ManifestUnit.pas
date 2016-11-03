@@ -9,8 +9,11 @@ uses
 
 type
   /// <summary>
-  /// The manifest contains values derived from other values
+  ///  The manifest contains values derived from other values
   /// </summary>
+  /// <remarks>
+  ///  https://github.com/route4me/json-schemas/blob/master/Address.dtd
+  /// </remarks>
   TManifest = class
   private
     [JSONName('running_service_time')]

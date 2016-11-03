@@ -68,14 +68,15 @@ type
     FRecomputeDirections: NullableBoolean;
 
     [JSONName('parameters')]
-    [Nullable]
-    FParameters: NullableObject; //TRouteParameters;
+    [NullableObject(TRouteParameters)]
+    FParameters: NullableObject;
   public
     /// <remarks>
     ///  Constructor with 0-arguments must be and be public.
     ///  For JSON-deserialization.
     /// </remarks>
     constructor Create; overload; override;
+    destructor Destroy; override;
 
     /// <summary>
     /// Route Identifier
@@ -143,7 +144,7 @@ type
     /// (After a PUT there is no guarantee that the route_destination_id values are preserved!
     /// It may create copies resulting in new destination IDs, especially when dealing with multiple depots.)
     /// </summary>
-    property Parameters: NullableObject {TRouteParameters} read FParameters write FParameters;
+    property Parameters: NullableObject read FParameters write FParameters;
   end;
 
 implementation
@@ -166,6 +167,13 @@ begin
   FReOptimize := NullableBoolean.Null;
   FRecomputeDirections := NullableBoolean.Null;
   FParameters := NullableObject.Null;
+end;
+
+destructor TRouteParametersQuery.Destroy;
+begin
+  FParameters.Free;
+
+  inherited;
 end;
 
 end.

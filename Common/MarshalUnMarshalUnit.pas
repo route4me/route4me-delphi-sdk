@@ -164,7 +164,6 @@ begin
 
               SetLength(ArraysItems, Length(ArraysItems) + 1);
               ArraysItems[High(ArraysItems)] := TJSONString.Create(ObjectAsString);
-  //            JSONArray.AddElement(TJSONString.Create(ObjectAsString));
             end
             else
               InitIntermediateObject(ItemTypeInfo, ArrayItemObject);
@@ -194,6 +193,7 @@ var
   Value: TJSONValue;
 begin
   Marshal := TJSONMarshal.Create(TJSONNullableConverter.Create);
+
   try
     Value := Marshal.Marshal(GenericParameters);
     try

@@ -4,13 +4,18 @@ interface
 
 uses
   SysUtils,
-  BaseOptimizationParametersProviderUnit, AddressUnit, RouteParametersUnit;
+  BaseOptimizationParametersProviderUnit, AddressUnit, RouteParametersUnit,
+  OptimizationParametersUnit;
 
 type
   TSingleDriverRoundTripTestDataProvider = class(TBaseOptimizationParametersProvider)
   protected
     function MakeAddresses(): TArray<TAddress>; override;
     function MakeRouteParameters(): TRouteParameters; override;
+    /// <summary>
+    ///  After response some fields are changed from request.
+    /// </summary>
+    procedure CorrectForResponse(OptimizationParameters: TOptimizationParameters); override;
   public
 
   end;
@@ -22,6 +27,13 @@ implementation
 uses
   DateUtils,
   EnumsUnit, UtilsUnit;
+
+procedure TSingleDriverRoundTripTestDataProvider.CorrectForResponse(
+  OptimizationParameters: TOptimizationParameters);
+begin
+  inherited;
+
+end;
 
 function TSingleDriverRoundTripTestDataProvider.MakeAddresses: TArray<TAddress>;
 var

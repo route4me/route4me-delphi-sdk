@@ -22,15 +22,12 @@ type
     FReOptimize: NullableBoolean;
 
     [JSONNameAttribute('parameters')]
-//    [NullableObject(TRouteParameters)]
-    FParameters: TRouteParameters;
-//    FParameters: NullableObject; todo: Если в NullableObject завернуть класс с Nullable-полями, то он не десериализуется
+    [NullableObject(TRouteParameters)]
+    FParameters: NullableObject;
 
     [JSONNameAttribute('addresses')]
-//    [NullableObject(TAddressesListClass)]
-//    [Nullable]
     [NullableArray(TAddress)]
-    FAddresses: TAddressesArray;//NullableObject;//TAddressesArray;
+    FAddresses: TAddressesArray;
 
     [JSONNameAttribute('directions')]
     [Nullable]
@@ -48,7 +45,6 @@ type
     [Nullable]
     FOptimizedCallbackUrl: NullableString;
 
-//    function GetAddresses: TAddressesList;
     function GetAddress(AddressString: String; Addresses: TAddressesArray): TAddress;
 
     function GetFormatEnum: TOptimizationParametersFormat;
@@ -74,12 +70,11 @@ type
     /// <summary>
     ///  Route Parameters. POST data
     /// </summary>
-    property Parameters: {NullableObject}TRouteParameters read FParameters write FParameters;
+    property Parameters: NullableObject read FParameters write FParameters;
 
     /// <summary>
     ///  Route Addresses. POST data
     /// </summary>
-//    property Addresses: TAddressesList read GetAddresses;
     property Addresses: TAddressesArray read FAddresses;
     procedure AddAddress(Address: TAddress);
 
@@ -119,9 +114,6 @@ implementation
 
 procedure TOptimizationParameters.AddAddress(Address: TAddress);
 begin
-{  if (FAddresses.IsNull) then
-    FAddresses := TAddressesList.Create();
-  (FAddresses.Value as TAddressesList).Add(Address);}
   SetLength(FAddresses, Length(FAddresses) + 1);
   FAddresses[High(FAddresses)] := Address;
 end;
@@ -136,24 +128,19 @@ begin
   FFormat := NullableString.Null;
   FRoutePathOutput := NullableString.Null;
   FOptimizedCallbackUrl := NullableString.Null;
-//  FAddresses := NullableObject.Null;
   SetLength(FAddresses, 0);
 
-  FParameters := nil;
-//  FParameters := NullableObject.Null;
+  FParameters := NullableObject.Null;
 end;
 
 destructor TOptimizationParameters.Destroy;
 var
   i: integer;
 begin
-{  for i := Addresses.Count - 1 downto 0 do
-    Addresses[i].Free;
-  FAddresses.Free;}
   for i := Length(FAddresses) - 1 downto 0 do
-    FAddresses[i].Free;
+    FreeAndNil(FAddresses[i]);
 
-  FreeAndNil(FParameters);
+  FParameters.Free;
 
   inherited;
 end;
@@ -161,9 +148,6 @@ end;
 function TOptimizationParameters.Equals(Obj: TObject): Boolean;
 var
   Other: TOptimizationParameters;
-  ParametersEquals: boolean;
-//  SortedAddresses1, SortedAddresses2: TAddressesArray;
-//  i: integer;
   Address, OtherAddress: TAddress;
   AddressEquals: boolean;
 begin
@@ -202,42 +186,8 @@ begin
       Break;
   end;
 
-{  if (FAddresses.IsNull and Other.FAddresses.IsNotNull) or
-    (FAddresses.IsNotNull and Other.FAddresses.IsNull) then
-    Exit;
-
-  if (Addresses <> nil) then
-  begin
-    if (Addresses.Count <> Other.Addresses.Count) then
-      Exit;
-
-    SortedAddresses1 := AddressUnit.SortAddresses(Addresses.ToArray);
-    SortedAddresses2 := AddressUnit.SortAddresses(Other.Addresses.ToArray);
-    for i := 0 to Length(SortedAddresses1) - 1 do
-      if (not SortedAddresses1[i].Equals(SortedAddresses2[i])) then
-        Exit;
-  end;}
-
-//  ParametersEquals := (FParameters = Other.Parameters);
-  if ((FParameters <> nil) and (Other.Parameters = nil)) or
-    ((FParameters = nil) and (Other.Parameters <> nil)) then
-    Exit;
-
-  if ((FParameters <> nil) and (Other.Parameters <> nil)) then
-    ParametersEquals := FParameters.Equals(Other.Parameters)
-  else
-    ParametersEquals := True;
-
-  Result := ParametersEquals;
+  Result := (FParameters = Other.Parameters);
 end;
-
-{function TOptimizationParameters.GetAddresses: TAddressesList;
-begin
-  if FAddresses.IsNull then
-    Result := nil
-  else
-    Result := FAddresses.Value as TAddressesList;
-end;}
 
 function TOptimizationParameters.GetAddress(AddressString: String;
   Addresses: TAddressesArray): TAddress;
@@ -254,24 +204,22 @@ function TOptimizationParameters.GetFormatEnum: TOptimizationParametersFormat;
 var
   FormatEnum: TOptimizationParametersFormat;
 begin
-  if FFormat.IsNull then
-    Exit(TOptimizationParametersFormat.opUndefined);
-
-  for FormatEnum := Low(TOptimizationParametersFormat) to High(TOptimizationParametersFormat) do
-    if (FFormat = TOptimizationParametersFormatDescription[FormatEnum]) then
-      Exit(FormatEnum);
+  Result := TOptimizationParametersFormat.opUndefined;
+  if FFormat.IsNotNull then
+    for FormatEnum := Low(TOptimizationParametersFormat) to High(TOptimizationParametersFormat) do
+      if (FFormat = TOptimizationParametersFormatDescription[FormatEnum]) then
+        Exit(FormatEnum);
 end;
 
 function TOptimizationParameters.GetRoutePathOutput: TRoutePathOutput;
 var
   RoutePathOutput: TRoutePathOutput;
 begin
-  if FRoutePathOutput.IsNull then
-    Exit(TRoutePathOutput.rpoUndefined);
-
-  for RoutePathOutput := Low(TRoutePathOutput) to High(TRoutePathOutput) do
-    if (FRoutePathOutput = TRoutePathOutputDescription[RoutePathOutput]) then
-      Exit(RoutePathOutput);
+  Result := TRoutePathOutput.rpoUndefined;
+  if FRoutePathOutput.IsNotNull then
+    for RoutePathOutput := Low(TRoutePathOutput) to High(TRoutePathOutput) do
+      if (FRoutePathOutput = TRoutePathOutputDescription[RoutePathOutput]) then
+        Exit(RoutePathOutput);
 end;
 
 procedure TOptimizationParameters.SetFormatEnum(

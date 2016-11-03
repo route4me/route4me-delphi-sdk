@@ -3,11 +3,17 @@ unit AvoidanceZoneUnit;
 interface
 
 uses
-  System.Generics.Collections,
-  NullableBasicTypesUnit, JSONNullableAttributeUnit,
+  REST.Json.Types, System.Generics.Collections,
+  JSONNullableAttributeUnit, NullableBasicTypesUnit,
   GenericParametersUnit, HttpQueryMemberAttributeUnit, TerritoryUnit;
 
 type
+  /// <summary>
+  ///  Json schema for an Avoidance Zone clas, which is used for defining different type avoidance zones.
+  /// </summary>
+  /// <remarks>
+  ///  https://github.com/route4me/json-schemas/blob/master/Avoidance_zone.dtd
+  /// </remarks>
   TAvoidanceZone = class(TGenericParameters)
   private
     [JSONNameAttribute('territory_id')]

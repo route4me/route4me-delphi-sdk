@@ -3,13 +3,17 @@ unit AddressNoteUnit;
 interface
 
 uses
-  REST.Json.Types, System.Generics.Collections, Classes, SysUtils,
-  Generics.Defaults, JSONNullableAttributeUnit,
-  NullableBasicTypesUnit, GenericParametersUnit,
+  REST.Json.Types, System.Generics.Collections, Generics.Defaults,
+  JSONNullableAttributeUnit, NullableBasicTypesUnit, GenericParametersUnit,
   EnumsUnit;
 
 type
-
+  /// <summary>
+  ///  Address Note
+  /// </summary>
+  /// <remarks>
+  ///  https://github.com/route4me/json-schemas/blob/master/note.dtd
+  /// </remarks>
   TAddressNote = class(TGenericParameters)
   private
     [JSONName('note_id')]
@@ -142,8 +146,6 @@ type
   end;
 
   TAddressNoteArray = TArray<TAddressNote>;
-  TAddressNoteList = TList<TAddressNote>;
-//  TAddressNoteListClass = class(TAddressNoteList);
 
 function SortAddressNotes(AddressNotes: TAddressNoteArray): TAddressNoteArray;
 
@@ -216,24 +218,22 @@ function TAddressNote.GetDeviceType: TDeviceType;
 var
   DeviceType: TDeviceType;
 begin
-  if FDeviceType.IsNull then
-    Exit(TDeviceType.UnknownDevice);
-
-  for DeviceType := Low(TDeviceType) to High(TDeviceType) do
-    if (FDeviceType = TDeviceTypeDescription[DeviceType]) then
-      Exit(DeviceType);
+  Result := TDeviceType.UnknownDevice;
+  if FDeviceType.IsNotNull then
+    for DeviceType := Low(TDeviceType) to High(TDeviceType) do
+      if (FDeviceType = TDeviceTypeDescription[DeviceType]) then
+        Exit(DeviceType);
 end;
 
 function TAddressNote.GetUploadType: TUploadType;
 var
   UploadType: TUploadType;
 begin
-  if FUploadType.IsNull then
-    Exit(TUploadType.UnknownUploadType);
-
-  for UploadType := Low(TUploadType) to High(TUploadType) do
-    if (FUploadType = TUploadTypeDescription[UploadType]) then
-      Exit(UploadType);
+  Result := TUploadType.UnknownUploadType;
+  if FUploadType.IsNotNull then
+    for UploadType := Low(TUploadType) to High(TUploadType) do
+      if (FUploadType = TUploadTypeDescription[UploadType]) then
+        Exit(UploadType);
 end;
 
 procedure TAddressNote.SetDeviceType(const Value: TDeviceType);

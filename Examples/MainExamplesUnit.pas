@@ -105,7 +105,8 @@ begin
 
         if routeIdToMoveTo.IsNotNull and routeDestinationIdToMove.IsNotNull and
           AfterDestinationIdToMoveAfter.IsNotNull then
-          Examples.MoveDestinationToRoute(RouteIdToMoveTo, RouteDestinationIdToMove, AfterDestinationIdToMoveAfter) // todo: {"success":false,"error":"Missing required POST parameters (route_destination_id, to_route_id)"}
+          // todo: {"success":false,"error":"Missing required POST parameters (route_destination_id, to_route_id)"}
+          Examples.MoveDestinationToRoute(RouteIdToMoveTo, RouteDestinationIdToMove, AfterDestinationIdToMoveAfter)
         else
           WriteLn(Format(
             'MoveDestinationToRoute not called. routeDestinationId = %d, afterDestinationId = %d.',

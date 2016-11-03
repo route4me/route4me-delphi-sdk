@@ -11,7 +11,10 @@ type
   private
     FRoute4MeManager: IUnknown; //IRoute4MeManager;
   public
-    constructor Create(Connection: IConnection; Route4MeManager: IUnknown{IRoute4MeManager});
+    /// <remarks>
+    ///  Route4MeManager it must be IRoute4MeManager
+    /// <remarks>
+    constructor Create(Connection: IConnection; Route4MeManager: IUnknown);
 
     function Get(NoteParameters: TNoteParameters;
       out ErrorString: String): TAddressNoteArray;
@@ -74,7 +77,7 @@ begin
 end;
 
 constructor TAddressNoteActions.Create(Connection: IConnection;
-  Route4MeManager: IUnknown{IRoute4MeManager});
+  Route4MeManager: IUnknown);
 begin
   Inherited Create(Connection);
   FRoute4MeManager := Route4MeManager;

@@ -8,6 +8,12 @@ uses
   NullableBasicTypesUnit;
 
 type
+  /// <summary>
+  ///  Links
+  /// </summary>
+  /// <remarks>
+  ///  https://github.com/route4me/json-schemas/blob/master/Links.dtd
+  /// </remarks>
   TLinks = class
   private
     [JSONName('route')]

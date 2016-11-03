@@ -3,14 +3,16 @@ unit UserUnit;
 interface
 
 uses
-  SysUtils, System.Generics.Collections,
-  REST.Json.Types, JSONNullableAttributeUnit,
-  NullableBasicTypesUnit, GenericParametersUnit;
+  REST.Json.Types, System.Generics.Collections, SysUtils,
+  JSONNullableAttributeUnit,
+  NullableBasicTypesUnit, GenericParametersUnit, EnumsUnit;
 
 type
-  // todo: привести в соответствии схеме
+  /// <summary>
+  ///  Response json schema for the retrieved member's object
+  /// </summary>
   /// <remarks>
-  ///  https://github.com/route4me/json-schemas/blob/master/User_v4_response.dtd
+  ///  https://github.com/route4me/json-schemas/blob/master/Member_response.dtd
   /// </remarks>
   TUser = class(TGenericParameters)
   private
@@ -49,6 +51,17 @@ type
     [JSONName('show_superuser_addresses')]
     [Nullable]
     FShowSuperuserAddresses: NullableBoolean;
+
+    [JSONName('api_key')]
+    [Nullable]
+    FApiKey: NullableString;
+
+    [JSONName('hashed_member_id')]
+    [Nullable]
+    FHashedMemberId: NullableString;
+
+    function GetMemberType: TMemberType;
+    procedure SetMemberType(const Value: TMemberType);
   public
     /// <remarks>
     ///  Constructor with 0-arguments must be and be public.
@@ -59,49 +72,59 @@ type
     function Equals(Obj: TObject): Boolean; override;
 
     /// <summary>
-    ///  The first name of the user
+    ///  A first name of the member
     /// </summary>
     property FirstName: NullableString read FFirstName write FFirstName;
 
     /// <summary>
-    ///  The last name of the user
+    ///  A last name of the member
     /// </summary>
     property LastName: NullableString read FLastName write FLastName;
 
     /// <summary>
-    ///  E-mail address of the user that was used for website registration
+    ///  An email of the member
     /// </summary>
     property Email: NullableString read FEmail write FEmail;
 
     /// <summary>
-    ///  A phone number of the user
+    ///  A phone number of the member
     /// </summary>
     property PhoneNumber: NullableString read FPhoneNumber write FPhoneNumber;
 
     /// <summary>
-    ///  Member ID
+    ///  An unique ID of the member
     /// </summary>
     property MemberId: NullableInteger read FMemberId write FMemberId;
 
     /// <summary>
-    ///  a
+    ///  Account type ID of the member
     /// </summary>
     property AccountTypeId: NullableInteger read FAccountTypeId write FAccountTypeId;
 
     /// <summary>
-    ///  a
+    ///  A type of the member
     /// </summary>
-    property MemberType: NullableString read FMemberType write FMemberType;
+    property MemberType: TMemberType read GetMemberType write SetMemberType;
 
     /// <summary>
-    ///  a
+    ///  True if value is '1'
     /// </summary>
     property ReadonlyUser: NullableBoolean read FReadonlyUser write FReadonlyUser;
 
     /// <summary>
-    ///  a
+    ///  Show superuser addresses
     /// </summary>
     property ShowSuperuserAddresses: NullableBoolean read FShowSuperuserAddresses write FShowSuperuserAddresses;
+
+    /// <summary>
+    ///  Api key of the user
+    /// </summary>
+    property ApiKey: NullableString read FApiKey write FApiKey;
+
+    /// <summary>
+    ///  Hashed member ID string
+    /// </summary>
+    property HashedMemberId: NullableString read FHashedMemberId write FHashedMemberId;
   end;
 
   TUserList = TList<TUser>;
@@ -149,6 +172,22 @@ begin
     (FFirstName = Other.FFirstName) and
     (FLastName = Other.FLastName) and
     (FPhoneNumber = Other.FPhoneNumber);
+end;
+
+function TUser.GetMemberType: TMemberType;
+var
+  MemberType: TMemberType;
+begin
+  Result := TMemberType.mtUnknown;
+  if FMemberType.IsNotNull then
+    for MemberType := Low(TMemberType) to High(TMemberType) do
+      if (FMemberType = TMemberTypeDescription[MemberType]) then
+        Exit(MemberType);
+end;
+
+procedure TUser.SetMemberType(const Value: TMemberType);
+begin
+  FMemberType := TMemberTypeDescription[Value];
 end;
 
 end.

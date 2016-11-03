@@ -3,8 +3,8 @@ unit NoteParametersUnit;
 interface
 
 uses
-  NullableBasicTypesUnit,
-  GenericParametersUnit, HttpQueryMemberAttributeUnit, JSONNullableAttributeUnit;
+  HttpQueryMemberAttributeUnit, JSONNullableAttributeUnit,
+  NullableBasicTypesUnit, GenericParametersUnit;
 
 type
   TNoteParameters = class(TGenericParameters)

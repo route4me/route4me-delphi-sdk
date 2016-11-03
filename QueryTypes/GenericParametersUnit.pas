@@ -3,8 +3,8 @@ unit GenericParametersUnit;
 interface
 
 uses
-  Classes, SysUtils, Rtti, System.Generics.Collections, System.JSON,
   REST.Json.Types, HttpQueryMemberAttributeUnit, JSONNullableAttributeUnit,
+  SysUtils, Rtti, System.JSON,
   CommonTypesUnit;
 
 type
@@ -62,9 +62,7 @@ end;
 
 procedure TGenericParameters.ReplaceParameter(Key, Value: String);
 begin
-
   FParametersCollection.Add(TStringPair.Create(Key, Value));
-
 end;
 
 function TGenericParameters.Serialize(ApiKey: String): TListStringPair;
@@ -148,15 +146,9 @@ begin
         Continue;
 
       if (IsNullableField(Field, IsRequired)) then
-      begin
-        Value := GetNullableFieldValue(Field);
-{        if Value.IsEmpty then
-          Continue;}
-      end
+        Value := GetNullableFieldValue(Field)
       else
-      begin
         Value := Field.GetValue(Self);
-      end;
 
       FieldName := Attr.Name;
 
@@ -166,8 +158,6 @@ begin
           FieldValue := Attr.DefaultValue
         else
           Continue;
-
-//        FieldValue := 'null';
       end
       else
       begin

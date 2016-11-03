@@ -115,6 +115,9 @@ type
       [JSONName('nullableobject_not_null')]
       [NullableObject(TTestObject,True)]
       FNotNullObject: NullableObject;
+    public
+      destructor Destroy; override;
+
     end;
   var
     [JSONName('object_null')]
@@ -264,7 +267,9 @@ end;
 
 destructor TTestNullableObjectClass.Destroy;
 begin
-  FreeAndNil(FTest);
+  FTestNull.Free;
+  FTestNullButNotNeedSave.Free;
+  FTest.Free;
 
   inherited;
 end;
@@ -309,6 +314,17 @@ begin
   Res.FNotNullObject := SubObject;
 
   Result := Res;
+end;
+
+{ TTestNullableObjectClass.TTestObject }
+
+destructor TTestNullableObjectClass.TTestObject.Destroy;
+begin
+  FOptionalNullObject.Free;
+  FNullObject.Free;
+  FNotNullObject.Free;
+
+  inherited;
 end;
 
 initialization

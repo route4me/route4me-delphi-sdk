@@ -8,6 +8,9 @@ uses
   EnumsUnit, NullableBasicTypesUnit;
 
 type
+  /// <summary>
+  ///  Route Parameters
+  /// </summary>
   /// <remarks>
   ///  https://github.com/route4me/json-schemas/blob/master/RouteParameters.dtd
   /// </remarks>
@@ -534,36 +537,33 @@ function TRouteParameters.GetAvoid: TAvoid;
 var
   Avoid: TAvoid;
 begin
-  if FAvoid.IsNull then
-    Exit(TAvoid.Empty);
-
-  for Avoid := Low(TAvoid) to High(TAvoid) do
-    if (FAvoid = TAvoidDescription[Avoid]) then
-      Exit(Avoid);
+  Result := TAvoid.Empty;
+  if FAvoid.IsNotNull then
+    for Avoid := Low(TAvoid) to High(TAvoid) do
+      if (FAvoid = TAvoidDescription[Avoid]) then
+        Exit(Avoid);
 end;
 
 function TRouteParameters.GetDeviceType: TDeviceType;
 var
   DeviceType: TDeviceType;
 begin
-  if FDeviceType.IsNull then
-    Exit(TDeviceType.UnknownDevice);
-
-  for DeviceType := Low(TDeviceType) to High(TDeviceType) do
-    if (FDeviceType = TDeviceTypeDescription[DeviceType]) then
-      Exit(DeviceType);
+  Result := TDeviceType.UnknownDevice;
+  if FDeviceType.IsNotNull then
+    for DeviceType := Low(TDeviceType) to High(TDeviceType) do
+      if (FDeviceType = TDeviceTypeDescription[DeviceType]) then
+        Exit(DeviceType);
 end;
 
 function TRouteParameters.GetDistanceUnit: TDistanceUnit;
 var
   DistanceUnit: TDistanceUnit;
 begin
-  if FDistanceUnit.IsNull then
-    Exit(TDistanceUnit.Undefinded);
-
-  for DistanceUnit := Low(TDistanceUnit) to High(TDistanceUnit) do
-    if (FDistanceUnit = TDistanceUnitDescription[DistanceUnit]) then
-      Exit(DistanceUnit);
+  Result := TDistanceUnit.Undefinded;
+  if FDistanceUnit.IsNotNull then
+    for DistanceUnit := Low(TDistanceUnit) to High(TDistanceUnit) do
+      if (FDistanceUnit = TDistanceUnitDescription[DistanceUnit]) then
+        Exit(DistanceUnit);
 end;
 
 function TRouteParameters.GetMetric: TMetric;
@@ -578,24 +578,22 @@ function TRouteParameters.GetOptimize: TOptimize;
 var
   Optimize: TOptimize;
 begin
-  if FOptimize.IsNull then
-    Exit(TOptimize.NoneOptimize);
-
-  for Optimize := Low(TOptimize) to High(TOptimize) do
-    if (FOptimize = TOptimizeDescription[Optimize]) then
-      Exit(Optimize);
+  Result := TOptimize.NoneOptimize;
+  if FOptimize.IsNotNull then
+    for Optimize := Low(TOptimize) to High(TOptimize) do
+      if (FOptimize = TOptimizeDescription[Optimize]) then
+        Exit(Optimize);
 end;
 
 function TRouteParameters.GetTravelMode: TTravelMode;
 var
   TravelMode: TTravelMode;
 begin
-  if FTravelMode.IsNull then
-    Exit(TTravelMode.UnknownMode);
-
-  for TravelMode := Low(TTravelMode) to High(TTravelMode) do
-    if (FTravelMode = TTravelModeDescription[TravelMode]) then
-      Exit(TravelMode);
+  Result := TTravelMode.UnknownMode;
+  if FTravelMode.IsNotNull then
+    for TravelMode := Low(TTravelMode) to High(TTravelMode) do
+      if (FTravelMode = TTravelModeDescription[TravelMode]) then
+        Exit(TravelMode);
 end;
 
 procedure TRouteParameters.SetAlgorithmType(const Value: TAlgorithmType);

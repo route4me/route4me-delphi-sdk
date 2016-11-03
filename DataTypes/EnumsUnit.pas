@@ -3,6 +3,19 @@ unit EnumsUnit;
 interface
 
 type
+  TMemberType = (
+    mtPrimaryAccount,
+    mtSubAccountAdmin,
+    mtSubAccountRegionalManager,
+    mtSubAccountDispatcher,
+    mtSubAccountPlanner,
+    mtSubAccountDriver,
+    mtSubAccountAnalyst,
+    mtSubAccountVendor,
+    mtSubAccountCustomerService,
+    mtUnknown
+  );
+
   TCompassDirection = (
     cdNorth,
     cdSouth,
@@ -186,6 +199,10 @@ var
     'ROUNDABOUT_RIGHT', 'UTURN_LEFT', 'UTURN_RIGHT', 'RAMP_LEFT', 'RAMP_RIGHT',
     'FORK_LEFT', 'FORK_RIGHT', 'KEEP_LEFT', 'KEEP_RIGHT', 'FERRY', 'FERRY_TRAIN',
     'MERGE', 'REACHED_YOUR_DESTINATION', 'Unknown');
+  TMemberTypeDescription: array[TMemberType] of String = (
+    'PRIMARY_ACCOUNT', 'SUB_ACCOUNT_ADMIN', 'SUB_ACCOUNT_REGIONAL_MANAGER',
+    'SUB_ACCOUNT_DISPATCHER', 'SUB_ACCOUNT_PLANNER', 'SUB_ACCOUNT_DRIVER',
+    'SUB_ACCOUNT_ANALYST', 'SUB_ACCOUNT_VENDOR', 'SUB_ACCOUNT_CUSTOMER_SERVICE', 'Unknown');
 
 implementation
 

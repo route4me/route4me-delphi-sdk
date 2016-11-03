@@ -20,6 +20,7 @@ type
     FNullableArrayIntermediateObject: TNullableArrayIntermediateObjectA;
   public
     constructor Create(Value: TValue);
+    destructor Destroy; override;
   end;
 
   TNullableArrayInterceptor = class(TJSONInterceptor)
@@ -29,9 +30,13 @@ type
   const
     IsNullFieldCaption = 'FIsNull';
     ValueFieldCaption = 'FValue';
+  var
+    FIntermediateObjects: TObjectList<TObject>;
 
     function GetObjectValue(s: String; Clazz: TClass): TValue;
   public
+    destructor Destroy; override;
+
     /// <summary>Converters that transforms a field value into an
     /// intermediate object</summary>
     /// <param name="Data">Current object instance being serialized</param>
@@ -52,6 +57,13 @@ implementation
 
 uses JSONNullableAttributeUnit, MarshalUnMarshalUnit;
 
+destructor TNullableArrayInterceptor.Destroy;
+begin
+  FreeAndNil(FIntermediateObjects);
+
+  inherited;
+end;
+
 function TNullableArrayInterceptor.GetObjectValue(s: String; Clazz: TClass): TValue;
 var
   Obj: TObject;
@@ -71,15 +83,8 @@ function TNullableArrayInterceptor.ObjectConverter(Data: TObject;
 var
   ctx: TRttiContext;
   RttiType: TRttiType;
-  RttiField, IsNullField, ValueField: TRttiField;
-  RttiRecord: TRttiRecordType;
-  Attr: TCustomAttribute;
-  Ptr: Pointer;
-
-  IsNull: boolean;
+  RttiField: TRttiField;
   Value: TValue;
-  IsRequired: boolean;
-  IsRequiredFound: boolean;
 begin
   Result := nil;
 
@@ -100,6 +105,10 @@ begin
 
   if (Result = nil) then
     raise Exception.Create('The result can not be undefinded!');
+
+  if (FIntermediateObjects = nil) then
+    FIntermediateObjects := TObjectList<TObject>.Create;
+  FIntermediateObjects.Add(Result);
 end;
 
 procedure TNullableArrayInterceptor.StringsReverter(Data: TObject;
@@ -122,17 +131,11 @@ var
   RttiType: TRttiType;
   RttiField: TRttiField;
   Clazz: TClass;
-  Ptr: Pointer;
   ArrayValue, NewArrayValue: TValue;
-  Value: TValue;
   i: integer;
   Values: array of TValue;
-  ArrLength: LongInt;
 begin
   inherited;
-{Нужно:
-1. Чтобы в метод TJSONUnMarshal.PopulateFields приходил в поле Addresses не массив объектов, а массив строк.
-2. В данном методе нужно из массива строк загружать объект. Использовать для этого метод TMarshalUnMarshal.FromJson. Пример смотреть в TNullableInterceptor.StringReverter}
 
   if (Length(Args) = 0) then
     Exit;
@@ -142,22 +145,14 @@ begin
     RttiType := ctx.GetType(Data.ClassType);
     RttiField := RttiType.GetField(Field);
     ArrayValue := RttiField.GetValue(Data);
-    Ptr := ArrayValue.GetReferenceToRawData;
-//    TValue.Make(@Ptr, RttiField.FieldType.Handle, ArrayValue);
 
-    Clazz := GetClass(RttiField);
+    Clazz := GetClass(RttiField);
     SetLength(Values, Length(Args));
     for i := 0 to Length(Args) - 1 do
       Values[i] := GetObjectValue(Args[i], Clazz);
 
-//    ArrLength := Length(Args);
-//    DynArraySetLength(Ptr, ArrayValue.TypeInfo, 1, @ArrLength);
     NewArrayValue := TValue.FromArray(ArrayValue.TypeInfo, Values);
-//    RttiField.SetValue(Ptr, NewArrayValue);
-//    ArrayValue.SetArrayElement(0, Values[0]);
     RttiField.SetValue(Data, NewArrayValue);
-
-//    RttiField.SetValue(val.AsObject, arrValue);
   finally
     ctx.Free;
   end;
@@ -177,7 +172,13 @@ begin
 
   for i := 0 to Len - 1 do
     FNullableArrayIntermediateObject.FValue[i] := Value.GetArrayElement(i).AsObject;
+end;
 
+destructor TNullableArrayIntermediateObject.Destroy;
+begin
+  FreeAndNil(FNullableArrayIntermediateObject);
+
+  inherited;
 end;
 
 end.

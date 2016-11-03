@@ -4,10 +4,12 @@ interface
 
 uses
   REST.Json.Types,
-  JSONNullableAttributeUnit,
-  GenericParametersUnit, NullableBasicTypesUnit, EnumsUnit;
+  JSONNullableAttributeUnit, GenericParametersUnit, NullableBasicTypesUnit;
 
 type
+  /// <summary>
+  ///  Activity
+  /// </summary>
   /// <remarks>
   ///  https://github.com/route4me/json-schemas/blob/master/Activity.dtd
   /// </remarks>

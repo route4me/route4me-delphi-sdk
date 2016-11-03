@@ -7,6 +7,7 @@ uses
   BaseDataObjectProviderUnit, DataObjectUnit;
 
 type
+  // todo: удалить, если не будем делать unit-тест
   TSingleDriverRoute10StopsResponseDataProvider = class(TBaseDataObjectProvider)
   protected
     function MakeDataObject: TDataObject; override;
@@ -23,12 +24,14 @@ uses
   RouteParametersUnit, LinksUnit, AddressUnit;
 
 function TSingleDriverRoute10StopsResponseDataProvider.MakeDataObject: TDataObject;
-var
+{var
   Parameters: TRouteParameters;
   Route: TDataObjectRoute;
-  Address1, Address2, Address3, Address4, Address5, Address6, Address7, Address8, Address9, Address10: TAddress;
+  Address1, Address2, Address3, Address4, Address5, Address6, Address7, Address8, Address9, Address10: TAddress;}
 begin
-  Parameters := TRouteParameters.Create;
+  Result := nil;
+
+{  Parameters := TRouteParameters.Create;
   Parameters.IsUpload := False;
   Parameters.RT := False;
   Parameters.RouteName := 'Single Driver Route 10 Stops';
@@ -117,8 +120,7 @@ begin
   Result.AddAddress(Address10);
   Result.AddRoute(Route);
   Result.Links := TLinks.Create;
-  Result.Links.View := 'http://www.route4me.com/api.v4/optimization_problem.php?optimization_problem_id=85DA4196C5F5EC5EF6779DA8E83E6AEC&api_key=11111111111111111111111111111111&member_id=1';
-  // Todo: сделать
+  Result.Links.View := 'http://www.route4me.com/api.v4/optimization_problem.php?optimization_problem_id=85DA4196C5F5EC5EF6779DA8E83E6AEC&api_key=11111111111111111111111111111111&member_id=1';}
 end;
 
 end.

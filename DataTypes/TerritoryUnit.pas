@@ -100,12 +100,11 @@ function TTerritory.GetType: TTerritoryType;
 var
   TerritoryType: TTerritoryType;
 begin
-  if FType.IsNull then
-    Exit(TTerritoryType.ttUndefined);
-
-  for TerritoryType := Low(TTerritoryType) to High(TTerritoryType) do
-    if (FType = TTerritoryTypeDescription[TerritoryType]) then
-      Exit(TerritoryType);
+  Result := TTerritoryType.ttUndefined;
+  if FType.IsNotNull then
+    for TerritoryType := Low(TTerritoryType) to High(TTerritoryType) do
+      if (FType = TTerritoryTypeDescription[TerritoryType]) then
+        Exit(TerritoryType);
 end;
 
 procedure TTerritory.SetType(const Value: TTerritoryType);

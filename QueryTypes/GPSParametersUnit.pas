@@ -3,8 +3,8 @@ unit GPSParametersUnit;
 interface
 
 uses
-  NullableBasicTypesUnit,
-  GenericParametersUnit, HttpQueryMemberAttributeUnit, JSONNullableAttributeUnit;
+  HttpQueryMemberAttributeUnit, JSONNullableAttributeUnit,
+  NullableBasicTypesUnit, GenericParametersUnit;
 
 type
   TGPSParameters = class(TGenericParameters)
@@ -82,6 +82,7 @@ type
     property DeviceTimestamp: NullableString read FDeviceTimestamp write FDeviceTimestamp;
     property AppVersion: NullableString read FAppVersion write FAppVersion;
   end;
+
 implementation
 
 { TActivityParameters }

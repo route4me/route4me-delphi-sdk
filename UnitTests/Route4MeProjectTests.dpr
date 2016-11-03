@@ -8,6 +8,9 @@ program Route4MeProjectTests;
 //  FastMM4Messages in '..\FastMM\FastMM4Messages.pas',
 
 uses
+//  FastMM4 in '..\FastMM\FastMM4.pas',
+//  FastMM4Messages in '..\FastMM\FastMM4Messages.pas',
+
   GUITestRunner,
   Route4MeManagerUnit in '..\Route4MeManagerUnit.pas',
   AddressUnit in '..\DataTypes\AddressUnit.pas',
@@ -22,14 +25,8 @@ uses
   JSONNullableMarshalConverterUnit in '..\Nullabled\JSONNullableMarshalConverterUnit.pas',
   JSONDictionaryIntermediateObjectUnit in '..\Nullabled\JSONDictionaryIntermediateObjectUnit.pas',
   AddressBookContactUnit in '..\DataTypes\AddressBookContactUnit.pas',
-  BaseRoute4MeTestUnit in 'Route4MeManager\BaseRoute4MeTestUnit.pas',
   AddressBookContactActionsUnit in '..\Actions\AddressBookContactActionsUnit.pas',
   AddressBookParametersUnit in '..\QueryTypes\AddressBookParametersUnit.pas',
-  TestAddressBookContactActionsUnit in 'Actions\TestAddressBookContactActionsUnit.pas',
-  TestMultipleDepotMultipleDriverUnit in 'Actions\Optimization\TestMultipleDepotMultipleDriverUnit.pas',
-  TestSingleDriverRoundTripUnit in 'Actions\Optimization\TestSingleDriverRoundTripUnit.pas',
-  TestSingleDriverRoute10StopsUnit in 'Actions\Optimization\TestSingleDriverRoute10StopsUnit.pas',
-  TestRoute4MeManagerUnit in 'Actions\Optimization\TestRoute4MeManagerUnit.pas',
   SettingsUnit in '..\Common\SettingsUnit.pas',
   UtilsUnit in '..\Common\UtilsUnit.pas',
   ConnectionUnit in '..\Common\ConnectionUnit.pas',

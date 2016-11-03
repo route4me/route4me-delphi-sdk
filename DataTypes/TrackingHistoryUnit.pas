@@ -3,12 +3,18 @@ unit TrackingHistoryUnit;
 interface
 
 uses
-  REST.Json.Types, System.Rtti, Classes, SysUtils, System.Generics.Collections,
+  REST.Json.Types, System.Generics.Collections,
   Generics.Defaults,
   JSONNullableAttributeUnit,
   NullableBasicTypesUnit;
 
 type
+  /// <summary>
+  ///  Tracking History
+  /// </summary>
+  /// <remarks>
+  ///  https://github.com/route4me/json-schemas/blob/master/TrackingHistory.dtd
+  /// </remarks>
   TTrackingHistory = class
   private
     [JSONName('s')]

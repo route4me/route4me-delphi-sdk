@@ -7,6 +7,7 @@ uses
   GenericParametersUnit;
 
 type
+  // todo: примера на C# нет
   TTrackingActions = class(TBaseAction)
   public
     function GetLastLocation(Parameters: TGenericParameters;

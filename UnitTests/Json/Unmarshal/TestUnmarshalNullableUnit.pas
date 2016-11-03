@@ -27,7 +27,7 @@ type
     [Nullable]
     FTestFalse: NullableBoolean;
   public
-    constructor Create;
+    constructor Create; override;
 
     function Equals(Obj: TObject): Boolean; override;
 
@@ -53,7 +53,7 @@ type
     [Nullable]
     FTest: NullableString;
   public
-    constructor Create;
+    constructor Create; override;
 
     function Equals(Obj: TObject): Boolean; override;
 
@@ -78,7 +78,7 @@ type
     [Nullable]
     FTest: NullableInteger;
   public
-    constructor Create;
+    constructor Create; override;
 
     function Equals(Obj: TObject): Boolean; override;
 
@@ -103,7 +103,7 @@ type
     [Nullable]
     FTest: NullableDouble;
   public
-    constructor Create;
+    constructor Create; override;
 
     function Equals(Obj: TObject): Boolean; override;
 
@@ -161,7 +161,7 @@ type
     [NullableObject(TTestObject)]
     FTest: NullableObject;
   public
-    constructor Create;
+    constructor Create; override;
     destructor Destroy; override;
 
     function Equals(Obj: TObject): Boolean; override;
@@ -191,7 +191,7 @@ type
     [NullableArray(TTestObject)]
     FTest: TTestArrayObjectArray;
   public
-    constructor Create;
+    constructor Create; override;
     destructor Destroy; override;
 
     function Equals(Obj: TObject): Boolean; override;
@@ -233,7 +233,7 @@ type
     [NullableArray(TTestIntegerObject)]
     FNullableNotEmptyArray: TTestIntegerObjectArray;
   public
-    constructor Create;
+    constructor Create; override;
 
     function Equals(Obj: TObject): Boolean; override;
 
@@ -272,10 +272,12 @@ uses MarshalUnMarshalUnit;
 
 constructor TTestNullableBooleanClass.Create;
 begin
-    FTestNull := NullableBoolean.Null;
-    FTestNullButNotNeedSave := NullableBoolean.Null;
-    FTestTrue := NullableBoolean.Null;
-    FTestFalse := NullableBoolean.Null;
+  Inherited;
+
+  FTestNull := NullableBoolean.Null;
+  FTestNullButNotNeedSave := NullableBoolean.Null;
+  FTestTrue := NullableBoolean.Null;
+  FTestFalse := NullableBoolean.Null;
 end;
 
 function TTestNullableBooleanClass.Equals(Obj: TObject): Boolean;
@@ -312,9 +314,11 @@ end;
 
 constructor TTestUnmarshalNullableStringClass.Create;
 begin
-    FTestNull := NullableString.Null;
-    FTestNullButNotNeedSave := NullableString.Null;
-    FTest := NullableString.Null;
+  Inherited;
+
+  FTestNull := NullableString.Null;
+  FTestNullButNotNeedSave := NullableString.Null;
+  FTest := NullableString.Null;
 end;
 
 function TTestUnmarshalNullableStringClass.Equals(Obj: TObject): Boolean;
@@ -624,9 +628,10 @@ end;
 
 constructor TTestNullableIntegerClass.Create;
 begin
-    FTestNull := NullableInteger.Null;
-    FTestNullButNotNeedSave := NullableInteger.Null;
-    FTest := NullableInteger.Null;
+  Inherited;
+  FTestNull := NullableInteger.Null;
+  FTestNullButNotNeedSave := NullableInteger.Null;
+  FTest := NullableInteger.Null;
 end;
 
 function TTestNullableIntegerClass.Equals(Obj: TObject): Boolean;
@@ -656,9 +661,10 @@ end;
 
 constructor TTestNullableDoubleClass.Create;
 begin
-    FTestNull := NullableDouble.Null;
-    FTestNullButNotNeedSave := NullableDouble.Null;
-    FTest := NullableDouble.Null;
+  Inherited;
+  FTestNull := NullableDouble.Null;
+  FTestNullButNotNeedSave := NullableDouble.Null;
+  FTest := NullableDouble.Null;
 end;
 
 function TTestNullableDoubleClass.Equals(Obj: TObject): Boolean;
@@ -682,6 +688,7 @@ end;
 
 constructor TTestNullableObjectClass.Create;
 begin
+  Inherited;
   FTestNull := NullableObject.Null;
   FTestNullButNotNeedSave := NullableObject.Null;
   FTest := NullableObject.Null;
@@ -850,6 +857,7 @@ end;
 
 constructor TTestNullableArrayObjectClass.Create;
 begin
+  Inherited;
   SetLength(FTestNull, 0);
   SetLength(FTestNullButNotNeedSave, 0);
   SetLength(FTest, 0);
@@ -981,6 +989,8 @@ end;
 
 constructor TTestArrayObjectClass.Create;
 begin
+  Inherited;
+
   SetLength(FEmptyArray, 0);
   SetLength(FNotEmptyArray, 0);
   SetLength(FNullableEmptyArray, 0);

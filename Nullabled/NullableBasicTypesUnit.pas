@@ -20,8 +20,6 @@ type
         class operator Equal(A, B: NullableObject): boolean;
         class operator NotEqual(A, B: NullableObject): boolean;
 
-//        function Compare(Other: NullableObject): integer;
-
         class function Null: NullableObject; static;
 
         procedure Free;
@@ -717,28 +715,6 @@ begin
 end;
 
 { NullableObject }
-
-(*function NullableObject.Compare(Other: NullableObject): integer;
-var
-  Value1, Value2: IComparable;
-begin
-  if (IsNull and Other.IsNotNull) then
-    Result := LessThanValue
-  else
-  if (IsNotNull and Other.IsNull) then
-    Result := GreaterThanValue
-  else
-  if (Self = Other) then
-    Result := EqualsValue
-  else
-  begin
-{    if not Self.Value.GetInterface(IComparable, Value1) then
-      raise Exception.Create('Self.Value does not implementing IComparable');
-    if not (Other.Value is IComparable) then
-      raise Exception.Create('Other.Value does not implementing IComparable');
-    Result := (Self.Value as IComparable).CompareTo(Other.Value as IComparable);}
-  end;
-end;*)
 
 constructor NullableObject.Create(PValue: TObject);
 begin

@@ -3,7 +3,8 @@ unit NullableInterceptorUnit;
 interface
 
 uses
-  Windows, REST.JsonReflect, Rtti, SysUtils, System.JSON, System.TypInfo;
+  Windows, REST.JsonReflect, Rtti, SysUtils, System.JSON, System.TypInfo,
+  System.Generics.Collections;
 
 type
   TBaseNullableIntermediateObject = class abstract
@@ -66,8 +67,12 @@ type
     IsNullFieldCaption = 'FIsNull';
     ValueFieldCaption = 'FValue';
   var
+    FIntermediateObjects: TObjectList<TObject>;
+
     function GetObjectValue(s: String; Clazz: TClass): TValue;
   public
+    destructor Destroy; override;
+
     /// <summary>Converters that transforms a field value into an
     /// intermediate object</summary>
     /// <param name="Data">Current object instance being serialized</param>
@@ -183,6 +188,10 @@ begin
 
   if (Result = nil) then
     raise Exception.Create('The result can not be undefinded!');
+
+  if (FIntermediateObjects = nil) then
+    FIntermediateObjects := TObjectList<TObject>.Create;
+  FIntermediateObjects.Add(Result);
 end;
 
 { TNullableBooleanIntermediateObject }
@@ -235,6 +244,12 @@ begin
 end;
 
 { TNullableNumberAndStringInterceptor }
+
+destructor TNullableInterceptor.Destroy;
+begin
+  FreeAndNil(FIntermediateObjects);
+  inherited;
+end;
 
 function TNullableInterceptor.GetObjectValue(s: String; Clazz: TClass): TValue;
 var
@@ -376,5 +391,7 @@ begin
 end;
 
 initialization
+  {$WARN SYMBOL_PLATFORM OFF}
   LocaleFormatSettings := TFormatSettings.Create(LOCALE_USER_DEFAULT);
+  {$WARN SYMBOL_PLATFORM ON}
 end.

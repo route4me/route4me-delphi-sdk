@@ -29,16 +29,12 @@ type
     function AddRouteDestinations(RouteId: String): TArray<integer>;
     procedure RemoveRouteDestination(RouteId: String; DestinationId: integer);
     function SingleDriverRoundTrip: TDataObject;
-{-}
     procedure MoveDestinationToRoute(ToRouteId: String;
       RouteDestinationId, AfterDestinationId: integer);
-{+}
     function SingleDriverRoundTripGeneric: NullableString;
     function MultipleDepotMultipleDriver: TDataObject;
     function MultipleDepotMultipleDriverTimeWindow: TDataObject;
-{- conflict}
     function SingleDepotMultipleDriverNoTimeWindow: TDataObject;
-{+}
     function MultipleDepotMultipleDriverWith24StopsTimeWindow: TDataObject;
     function SingleDriverMultipleTimeWindows: TDataObject;
     procedure GetOptimization(OptimizationProblemId: String);
@@ -47,7 +43,6 @@ type
       AndReOptimize: boolean): TDataObject;
     procedure RemoveDestinationFromOptimization(OptimizationId: String;
       DestinationId: integer; AndReOptimize: boolean);
-{-}
     procedure ReOptimization(OptimizationProblemId: String);
     procedure UpdateRoute(RouteId: String);
     procedure ReoptimizeRoute(RouteId: String);
@@ -257,8 +252,6 @@ var
   ErrorString: String;
   Order: TOrder;
 begin
-  Result := nil;
-
   Order := TOrder.Create();
   try
     Order.Address1 := 'Test Address1';
@@ -414,13 +407,11 @@ end;
 
 procedure TRoute4MeExamples.GenericExample(Connection: IConnection);
 var
-  ErrorString: String;
   Parameters: TGenericParameters;
   DataObjects: TDataObjectRouteList;
   Route: TDataObjectRoute;
   Uri: String;
   Route4Me: TRoute4MeManager;
-  MyApiKey: String;
   ErrorMessage: String;
 begin
   Route4Me := TRoute4MeManager.Create(Connection);
@@ -470,7 +461,6 @@ var
   Routes: TArray<TDataObjectRoute>;
   Route: TDataObjectRoute;
   Route4Me: TRoute4MeManager;
-  MyApiKey: String;
 begin
   Route4Me := TRoute4MeManager.Create(Connection);
   try
@@ -648,7 +638,6 @@ var
   ErrorString: String;
   Query: TAvoidanceZoneQuery;
   AvoidanceZone: TAvoidanceZone;
-  i: integer;
 begin
   Query := TAvoidanceZoneQuery.Create();
   try
@@ -1386,7 +1375,7 @@ begin
   try
     Parameters := DataProvider.OptimizationParameters;
     try
-      Request.Parameters := Parameters.Parameters;
+      Request.Parameters := Parameters.Parameters.Value as TRouteParameters;
       Request.Addresses := Parameters.Addresses;
 
       // Run the query
@@ -1605,34 +1594,30 @@ var
   ErrorString: String;
   Route: TDataObjectRoute;
 begin
-  ParametersNew := TRouteParameters.Create;
+  ParametersNew := TRouteParameters.Create; // not need destroy
+  ParametersNew.RouteName := 'New name of the route';
+
+  RouteParameters := TRouteParametersQuery.Create;
   try
-    ParametersNew.RouteName := 'New name of the route';
+    RouteParameters.RouteId := RouteId;
+    RouteParameters.Parameters := ParametersNew;
 
-    RouteParameters := TRouteParametersQuery.Create;
+    // Run the query
+    Route := Route4MeManager.Route.Update(RouteParameters, ErrorString);
     try
-      RouteParameters.RouteId := RouteId;
-      RouteParameters.Parameters := ParametersNew;
-
-      // Run the query
-      Route := Route4MeManager.Route.Update(RouteParameters, ErrorString);
-      try
-        if (Route <> nil) then
-        begin
-          WriteLn('UpdateRoute executed successfully');
-          WriteLn(Format('Route ID: %s', [Route.RouteId]));
-          WriteLn(Format('State: %s', [TOptimizationDescription[TOptimizationState(Route.State)]]));
-        end
-        else
-          WriteLn(Format('UpdateRoute error: %s', [ErrorString]));
-      finally
-        FreeAndNil(Route);
-      end;
+      if (Route <> nil) then
+      begin
+        WriteLn('UpdateRoute executed successfully');
+        WriteLn(Format('Route ID: %s', [Route.RouteId]));
+        WriteLn(Format('State: %s', [TOptimizationDescription[TOptimizationState(Route.State)]]));
+      end
+      else
+        WriteLn(Format('UpdateRoute error: %s', [ErrorString]));
     finally
-      FreeAndNil(RouteParameters);
+      FreeAndNil(Route);
     end;
   finally
-    FreeAndNil(ParametersNew);
+    FreeAndNil(RouteParameters);
   end;
 end;
 

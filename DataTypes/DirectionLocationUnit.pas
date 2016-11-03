@@ -7,6 +7,9 @@ uses
   JSONNullableAttributeUnit, NullableBasicTypesUnit;
 
 type
+  /// <summary>
+  ///  Direction Location
+  /// </summary>
   /// <remarks>
   ///  https://github.com/route4me/json-schemas/blob/master/Direction.dtd
   /// </remarks>

@@ -3,8 +3,8 @@ unit OrderParametersUnit;
 interface
 
 uses
-  NullableBasicTypesUnit,
-  GenericParametersUnit, HttpQueryMemberAttributeUnit, JSONNullableAttributeUnit;
+  HttpQueryMemberAttributeUnit, JSONNullableAttributeUnit,
+  NullableBasicTypesUnit, GenericParametersUnit;
 
 type
   TOrderParameters = class(TGenericParameters)

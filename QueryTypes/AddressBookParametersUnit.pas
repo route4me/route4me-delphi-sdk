@@ -3,8 +3,8 @@ unit AddressBookParametersUnit;
 interface
 
 uses
-  NullableBasicTypesUnit,
-  GenericParametersUnit, HttpQueryMemberAttributeUnit, JSONNullableAttributeUnit;
+  HttpQueryMemberAttributeUnit, JSONNullableAttributeUnit,
+  NullableBasicTypesUnit, GenericParametersUnit;
 
 type
   TAddressBookParameters = class(TGenericParameters)
@@ -38,7 +38,7 @@ type
     FDisplay: NullableString;
   public
     constructor Create; overload; override;
-    constructor Create(Limit: integer; Offset: integer); overload;
+    constructor Create(Limit: integer; Offset: integer); reintroduce; overload;
 
     property AddressId: NullableString read FAddressId write FAddressId;
     property Limit: NullableInteger read FLimit write FLimit;
@@ -48,6 +48,7 @@ type
     property Fields: NullableString read FFields write FFields;
     property Display: NullableString read FDisplay write FDisplay;
   end;
+
 implementation
 
 { TAddressBookParameters }

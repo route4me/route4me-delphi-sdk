@@ -9,6 +9,8 @@ uses
 type
   TJSONNullableConverter = class(TJSONConverter)
   private
+    FRemovedPairs: TObjectList<TObject>;
+
     procedure RemoveNullableFields(Root: TJSONAncestor);
     procedure PrepareDictionaryFields(Root: TJSONAncestor);
 
@@ -20,6 +22,8 @@ type
       out Pairs: TArray<TJSONPair>): boolean;
   protected
     function GetSerializedData: TJSONValue; override;
+  public
+    destructor Destroy; override;
   end;
 
 implementation
@@ -29,11 +33,20 @@ implementation
 uses
   NullableInterceptorUnit, NullableArrayInterceptorUnit;
 
+destructor TJSONNullableConverter.Destroy;
+begin
+
+  inherited;
+end;
+
 function TJSONNullableConverter.GetSerializedData: TJSONValue;
 begin
   Result := Inherited GetSerializedData;
 
+  FRemovedPairs := TObjectList<TObject>.Create;
   RemoveNullableFields(Result);
+  FreeAndNil(FRemovedPairs);
+
   PrepareDictionaryFields(Result);
 end;
 
@@ -187,28 +200,34 @@ begin
       begin
         Name := JSONObject.Pairs[i].JsonString.Value;
         JSONValue := (Value.AsObject as TJsonValue).Clone as TJsonValue;
-        JSONObject.RemovePair(JSONObject.Pairs[i].JsonString.Value);
+        FRemovedPairs.Add(JSONObject.RemovePair(JSONObject.Pairs[i].JsonString.Value));
 
         if (not IsNull) then
           JSONObject.AddPair(Name, JSONValue)
         else
-        if IsRequired then
-          JSONObject.AddPair(Name, TJSONNull.Create);
+        begin
+          if IsRequired then
+            JSONObject.AddPair(Name, TJSONNull.Create);
+          FreeAndNil(JSONValue);
+        end;
       end
       else
       if IsNullableArray(JSONObject.Pairs[i].JsonValue, IsRequired, JSONValue) then
       begin
         Name := JSONObject.Pairs[i].JsonString.Value;
-        JSONValue := JSONValue.Clone as TJsonValue;
-        JSONObject.RemovePair(JSONObject.Pairs[i].JsonString.Value);
+        JSONValue := JSONValue.Clone as TJSONValue;
+        FRemovedPairs.Add(JSONObject.RemovePair(JSONObject.Pairs[i].JsonString.Value));
 
         IsNull := (JSONValue is TJSONNull) or (
           (JSONValue is TJSONArray) and (TJSONArray(JSONValue).Count = 0));
         if (not IsNull) then
           JSONObject.AddPair(Name, JSONValue)
         else
-        if IsRequired then
-          JSONObject.AddPair(Name, TJSONNull.Create);
+        begin
+          if IsRequired then
+            JSONObject.AddPair(Name, TJSONNull.Create);
+          FreeAndNil(JSONValue);
+        end;
       end
       else
       begin

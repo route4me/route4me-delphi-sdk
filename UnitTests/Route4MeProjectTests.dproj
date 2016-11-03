@@ -98,14 +98,8 @@
         <DCCReference Include="..\Nullabled\JSONNullableMarshalConverterUnit.pas"/>
         <DCCReference Include="..\Nullabled\JSONDictionaryIntermediateObjectUnit.pas"/>
         <DCCReference Include="..\DataTypes\AddressBookContactUnit.pas"/>
-        <DCCReference Include="Route4MeManager\BaseRoute4MeTestUnit.pas"/>
         <DCCReference Include="..\Actions\AddressBookContactActionsUnit.pas"/>
         <DCCReference Include="..\QueryTypes\AddressBookParametersUnit.pas"/>
-        <DCCReference Include="Actions\TestAddressBookContactActionsUnit.pas"/>
-        <DCCReference Include="Actions\Optimization\TestMultipleDepotMultipleDriverUnit.pas"/>
-        <DCCReference Include="Actions\Optimization\TestSingleDriverRoundTripUnit.pas"/>
-        <DCCReference Include="Actions\Optimization\TestSingleDriverRoute10StopsUnit.pas"/>
-        <DCCReference Include="Actions\Optimization\TestRoute4MeManagerUnit.pas"/>
         <DCCReference Include="..\Common\SettingsUnit.pas"/>
         <DCCReference Include="..\Common\UtilsUnit.pas"/>
         <DCCReference Include="..\Common\ConnectionUnit.pas"/>

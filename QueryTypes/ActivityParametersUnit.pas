@@ -3,8 +3,8 @@ unit ActivityParametersUnit;
 interface
 
 uses
-  NullableBasicTypesUnit,
-  GenericParametersUnit, HttpQueryMemberAttributeUnit, JSONNullableAttributeUnit;
+  HttpQueryMemberAttributeUnit, JSONNullableAttributeUnit,
+  NullableBasicTypesUnit, GenericParametersUnit;
 
 type
   TActivityParameters = class(TGenericParameters)
@@ -47,6 +47,7 @@ type
     property Start: NullableInteger read FStart write FStart;
     property End_: NullableInteger read FEnd write FEnd;
   end;
+
 implementation
 
 { TActivityParameters }

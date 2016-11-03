@@ -3,12 +3,17 @@ unit AddressBookContactUnit;
 interface
 
 uses
-  REST.Json.Types, System.Generics.Collections, JSONNullableAttributeUnit,
-  NullableBasicTypesUnit, GenericParametersUnit,
+  REST.Json.Types, System.Generics.Collections,
+  JSONNullableAttributeUnit, NullableBasicTypesUnit, GenericParametersUnit,
   JSONDictionaryIntermediateObjectUnit;
 
 type
-
+  /// <summary>
+  ///  Address Book Contact
+  /// </summary>
+  /// <remarks>
+  ///  https://github.com/route4me/json-schemas/blob/master/Addressbook_v4.dtd
+  /// </remarks>
   TAddressBookContact = class(TGenericParameters)
   private
     [JSONName('address_group')]
@@ -91,7 +96,7 @@ type
     ///  For JSON-deserialization.
     /// </remarks>
     constructor Create; overload; override;
-    constructor Create(Address: String; Latitude, Longitude: Double); overload;
+    constructor Create(Address: String; Latitude, Longitude: Double); reintroduce; overload;
     destructor Destroy; override;
 
     function Equals(Obj: TObject): Boolean; override;
@@ -194,7 +199,7 @@ type
   end;
 
   TAddressBookContactArray = TArray<TAddressBookContact>;
-  TAddressBookContactList = TList<TAddressBookContact>;
+
 
 implementation
 

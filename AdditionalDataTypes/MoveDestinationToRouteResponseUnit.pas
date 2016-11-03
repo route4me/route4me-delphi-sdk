@@ -3,7 +3,7 @@ unit MoveDestinationToRouteResponseUnit;
 interface
 
 uses
-  REST.Json.Types, HttpQueryMemberAttributeUnit,
+  REST.Json.Types,
   GenericParametersUnit;
 
 type

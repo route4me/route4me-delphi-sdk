@@ -5,10 +5,13 @@ interface
 uses
   REST.Json.Types, System.Generics.Collections, Generics.Defaults,
   JSONNullableAttributeUnit,
-  DirectionLocationUnit, DirectionPathPointUnit, EnumsUnit,
+  DirectionPathPointUnit, EnumsUnit,
   NullableBasicTypesUnit;
 
 type
+  /// <summary>
+  ///  Direction Step
+  /// </summary>
   /// <remarks>
   ///  https://github.com/route4me/json-schemas/blob/master/Direction.dtd
   /// </remarks>
@@ -104,8 +107,6 @@ type
   end;
 
   TDirectionStepArray = TArray<TDirectionStep>;
-  TDirectionStepList = TList<TDirectionStep>;
-//  TDirectionStepListClass = class(TDirectionStepList);
 
   function SortDirectionSteps(DirectionSteps: TDirectionStepArray): TDirectionStepArray;
 
@@ -171,36 +172,33 @@ function TDirectionStep.GetCompassDirection: TCompassDirection;
 var
   CompassDirection: TCompassDirection;
 begin
-  if FCompassDirection.IsNull then
-    Exit(TCompassDirection.cdUndefined);
-
-  for CompassDirection := Low(TCompassDirection) to High(TCompassDirection) do
-    if (FCompassDirection = TCompassDirectionDescription[CompassDirection]) then
-      Exit(CompassDirection);
+  Result := TCompassDirection.cdUndefined;
+  if FCompassDirection.IsNotNull then
+    for CompassDirection := Low(TCompassDirection) to High(TCompassDirection) do
+      if (FCompassDirection = TCompassDirectionDescription[CompassDirection]) then
+        Exit(CompassDirection);
 end;
 
 function TDirectionStep.GetDirections: TDirectionEnum;
 var
   DirectionEnum: TDirectionEnum;
 begin
-  if FDirections.IsNull then
-    Exit(TDirectionEnum.dUnknown);
-
-  for DirectionEnum := Low(TDirectionEnum) to High(TDirectionEnum) do
-    if (FDirections = TDirectionDescription[DirectionEnum]) then
-      Exit(DirectionEnum);
+  Result := TDirectionEnum.dUnknown;
+  if FDirections.IsNotNull then
+    for DirectionEnum := Low(TDirectionEnum) to High(TDirectionEnum) do
+      if (FDirections = TDirectionDescription[DirectionEnum]) then
+        Exit(DirectionEnum);
 end;
 
 function TDirectionStep.GetDistanceUnit: TDistanceUnit;
 var
   DistanceUnit: TDistanceUnit;
 begin
-  if FDistanceUnit.IsNull then
-    Exit(TDistanceUnit.Undefinded);
-
-  for DistanceUnit := Low(TDistanceUnit) to High(TDistanceUnit) do
-    if (FDistanceUnit = TDistanceUnitDescription[DistanceUnit]) then
-      Exit(DistanceUnit);
+  Result := TDistanceUnit.Undefinded;
+  if FDistanceUnit.IsNotNull then
+    for DistanceUnit := Low(TDistanceUnit) to High(TDistanceUnit) do
+      if (FDistanceUnit = TDistanceUnitDescription[DistanceUnit]) then
+        Exit(DistanceUnit);
 end;
 
 function TDirectionStep.GetManeuverPoint: TDirectionPathPoint;
@@ -215,12 +213,11 @@ function TDirectionStep.GetManeuverType: TDirectionEnum;
 var
   ManeuverType: TDirectionEnum;
 begin
-  if FDistanceUnit.IsNull then
-    Exit(TDirectionEnum.dUnknown);
-
-  for ManeuverType := Low(TDirectionEnum) to High(TDirectionEnum) do
-    if (FManeuverType = TManeuverTypeDescription[ManeuverType]) then
-      Exit(ManeuverType);
+  Result := TDirectionEnum.dUnknown;
+  if FDistanceUnit.IsNotNull then
+    for ManeuverType := Low(TDirectionEnum) to High(TDirectionEnum) do
+      if (FManeuverType = TManeuverTypeDescription[ManeuverType]) then
+        Exit(ManeuverType);
 end;
 
 procedure TDirectionStep.SetCompassDirection(const Value: TCompassDirection);

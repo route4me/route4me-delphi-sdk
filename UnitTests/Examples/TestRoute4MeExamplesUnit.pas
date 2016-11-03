@@ -90,7 +90,7 @@ end;
 
 procedure TTestRoute4MeExamples.SetGPSPosition;
 begin
-  // todo: сделать
+  // todo: нет примеров в C#
 end;
 
 procedure TTestRoute4MeExamples.SetUp;
@@ -257,14 +257,14 @@ end;
 
 procedure TTestRoute4MeExamples.TrackDeviceLastLocationHistory;
 begin
-  // todo: сделать
+  // todo: нет примеров в C#
 end;
 
 procedure TTestRoute4MeExamples.UpdateAddressBookContact;
-var
-  Contact: TAddressBookContact;
+{var
+  Contact: TAddressBookContact;}
 begin
-{ todo:
+(* todo: проверить есть ли TAddressBookContact.Id у серверных ответов
   Contact := TAddressBookContact.Create;
   try
     Contact.Address := 'Test Address1 768611171';
@@ -281,7 +281,7 @@ begin
     CheckTrue(TRESTRequestMethod.rmPUT = FConnection.Method);
   finally
     FreeAndNil(Contact);
-  end;  }
+  end;  *)
 end;
 
 procedure TTestRoute4MeExamples.UpdateAvoidanceZone;
@@ -700,44 +700,6 @@ procedure TTestRoute4MeExamples.ReOptimization;
 var
   OptimizationProblemId: String;
 begin
-(*
-todo: проверить.
-Запрос на сервер должен быть: {}
-По факту: {"addresses":[],"parameters":null}
-
-Причина понятна. С NullableObject в котором есть nullable-поля проблема описана в OptimizationParametersUnit
-С пустым массивом - ситуация новая. Если имеющаяся сейчас реализация запроса не приведет у удалению адресов, например,
-так и оставить. В противном случае, придется заводить Nullable-массив.
-
-
-
-По факту: {"addresses":null,"parameters":null} - на 10.1 Berlin
-
-procedure TTypeMarshaller<TSerial>.MarshalValue(Value: TValue; fieldRTTI: TRttiField);
-var
-  I, Len: Integer;
-  rttiType: TRttiType;
-  rttiField: TRttiField;
-  convEv: TJSONInterceptor;
-  Data: TObject;
-begin
-  if Value.IsEmpty then
-    FConverter.OnNull
-  else
-
-
-
-function TTypeMarshaller<TSerial>.MarshalSimpleField(rttiField: TRttiField; Data: Pointer): Boolean;
-1. rttiField.Name='FAddresses'
-procedure TTypeMarshaller<TSerial>.MarshalValue(Value: TValue; fieldRTTI: TRttiField);
-function TValue.GetIsEmpty: Boolean;
-2. FData.FTypeInfo	$6A0480
-3. FData.FValueData	= TValueDataImpl($3787E54) as IValueData
-4. FData.FTypeInfo^.Kind = tkDynArray, ушел в Else, Result := False;
-Поэтому Value.IsEmpty = False
-
-*)
-
   OptimizationProblemId := '6084D999940BDCF13A568724DBE8FFE4';
 
   FRoute4MeExamples.ReOptimization(OptimizationProblemId);

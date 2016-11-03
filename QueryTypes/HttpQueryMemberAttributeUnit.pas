@@ -2,9 +2,6 @@ unit HttpQueryMemberAttributeUnit;
 
 interface
 
-uses
-  REST.Json.Types, REST.JsonReflect;
-
 type
   HttpQueryMemberAttribute = class abstract(TCustomAttribute)
   private

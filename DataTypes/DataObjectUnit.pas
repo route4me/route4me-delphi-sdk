@@ -3,8 +3,8 @@ unit DataObjectUnit;
 interface
 
 uses
-  System.Generics.Collections, SysUtils, Generics.Defaults,
-  REST.Json.Types, JSONNullableAttributeUnit,
+  REST.Json.Types, System.Generics.Collections, SysUtils, Generics.Defaults,
+  JSONNullableAttributeUnit,
   EnumsUnit, AddressUnit, RouteParametersUnit, DirectionUnit, CommonTypesUnit,
   NullableBasicTypesUnit, LinksUnit, TrackingHistoryUnit, DirectionPathPointUnit;
 
@@ -208,9 +208,6 @@ type
   function SortRoutes(Routes: TDataObjectRouteArray): TDataObjectRouteArray;
 
 implementation
-
-uses
-  Math;
 
 function SortRoutes(Routes: TDataObjectRouteArray): TDataObjectRouteArray;
 begin

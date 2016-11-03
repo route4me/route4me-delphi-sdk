@@ -8,6 +8,12 @@ uses
   NullableBasicTypesUnit;
 
 type
+  /// <summary>
+  ///  Path - an array of the geographic points, which are laying on a path
+  /// </summary>
+  /// <remarks>
+  ///  https://github.com/route4me/json-schemas/blob/master/Path.dtd
+  /// </remarks>
   TDirectionPathPoint = class
   strict private
     [JSONName('lat')]
@@ -37,8 +43,6 @@ type
   end;
 
   TDirectionPathPointArray = TArray<TDirectionPathPoint>;
-  TDirectionPathPointList = TList<TDirectionPathPoint>;
-//  TDirectionPathPointListClass = class(TDirectionPathPointList);
 
 function SortDirectionPathPoints(DirectionPathPoints: TDirectionPathPointArray): TDirectionPathPointArray;
 

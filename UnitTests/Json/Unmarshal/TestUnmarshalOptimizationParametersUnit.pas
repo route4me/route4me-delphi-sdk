@@ -12,13 +12,14 @@ type
   private
     procedure CheckEquals(Etalon: IOptimizationParametersProvider; TestName: String);
 
+    { todo: удалить, если не будем актуализировать unit-тесты
     procedure MultipleDepotMultipleDriver();
     procedure MultipleDepotMultipleDriverTimeWindow();
     procedure MultipleDepotMultipleDriverWith24StopsTimeWindow();
 
     procedure SingleDepotMultipleDriverNoTimeWindow();
     procedure SingleDriverMultipleTimeWindows();
-    procedure SingleDriverRoundTrip();
+    procedure SingleDriverRoundTrip();                       }
   published
     procedure SingleDriverRoute10Stops();
   end;
@@ -30,12 +31,12 @@ implementation
 uses
   Classes, System.JSON,
   SingleDriverRoute10StopsTestDataProviderUnit,
-  SingleDriverRoundTripTestDataProviderUnit,
+{  SingleDriverRoundTripTestDataProviderUnit,
   SingleDriverMultipleTimeWindowsTestDataProviderUnit,
   SingleDepotMultipleDriverNoTimeWindowTestDataProviderUnit,
   MultipleDepotMultipleDriverTestDataProviderUnit,
   MultipleDepotMultipleDriverTimeWindowTestDataProviderUnit,
-  MultipleDepotMultipleDriverWith24StopsTimeWindowTestDataProviderUnit,
+  MultipleDepotMultipleDriverWith24StopsTimeWindowTestDataProviderUnit,}
   OptimizationParametersUnit, MarshalUnMarshalUnit;
 
 procedure TTestUnmarshalOptimizationParameters.CheckEquals(
@@ -72,7 +73,7 @@ begin
   Etalon := nil;
 end;
 
-procedure TTestUnmarshalOptimizationParameters.MultipleDepotMultipleDriver();
+{procedure TTestUnmarshalOptimizationParameters.MultipleDepotMultipleDriver();
 begin
   CheckEquals(
     TMultipleDepotMultipleDriverTestDataProvider.Create,
@@ -113,7 +114,7 @@ begin
     TSingleDriverRoundTripTestDataProvider.Create,
     'OptimizationParametersFromJson\SingleDriverRoundTrip');
 end;
-
+ }
 procedure TTestUnmarshalOptimizationParameters.SingleDriverRoute10Stops;
 begin
   CheckEquals(

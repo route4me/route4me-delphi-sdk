@@ -4,14 +4,12 @@ interface
 
 uses
   Classes, SysUtils, System.JSON,
-  //HTTPApp, IdHTTP,
   REST.Client, REST.Types, IPPeerCommon, IPPeerClient,
   IConnectionUnit, GenericParametersUnit, DataObjectUnit, CommonTypesUnit;
 
 type
   TConnection = class(TInterfacedObject, IConnection)
   private
-//    FHttp: TIdHTTP;
     FClient: TRESTClient;
     FRESTRequest: TRESTRequest;
     FRESTResponse: TRESTResponse;
@@ -65,12 +63,6 @@ constructor TConnection.Create(ApiKey: String);
 begin
   FApiKey := ApiKey;
 
-{  FHttp := TIdHTTP.Create;
-  FHttp.ProxyParams.BasicAuthentication := False;
-
-  FHttp.Request.CharSet := 'utf-8';
-  FHttp.Request.ContentType := 'application/json';}
-
   FRESTResponse := TRESTResponse.Create(nil);
   FClient := TRESTClient.Create(nil);
   FRESTRequest := TRESTRequest.Create(FClient);
@@ -92,7 +84,7 @@ begin
   FreeAndNil(FRESTRequest);
   FreeAndNil(FClient);
   FreeAndNil(FRESTResponse);
-//  FreeAndNil(FHttp);
+
   inherited;
 end;
 
@@ -132,7 +124,7 @@ begin
   begin
     st := TStringList.Create;
     st.Text := Responce.ToString;
-    st.SaveToFile('d:\post.json');
+//    st.SaveToFile('d:\post.json');
     FreeAndNil(st);
     Result := TMarshalUnMarshal.FromJson(ResultClassType, Responce);
   end;
@@ -185,12 +177,6 @@ end;
 
 procedure TConnection.SetProxy(Host: String; Port: integer; Username, Password: String);
 begin
-{  FHttp.ProxyParams.BasicAuthentication := True;
-  FHttp.ProxyParams.ProxyPassword := Password;
-  FHttp.ProxyParams.ProxyPort := Port;
-  FHttp.ProxyParams.ProxyServer := Host;
-  FHttp.ProxyParams.ProxyUsername := Username;}
-
   FClient.ProxyServer := Host;
   FClient.ProxyPort := Port;
   FClient.ProxyUsername := Username;

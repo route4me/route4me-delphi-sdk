@@ -4,13 +4,18 @@ interface
 
 uses
   SysUtils,
-  BaseOptimizationParametersProviderUnit, AddressUnit, RouteParametersUnit;
+  BaseOptimizationParametersProviderUnit, AddressUnit, RouteParametersUnit,
+  OptimizationParametersUnit;
 
 type
   TMultipleDepotMultipleDriverTimeWindowTestDataProvider = class(TBaseOptimizationParametersProvider)
   protected
     function MakeAddresses(): TArray<TAddress>; override;
     function MakeRouteParameters(): TRouteParameters; override;
+    /// <summary>
+    ///  After response some fields are changed from request.
+    /// </summary>
+    procedure CorrectForResponse(OptimizationParameters: TOptimizationParameters); override;
   public
 
   end;
@@ -22,6 +27,13 @@ implementation
 uses
   DateUtils,
   EnumsUnit, UtilsUnit;
+
+procedure TMultipleDepotMultipleDriverTimeWindowTestDataProvider.CorrectForResponse(
+  OptimizationParameters: TOptimizationParameters);
+begin
+  inherited;
+
+end;
 
 function TMultipleDepotMultipleDriverTimeWindowTestDataProvider.MakeAddresses: TArray<TAddress>;
 var

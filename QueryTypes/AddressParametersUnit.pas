@@ -3,8 +3,8 @@ unit AddressParametersUnit;
 interface
 
 uses
-  NullableBasicTypesUnit,
-  GenericParametersUnit, HttpQueryMemberAttributeUnit, JSONNullableAttributeUnit;
+  HttpQueryMemberAttributeUnit, JSONNullableAttributeUnit,
+  NullableBasicTypesUnit, GenericParametersUnit;
 
 type
   TAddressParameters = class(TGenericParameters)
@@ -26,6 +26,7 @@ type
     property RouteDestinationId: NullableInteger read FRouteDestinationId write FRouteDestinationId;
     property Notes: Boolean read FNotes write FNotes;
   end;
+
 implementation
 
 { TAddressParameters }

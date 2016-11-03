@@ -23,12 +23,18 @@ uses AddressBookContactUnit, IAddressBookContactProviderUnit,
 procedure TTestMarshalAddressBookContact.DefaultAddressBookContact;
 var
   Provider: IAddressBookContactProvider;
+  AddressBookContact: TAddressBookContact;
 begin
   Provider := TDefaultAddressBookContactProvider.Create;
   try
-    CheckEquals(
-      EtalonFilename('AddressBookContactToJson\DefaultAddressBookContact'),
-      Provider.AddressBookContact.ToJsonString);
+    AddressBookContact := Provider.AddressBookContact;
+    try
+      CheckEquals(
+        EtalonFilename('AddressBookContactToJson\DefaultAddressBookContact'),
+        AddressBookContact.ToJsonString);
+    finally
+      FreeAndNil(AddressBookContact);
+    end;
   finally
     Provider := nil;
   end;
@@ -37,12 +43,18 @@ end;
 procedure TTestMarshalAddressBookContact.FullAddressBookContact;
 var
   Provider: IAddressBookContactProvider;
+  AddressBookContact: TAddressBookContact;
 begin
   Provider := TFullAddressBookContactProvider.Create;
   try
-    CheckEquals(
-      EtalonFilename('AddressBookContactToJson\FullAddressBookContact'),
-      Provider.AddressBookContact.ToJsonString);
+    AddressBookContact := Provider.AddressBookContact;
+    try
+      CheckEquals(
+        EtalonFilename('AddressBookContactToJson\FullAddressBookContact'),
+        AddressBookContact.ToJsonString);
+    finally
+      FreeAndNil(AddressBookContact);
+    end;
   finally
     Provider := nil;
   end;

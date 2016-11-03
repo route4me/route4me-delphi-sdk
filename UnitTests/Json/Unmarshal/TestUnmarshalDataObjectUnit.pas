@@ -7,11 +7,12 @@ uses
   TestBaseJsonUnmarshalUnit, IDataObjectProviderUnit;
 
 type
+  // todo: удалить, если не будем делать unit-тест
   TTestUnmarshalDataObject = class(TTestBaseJsonUnmarshal)
   private
-    procedure CheckEquals(Etalon: IDataObjectProvider; TestName: String);
+//    procedure CheckEquals(Etalon: IDataObjectProvider; TestName: String);
+//    procedure SingleDriverRoute10Stops();
   published
-    procedure SingleDriverRoute10Stops();
   end;
 
 implementation
@@ -24,7 +25,7 @@ uses
   DataObjectUnit, MarshalUnMarshalUnit,
   SingleDriverRoute10StopsResponseDataProviderUnit;
 
-procedure TTestUnmarshalDataObject.CheckEquals(
+{procedure TTestUnmarshalDataObject.CheckEquals(
   Etalon: IDataObjectProvider; TestName: String);
 var
   ActualList: TStringList;
@@ -58,7 +59,7 @@ begin
   CheckEquals(
     TSingleDriverRoute10StopsResponseDataProvider.Create,
     'Route4MeExamples\Responses\SingleDriverRoute10Stops');
-end;
+end;}
 
 initialization
   // Register any test cases with the test runner
