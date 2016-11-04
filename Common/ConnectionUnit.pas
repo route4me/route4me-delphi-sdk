@@ -3,7 +3,7 @@ unit ConnectionUnit;
 interface
 
 uses
-  Classes, SysUtils, System.JSON,
+  Classes, SysUtils, System.JSON, IdURI,
   REST.Client, REST.Types, IPPeerCommon, IPPeerClient,
   IConnectionUnit, GenericParametersUnit, DataObjectUnit, CommonTypesUnit;
 
@@ -19,12 +19,12 @@ type
       Method: TRESTRequestMethod; ResultClassType: TClass;
       out ErrorString: String): TObject;
     function InternalRequest(URL: String; Method: TRESTRequestMethod;
-      Body: String; out ErrorString: String): TJsonValue;
+      Body: String; ContentType: TRESTContentType; out ErrorString: String): TJsonValue;
 
     function UrlParameters(Parameters: TListStringPair): String;
   protected
     function RunRequest(URL: String; Method: TRESTRequestMethod;
-      Body: String; out ErrorString: String): TJsonValue; virtual;
+      Body: String; ContentType: TRESTContentType; out ErrorString: String): TJsonValue; virtual;
   public
     constructor Create(ApiKey: String);
     destructor Destroy; override;
@@ -101,19 +101,33 @@ var
   Responce: TJSONValue;
   Parameters: TListStringPair;
   st: TStringList;
-  JsonString: String;
+  Body: String;
+  Pair: TStringPair;
+  ContentType: TRESTContentType;
 begin
   FClient.BaseURL := Url;
   Parameters := Data.Serialize(FApiKey);
   try
-    if (Method = rmGET) then
-      JsonString := EmptyStr
-    else
-      JsonString := Data.ToJsonValue.ToString;
+    Body := EmptyStr;
+
+    ContentType := TRESTContentType.ctTEXT_PLAIN;
+
+    if (Method <> rmGET) then
+    begin
+      if (Data.BodyParameters.Count > 0) then
+      begin
+        for Pair in Data.BodyParameters do
+          Body := Body + Pair.Key + '=' + {TIdURI.ParamsEncode}(Pair.Value) + '&';
+        System.Delete(Body, Length(Body), 1);
+        ContentType := TRESTContentType.ctAPPLICATION_X_WWW_FORM_URLENCODED;
+      end
+      else
+        Body := Data.ToJsonValue.ToString;
+    end;
 
     Responce := RunRequest(
       FRESTRequest.Client.BaseURL + UrlParameters(Parameters),
-      Method, JsonString, ErrorString);
+      Method, Body, ContentType, ErrorString);
   finally
     FreeAndNil(Parameters);
   end;
@@ -131,13 +145,13 @@ begin
 end;
 
 function TConnection.RunRequest(URL: String; Method: TRESTRequestMethod;
-  Body: String; out ErrorString: String): TJsonValue;
+  Body: String; ContentType: TRESTContentType; out ErrorString: String): TJsonValue;
 begin
-  Result := InternalRequest(URL, Method, Body, ErrorString);
+  Result := InternalRequest(URL, Method, Body, ContentType, ErrorString);
 end;
 
 function TConnection.InternalRequest(URL: String; Method: TRESTRequestMethod;
-  Body: String; out ErrorString: String): TJsonValue;
+  Body: String; ContentType: TRESTContentType; out ErrorString: String): TJsonValue;
   function GetHeaderValue(Name: String): String;
   var
     s: String;
@@ -159,7 +173,10 @@ begin
   FRESTRequest.Client.BaseURL := URL;
   FRESTRequest.Method := Method;
   FRESTRequest.ClearBody;
-  FRESTRequest.AddBody(Body, TRESTContentType.ctTEXT_PLAIN);
+  FRESTRequest.AddBody(Body, ContentType);
+  if (ContentType = TRESTContentType.ctAPPLICATION_X_WWW_FORM_URLENCODED) then
+    FRESTRequest.Params[FRESTRequest.Params.Count - 1].Options :=
+      FRESTRequest.Params[FRESTRequest.Params.Count - 1].Options + [TRESTRequestParameterOption.poDoNotEncode];
   FRESTRequest.Execute;
   if (FRESTResponse.StatusCode = 200) then
     Result := FRESTResponse.JSONValue
@@ -167,7 +184,7 @@ begin
   if (FRESTResponse.StatusCode = 303) then
   begin
     Result := InternalRequest(
-      GetHeaderValue('Location'), TRESTRequestMethod.rmGET, EmptyStr, ErrorString);
+      GetHeaderValue('Location'), TRESTRequestMethod.rmGET, EmptyStr, ContentType, ErrorString);
   end
   else
 // todo:  здесь есть ответ: {"errors":["Point is not allowed for test account"],"timestamp":1477405518}
@@ -190,7 +207,7 @@ begin
   Result := EmptyStr;
 
   for Pair in Parameters do
-    Result := Result + Pair.Key + '=' + Pair.Value + '&';
+    Result := Result + Pair.Key + '=' + TIdURI.ParamsEncode(Pair.Value) + '&';
 
   if (Result <> EmptyStr) then
   begin

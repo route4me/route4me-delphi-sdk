@@ -4,7 +4,7 @@ interface
 
 uses
   TestFramework, REST.Json.Types, System.JSON, Types, SysUtils,
-  JSONNullableAttributeUnit,
+  JSONNullableAttributeUnit, System.Generics.Collections, REST.JsonReflect,
   GenericParametersUnit,
   NullableBasicTypesUnit;
 
@@ -212,6 +212,7 @@ type
     constructor Create(Value: integer);
   end;
   TTestIntegerObjectArray = array of TTestIntegerObject;
+  TTestIntegerObjectList = TList<TTestIntegerObject>;
 
   TTestArrayObjectClass = class(TGenericParameters)
   private
@@ -253,6 +254,8 @@ type
   end;
 
   TTestUnmarshalNullable = class(TTestCase)
+  private
+    procedure TestSimpleArray();
   published
     procedure TestNullableBoolean();
     procedure TestNullableString();
@@ -570,6 +573,47 @@ begin
       finally
         FreeAndNil(Etalon);
       end;
+    finally
+      FreeAndNil(Obj);
+    end;
+  finally
+    FreeAndNil(JsonValue);
+  end;
+end;
+
+procedure TTestUnmarshalNullable.TestSimpleArray;
+var
+  Actual: TTestIntegerObjectList;
+  Obj: TObject;
+  JsonValue: TJSONValue;
+
+  Temp: TTestIntegerObjectList;
+  Marshal: TJSONMarshal;
+  Value: TJSONValue;
+  s: String;
+begin
+  Temp := TTestIntegerObjectList.Create;
+  Temp.Add(TTestIntegerObject.Create(1));
+  Temp.Add(TTestIntegerObject.Create(2));
+  Temp.Add(TTestIntegerObject.Create(3));
+  Temp.Add(TTestIntegerObject.Create(4));
+  Temp.Add(TTestIntegerObject.Create(5));
+  Marshal := TJSONMarshal.Create();
+  Value := Marshal.Marshal(Temp);
+  s := Value.ToString;
+
+  JsonValue := TJSONObject.ParseJSONValue('[{"value":1},{"value":2},{"value":3}]');
+  try
+    Obj := TMarshalUnMarshal.FromJson(TTestIntegerObjectList, JsonValue);
+    try
+      CheckIs(Obj, TTestIntegerObjectList);
+
+      Actual := Obj as TTestIntegerObjectList;
+
+      CheckEquals(3, Actual.Count);
+      CheckEquals(1, Actual[0].FValue);
+      CheckEquals(2, Actual[1].FValue);
+      CheckEquals(3, Actual[2].FValue);
     finally
       FreeAndNil(Obj);
     end;

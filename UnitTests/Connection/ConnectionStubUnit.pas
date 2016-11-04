@@ -14,15 +14,17 @@ type
     FUrl: String;
     FMethod: TRESTRequestMethod;
     FRequestBody: String;
+    FContentType: TRESTContentType;
   protected
     function RunRequest(URL: String; Method: TRESTRequestMethod;
-      RequestBody: String; out ErrorString: String): TJsonValue; override;
+      RequestBody: String; ContentType: TRESTContentType; out ErrorString: String): TJsonValue; override;
   public
     constructor Create(); reintroduce;
 
     property Url: String read FUrl;
     property Method: TRESTRequestMethod read FMethod;
     property RequestBody: String read FRequestBody;
+    property ContentType: TRESTContentType read FContentType;
   end;
 
 implementation
@@ -35,12 +37,13 @@ begin
 end;
 
 function TConnectionStub.RunRequest(URL: String;
-  Method: TRESTRequestMethod; RequestBody: String;
+  Method: TRESTRequestMethod; RequestBody: String; ContentType: TRESTContentType;
   out ErrorString: String): TJsonValue;
 begin
   FUrl := URL;
   FMethod := Method;
   FRequestBody := RequestBody;
+  FContentType := ContentType;
 
   Result := nil;
 end;

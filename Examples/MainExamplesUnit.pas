@@ -55,6 +55,7 @@ begin
     Examples := TRoute4MeExamples.Create(TOutputConsole.Create, Connection);
     try
       try
+//        examples.GetRoutes();
         DataObject1 := Examples.SingleDriverRoute10Stops();
 
         if (DataObject1 <> nil) and (DataObject1.Routes <> nil) and (Length(DataObject1.Routes) > 0) then
@@ -77,15 +78,9 @@ begin
         DataObject2 := Examples.SingleDriverRoundTrip();
 
         if (DataObject2 <> nil) and (DataObject2.Routes <> nil) and (Length(DataObject2.Routes) > 0) then
-        begin
-          RouteId_SingleDriverRoundTrip := DataObject2.Routes[0].RouteId;
-          Examples.ResequenceRouteDestinations(RouteSingleDriverRoute10Stops);
-        end
+          RouteId_SingleDriverRoundTrip := DataObject2.Routes[0].RouteId
         else
-        begin
           RouteId_SingleDriverRoundTrip := NullableString.Null;
-          WriteLn('ResequenceRouteDestinations not called. RouteSingleDriverRoute10Stops = null.');
-        end;
 
         routeIdToMoveTo := routeId_SingleDriverRoundTrip;
 
@@ -98,14 +93,13 @@ begin
 
         if (DataObject2 <> nil) and (Length(DataObject2.Routes) > 0) and
           (Length(DataObject2.Routes[0].Addresses) > 1) and
-          (DataObject1.Routes[0].Addresses[0].RouteDestinationId.IsNotNull) then
+          (DataObject2.Routes[0].Addresses[0].RouteDestinationId.IsNotNull) then
           AfterDestinationIdToMoveAfter := dataObject2.Routes[0].Addresses[0].RouteDestinationId.Value
         else
           AfterDestinationIdToMoveAfter := NullableInteger.Null;
 
         if routeIdToMoveTo.IsNotNull and routeDestinationIdToMove.IsNotNull and
           AfterDestinationIdToMoveAfter.IsNotNull then
-          // todo: {"success":false,"error":"Missing required POST parameters (route_destination_id, to_route_id)"}
           Examples.MoveDestinationToRoute(RouteIdToMoveTo, RouteDestinationIdToMove, AfterDestinationIdToMoveAfter)
         else
           WriteLn(Format(

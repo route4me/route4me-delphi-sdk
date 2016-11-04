@@ -4,7 +4,7 @@ interface
 
 uses
   GenericParametersUnit, System.Rtti, Classes, SysUtils,
-  REST.JsonReflect, System.JSON, REST.Json.Types;
+  REST.JsonReflect, System.JSON, REST.Json.Types, System.Generics.Collections;
 
 type
   TMarshalUnMarshal = class
@@ -12,6 +12,7 @@ type
     class var ctx: TRttiContext;
 
     class procedure InitIntermediateObject(TypeInfo: Pointer; JsonObject: TJSONObject);
+    class function MakeJsonObject(JsonValue: TJsonValue): TJSONObject;
   public
     class function ToJson(GenericParameters: TGenericParameters): String;
     class function ToJsonValue(GenericParameters: TGenericParameters): TJSONValue;
@@ -35,7 +36,9 @@ var
 begin
   Unmarshal := TJSONUnMarshal.Create();
   try
-    JsonObject := JsonValue as TJSONObject;
+    JsonObject := MakeJsonObject(JsonValue);
+    if (JsonObject = nil) then
+      Exit(nil);
 
     ctx := TRttiContext.Create;
     Marshal := TJSONMarshal.Create;
@@ -184,6 +187,30 @@ begin
         raise Exception.Create('Error of "' + Name + '" field name');
     end;
   end;
+end;
+
+class function TMarshalUnMarshal.MakeJsonObject(
+  JsonValue: TJsonValue): TJSONObject;
+var
+  i: integer;
+  Arr: TJSONArray;
+  ListHelperJSONValue: TJSONArray;
+begin
+  if JsonValue is TJsonObject then
+    Exit(TJSONObject(JsonValue));
+
+(*  if JsonValue is TJSONArray then
+  begin
+// '{"listHelper":[5],"items":[{"value":1},{"value":2},{"value":3},{"value":4},{"value":5},null,null,null]}'
+    Result := TJSONObject.Create();
+    ListHelperJSONValue := TJSONArray.Create;
+//    ListHelperJSONValue.a
+//    Result.AddPair('listHelper', TJSONValue.)
+    Arr := TJSONArray(JsonValue);
+    for i := 0 to Arr.Count - 1 do
+      Result.AddPair('Items', Arr.Items[i]);
+//      Result.AddPair('ListHelper', Arr.Items[i]);
+  end;*)
 end;
 
 class function TMarshalUnMarshal.ToJson(

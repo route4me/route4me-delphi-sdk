@@ -8,9 +8,6 @@ program Route4MeProjectTests;
 //  FastMM4Messages in '..\FastMM\FastMM4Messages.pas',
 
 uses
-//  FastMM4 in '..\FastMM\FastMM4.pas',
-//  FastMM4Messages in '..\FastMM\FastMM4Messages.pas',
-
   GUITestRunner,
   Route4MeManagerUnit in '..\Route4MeManagerUnit.pas',
   AddressUnit in '..\DataTypes\AddressUnit.pas',

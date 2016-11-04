@@ -20,12 +20,18 @@ type
 
     [JSONMarshalled(False)]
     FParametersCollection: TListStringPair;
+
+    [JSONMarshalled(False)]
+    FBodyParametersCollection: TListStringPair;
   public
     constructor Create; virtual;
     destructor Destroy; override;
 
     procedure AddParameter(Key, Value: String);
     procedure ReplaceParameter(Key, Value: String);
+
+    procedure AddBodyParameter(Key, Value: String);
+    property BodyParameters: TListStringPair read FBodyParametersCollection;
 
     function ToJsonString: String;
     function ToJsonValue: TJSONValue;
@@ -40,6 +46,11 @@ uses
   Math,
   MarshalUnMarshalUnit;
 
+procedure TGenericParameters.AddBodyParameter(Key, Value: String);
+begin
+  FBodyParametersCollection.Add(TStringPair.Create(Key, Value));
+end;
+
 procedure TGenericParameters.AddParameter(Key, Value: String);
 begin
   FParametersCollection.Add(TStringPair.Create(Key, Value));
@@ -51,11 +62,13 @@ begin
 
   FConvertBooleansToInteger := True;
   FParametersCollection := TListStringPair.Create;
+  FBodyParametersCollection := TListStringPair.Create;
 end;
 
 destructor TGenericParameters.Destroy;
 begin
   FreeAndNil(FParametersCollection);
+  FreeAndNil(FBodyParametersCollection);
 
   inherited;
 end;

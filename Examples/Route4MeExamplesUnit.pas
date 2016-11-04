@@ -47,8 +47,8 @@ type
     procedure UpdateRoute(RouteId: String);
     procedure ReoptimizeRoute(RouteId: String);
     procedure GetRoute(RouteId: String; GetRouteDirections, GetRoutePathPoints: boolean);
-    procedure GetRoutes();
 
+    procedure GetRoutes();
     procedure GetUsers();
     function LogCustomActivity(Message: String; RouteId: String): boolean;
     procedure GetActivities(RouteId: String);
@@ -809,6 +809,8 @@ begin
 
     // Run the query
     Route := Route4MeManager.Route.Get(Parameters, ErrorString);
+
+    WriteLn('');
     try
       if (Route <> nil) then
       begin
@@ -845,9 +847,8 @@ begin
 
     // Run the query
     Routes := Route4MeManager.Route.GetList(Parameters, ErrorString);
+    WriteLn('');
     try
-      WriteLn('');
-
       if (Length(Routes) > 0) then
       begin
         WriteLn(Format('GetRoutes executed successfully, %d routes returned', [Length(Routes)]));
@@ -1156,6 +1157,8 @@ begin
 
     // Run the query
     DataObject := Route4MeManager.Optimization.Update(Parameters, ErrorString);
+
+    WriteLn('');
     try
       if (DataObject <> nil) then
       begin
@@ -1186,6 +1189,8 @@ begin
 
     // Run the query
     Route := Route4MeManager.Route.Update(Parameters, ErrorString);
+
+    WriteLn('');
     try
       if (Route <> nil) then
       begin
@@ -1604,6 +1609,8 @@ begin
 
     // Run the query
     Route := Route4MeManager.Route.Update(RouteParameters, ErrorString);
+
+    WriteLn('');
     try
       if (Route <> nil) then
       begin

@@ -234,9 +234,9 @@ var
 begin
   Request := TGenericParameters.Create;
   try
-    Request.AddParameter('to_route_id', ToRouteId);
-    Request.AddParameter('route_destination_id', IntToStr(RouteDestinationId));
-    Request.AddParameter('after_destination_id', IntToStr(AfterDestinationId));
+    Request.AddBodyParameter('to_route_id', ToRouteId);
+    Request.AddBodyParameter('route_destination_id', IntToStr(RouteDestinationId));
+    Request.AddBodyParameter('after_destination_id', IntToStr(AfterDestinationId));
 
     Response := FConnection.Post(TSettings.MoveRouteDestination,
         Request, TMoveDestinationToRouteResponse, ErrorString) as TMoveDestinationToRouteResponse;

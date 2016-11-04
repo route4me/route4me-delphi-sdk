@@ -3,7 +3,7 @@ unit TestRoute4MeExamplesUnit;
 interface
 
 uses
-  TestFramework, REST.Types, Classes,
+  TestFramework, REST.Types, Classes, IdURI,
   SysUtils, TestBaseJsonMarshalUnit, Route4MeExamplesUnit, IRoute4MeManagerUnit,
   ConnectionStubUnit;
 
@@ -110,6 +110,7 @@ begin
     CheckEqualsBody('SingleDepotMultipleDriverNoTimeWindow', FConnection.RequestBody);
     CheckEquals('https://www.route4me.com/api.v4/optimization_problem.php?api_key=11111111111111111111111111111111', FConnection.Url);
     CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
+    CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
   finally
     FreeAndNil(DataObject);
   end;
@@ -124,6 +125,7 @@ begin
     CheckEqualsBody('SingleDriverMultipleTimeWindows', FConnection.RequestBody);
     CheckEquals('https://www.route4me.com/api.v4/optimization_problem.php?api_key=11111111111111111111111111111111', FConnection.Url);
     CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
+    CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
   finally
     FreeAndNil(DataObject);
   end;
@@ -138,6 +140,7 @@ begin
     CheckEqualsBody('SingleDriverRoundTrip', FConnection.RequestBody);
     CheckEquals('https://www.route4me.com/api.v4/optimization_problem.php?api_key=11111111111111111111111111111111', FConnection.Url);
     CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
+    CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
   finally
     FreeAndNil(DataObject);
   end;
@@ -152,6 +155,7 @@ begin
   CheckEqualsBody('SingleDriverRoundTripGeneric', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/optimization_problem.php?api_key=11111111111111111111111111111111', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
 procedure TTestRoute4MeExamples.SingleDriverRoute10Stops;
@@ -163,6 +167,7 @@ begin
     CheckEqualsBody('SingleDriverRoute10Stops', FConnection.RequestBody);
     CheckEquals('https://www.route4me.com/api.v4/optimization_problem.php?api_key=11111111111111111111111111111111', FConnection.Url);
     CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
+    CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
   finally
     FreeAndNil(DataObject);
   end;
@@ -186,6 +191,7 @@ begin
   CheckEqualsBody('AddAddressBookContact', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/address_book.php?api_key=11111111111111111111111111111111', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
 procedure TTestRoute4MeExamples.AddAddressNote;
@@ -197,11 +203,12 @@ begin
   AddressId := 194622711;
   FRoute4MeExamples.AddAddressNote(RouteId, AddressId);
 
-  CheckEquals('{}', FConnection.RequestBody);
+  CheckEquals('strUpdateType=dropoff&strNoteContents=Test+Note+Contents+' + TIdURI.ParamsEncode(DateTimeToStr(Now)), FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/actions/addRouteNotes.php?api_key=11111111111111111111111111111111&' +
     'route_id=585D2628AE1C5A4FBD7B4050CB9D9601&address_id=194622711&dev_lat=33%2c132675170898&dev_lng=-83%2c244743347168&device_type=web&strUpdateType=dropoff', FConnection.Url);
 
   CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
+  CheckTrue(TRESTContentType.ctAPPLICATION_X_WWW_FORM_URLENCODED = FConnection.ContentType);
 // todo: как параметры, а не JSON strUpdateType=dropoff&strNoteContents=Test+Note+Contents+27.10.2016+19%3A24%3A04
 end;
 
@@ -212,6 +219,7 @@ begin
   CheckEqualsBody('AddAvoidanceZone', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/avoidance.php?api_key=11111111111111111111111111111111', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
 procedure TTestRoute4MeExamples.AddDestinationToOptimization;
@@ -228,6 +236,7 @@ begin
     CheckEqualsBody('AddDestinationToOptimization', FConnection.RequestBody);
     CheckEquals('https://www.route4me.com/api.v4/optimization_problem.php?api_key=11111111111111111111111111111111&optimization_problem_id=6084D999940BDCF13A568724DBE8FFE4&reoptimize=1', FConnection.Url);
     CheckTrue(TRESTRequestMethod.rmPUT = FConnection.Method);
+    CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
   finally
     FreeAndNil(DataObject);
   end;
@@ -240,6 +249,7 @@ begin
   CheckEqualsBody('AddOrder', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/order.php?api_key=11111111111111111111111111111111', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
 procedure TTestRoute4MeExamples.AddRouteDestinations;
@@ -253,6 +263,7 @@ begin
   CheckEqualsBody('AddRouteDestinations', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/route.php?api_key=11111111111111111111111111111111&route_id=5BCEACC31C444BCF9D8AB604DA4DFCA7', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmPUT = FConnection.Method);
+    CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
 procedure TTestRoute4MeExamples.TrackDeviceLastLocationHistory;
@@ -279,6 +290,7 @@ begin
     CheckEqualsBody('UpdateAddressBookContact', FConnection.RequestBody);
     CheckEquals('https://www.route4me.com/api.v4/address_book.php?api_key=11111111111111111111111111111111', FConnection.Url);
     CheckTrue(TRESTRequestMethod.rmPUT = FConnection.Method);
+    CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
   finally
     FreeAndNil(Contact);
   end;  *)
@@ -294,6 +306,7 @@ begin
   CheckEqualsBody('UpdateAvoidanceZone', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/avoidance.php?api_key=11111111111111111111111111111111', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmPUT = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
 procedure TTestRoute4MeExamples.UpdateOrder;
@@ -318,6 +331,7 @@ begin
     CheckEqualsBody('UpdateOrder', FConnection.RequestBody);
     CheckEquals('https://www.route4me.com/api.v4/order.php?api_key=11111111111111111111111111111111', FConnection.Url);
     CheckTrue(TRESTRequestMethod.rmPUT = FConnection.Method);
+    CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
   finally
     FreeAndNil(Order);
   end;
@@ -334,6 +348,7 @@ begin
   CheckEqualsBody('UpdateRoute', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/route.php?api_key=11111111111111111111111111111111&route_id=5BCEACC31C444BCF9D8AB604DA4DFCA7', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmPUT = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
 procedure TTestRoute4MeExamples.CheckEqualsBody(TestName, Actual: String);
@@ -365,6 +380,7 @@ begin
   CheckEqualsBody('DeleteAvoidanceZone', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/avoidance.php?api_key=11111111111111111111111111111111&territory_id=503F8B59E9719FE310836C830F7E82A0', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmDELETE = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
 procedure TTestRoute4MeExamples.DeleteRoutes;
@@ -388,6 +404,7 @@ begin
     '%2C181AA7EA4C23DFCAD80DB4244B1BC605%2C5E335C48F3A35CC043C2D9F4B865B509%2C1275C40E330F6E54753688FCCD7B4055' +
     '%2C49924C49F5B845AA429770AD0D115C92', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmDELETE = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
 procedure TTestRoute4MeExamples.DuplicateRoute;
@@ -400,6 +417,7 @@ begin
   CheckEquals(EmptyStr, FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/actions/duplicate_route.php?api_key=11111111111111111111111111111111&to=none&route_id=68621A20B99EBA14F1A4F2FDAC907B42', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
 procedure TTestRoute4MeExamples.GenericExample;
@@ -409,6 +427,7 @@ begin
   CheckEquals(EmptyStr, FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/route.php?api_key=11111111111111111111111111111111&limit=10&Offset=5', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
 procedure TTestRoute4MeExamples.GenericExampleShortcut;
@@ -418,6 +437,7 @@ begin
   CheckEquals(EmptyStr, FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/route.php?api_key=11111111111111111111111111111111&limit=10&offset=5', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
 procedure TTestRoute4MeExamples.GetActivities;
@@ -430,6 +450,7 @@ begin
   CheckEquals(EmptyStr, FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/activity_feed.php?api_key=11111111111111111111111111111111&route_id=68621A20B99EBA14F1A4F2FDAC907B42&limit=10&offset=0', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
 procedure TTestRoute4MeExamples.GetAddress;
@@ -444,6 +465,7 @@ begin
   CheckEquals(EmptyStr, FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/address.php?api_key=11111111111111111111111111111111&route_id=585D2628AE1C5A4FBD7B4050CB9D9601&route_destination_id=194622711&notes=1', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
 procedure TTestRoute4MeExamples.GetAddressBookContacts;
@@ -453,6 +475,7 @@ begin
   CheckEquals(EmptyStr, FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/address_book.php?api_key=11111111111111111111111111111111&limit=10&offset=0', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
 procedure TTestRoute4MeExamples.GetAddressNotes;
@@ -467,6 +490,7 @@ begin
   CheckEquals(EmptyStr, FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/address.php?api_key=11111111111111111111111111111111&route_id=585D2628AE1C5A4FBD7B4050CB9D9601&route_destination_id=194622711&notes=1', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
 procedure TTestRoute4MeExamples.GetAvoidanceZone;
@@ -479,6 +503,7 @@ begin
   CheckEquals(EmptyStr, FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/avoidance.php?api_key=11111111111111111111111111111111&territory_id=503F8B59E9719FE310836C830F7E82A0', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
 procedure TTestRoute4MeExamples.GetAvoidanceZones;
@@ -488,6 +513,7 @@ begin
   CheckEquals(EmptyStr, FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/avoidance.php?api_key=11111111111111111111111111111111', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
 procedure TTestRoute4MeExamples.GetOptimization;
@@ -500,6 +526,7 @@ begin
   CheckEquals('', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/optimization_problem.php?api_key=11111111111111111111111111111111&optimization_problem_id=6084D999940BDCF13A568724DBE8FFE4', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
 procedure TTestRoute4MeExamples.GetOptimizations;
@@ -509,6 +536,7 @@ begin
   CheckEquals('', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/optimization_problem.php?api_key=11111111111111111111111111111111&limit=10&offset=5', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
 procedure TTestRoute4MeExamples.GetOrders;
@@ -518,6 +546,7 @@ begin
   CheckEquals(EmptyStr, FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/order.php?api_key=11111111111111111111111111111111&limit=10', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
 procedure TTestRoute4MeExamples.GetRoute;
@@ -534,6 +563,7 @@ begin
   CheckEquals(EmptyStr, FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/route.php?api_key=11111111111111111111111111111111&route_id=68621A20B99EBA14F1A4F2FDAC907B42&directions=1&route_path_output=Points', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
 procedure TTestRoute4MeExamples.GetRoutes;
@@ -543,6 +573,7 @@ begin
   CheckEquals(EmptyStr, FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/route.php?api_key=11111111111111111111111111111111&limit=10&offset=5', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
 procedure TTestRoute4MeExamples.GetUsers;
@@ -552,6 +583,7 @@ begin
   CheckEquals(EmptyStr, FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api/member/view_users.php?api_key=11111111111111111111111111111111', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
 procedure TTestRoute4MeExamples.LogCustomActivity;
@@ -566,6 +598,7 @@ begin
   CheckEqualsBody('LogCustomActivity', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/activity_feed.php?api_key=11111111111111111111111111111111', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
 procedure TTestRoute4MeExamples.MoveDestinationToRoute;
@@ -579,8 +612,9 @@ begin
   FRoute4MeExamples.MoveDestinationToRoute(ToRouteId, RouteDestinationId, AfterDestinationId);
 
   CheckEqualsBody('MoveDestinationToRoute', FConnection.RequestBody);
-  CheckEquals('https://www.route4me.com/actions/route/move_route_destination.php?api_key=11111111111111111111111111111111&to_route_id=5669728DF43FCE78F6CBD3DD5B533197&route_destination_id=194447367&after_destination_id=194451895', FConnection.Url);
+  CheckEquals('https://www.route4me.com/actions/route/move_route_destination.php?api_key=11111111111111111111111111111111', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
+  CheckTrue(TRESTContentType.ctAPPLICATION_X_WWW_FORM_URLENCODED = FConnection.ContentType);
 end;
 
 procedure TTestRoute4MeExamples.MultipleDepotMultipleDriver;
@@ -592,6 +626,7 @@ begin
     CheckEqualsBody('MultipleDepotMultipleDriver', FConnection.RequestBody);
     CheckEquals('https://www.route4me.com/api.v4/optimization_problem.php?api_key=11111111111111111111111111111111', FConnection.Url);
     CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
+    CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
   finally
     FreeAndNil(DataObject);
   end;
@@ -606,6 +641,7 @@ begin
     CheckEqualsBody('MultipleDepotMultipleDriverTimeWindow', FConnection.RequestBody);
     CheckEquals('https://www.route4me.com/api.v4/optimization_problem.php?api_key=11111111111111111111111111111111', FConnection.Url);
     CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
+    CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
   finally
     FreeAndNil(DataObject);
   end;
@@ -620,6 +656,7 @@ begin
     CheckEqualsBody('MultipleDepotMultipleDriverWith24StopsTimeWindow', FConnection.RequestBody);
     CheckEquals('https://www.route4me.com/api.v4/optimization_problem.php?api_key=11111111111111111111111111111111', FConnection.Url);
     CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
+    CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
   finally
     FreeAndNil(DataObject);
   end;
@@ -637,6 +674,7 @@ begin
   CheckEqualsBody('RemoveAddressBookContacts', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/address_book.php?api_key=11111111111111111111111111111111', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmDELETE = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
 procedure TTestRoute4MeExamples.RemoveDestinationFromOptimization;
@@ -654,6 +692,7 @@ begin
   CheckEqualsBody('RemoveDestinationFromOptimization', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/address.php?api_key=11111111111111111111111111111111&optimization_problem_id=6084D999940BDCF13A568724DBE8FFE4&route_destination_id=194457563', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmDELETE = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
 procedure TTestRoute4MeExamples.RemoveOptimization;
@@ -666,6 +705,7 @@ begin
   CheckEqualsBody('RemoveOptimization', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/optimization_problem.php?api_key=11111111111111111111111111111111&optimization_problem_id=EECF1B409E2491B80C860C5A7E6565AB', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmDELETE = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
 procedure TTestRoute4MeExamples.RemoveOrders;
@@ -680,6 +720,7 @@ begin
   CheckEqualsBody('RemoveOrders', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/order.php?api_key=11111111111111111111111111111111', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmDELETE = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
 procedure TTestRoute4MeExamples.RemoveRouteDestination;
@@ -694,6 +735,7 @@ begin
   CheckEqualsBody('RemoveRouteDestination', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/address.php?api_key=11111111111111111111111111111111&route_id=5BCEACC31C444BCF9D8AB604DA4DFCA7&route_destination_id=194450192', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmDELETE = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
 procedure TTestRoute4MeExamples.ReOptimization;
@@ -707,6 +749,7 @@ begin
   CheckEqualsBody('ReOptimization', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/optimization_problem.php?api_key=11111111111111111111111111111111&optimization_problem_id=6084D999940BDCF13A568724DBE8FFE4&reoptimize=1', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmPUT = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
 procedure TTestRoute4MeExamples.ReoptimizeRoute;
@@ -719,8 +762,8 @@ begin
 
   CheckEqualsBody('ReoptimizeRoute', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/route.php?api_key=11111111111111111111111111111111&route_id=68621A20B99EBA14F1A4F2FDAC907B42&reoptimize=1', FConnection.Url);
-
   CheckTrue(TRESTRequestMethod.rmPUT = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
 procedure TTestRoute4MeExamples.ResequenceRouteDestinations;
@@ -753,6 +796,7 @@ begin
     CheckEqualsBody('ResequenceRouteDestinations', FConnection.RequestBody);
     CheckEquals('https://www.route4me.com/api.v4/route.php?api_key=11111111111111111111111111111111&route_id=5BCEACC31C444BCF9D8AB604DA4DFCA7', FConnection.Url);
     CheckTrue(TRESTRequestMethod.rmPUT = FConnection.Method);
+    CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
   finally
     FreeAndNil(Route);
   end;

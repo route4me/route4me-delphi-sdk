@@ -52,8 +52,8 @@ begin
     // todo: сделать TAddressNoteActions.Add
     // эти параметры должны быть переданы через тело запрос, но не как json, а в виде:
     // strUpdateType=dropoff&strNoteContents=Test+Note+Contents+27.10.2016+19%3A24%3A04
-    Parameters.AddParameter('strUpdateType', StrUpdateType);
-    Parameters.AddParameter('strNoteContents', NoteContents);
+    Parameters.AddBodyParameter('strUpdateType', StrUpdateType);
+    Parameters.AddBodyParameter('strNoteContents', NoteContents);
     Temp := NoteParameters.Serialize('');
     // эти параметры должны быть через url переданы
     for i := 0 to Temp.Count - 1 do
