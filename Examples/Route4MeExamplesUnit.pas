@@ -47,7 +47,6 @@ type
     procedure UpdateRoute(RouteId: String);
     procedure ReoptimizeRoute(RouteId: String);
     procedure GetRoute(RouteId: String; GetRouteDirections, GetRoutePathPoints: boolean);
-
     procedure GetRoutes();
     procedure GetUsers();
     function LogCustomActivity(Message: String; RouteId: String): boolean;
@@ -63,7 +62,7 @@ type
     function AddAddressBookContact(FirstName, Address: String): TAddressBookContact;
     procedure GetAddressBookContacts;
     procedure UpdateAddressBookContact(Contact: TAddressBookContact);
-    procedure RemoveAddressBookContacts(AddressIds: TStringArray);
+    procedure RemoveAddressBookContacts(AddressIds: TArray<integer>);
     function AddAvoidanceZone: NullableString;
     procedure GetAvoidanceZones;
     procedure GetAvoidanceZone(TerritoryId: String);
@@ -120,7 +119,7 @@ begin
     if (Result <> nil) then
     begin
       WriteLn('AddAddressBookContact executed successfully');
-      WriteLn(Format('Address: %s', [Result.Address]));
+      WriteLn(Format('AddressId: %d', [Result.Id.Value]));
     end
     else
       WriteLn(Format('AddAddressBookContact error: "%s"', [ErrorString]));
@@ -518,7 +517,7 @@ begin
         WriteLn('');
 
         for Activity in Activities do
-          WriteLn(Format('Activity message: %s', [Activity.ActivityMessage.Value]));
+          WriteLn(Format('Activity id: %s', [Activity.ActivityId.Value]));
 
         WriteLn('');
       end
@@ -744,10 +743,7 @@ begin
           WriteLn('');
 
           for DataObject in DataObjects do
-          begin
             WriteLn(Format('Optimization Problem ID: %s', [DataObject.OptimizationProblemId]));
-            WriteLn('');
-          end;
       end
       else
         WriteLn(Format('GetOptimizations error: "%s"', [ErrorString]));
@@ -855,10 +851,7 @@ begin
         WriteLn('');
 
         for Route in Routes do
-        begin
           WriteLn(Format('RouteId: %s', [Route.RouteId]));
-          WriteLn('');
-        end;
       end
       else
         WriteLn(Format('GetRoutes error "%s"', [ErrorString]));
@@ -1052,7 +1045,7 @@ begin
     WriteLn(Format('%s error: "%s"', [ExampleName, ErrorString]));
 end;
 
-procedure TRoute4MeExamples.RemoveAddressBookContacts(AddressIds: TStringArray);
+procedure TRoute4MeExamples.RemoveAddressBookContacts(AddressIds: TArray<integer>);
 var
   ErrorString: String;
   Removed: boolean;

@@ -16,6 +16,10 @@ type
   /// </remarks>
   TAddressBookContact = class(TGenericParameters)
   private
+    [JSONName('address_id')]
+    [Nullable]
+    FId: NullableInteger;
+
     [JSONName('address_group')]
     [Nullable]
     FAddressGroup: NullableString;
@@ -100,6 +104,11 @@ type
     destructor Destroy; override;
 
     function Equals(Obj: TObject): Boolean; override;
+
+    /// <summary>
+    ///  Address unique ID
+    /// </summary>
+    property Id: NullableInteger read FId write FId;
 
     /// <summary>
     ///  Address group
@@ -209,6 +218,7 @@ constructor TAddressBookContact.Create;
 begin
   Inherited Create;
 
+  FId := NullableInteger.Null;
   FAddressGroup := NullableString.Null;
   FAlias := NullableString.Null;
   FAddress2 := NullableString.Null;
@@ -268,6 +278,7 @@ begin
   Other := TAddressBookContact(Obj);
 
   Result :=
+    (FId = Other.FId) and
     (FAddressGroup = Other.FAddressGroup) and
     (FAlias = Other.FAlias) and
     (FAddress = Other.FAddress) and

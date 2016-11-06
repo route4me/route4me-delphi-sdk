@@ -3,7 +3,7 @@ unit TestUnmarshalNullableUnit;
 interface
 
 uses
-  TestFramework, REST.Json.Types, System.JSON, Types, SysUtils,
+  TestFramework, REST.Json.Types, System.JSON, Types, SysUtils, Classes,
   JSONNullableAttributeUnit, System.Generics.Collections, REST.JsonReflect,
   GenericParametersUnit,
   NullableBasicTypesUnit;
@@ -254,8 +254,6 @@ type
   end;
 
   TTestUnmarshalNullable = class(TTestCase)
-  private
-    procedure TestSimpleArray();
   published
     procedure TestNullableBoolean();
     procedure TestNullableString();
@@ -265,13 +263,15 @@ type
     procedure TestSimpleObject();
     procedure TestNullableArrayObject();
     procedure TestArrayObject();
+    procedure TestSimpleArray();
+    procedure TestSimpleList();
   end;
 
 implementation
 
 { TTestNullableBooleanClass }
 
-uses MarshalUnMarshalUnit;
+uses MarshalUnMarshalUnit, ErrorResponseUnit;
 
 constructor TTestNullableBooleanClass.Create;
 begin
@@ -586,22 +586,7 @@ var
   Actual: TTestIntegerObjectList;
   Obj: TObject;
   JsonValue: TJSONValue;
-
-  Temp: TTestIntegerObjectList;
-  Marshal: TJSONMarshal;
-  Value: TJSONValue;
-  s: String;
 begin
-  Temp := TTestIntegerObjectList.Create;
-  Temp.Add(TTestIntegerObject.Create(1));
-  Temp.Add(TTestIntegerObject.Create(2));
-  Temp.Add(TTestIntegerObject.Create(3));
-  Temp.Add(TTestIntegerObject.Create(4));
-  Temp.Add(TTestIntegerObject.Create(5));
-  Marshal := TJSONMarshal.Create();
-  Value := Marshal.Marshal(Temp);
-  s := Value.ToString;
-
   JsonValue := TJSONObject.ParseJSONValue('[{"value":1},{"value":2},{"value":3}]');
   try
     Obj := TMarshalUnMarshal.FromJson(TTestIntegerObjectList, JsonValue);
@@ -614,6 +599,31 @@ begin
       CheckEquals(1, Actual[0].FValue);
       CheckEquals(2, Actual[1].FValue);
       CheckEquals(3, Actual[2].FValue);
+    finally
+      FreeAndNil(Obj);
+    end;
+  finally
+    FreeAndNil(JsonValue);
+  end;
+end;
+
+procedure TTestUnmarshalNullable.TestSimpleList;
+var
+  Actual: TErrorResponse;
+  Obj: TObject;
+  JsonValue: TJSONValue;
+begin
+  JsonValue := TJSONObject.ParseJSONValue('{"errors":["Error1", "Error2"]}');
+  try
+    Obj := TMarshalUnMarshal.FromJson(TErrorResponse, JsonValue);
+    try
+      CheckIs(Obj, TErrorResponse);
+
+      Actual := Obj as TErrorResponse;
+
+      CheckEquals(2, Length(Actual.Errors));
+      CheckEquals('Error1', Actual.Errors[0]);
+      CheckEquals('Error2', Actual.Errors[1]);
     finally
       FreeAndNil(Obj);
     end;

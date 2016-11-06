@@ -15,6 +15,7 @@ type
   published
     procedure DefaultAddressBookContact();
     procedure FullAddressBookContact();
+    procedure RealAddressBookContact();
   end;
 
 implementation
@@ -24,7 +25,8 @@ implementation
 uses
   Classes, System.JSON,
   DefaultAddressBookContactProviderUnit, FullAddressBookContactProviderUnit,
-  AddressBookContactUnit, MarshalUnMarshalUnit;
+  AddressBookContactUnit, MarshalUnMarshalUnit,
+  RealAddressBookContactProviderUnit;
 
 procedure TTestUnmarshalAddressBookContact.CheckEquals(
   Etalon: IAddressBookContactProvider; TestName: String);
@@ -72,6 +74,13 @@ begin
   CheckEquals(
     TFullAddressBookContactProvider.Create,
     'AddressBookContactToJson\FullAddressBookContact');
+end;
+
+procedure TTestUnmarshalAddressBookContact.RealAddressBookContact;
+begin
+  CheckEquals(
+    TRealAddressBookContactProvider.Create,
+    'AddressBookContactToJson\RealAddressBookContact');
 end;
 
 initialization

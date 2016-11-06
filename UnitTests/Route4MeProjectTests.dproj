@@ -195,6 +195,11 @@
         <DCCReference Include="..\DataTypes\GeocodingUnit.pas"/>
         <DCCReference Include="..\DataTypes\ManifestUnit.pas"/>
         <DCCReference Include="..\Nullabled\NullableArrayInterceptorUnit.pas"/>
+        <DCCReference Include="..\DataTypes\ErrorResponseUnit.pas"/>
+        <DCCReference Include="..\TestDataProviders\AddressBookContact\RealAddressBookContactProviderUnit.pas"/>
+        <DCCReference Include="TestDataProviders\AvoidanceZone\TestUnmarshalAvoidanceZoneUnit.pas"/>
+        <DCCReference Include="TestDataProviders\AvoidanceZone\IAvoidanceZoneProviderUnit.pas"/>
+        <DCCReference Include="TestDataProviders\AvoidanceZone\RealAvoidanceZoneProviderUnit.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

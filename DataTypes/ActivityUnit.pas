@@ -15,6 +15,10 @@ type
   /// </remarks>
   TActivity = class(TGenericParameters)
   private
+    [JSONName('activity_id')]
+    [Nullable]
+    FActivityId: NullableString;
+
     [JSONName('route_id')]
     [Nullable]
     FRouteId: NullableString;
@@ -42,6 +46,11 @@ type
     constructor Create; override;
 
     function Equals(Obj: TObject): Boolean; override;
+
+    /// <summary>
+    /// Activity ID
+    /// </summary>
+    property ActivityId: NullableString read FActivityId write FActivityId;
 
     /// <summary>
     /// Route ID
@@ -92,6 +101,7 @@ constructor TActivity.Create;
 begin
   Inherited;
 
+  FActivityId := NullableString.Null;
   FRouteId := NullableString.Null;
   FRouteDestinationId := NullableInteger.Null;
   FActivityType := NullableString.Null;
@@ -111,6 +121,7 @@ begin
   Other := TActivity(Obj);
 
   Result :=
+    (FActivityId = Other.FActivityId) and
     (FRouteId = Other.FRouteId) and
     (FRouteDestinationId = Other.FRouteDestinationId) and
     (FActivityType = Other.FActivityType) and

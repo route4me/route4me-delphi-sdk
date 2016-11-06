@@ -118,7 +118,12 @@ uses
   TestUnmarshalDataObjectUnit in 'Json\Unmarshal\TestUnmarshalDataObjectUnit.pas',
   GeocodingUnit in '..\DataTypes\GeocodingUnit.pas',
   ManifestUnit in '..\DataTypes\ManifestUnit.pas',
-  NullableArrayInterceptorUnit in '..\Nullabled\NullableArrayInterceptorUnit.pas';
+  NullableArrayInterceptorUnit in '..\Nullabled\NullableArrayInterceptorUnit.pas',
+  ErrorResponseUnit in '..\DataTypes\ErrorResponseUnit.pas',
+  RealAddressBookContactProviderUnit in '..\TestDataProviders\AddressBookContact\RealAddressBookContactProviderUnit.pas',
+  TestUnmarshalAvoidanceZoneUnit in 'TestDataProviders\AvoidanceZone\TestUnmarshalAvoidanceZoneUnit.pas',
+  IAvoidanceZoneProviderUnit in 'TestDataProviders\AvoidanceZone\IAvoidanceZoneProviderUnit.pas',
+  RealAvoidanceZoneProviderUnit in 'TestDataProviders\AvoidanceZone\RealAvoidanceZoneProviderUnit.pas';
 
 {R *.RES}
 

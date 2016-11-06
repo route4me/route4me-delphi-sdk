@@ -10,10 +10,15 @@ type
   TStringPair = TPair<String,String>;
   TArrayStringPair = TArray<TStringPair>;
   TListStringPair = TList<TStringPair>;
+  TListString = TList<String>;
 
   function SortStringArray(Strings: TStringArray): TStringArray;
+  function EncodeURL(URL: String): String;
 
 implementation
+
+uses
+  {System.NetEncoding,} IdURI;
 
 function SortStringArray(Strings: TStringArray): TStringArray;
 begin
@@ -29,5 +34,11 @@ begin
     end));
 end;
 
-end.
+function EncodeURL(URL: String): String;
+begin
+  Result := TIdURI.ParamsEncode(URL);
+//  Result := TNetEncoding.URL.Encode(Result);
 
+end;
+
+end.

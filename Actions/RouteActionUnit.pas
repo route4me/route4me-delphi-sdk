@@ -65,7 +65,7 @@ implementation
 { TRouteActions }
 
 uses
-  System.Generics.Collections, System.NetEncoding,
+  System.Generics.Collections,
   SettingsUnit, RemoveRouteDestinationResponseUnit,
   RemoveRouteDestinationRequestUnit, AddRouteDestinationRequestUnit,
   MoveDestinationToRouteResponseUnit,
@@ -138,7 +138,7 @@ begin
       RouteIdsAsString := RouteIdsAsString + ',';
     RouteIdsAsString := RouteIdsAsString + RouteId;
   end;
-  RouteIdsAsString := TURLEncoding.URL.Encode(RouteIdsAsString);
+  RouteIdsAsString := EncodeURL(RouteIdsAsString);
 
   Parameters := TGenericParameters.Create;
   try

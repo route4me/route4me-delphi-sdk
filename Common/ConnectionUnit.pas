@@ -45,7 +45,7 @@ implementation
 
 { TConnection }
 
-uses SettingsUnit, MarshalUnMarshalUnit;
+uses SettingsUnit, MarshalUnMarshalUnit, ErrorResponseUnit;
 
 function TConnection.Post(Url: String; Data: TGenericParameters;
   ResultClassType: TClass; out ErrorString: String): TObject;
@@ -117,7 +117,7 @@ begin
       if (Data.BodyParameters.Count > 0) then
       begin
         for Pair in Data.BodyParameters do
-          Body := Body + Pair.Key + '=' + {TIdURI.ParamsEncode}(Pair.Value) + '&';
+          Body := Body + Pair.Key + '=' + Pair.Value + '&';
         System.Delete(Body, Length(Body), 1);
         ContentType := TRESTContentType.ctAPPLICATION_X_WWW_FORM_URLENCODED;
       end
@@ -138,7 +138,7 @@ begin
   begin
     st := TStringList.Create;
     st.Text := Responce.ToString;
-//    st.SaveToFile('d:\post.json');
+    st.SaveToFile('d:\post.json');
     FreeAndNil(st);
     Result := TMarshalUnMarshal.FromJson(ResultClassType, Responce);
   end;
@@ -166,6 +166,10 @@ function TConnection.InternalRequest(URL: String; Method: TRESTRequestMethod;
         Break;
       end;
   end;
+var
+  ErrorResponse: TErrorResponse;
+  Error: String;
+  JsonResponce: TJsonValue;
 begin
   Result := nil;
   ErrorString := EmptyStr;
@@ -178,18 +182,30 @@ begin
     FRESTRequest.Params[FRESTRequest.Params.Count - 1].Options :=
       FRESTRequest.Params[FRESTRequest.Params.Count - 1].Options + [TRESTRequestParameterOption.poDoNotEncode];
   FRESTRequest.Execute;
-  if (FRESTResponse.StatusCode = 200) then
+  if (FRESTResponse.Status.Success) then
     Result := FRESTResponse.JSONValue
   else
   if (FRESTResponse.StatusCode = 303) then
-  begin
     Result := InternalRequest(
-      GetHeaderValue('Location'), TRESTRequestMethod.rmGET, EmptyStr, ContentType, ErrorString);
-  end
+      GetHeaderValue('Location'), TRESTRequestMethod.rmGET, EmptyStr, ContentType, ErrorString)
   else
-// todo:  здесь есть ответ: {"errors":["Point is not allowed for test account"],"timestamp":1477405518}
-
-    ErrorString := FRESTResponse.StatusText;
+  begin
+    ErrorString := EmptyStr;
+    JsonResponce := TJSONObject.ParseJSONValue(FRESTResponse.Content);
+    if (JsonResponce <> nil) then
+    begin
+      ErrorResponse := TMarshalUnMarshal.FromJson(TErrorResponse, JsonResponce) as TErrorResponse;
+      if (ErrorResponse <> nil) then
+        for Error in ErrorResponse.Errors do
+        begin
+          if (Length(ErrorString) > 0) then
+            ErrorString := ErrorString + '; ';
+          ErrorString := ErrorString + Error;
+        end;
+    end
+    else
+      ErrorString := 'Response: ' + FRESTResponse.StatusText;
+  end;
 end;
 
 procedure TConnection.SetProxy(Host: String; Port: integer; Username, Password: String);
@@ -207,7 +223,7 @@ begin
   Result := EmptyStr;
 
   for Pair in Parameters do
-    Result := Result + Pair.Key + '=' + TIdURI.ParamsEncode(Pair.Value) + '&';
+    Result := Result + Pair.Key + '=' + EncodeURL(Pair.Value) + '&';
 
   if (Result <> EmptyStr) then
   begin

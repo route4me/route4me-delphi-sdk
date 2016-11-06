@@ -142,7 +142,7 @@ begin
 
       if (RttiField = nil) then
         Continue;
-    
+
       JSONValue := JsonObject.Pairs[i].JsonValue;
       if (JSONValue is TJSONArray) then
       begin
@@ -151,31 +151,39 @@ begin
           elementType := TRttiArrayType(RttiField.FieldType).elementType
         else
           elementType := TRttiDynamicArrayType(RttiField.FieldType).elementType;
-        ItemTypeInfo := elementType.Handle;
+        if (elementType <> nil) then
+        begin
+          ItemTypeInfo := elementType.Handle;
 
-        SetLength(ArraysItems, 0);
-        IsNullabledArrayAttr := IsNullabledArrayAttribute(Name);
-        for j := JSONArray.Count - 1 downto 0 do
-          if JSONArray.Items[j] is TJSONObject then
-          begin
-            ArrayItemObject := TJSONObject(JSONArray.Items[j]);
-
-            if IsNullabledArrayAttr then
+          SetLength(ArraysItems, 0);
+          IsNullabledArrayAttr := IsNullabledArrayAttribute(Name);
+          for j := JSONArray.Count - 1 downto 0 do
+            if JSONArray.Items[j] is TJSONObject then
             begin
-              ObjectAsString := ArrayItemObject.ToString;
-              JSONArray.Remove(j);
+              ArrayItemObject := TJSONObject(JSONArray.Items[j]);
 
-              SetLength(ArraysItems, Length(ArraysItems) + 1);
-              ArraysItems[High(ArraysItems)] := TJSONString.Create(ObjectAsString);
-            end
-            else
-              InitIntermediateObject(ItemTypeInfo, ArrayItemObject);
-          end;
+              if IsNullabledArrayAttr then
+              begin
+                ObjectAsString := ArrayItemObject.ToString;
+                JSONArray.Remove(j);
 
-        if IsNullabledArrayAttr then
-          for j := Length(ArraysItems) - 1 downto 0 do
-            JSONArray.AddElement(ArraysItems[j]);
+                SetLength(ArraysItems, Length(ArraysItems) + 1);
+                ArraysItems[High(ArraysItems)] := TJSONString.Create(ObjectAsString);
+              end
+              else
+                InitIntermediateObject(ItemTypeInfo, ArrayItemObject);
+            end;
 
+          if IsNullabledArrayAttr then
+            for j := Length(ArraysItems) - 1 downto 0 do
+              JSONArray.AddElement(ArraysItems[j]);
+
+        end
+        else
+        begin
+          JsonObject.RemovePair(Name);
+          Continue;
+        end;
       end;
       if (JSONValue is TJSONObject) then
       begin
@@ -195,22 +203,26 @@ var
   i: integer;
   Arr: TJSONArray;
   ListHelperJSONValue: TJSONArray;
+  ItemsJSONValue: TJSONArray;
+  Item: TJSONObject;
 begin
   if JsonValue is TJsonObject then
     Exit(TJSONObject(JsonValue));
 
-(*  if JsonValue is TJSONArray then
+  if JsonValue is TJSONArray then
   begin
-// '{"listHelper":[5],"items":[{"value":1},{"value":2},{"value":3},{"value":4},{"value":5},null,null,null]}'
+    Arr := TJSONArray(JsonValue);
+
     Result := TJSONObject.Create();
     ListHelperJSONValue := TJSONArray.Create;
-//    ListHelperJSONValue.a
-//    Result.AddPair('listHelper', TJSONValue.)
-    Arr := TJSONArray(JsonValue);
+    ListHelperJSONValue.AddElement(TJSONNumber.Create(Arr.Count));
+    Result.AddPair('listHelper', ListHelperJSONValue);
+
+    ItemsJSONValue := TJSONArray.Create;
     for i := 0 to Arr.Count - 1 do
-      Result.AddPair('Items', Arr.Items[i]);
-//      Result.AddPair('ListHelper', Arr.Items[i]);
-  end;*)
+      ItemsJSONValue.AddElement(Arr.Items[i]);
+    Result.AddPair('items', ItemsJSONValue);
+  end;
 end;
 
 class function TMarshalUnMarshal.ToJson(

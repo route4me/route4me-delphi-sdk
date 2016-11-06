@@ -203,7 +203,7 @@ begin
   AddressId := 194622711;
   FRoute4MeExamples.AddAddressNote(RouteId, AddressId);
 
-  CheckEquals('strUpdateType=dropoff&strNoteContents=Test+Note+Contents+' + TIdURI.ParamsEncode(DateTimeToStr(Now)), FConnection.RequestBody);
+  CheckEquals('strUpdateType=dropoff&strNoteContents=Test+Note+Contents+' + EncodeURL(DateTimeToStr(Now)), FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/actions/addRouteNotes.php?api_key=11111111111111111111111111111111&' +
     'route_id=585D2628AE1C5A4FBD7B4050CB9D9601&address_id=194622711&dev_lat=33%2c132675170898&dev_lng=-83%2c244743347168&device_type=web&strUpdateType=dropoff', FConnection.Url);
 
@@ -400,9 +400,13 @@ begin
 
   CheckEqualsBody('DeleteRoutes', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/route.php?api_key=11111111111111111111111111111111&route_id=' +
+    '68621A20B99EBA14F1A4F2FDAC907B42,585D2628AE1C5A4FBD7B4050CB9D9601,3535A4E466B05DDD7FB1826D33C7BF4B' +
+    ',181AA7EA4C23DFCAD80DB4244B1BC605,5E335C48F3A35CC043C2D9F4B865B509,1275C40E330F6E54753688FCCD7B4055' +
+    ',49924C49F5B845AA429770AD0D115C92', FConnection.Url);
+{  CheckEquals('https://www.route4me.com/api.v4/route.php?api_key=11111111111111111111111111111111&route_id=' +
     '68621A20B99EBA14F1A4F2FDAC907B42%2C585D2628AE1C5A4FBD7B4050CB9D9601%2C3535A4E466B05DDD7FB1826D33C7BF4B' +
     '%2C181AA7EA4C23DFCAD80DB4244B1BC605%2C5E335C48F3A35CC043C2D9F4B865B509%2C1275C40E330F6E54753688FCCD7B4055' +
-    '%2C49924C49F5B845AA429770AD0D115C92', FConnection.Url);
+    '%2C49924C49F5B845AA429770AD0D115C92', FConnection.Url);}
   CheckTrue(TRESTRequestMethod.rmDELETE = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
@@ -664,11 +668,11 @@ end;
 
 procedure TTestRoute4MeExamples.RemoveAddressBookContacts;
 var
-  AddressIds: TStringArray;
+  AddressIds: TArray<integer>;
 begin
   SetLength(AddressIds, 2);
-  AddressIds[0] := '10494328';
-  AddressIds[1] := '10494329';
+  AddressIds[0] := 10494328;
+  AddressIds[1] := 10494329;
   FRoute4MeExamples.RemoveAddressBookContacts(AddressIds);
 
   CheckEqualsBody('RemoveAddressBookContacts', FConnection.RequestBody);

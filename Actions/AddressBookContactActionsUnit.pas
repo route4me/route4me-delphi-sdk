@@ -14,9 +14,8 @@ type
   public
     function Add(Contact: TAddressBookContact; out ErrorString: String): TAddressBookContact;
     function Update(Contact: TAddressBookContact; out ErrorString: String): TAddressBookContact;
-    function Remove(AddressId: String; out ErrorString: String): boolean; overload;
-    function Remove(AddressIds: TArray<String>;
-      out ErrorString: String): boolean; overload;
+    function Remove(AddressId: integer; out ErrorString: String): boolean; overload;
+    function Remove(AddressIds: TArray<integer>; out ErrorString: String): boolean; overload;
     function Get(AddressBookParameters: TAddressBookParameters;
       out Total: integer; out ErrorString: String): TAddressBookContactArray;
   end;
@@ -28,7 +27,7 @@ implementation
 uses RemoveAddressBookContactsRequestUnit,
   RemoveAddressBookContactsResponseUnit, GetAddressBookContactsResponseUnit;
 
-function TAddressBookContactActions.Remove(AddressId: String;
+function TAddressBookContactActions.Remove(AddressId: integer;
   out ErrorString: String): boolean;
 begin
   Result := Remove([AddressId], ErrorString);
@@ -62,7 +61,7 @@ begin
   end;
 end;
 
-function TAddressBookContactActions.Remove(AddressIds: TArray<String>;
+function TAddressBookContactActions.Remove(AddressIds: TArray<integer>;
   out ErrorString: String): boolean;
 var
   Request: TRemoveAddressBookContactsRequest;

@@ -28,6 +28,7 @@ type
     FRouteDestinationId: Integer;
 
     [JSONName('upload_id')]
+    [Nullable]
     FUploadId: NullableString;
 
     [JSONName('ts_added')]

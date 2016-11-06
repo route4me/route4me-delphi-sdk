@@ -98,7 +98,8 @@ uses
   OrderParametersUnit in 'QueryTypes\OrderParametersUnit.pas',
   ManifestUnit in 'DataTypes\ManifestUnit.pas',
   GeocodingUnit in 'DataTypes\GeocodingUnit.pas',
-  NullableArrayInterceptorUnit in 'Nullabled\NullableArrayInterceptorUnit.pas';
+  NullableArrayInterceptorUnit in 'Nullabled\NullableArrayInterceptorUnit.pas',
+  ErrorResponseUnit in 'DataTypes\ErrorResponseUnit.pas';
 
 begin
   try

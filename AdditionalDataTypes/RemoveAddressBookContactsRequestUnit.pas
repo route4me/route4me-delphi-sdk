@@ -3,16 +3,16 @@ unit RemoveAddressBookContactsRequestUnit;
 interface
 
 uses
-  REST.Json.Types,
-  GenericParametersUnit, CommonTypesUnit;
+  REST.Json.Types, System.Generics.Collections,
+  GenericParametersUnit;
 
 type
   TRemoveAddressBookContactsRequest = class(TGenericParameters)
   private
     [JSONName('address_ids')]
-    FAddressIds: TStringArray;
+    FAddressIds: TArray<integer>;
   public
-    property AddressIds: TStringArray read FAddressIds write FAddressIds;
+    property AddressIds: TArray<integer> read FAddressIds write FAddressIds;
   end;
 
 implementation
