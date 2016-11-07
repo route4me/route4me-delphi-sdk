@@ -27,10 +27,12 @@ procedure TTestUnmarshalAvoidanceZone.CheckEquals(
   Etalon: IAvoidanceZoneProvider; TestName: String);
 var
   ActualList: TStringList;
-  Actual: TAvoidanceZone;
+  Actual: TAvoidanceZoneList;
   JsonFilename: String;
-  AvoidanceZone: TAvoidanceZone;
+  AvoidanceZones: TAvoidanceZoneList;
   JsonValue: TJSONValue;
+  SortedAvoidanceZone1, SortedAvoidanceZone2: TAvoidanceZoneArray;
+  i: integer;
 begin
   JsonFilename := EtalonFilename(TestName);
   ActualList := TStringList.Create;
@@ -39,14 +41,18 @@ begin
 
     JsonValue := TJSONObject.ParseJSONValue(ActualList.Text);
     try
-      AvoidanceZone := Etalon.AvoidanceZone;
+      AvoidanceZones := Etalon.AvoidanceZones;
       Actual := TMarshalUnMarshal.FromJson(
-        AvoidanceZone.ClassType, JsonValue) as TAvoidanceZone;
+        AvoidanceZones.ClassType, JsonValue) as TAvoidanceZoneList;
       try
-        CheckTrue(AvoidanceZone.Equals(Actual));
+        CheckEquals(AvoidanceZones.Count, Actual.Count);
+        SortedAvoidanceZone1 := AvoidanceZoneUnit.SortAvoidanceZones(AvoidanceZones.ToArray);
+        SortedAvoidanceZone2 := AvoidanceZoneUnit.SortAvoidanceZones(Actual.ToArray);
+        for i := 0 to Length(SortedAvoidanceZone1) - 1 do
+          CheckTrue(SortedAvoidanceZone1[i].Equals(SortedAvoidanceZone2[i]));
       finally
         FreeAndNil(Actual);
-        FreeAndNil(AvoidanceZone);
+        FreeAndNil(AvoidanceZones);
       end;
     finally
       FreeAndNil(JsonValue);

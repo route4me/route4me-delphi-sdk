@@ -3,7 +3,7 @@ unit TestRoute4MeExamplesUnit;
 interface
 
 uses
-  TestFramework, REST.Types, Classes, IdURI,
+  TestFramework, REST.Types, Classes, IdURI, System.NetEncoding,
   SysUtils, TestBaseJsonMarshalUnit, Route4MeExamplesUnit, IRoute4MeManagerUnit,
   ConnectionStubUnit;
 
@@ -203,9 +203,9 @@ begin
   AddressId := 194622711;
   FRoute4MeExamples.AddAddressNote(RouteId, AddressId);
 
-  CheckEquals('strUpdateType=dropoff&strNoteContents=Test+Note+Contents+' + EncodeURL(DateTimeToStr(Now)), FConnection.RequestBody);
+  CheckEquals('strUpdateType=dropoff&strNoteContents=Test+Note+Contents+' + TNetEncoding.URL.Encode(DateTimeToStr(Now)), FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/actions/addRouteNotes.php?api_key=11111111111111111111111111111111&' +
-    'route_id=585D2628AE1C5A4FBD7B4050CB9D9601&address_id=194622711&dev_lat=33%2c132675170898&dev_lng=-83%2c244743347168&device_type=web&strUpdateType=dropoff', FConnection.Url);
+    'route_id=585D2628AE1C5A4FBD7B4050CB9D9601&address_id=194622711&dev_lat=33.132675170898&dev_lng=-83.244743347168&device_type=web&strUpdateType=dropoff', FConnection.Url);
 
   CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
   CheckTrue(TRESTContentType.ctAPPLICATION_X_WWW_FORM_URLENCODED = FConnection.ContentType);
@@ -272,15 +272,15 @@ begin
 end;
 
 procedure TTestRoute4MeExamples.UpdateAddressBookContact;
-{var
-  Contact: TAddressBookContact;}
+var
+  Contact: TAddressBookContact;
 begin
-(* todo: проверить есть ли TAddressBookContact.Id у серверных ответов
+//(* todo: проверить есть ли TAddressBookContact.Id у серверных ответов
   Contact := TAddressBookContact.Create;
   try
     Contact.Address := 'Test Address1 768611171';
     Contact.CountryId := '0';
-    Contact.Id := '10494328';
+    Contact.Id := 10494328;
     Contact.Latitude := 38.024654;
     Contact.Longitude := -77.338814;
     Contact.FirstName := 'Test FirstName 768611171';
@@ -293,7 +293,7 @@ begin
     CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
   finally
     FreeAndNil(Contact);
-  end;  *)
+  end;
 end;
 
 procedure TTestRoute4MeExamples.UpdateAvoidanceZone;

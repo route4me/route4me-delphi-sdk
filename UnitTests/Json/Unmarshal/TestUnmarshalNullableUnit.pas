@@ -235,6 +235,7 @@ type
     FNullableNotEmptyArray: TTestIntegerObjectArray;
   public
     constructor Create; override;
+    destructor Destroy; override;
 
     function Equals(Obj: TObject): Boolean; override;
 
@@ -586,6 +587,7 @@ var
   Actual: TTestIntegerObjectList;
   Obj: TObject;
   JsonValue: TJSONValue;
+  i: integer;
 begin
   JsonValue := TJSONObject.ParseJSONValue('[{"value":1},{"value":2},{"value":3}]');
   try
@@ -600,6 +602,9 @@ begin
       CheckEquals(2, Actual[1].FValue);
       CheckEquals(3, Actual[2].FValue);
     finally
+      for i := Actual.Count - 1 downto 0 do
+        Actual[i].Free;
+
       FreeAndNil(Obj);
     end;
   finally
@@ -1050,6 +1055,24 @@ begin
   SetLength(FNullableEmptyArray, 0);
   SetLength(FNullableEmptyArrayNotForSaving, 0);
   SetLength(FNullableNotEmptyArray, 0);
+end;
+
+destructor TTestArrayObjectClass.Destroy;
+  procedure Destroy(Arr: TTestIntegerObjectArray);
+  var
+    i: integer;
+  begin
+    for i := Length(Arr) - 1 downto 0 do
+      FreeAndNil(Arr[i]);
+  end;
+begin
+    Destroy(FEmptyArray);
+    Destroy(FNotEmptyArray);
+    Destroy(FNullableEmptyArray);
+    Destroy(FNullableEmptyArrayNotForSaving);
+    Destroy(FNullableNotEmptyArray);
+
+  inherited;
 end;
 
 function TTestArrayObjectClass.Equals(Obj: TObject): Boolean;

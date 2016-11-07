@@ -12,7 +12,7 @@ type
     class var ctx: TRttiContext;
 
     class procedure InitIntermediateObject(TypeInfo: Pointer; JsonObject: TJSONObject);
-    class function MakeJsonObject(JsonValue: TJsonValue): TJSONObject;
+    class function MakeJsonObject(JsonValue: TJsonValue; out IsMakedObject: boolean): TJSONObject;
   public
     class function ToJson(GenericParameters: TGenericParameters): String;
     class function ToJsonValue(GenericParameters: TGenericParameters): TJSONValue;
@@ -33,10 +33,11 @@ var
   Marshal: TJSONMarshal;
   Unmarshal: TJSONUnMarshal;
   JsonObject: TJSONObject;
+  IsMakedObject: boolean;
 begin
   Unmarshal := TJSONUnMarshal.Create();
   try
-    JsonObject := MakeJsonObject(JsonValue);
+    JsonObject := MakeJsonObject(JsonValue, IsMakedObject);
     if (JsonObject = nil) then
       Exit(nil);
 
@@ -50,6 +51,9 @@ begin
     end;
 
     Result := Unmarshal.CreateObject(AClass, JsonObject);
+
+    if IsMakedObject then
+      FreeAndNil(JsonObject);
   finally
     FreeAndNil(Unmarshal);
   end;
@@ -93,7 +97,7 @@ var
               Exit(True);
   end;
 var
-  i, j: integer;
+  i, j, k: integer;
   Name: String;
   Value: TJSONValue;
   RttiField: TRttiField;
@@ -141,7 +145,32 @@ begin
       end;
 
       if (RttiField = nil) then
+      begin
+        if (Name = 'listHelper') then
+          for j := 0 to JsonObject.Count - 1 do
+            if (JsonObject.Pairs[j].JsonString.Value = 'items') then
+            begin
+              elementType := nil;
+              for RttiField in RttiType.GetFields do
+                if (RttiField.Name = 'FItems') then
+                begin
+                  elementType := (RttiField.FieldType as TRttiDynamicArrayType).ElementType;
+                  Break;
+                end;
+              if (elementType = nil) then
+                raise Exception.Create('Invalid collection initialization');
+
+              ItemTypeInfo := elementType.Handle;
+
+              JSONArray := JsonObject.Pairs[j].JsonValue as TJSONArray;
+              for k := 0 to JSONArray.Count - 1 do
+                InitIntermediateObject(ItemTypeInfo, JSONArray.Items[k] as TJSONObject);
+
+              Break;
+            end;
+
         Continue;
+      end;
 
       JSONValue := JsonObject.Pairs[i].JsonValue;
       if (JSONValue is TJSONArray) then
@@ -198,7 +227,7 @@ begin
 end;
 
 class function TMarshalUnMarshal.MakeJsonObject(
-  JsonValue: TJsonValue): TJSONObject;
+  JsonValue: TJsonValue; out IsMakedObject: boolean): TJSONObject;
 var
   i: integer;
   Arr: TJSONArray;
@@ -206,13 +235,15 @@ var
   ItemsJSONValue: TJSONArray;
   Item: TJSONObject;
 begin
+  IsMakedObject := False;
   if JsonValue is TJsonObject then
     Exit(TJSONObject(JsonValue));
 
   if JsonValue is TJSONArray then
   begin
-    Arr := TJSONArray(JsonValue);
+    IsMakedObject := True;
 
+    Arr := TJSONArray(JsonValue);
     Result := TJSONObject.Create();
     ListHelperJSONValue := TJSONArray.Create;
     ListHelperJSONValue.AddElement(TJSONNumber.Create(Arr.Count));
@@ -220,7 +251,7 @@ begin
 
     ItemsJSONValue := TJSONArray.Create;
     for i := 0 to Arr.Count - 1 do
-      ItemsJSONValue.AddElement(Arr.Items[i]);
+      ItemsJSONValue.AddElement(Arr.Items[i].Clone as TJSONValue);
     Result.AddPair('items', ItemsJSONValue);
   end;
 end;

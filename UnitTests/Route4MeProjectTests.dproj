@@ -124,10 +124,6 @@
         <DCCReference Include="..\Actions\OptimizationActionUnit.pas"/>
         <DCCReference Include="..\Actions\RouteActionUnit.pas"/>
         <DCCReference Include="..\AdditionalDataTypes\AddressesOrderInfoUnit.pas"/>
-        <DCCReference Include="Json\Unmarshal\TestUnmarshalDataObjectRouteUnit.pas"/>
-        <DCCReference Include="TestDataProviders\DataObjectRoute\IDataObjectRouteProviderUnit.pas"/>
-        <DCCReference Include="TestDataProviders\DataObjectRoute\SampleDataObjectRouteProviderUnit.pas"/>
-        <DCCReference Include="TestDataProviders\DataObjectRoute\BaseDataObjectRouteProviderUnit.pas"/>
         <DCCReference Include="..\DataTypes\DataObjectUnit.pas"/>
         <DCCReference Include="..\Common\CommonTypesUnit.pas"/>
         <DCCReference Include="..\AdditionalDataTypes\MoveDestinationToRouteResponseUnit.pas"/>
@@ -188,10 +184,6 @@
         <DCCReference Include="..\AdditionalDataTypes\RemoveOrdersResponseUnit.pas"/>
         <DCCReference Include="..\QueryTypes\GPSParametersUnit.pas"/>
         <DCCReference Include="..\Actions\TrackingActionsUnit.pas"/>
-        <DCCReference Include="TestDataProviders\DataObject\SingleDriverRoute10StopsResponseDataProviderUnit.pas"/>
-        <DCCReference Include="TestDataProviders\DataObject\BaseDataObjectProviderUnit.pas"/>
-        <DCCReference Include="TestDataProviders\DataObject\IDataObjectProviderUnit.pas"/>
-        <DCCReference Include="Json\Unmarshal\TestUnmarshalDataObjectUnit.pas"/>
         <DCCReference Include="..\DataTypes\GeocodingUnit.pas"/>
         <DCCReference Include="..\DataTypes\ManifestUnit.pas"/>
         <DCCReference Include="..\Nullabled\NullableArrayInterceptorUnit.pas"/>

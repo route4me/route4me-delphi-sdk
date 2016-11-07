@@ -3,7 +3,7 @@ unit AvoidanceZoneUnit;
 interface
 
 uses
-  REST.Json.Types, System.Generics.Collections,
+  REST.Json.Types, System.Generics.Collections, Generics.Defaults,
   JSONNullableAttributeUnit, NullableBasicTypesUnit,
   GenericParametersUnit, HttpQueryMemberAttributeUnit, TerritoryUnit;
 
@@ -73,7 +73,23 @@ type
   TAvoidanceZoneArray = TArray<TAvoidanceZone>;
   TAvoidanceZoneList = TList<TAvoidanceZone>;
 
+  function SortAvoidanceZones(AvoidanceZones: TAvoidanceZoneArray): TAvoidanceZoneArray;
+
 implementation
+
+function SortAvoidanceZones(AvoidanceZones: TAvoidanceZoneArray): TAvoidanceZoneArray;
+begin
+  SetLength(Result, Length(AvoidanceZones));
+  if Length(AvoidanceZones) = 0 then
+    Exit;
+
+  TArray.Copy<TAvoidanceZone>(AvoidanceZones, Result, Length(AvoidanceZones));
+  TArray.Sort<TAvoidanceZone>(Result, TComparer<TAvoidanceZone>.Construct(
+    function (const AvoidanceZone1, AvoidanceZone2: TAvoidanceZone): Integer
+    begin
+      Result := AvoidanceZone1.FTerritoryId.Compare(AvoidanceZone2.FTerritoryId);
+    end));
+end;
 
 { TAvoidanceZoneParameters }
 

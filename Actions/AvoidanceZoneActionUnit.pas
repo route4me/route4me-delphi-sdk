@@ -62,7 +62,7 @@ begin
     if (List <> nil) then
       Result := List.ToArray;
   finally
-    FreeAndNil(Result);
+    FreeAndNil(List);
   end;
 end;
 

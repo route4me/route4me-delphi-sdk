@@ -17,7 +17,7 @@ type
   /// </remarks>
   TOrder = class(TGenericParameters)
   private
-    [JSONName('Order_id')]
+    [JSONName('order_id')]
     [Nullable]
     FOrderId: NullableString;
 

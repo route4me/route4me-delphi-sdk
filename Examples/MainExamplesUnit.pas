@@ -56,7 +56,7 @@ begin
     Examples := TRoute4MeExamples.Create(TOutputConsole.Create, Connection);
     try
       try
-(*        DataObject1 := Examples.SingleDriverRoute10Stops();
+        DataObject1 := Examples.SingleDriverRoute10Stops();
 
         if (DataObject1 <> nil) and (DataObject1.Routes <> nil) and (Length(DataObject1.Routes) > 0) then
         begin
@@ -278,10 +278,10 @@ begin
           Examples.RemoveOptimization(optimizationProblemId)
         else
           WriteLn('RemoveOptimization not called. optimizationProblemID is null.');
-*)
+
         Randomize;
 
-{        // Address Book
+        // Address Book
         Contact1 := Examples.AddAddressBookContact('Test FirstName 1', 'Test Address 1');
         Contact2 := Examples.AddAddressBookContact('Test FirstName 2', 'Test Address 2');
         try
@@ -301,7 +301,7 @@ begin
             if (Contact2 <> nil) then
               AddressIdsToRemove.Add(Contact2.Id);
             // todo: Remove не работает
-            Examples.RemoveAddressBookContacts(AddressIdsToRemove.ToArray());
+//            Examples.RemoveAddressBookContacts(AddressIdsToRemove.ToArray());
           finally
             FreeAndNil(AddressIdsToRemove);
           end;
@@ -309,7 +309,8 @@ begin
           FreeAndNil(Contact2);
           FreeAndNil(Contact1);
         end;
-}
+
+
         // Avoidance Zones
         TerritoryId := Examples.AddAvoidanceZone();
         Examples.GetAvoidanceZones();
@@ -327,7 +328,6 @@ begin
           examples.DeleteAvoidanceZone(TerritoryId)
         else
           WriteLn('DeleteAvoidanceZone not called. territoryId is null.');
-
 
         // Orders
         Order1 := Examples.AddOrder();
@@ -348,7 +348,8 @@ begin
               OrderIdsToRemove.Add(Order1.OrderId);
             if (Order2 <> nil) then
               OrderIdsToRemove.Add(Order2.OrderId);
-            Examples.RemoveOrders(OrderIdsToRemove.ToArray());
+            //todo: не работает Delete
+//            Examples.RemoveOrders(OrderIdsToRemove.ToArray());
           finally
             FreeAndNil(OrderIdsToRemove);
           end;

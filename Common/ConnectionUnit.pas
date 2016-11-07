@@ -138,7 +138,7 @@ begin
   begin
     st := TStringList.Create;
     st.Text := Responce.ToString;
-    st.SaveToFile('d:\post.json');
+//    st.SaveToFile('d:\post.json');
     FreeAndNil(st);
     Result := TMarshalUnMarshal.FromJson(ResultClassType, Responce);
   end;

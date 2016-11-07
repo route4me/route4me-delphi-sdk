@@ -27,7 +27,7 @@ implementation
 { TAddressNoteActions }
 
 uses
-  System.Generics.Collections,
+  System.Generics.Collections, System.NetEncoding,
   SettingsUnit, IRoute4MeManagerUnit,
   GenericParametersUnit, CommonTypesUnit, AddressParametersUnit, AddressUnit,
   AddAddressNoteResponseUnit;
@@ -38,7 +38,7 @@ var
   Response: TAddAddressNoteResponse;
   Parameters: TGenericParameters;
   StrUpdateType: String;
-  Temp: TListStringPair;
+  NoteParameterPairs: TListStringPair;
   i: integer;
 begin
   Result := nil;
@@ -49,15 +49,16 @@ begin
       StrUpdateType := NoteParameters.ActivityType
     else
       StrUpdateType := 'unclassified';
-    // todo: сделать TAddressNoteActions.Add
-    // эти параметры должны быть переданы через тело запрос, но не как json, а в виде:
-    // strUpdateType=dropoff&strNoteContents=Test+Note+Contents+27.10.2016+19%3A24%3A04
     Parameters.AddBodyParameter('strUpdateType', StrUpdateType);
-    Parameters.AddBodyParameter('strNoteContents', NoteContents);
-    Temp := NoteParameters.Serialize('');
-    // эти параметры должны быть через url переданы
-    for i := 0 to Temp.Count - 1 do
-      Parameters.AddParameter(Temp[i].Key, Temp[i].Value);
+    Parameters.AddBodyParameter('strNoteContents', TNetEncoding.URL.Encode(NoteContents));
+    NoteParameterPairs := NoteParameters.Serialize('');
+    try
+      // эти параметры должны быть через url переданы
+      for i := 0 to NoteParameterPairs.Count - 1 do
+        Parameters.AddParameter(NoteParameterPairs[i].Key, NoteParameterPairs[i].Value);
+    finally
+      FreeAndNil(NoteParameterPairs);
+    end;
 
     Response := FConnection.Post(TSettings.AddRouteNotesHost, Parameters,
       TAddAddressNoteResponse, ErrorString) as TAddAddressNoteResponse;

@@ -434,11 +434,7 @@ begin
           WriteLn('');
 
           for Route in DataObjects do
-          begin
-            WriteLn(Format('Optimization Problem ID: %s', [Route.OptimizationProblemId]));
             WriteLn(Format('RouteID: %s', [Route.RouteID]));
-            WriteLn('');
-          end;
         end
         else
           WriteLn(Format('GenericExample error "%s"', [ErrorMessage]));
@@ -476,11 +472,7 @@ begin
         WriteLn('');
 
         for Route in Routes do
-        begin
-          WriteLn(Format('Optimization Problem ID: %s', [Route.OptimizationProblemId]));
           WriteLn(Format('RouteID: %s', [Route.RouteId]));
-          WriteLn('');
-        end;
       end
       else
         WriteLn(Format('GenericExampleShortcut error "%s"', [ErrorMessage]));

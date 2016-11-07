@@ -18,7 +18,7 @@ type
 implementation
 
 uses
-  {System.NetEncoding,} IdURI;
+  System.NetEncoding, IdURI;
 
 function SortStringArray(Strings: TStringArray): TStringArray;
 begin
@@ -37,7 +37,7 @@ end;
 function EncodeURL(URL: String): String;
 begin
   Result := TIdURI.ParamsEncode(URL);
-//  Result := TNetEncoding.URL.Encode(Result);
+//  Result := TNetEncoding.URL.Encode(URL);
 
 end;
 
