@@ -300,8 +300,7 @@ begin
               AddressIdsToRemove.Add(Contact1.Id);
             if (Contact2 <> nil) then
               AddressIdsToRemove.Add(Contact2.Id);
-            // todo: Remove не работает
-//            Examples.RemoveAddressBookContacts(AddressIdsToRemove.ToArray());
+            Examples.RemoveAddressBookContacts(AddressIdsToRemove.ToArray());
           finally
             FreeAndNil(AddressIdsToRemove);
           end;
@@ -348,8 +347,7 @@ begin
               OrderIdsToRemove.Add(Order1.OrderId);
             if (Order2 <> nil) then
               OrderIdsToRemove.Add(Order2.OrderId);
-            //todo: не работает Delete
-//            Examples.RemoveOrders(OrderIdsToRemove.ToArray());
+            Examples.RemoveOrders(OrderIdsToRemove.ToArray());
           finally
             FreeAndNil(OrderIdsToRemove);
           end;

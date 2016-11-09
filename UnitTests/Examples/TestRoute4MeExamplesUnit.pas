@@ -198,18 +198,22 @@ procedure TTestRoute4MeExamples.AddAddressNote;
 var
   RouteId: String;
   AddressId: integer;
+  LongitudeStr, LatitudeStr: String;
 begin
   RouteId := '585D2628AE1C5A4FBD7B4050CB9D9601';
   AddressId := 194622711;
   FRoute4MeExamples.AddAddressNote(RouteId, AddressId);
 
-  CheckEquals('strUpdateType=dropoff&strNoteContents=Test+Note+Contents+' + TNetEncoding.URL.Encode(DateTimeToStr(Now)), FConnection.RequestBody);
+  CheckEquals('strUpdateType=dropoff&strNoteContents=Test+Note+Contents+' + TNetEncoding.URL.Encode(DateTimeToStr(Now)),
+    FConnection.RequestBody);
+  LongitudeStr := FloatToStr(-83.244743347168);
+  LatitudeStr := FloatToStr(33.132675170898);
   CheckEquals('https://www.route4me.com/actions/addRouteNotes.php?api_key=11111111111111111111111111111111&' +
-    'route_id=585D2628AE1C5A4FBD7B4050CB9D9601&address_id=194622711&dev_lat=33.132675170898&dev_lng=-83.244743347168&device_type=web&strUpdateType=dropoff', FConnection.Url);
+    'route_id=585D2628AE1C5A4FBD7B4050CB9D9601&address_id=194622711&' +
+    'dev_lat=' + LatitudeStr + '&dev_lng=' + LongitudeStr + '&device_type=web&strUpdateType=dropoff', FConnection.Url);
 
   CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
   CheckTrue(TRESTContentType.ctAPPLICATION_X_WWW_FORM_URLENCODED = FConnection.ContentType);
-// todo: как параметры, а не JSON strUpdateType=dropoff&strNoteContents=Test+Note+Contents+27.10.2016+19%3A24%3A04
 end;
 
 procedure TTestRoute4MeExamples.AddAvoidanceZone;
@@ -275,7 +279,6 @@ procedure TTestRoute4MeExamples.UpdateAddressBookContact;
 var
   Contact: TAddressBookContact;
 begin
-//(* todo: проверить есть ли TAddressBookContact.Id у серверных ответов
   Contact := TAddressBookContact.Create;
   try
     Contact.Address := 'Test Address1 768611171';

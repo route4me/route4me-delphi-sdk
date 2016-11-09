@@ -138,7 +138,7 @@ begin
       RouteIdsAsString := RouteIdsAsString + ',';
     RouteIdsAsString := RouteIdsAsString + RouteId;
   end;
-  RouteIdsAsString := EncodeURL(RouteIdsAsString);
+//  RouteIdsAsString := EncodeURL(RouteIdsAsString);
 
   Parameters := TGenericParameters.Create;
   try
