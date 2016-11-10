@@ -22,7 +22,7 @@ implementation
 
 uses
   SettingsUnit, GetOrdersResponseUnit, RemoveOrdersRequestUnit,
-  RemoveOrdersResponseUnit;
+  StatusResponseUnit;
 
 function TOrderActions.Add(Order: TOrder; out ErrorString: String): TOrder;
 begin
@@ -55,14 +55,14 @@ function TOrderActions.Remove(OrderIds: TStringArray;
   out ErrorString: String): boolean;
 var
   Request: TRemoveOrdersRequest;
-  Response: TRemoveOrdersResponse;
+  Response: TStatusResponse;
 begin
   Request := TRemoveOrdersRequest.Create();
   try
     Request.OrderIds := OrderIds;
 
     Response := FConnection.Delete(TSettings.Order, Request,
-      TRemoveOrdersResponse, ErrorString) as TRemoveOrdersResponse;
+      TStatusResponse, ErrorString) as TStatusResponse;
     try
       Result := (Response <> nil) and (Response.Status);
     finally

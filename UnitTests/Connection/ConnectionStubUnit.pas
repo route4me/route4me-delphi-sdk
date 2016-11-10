@@ -3,8 +3,7 @@ unit ConnectionStubUnit;
 interface
 
 uses
-  REST.Types, System.JSON,
-  ConnectionUnit;
+  REST.Types, System.JSON, ConnectionUnit;
 
 type
   TConnectionStub = class(TConnection)

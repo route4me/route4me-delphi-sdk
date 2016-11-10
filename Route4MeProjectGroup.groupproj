@@ -6,7 +6,7 @@
         <Projects Include="UnitTests\Route4MeProjectTests.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="Route4MeExamplesProject.dproj">
+        <Projects Include="Examples\Route4MeExamplesProject.dproj">
             <Dependencies/>
         </Projects>
     </ItemGroup>
@@ -27,13 +27,13 @@
         <MSBuild Projects="UnitTests\Route4MeProjectTests.dproj" Targets="Make"/>
     </Target>
     <Target Name="Route4MeExamplesProject">
-        <MSBuild Projects="Route4MeExamplesProject.dproj"/>
+        <MSBuild Projects="Examples\Route4MeExamplesProject.dproj"/>
     </Target>
     <Target Name="Route4MeExamplesProject:Clean">
-        <MSBuild Projects="Route4MeExamplesProject.dproj" Targets="Clean"/>
+        <MSBuild Projects="Examples\Route4MeExamplesProject.dproj" Targets="Clean"/>
     </Target>
     <Target Name="Route4MeExamplesProject:Make">
-        <MSBuild Projects="Route4MeExamplesProject.dproj" Targets="Make"/>
+        <MSBuild Projects="Examples\Route4MeExamplesProject.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
         <CallTarget Targets="Route4MeProjectTests;Route4MeExamplesProject"/>

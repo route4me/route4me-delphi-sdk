@@ -32,7 +32,7 @@ implementation
 { TActivityActions }
 
 uses
-  SettingsUnit, GetActivitiesResponseUnit, LogCustomActivityResponseUnit;
+  SettingsUnit, GetActivitiesResponseUnit, StatusResponseUnit;
 
 function TActivityActions.GetActivityFeed(Parameters: TActivityParameters;
   out ErrorString: String): TActivityArray;
@@ -53,10 +53,10 @@ end;
 
 function TActivityActions.LogCustomActivity(Activity: TActivity; out ErrorString: String): boolean;
 var
-  Response: TLogCustomActivityResponse;
+  Response: TStatusResponse;
 begin
   Response := FConnection.Post(TSettings.ActivityFeedHost, Activity,
-    TLogCustomActivityResponse, ErrorString) as TLogCustomActivityResponse;
+    TStatusResponse, ErrorString) as TStatusResponse;
   try
     Result := (Response <> nil) and (Response.Status);
   finally

@@ -55,6 +55,7 @@ type
     procedure AddAddressNote(RouteId: String; AddressId: integer);
     procedure GetAddressNotes(RouteId: String; RouteDestinationId: integer);
     function DuplicateRoute(RouteId: String): NullableString;
+    procedure ShareRoute(RouteId: String; RecipientEmail: String);
     procedure SetGPSPosition(RouteId: String);
     procedure TrackDeviceLastLocationHistory(RouteId: String);
     procedure DeleteRoutes(RouteIds: TStringArray);
@@ -1278,6 +1279,20 @@ begin
   finally
     FreeAndNil(Parameters);
   end;
+end;
+
+procedure TRoute4MeExamples.ShareRoute(RouteId, RecipientEmail: String);
+var
+  ErrorString: String;
+begin
+  Route4MeManager.Route.Share(RouteId, RecipientEmail, ErrorString);
+
+  WriteLn('');
+
+  if (ErrorString = EmptyStr) then
+    WriteLn('ShareRoute executed successfully')
+  else
+    WriteLn(Format('ShareRoute error: "%s"', [ErrorString]));
 end;
 
 function TRoute4MeExamples.SingleDepotMultipleDriverNoTimeWindow: TDataObject;

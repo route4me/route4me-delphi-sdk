@@ -4,7 +4,7 @@ interface
 
 uses
   System.Generics.Collections, SysUtils,
-  AddressBookContactUnit, AddressBookParametersUnit, ConnectionUnit,
+  AddressBookContactUnit, AddressBookParametersUnit,
   IConnectionUnit, BaseActionUnit, SettingsUnit, CommonTypesUnit;
 
 type
@@ -25,7 +25,7 @@ implementation
 { TAddressBookContact }
 
 uses RemoveAddressBookContactsRequestUnit,
-  RemoveAddressBookContactsResponseUnit, GetAddressBookContactsResponseUnit;
+  StatusResponseUnit, GetAddressBookContactsResponseUnit;
 
 function TAddressBookContactActions.Remove(AddressId: integer;
   out ErrorString: String): boolean;
@@ -65,14 +65,14 @@ function TAddressBookContactActions.Remove(AddressIds: TArray<integer>;
   out ErrorString: String): boolean;
 var
   Request: TRemoveAddressBookContactsRequest;
-  Response: TRemoveAddressBookContactsResponse;
+  Response: TStatusResponse;
 begin
   Request := TRemoveAddressBookContactsRequest.Create();
   try
     Request.AddressIds := AddressIds;
 
     Response := FConnection.Delete(TSettings.AddressBook, Request,
-      TRemoveAddressBookContactsResponse, ErrorString) as TRemoveAddressBookContactsResponse;
+      TStatusResponse, ErrorString) as TStatusResponse;
     try
       Result := (Response <> nil) and (Response.Status);
     finally

@@ -58,6 +58,13 @@ type
 
     function Duplicate(QueryParameters: TRouteParametersQuery;
       out ErrorString: String): NullableString;
+
+    /// <summary>
+    ///  Share a route via email.
+    /// </summary>
+    function Share(RouteId: String; RecipientEmail: String;
+      out ErrorString: String): boolean;
+
   end;
 
 implementation
@@ -69,7 +76,8 @@ uses
   SettingsUnit, RemoveRouteDestinationResponseUnit,
   RemoveRouteDestinationRequestUnit, AddRouteDestinationRequestUnit,
   MoveDestinationToRouteResponseUnit,
-  GenericParametersUnit, DeleteRouteResponseUnit, DuplicateRouteResponseUnit;
+  GenericParametersUnit, DeleteRouteResponseUnit, DuplicateRouteResponseUnit,
+  ShareRouteRequestUnit, StatusResponseUnit, EnumsUnit;
 
 function TRouteActions.Add(RouteId: String; Addresses: TAddressesArray;
   OptimalPosition: boolean; out ErrorString: String): TArray<integer>;
@@ -286,6 +294,29 @@ function TRouteActions.Resequence(
 begin
   Result := FConnection.Put(TSettings.RouteHost,
     AddressesOrderInfo, TDataObjectRoute, errorString) as TDataObjectRoute;
+end;
+
+function TRouteActions.Share(RouteId, RecipientEmail: String;
+  out ErrorString: String): boolean;
+var
+  Request: TShareRouteRequest;
+  Response: TStatusResponse;
+begin
+  Request := TShareRouteRequest.Create(RecipientEmail);
+  try
+    Request.AddParameter('route_id', RouteId);
+    Request.AddParameter('response_format', TOptimizationParametersFormatDescription[opJson]);
+
+    Response := FConnection.Post(TSettings.ShareRouteHost,
+      Request, TStatusResponse, ErrorString) as TStatusResponse;
+    try
+      Result := (Response <> nil) and (Response.Status);
+    finally
+      FreeAndNil(Response);
+    end;
+  finally
+    FreeAndnil(Request);
+  end;
 end;
 
 function TRouteActions.Update(RouteParameters: TRouteParametersQuery;

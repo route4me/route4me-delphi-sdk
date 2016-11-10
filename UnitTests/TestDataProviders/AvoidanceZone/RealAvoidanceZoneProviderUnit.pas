@@ -23,7 +23,6 @@ uses
 function TRealAvoidanceZoneProvider.AvoidanceZones: TAvoidanceZoneList;
 var
   AvoidanceZone: TAvoidanceZone;
-  Territory: TTerritory;
 begin
   Result := TAvoidanceZoneList.Create;
 

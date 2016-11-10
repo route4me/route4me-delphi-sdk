@@ -233,8 +233,9 @@ var
   Arr: TJSONArray;
   ListHelperJSONValue: TJSONArray;
   ItemsJSONValue: TJSONArray;
-  Item: TJSONObject;
 begin
+  Result := nil;
+
   IsMakedObject := False;
   if JsonValue is TJsonObject then
     Exit(TJSONObject(JsonValue));

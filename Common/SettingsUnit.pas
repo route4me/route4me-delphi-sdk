@@ -15,6 +15,7 @@ type
     const ApiHost = MainHost + '/api.v4/optimization_problem.php';
     const ShowRouteHost = MainHost + '/route4me.php';
     const RouteHost = MainHost + '/api.v4/route.php';
+    const ShareRouteHost = MainHost + '/api.v4/share_route.php';
     const SetGpsHost = MainHost + '/track/set.php';
     const GetUsersHost = MainHost + '/api/member/view_users.php';
     const AddRouteNotesHost = MainHost + '/actions/addRouteNotes.php';

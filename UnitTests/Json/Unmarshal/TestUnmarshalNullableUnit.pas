@@ -596,15 +596,16 @@ begin
       CheckIs(Obj, TTestIntegerObjectList);
 
       Actual := Obj as TTestIntegerObjectList;
-
-      CheckEquals(3, Actual.Count);
-      CheckEquals(1, Actual[0].FValue);
-      CheckEquals(2, Actual[1].FValue);
-      CheckEquals(3, Actual[2].FValue);
+      try
+        CheckEquals(3, Actual.Count);
+        CheckEquals(1, Actual[0].FValue);
+        CheckEquals(2, Actual[1].FValue);
+        CheckEquals(3, Actual[2].FValue);
+      finally
+        for i := Actual.Count - 1 downto 0 do
+          Actual[i].Free;
+      end;
     finally
-      for i := Actual.Count - 1 downto 0 do
-        Actual[i].Free;
-
       FreeAndNil(Obj);
     end;
   finally

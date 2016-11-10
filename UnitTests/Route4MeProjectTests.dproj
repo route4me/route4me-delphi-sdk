@@ -92,20 +92,13 @@
         <DCCReference Include="..\DataTypes\RouteParametersUnit.pas"/>
         <DCCReference Include="..\DataTypes\EnumsUnit.pas"/>
         <DCCReference Include="..\IRoute4MeManagerUnit.pas"/>
-        <DCCReference Include="..\Nullabled\NullableBasicTypesUnit.pas"/>
-        <DCCReference Include="..\Nullabled\JSONNullableAttributeUnit.pas"/>
-        <DCCReference Include="..\Nullabled\NullableInterceptorUnit.pas"/>
-        <DCCReference Include="..\Nullabled\JSONNullableMarshalConverterUnit.pas"/>
-        <DCCReference Include="..\Nullabled\JSONDictionaryIntermediateObjectUnit.pas"/>
         <DCCReference Include="..\DataTypes\AddressBookContactUnit.pas"/>
         <DCCReference Include="..\Actions\AddressBookContactActionsUnit.pas"/>
         <DCCReference Include="..\QueryTypes\AddressBookParametersUnit.pas"/>
         <DCCReference Include="..\Common\SettingsUnit.pas"/>
         <DCCReference Include="..\Common\UtilsUnit.pas"/>
-        <DCCReference Include="..\Common\ConnectionUnit.pas"/>
-        <DCCReference Include="..\Common\IConnectionUnit.pas"/>
+        <DCCReference Include="..\Connection\IConnectionUnit.pas"/>
         <DCCReference Include="..\Actions\BaseActionUnit.pas"/>
-        <DCCReference Include="..\Common\MarshalUnMarshalUnit.pas"/>
         <DCCReference Include="Json\Marshal\TestMarshalAddressBookContactUnit.pas"/>
         <DCCReference Include="Json\Marshal\TestMarshalNullableUnit.pas"/>
         <DCCReference Include="Json\Marshal\TestMarshalOptimizationParametersUnit.pas"/>
@@ -123,33 +116,20 @@
         <DCCReference Include="..\DataTypes\TrackingHistoryUnit.pas"/>
         <DCCReference Include="..\Actions\OptimizationActionUnit.pas"/>
         <DCCReference Include="..\Actions\RouteActionUnit.pas"/>
-        <DCCReference Include="..\AdditionalDataTypes\AddressesOrderInfoUnit.pas"/>
+        <DCCReference Include="..\QueryTypes\AddressesOrderInfoUnit.pas"/>
         <DCCReference Include="..\DataTypes\DataObjectUnit.pas"/>
         <DCCReference Include="..\Common\CommonTypesUnit.pas"/>
-        <DCCReference Include="..\AdditionalDataTypes\MoveDestinationToRouteResponseUnit.pas"/>
-        <DCCReference Include="..\AdditionalDataTypes\RemoveRouteDestinationRequestUnit.pas"/>
-        <DCCReference Include="..\AdditionalDataTypes\RemoveRouteDestinationResponseUnit.pas"/>
-        <DCCReference Include="..\AdditionalDataTypes\AddRouteDestinationRequestUnit.pas"/>
+        <DCCReference Include="..\QueryTypes\MoveDestinationToRouteResponseUnit.pas"/>
+        <DCCReference Include="..\QueryTypes\RemoveRouteDestinationRequestUnit.pas"/>
+        <DCCReference Include="..\QueryTypes\RemoveRouteDestinationResponseUnit.pas"/>
+        <DCCReference Include="..\QueryTypes\AddRouteDestinationRequestUnit.pas"/>
         <DCCReference Include="..\QueryTypes\RouteParametersQueryUnit.pas"/>
-        <DCCReference Include="..\AdditionalDataTypes\DataObjectOptimizationsResponseUnit.pas"/>
-        <DCCReference Include="..\AdditionalDataTypes\RemoveDestinationFromOptimizationResponseUnit.pas"/>
+        <DCCReference Include="..\QueryTypes\DataObjectOptimizationsResponseUnit.pas"/>
+        <DCCReference Include="..\QueryTypes\RemoveDestinationFromOptimizationResponseUnit.pas"/>
         <DCCReference Include="Examples\TestRoute4MeExamplesUnit.pas"/>
         <DCCReference Include="..\Examples\Route4MeExamplesUnit.pas"/>
-        <DCCReference Include="..\AdditionalDataTypes\SingleDriverRoundTripGenericRequestUnit.pas"/>
-        <DCCReference Include="..\AdditionalDataTypes\SingleDriverRoundTripGenericResponseUnit.pas"/>
-        <DCCReference Include="..\TestDataProviders\OptimizationParameters\BaseOptimizationParametersProviderUnit.pas"/>
-        <DCCReference Include="..\TestDataProviders\OptimizationParameters\IOptimizationParametersProviderUnit.pas"/>
-        <DCCReference Include="..\TestDataProviders\OptimizationParameters\MultipleDepotMultipleDriverTestDataProviderUnit.pas"/>
-        <DCCReference Include="..\TestDataProviders\OptimizationParameters\MultipleDepotMultipleDriverTimeWindowTestDataProviderUnit.pas"/>
-        <DCCReference Include="..\TestDataProviders\OptimizationParameters\MultipleDepotMultipleDriverWith24StopsTimeWindowTestDataProviderUnit.pas"/>
-        <DCCReference Include="..\TestDataProviders\OptimizationParameters\SingleDepotMultipleDriverNoTimeWindowTestDataProviderUnit.pas"/>
-        <DCCReference Include="..\TestDataProviders\OptimizationParameters\SingleDriverMultipleTimeWindowsTestDataProviderUnit.pas"/>
-        <DCCReference Include="..\TestDataProviders\OptimizationParameters\SingleDriverRoundTripGenericTestDataProviderUnit.pas"/>
-        <DCCReference Include="..\TestDataProviders\OptimizationParameters\SingleDriverRoundTripTestDataProviderUnit.pas"/>
-        <DCCReference Include="..\TestDataProviders\OptimizationParameters\SingleDriverRoute10StopsTestDataProviderUnit.pas"/>
-        <DCCReference Include="..\TestDataProviders\AddressBookContact\DefaultAddressBookContactProviderUnit.pas"/>
-        <DCCReference Include="..\TestDataProviders\AddressBookContact\FullAddressBookContactProviderUnit.pas"/>
-        <DCCReference Include="..\TestDataProviders\AddressBookContact\IAddressBookContactProviderUnit.pas"/>
+        <DCCReference Include="..\QueryTypes\SingleDriverRoundTripGenericRequestUnit.pas"/>
+        <DCCReference Include="..\QueryTypes\SingleDriverRoundTripGenericResponseUnit.pas"/>
         <DCCReference Include="..\Common\OutputUnit.pas"/>
         <DCCReference Include="Connection\ConnectionStubUnit.pas"/>
         <DCCReference Include="..\Actions\UserActionUnit.pas"/>
@@ -160,7 +140,7 @@
         <DCCReference Include="..\DataTypes\AddressNoteUnit.pas"/>
         <DCCReference Include="..\Actions\AddressNoteActionUnit.pas"/>
         <DCCReference Include="..\QueryTypes\AddressParametersUnit.pas"/>
-        <DCCReference Include="..\AdditionalDataTypes\AddAddressNoteResponseUnit.pas"/>
+        <DCCReference Include="..\QueryTypes\AddAddressNoteResponseUnit.pas"/>
         <DCCReference Include="..\Actions\AddressActionUnit.pas"/>
         <DCCReference Include="..\QueryTypes\AvoidanceZoneParametersUnit.pas"/>
         <DCCReference Include="..\DataTypes\TerritoryUnit.pas"/>
@@ -168,30 +148,53 @@
         <DCCReference Include="..\Actions\AvoidanceZoneActionUnit.pas"/>
         <DCCReference Include="..\QueryTypes\AvoidanceZoneQueryUnit.pas"/>
         <DCCReference Include="..\Actions\OrderActionUnit.pas"/>
-        <DCCReference Include="..\AdditionalDataTypes\GetOrdersResponseUnit.pas"/>
+        <DCCReference Include="..\QueryTypes\GetOrdersResponseUnit.pas"/>
         <DCCReference Include="..\QueryTypes\OrderParametersUnit.pas"/>
-        <DCCReference Include="..\AdditionalDataTypes\DeleteRouteResponseUnit.pas"/>
-        <DCCReference Include="..\AdditionalDataTypes\DuplicateRouteResponseUnit.pas"/>
-        <DCCReference Include="..\QueryTypes\ActivityParametersUnit.pas"/>
+        <DCCReference Include="..\QueryTypes\DeleteRouteResponseUnit.pas"/>
+        <DCCReference Include="..\QueryTypes\DuplicateRouteResponseUnit.pas"/>
         <DCCReference Include="..\Actions\ActivityActionsUnit.pas"/>
-        <DCCReference Include="..\AdditionalDataTypes\GetActivitiesResponseUnit.pas"/>
-        <DCCReference Include="..\AdditionalDataTypes\LogCustomActivityResponseUnit.pas"/>
-        <DCCReference Include="..\AdditionalDataTypes\RemoveAddressBookContactsRequestUnit.pas"/>
-        <DCCReference Include="..\AdditionalDataTypes\RemoveAddressBookContactsResponseUnit.pas"/>
-        <DCCReference Include="..\AdditionalDataTypes\GetAddressBookContactsResponseUnit.pas"/>
-        <DCCReference Include="..\AdditionalDataTypes\RemoveOptimizationResponseUnit.pas"/>
-        <DCCReference Include="..\AdditionalDataTypes\RemoveOrdersRequestUnit.pas"/>
-        <DCCReference Include="..\AdditionalDataTypes\RemoveOrdersResponseUnit.pas"/>
+        <DCCReference Include="..\QueryTypes\GetActivitiesResponseUnit.pas"/>
+        <DCCReference Include="..\QueryTypes\LogCustomActivityResponseUnit.pas"/>
+        <DCCReference Include="..\QueryTypes\RemoveAddressBookContactsRequestUnit.pas"/>
+        <DCCReference Include="..\QueryTypes\RemoveAddressBookContactsResponseUnit.pas"/>
+        <DCCReference Include="..\QueryTypes\GetAddressBookContactsResponseUnit.pas"/>
+        <DCCReference Include="..\QueryTypes\RemoveOptimizationResponseUnit.pas"/>
+        <DCCReference Include="..\QueryTypes\RemoveOrdersRequestUnit.pas"/>
+        <DCCReference Include="..\QueryTypes\RemoveOrdersResponseUnit.pas"/>
         <DCCReference Include="..\QueryTypes\GPSParametersUnit.pas"/>
         <DCCReference Include="..\Actions\TrackingActionsUnit.pas"/>
         <DCCReference Include="..\DataTypes\GeocodingUnit.pas"/>
         <DCCReference Include="..\DataTypes\ManifestUnit.pas"/>
-        <DCCReference Include="..\Nullabled\NullableArrayInterceptorUnit.pas"/>
         <DCCReference Include="..\DataTypes\ErrorResponseUnit.pas"/>
-        <DCCReference Include="..\TestDataProviders\AddressBookContact\RealAddressBookContactProviderUnit.pas"/>
         <DCCReference Include="TestDataProviders\AvoidanceZone\TestUnmarshalAvoidanceZoneUnit.pas"/>
         <DCCReference Include="TestDataProviders\AvoidanceZone\IAvoidanceZoneProviderUnit.pas"/>
         <DCCReference Include="TestDataProviders\AvoidanceZone\RealAvoidanceZoneProviderUnit.pas"/>
+        <DCCReference Include="..\Examples\TestDataProviders\OptimizationParameters\BaseOptimizationParametersProviderUnit.pas"/>
+        <DCCReference Include="..\Examples\TestDataProviders\OptimizationParameters\IOptimizationParametersProviderUnit.pas"/>
+        <DCCReference Include="..\Examples\TestDataProviders\OptimizationParameters\MultipleDepotMultipleDriverTestDataProviderUnit.pas"/>
+        <DCCReference Include="..\Examples\TestDataProviders\OptimizationParameters\MultipleDepotMultipleDriverTimeWindowTestDataProviderUnit.pas"/>
+        <DCCReference Include="..\Examples\TestDataProviders\OptimizationParameters\MultipleDepotMultipleDriverWith24StopsTimeWindowTestDataProviderUnit.pas"/>
+        <DCCReference Include="..\Examples\TestDataProviders\OptimizationParameters\SingleDepotMultipleDriverNoTimeWindowTestDataProviderUnit.pas"/>
+        <DCCReference Include="..\Examples\TestDataProviders\OptimizationParameters\SingleDriverMultipleTimeWindowsTestDataProviderUnit.pas"/>
+        <DCCReference Include="..\Examples\TestDataProviders\OptimizationParameters\SingleDriverRoundTripGenericTestDataProviderUnit.pas"/>
+        <DCCReference Include="..\Examples\TestDataProviders\OptimizationParameters\SingleDriverRoundTripTestDataProviderUnit.pas"/>
+        <DCCReference Include="..\Examples\TestDataProviders\OptimizationParameters\SingleDriverRoute10StopsTestDataProviderUnit.pas"/>
+        <DCCReference Include="TestDataProviders\AddressBookContact\AddressBookContactListProviderUnit.pas"/>
+        <DCCReference Include="TestDataProviders\AddressBookContact\DefaultAddressBookContactProviderUnit.pas"/>
+        <DCCReference Include="TestDataProviders\AddressBookContact\FullAddressBookContactProviderUnit.pas"/>
+        <DCCReference Include="TestDataProviders\AddressBookContact\IAddressBookContactProviderUnit.pas"/>
+        <DCCReference Include="TestDataProviders\AddressBookContact\RealAddressBookContactProviderUnit.pas"/>
+        <DCCReference Include="..\Connection\ConnectionUnit.pas"/>
+        <DCCReference Include="..\Common\NullableBasicTypesUnit.pas"/>
+        <DCCReference Include="..\Json\JSONDictionaryIntermediateObjectUnit.pas"/>
+        <DCCReference Include="..\Json\JSONNullableAttributeUnit.pas"/>
+        <DCCReference Include="..\Json\JSONNullableMarshalConverterUnit.pas"/>
+        <DCCReference Include="..\Json\MarshalUnMarshalUnit.pas"/>
+        <DCCReference Include="..\Json\NullableArrayInterceptorUnit.pas"/>
+        <DCCReference Include="..\Json\NullableInterceptorUnit.pas"/>
+        <DCCReference Include="..\QueryTypes\ActivityParametersUnit.pas"/>
+        <DCCReference Include="..\QueryTypes\StatusResponseUnit.pas"/>
+        <DCCReference Include="..\QueryTypes\ShareRouteRequestUnit.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -217,7 +220,7 @@
                     <Excluded_Packages Name="$(BDSBIN)\dclofficexp240.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
                 </Excluded_Packages>
             </Delphi.Personality>
-            <Deployment Version="3">
+            <Deployment Version="2">
                 <DeployFile LocalName="$(BDS)\Redist\osx32\libcgunwind.1.0.dylib" Class="DependencyModule">
                     <Platform Name="OSX32">
                         <Overwrite>true</Overwrite>
@@ -244,27 +247,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployClass Name="DependencyModule">
-                    <Platform Name="Win32">
-                        <Operation>0</Operation>
-                        <Extensions>.dll;.bpl</Extensions>
-                    </Platform>
+                <DeployClass Name="ProjectiOSDeviceResourceRules">
                     <Platform Name="iOSDevice64">
                         <Operation>1</Operation>
-                        <Extensions>.dylib</Extensions>
-                    </Platform>
-                    <Platform Name="OSX32">
-                        <RemoteDir>Contents\MacOS</RemoteDir>
-                        <Operation>1</Operation>
-                        <Extensions>.dylib</Extensions>
                     </Platform>
                     <Platform Name="iOSDevice32">
                         <Operation>1</Operation>
-                        <Extensions>.dylib</Extensions>
-                    </Platform>
-                    <Platform Name="iOSSimulator">
-                        <Operation>1</Operation>
-                        <Extensions>.dylib</Extensions>
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="ProjectOSXResource">
@@ -316,20 +304,17 @@
                     </Platform>
                 </DeployClass>
                 <DeployClass Required="true" Name="ProjectOutput">
-                    <Platform Name="iOSDevice64">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice32">
-                        <Operation>1</Operation>
-                    </Platform>
                     <Platform Name="Win32">
                         <Operation>0</Operation>
                     </Platform>
-                    <Platform Name="Linux64">
+                    <Platform Name="iOSDevice64">
                         <Operation>1</Operation>
                     </Platform>
                     <Platform Name="OSX32">
                         <RemoteDir>Contents\MacOS</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice32">
                         <Operation>1</Operation>
                     </Platform>
                     <Platform Name="Android">
@@ -382,7 +367,12 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <DeployClass Name="AndroidLibnativeX86File"/>
+                <DeployClass Name="AndroidLibnativeX86File">
+                    <Platform Name="Android">
+                        <RemoteDir>library\lib\x86</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
                 <DeployClass Name="iPhone_Launch320">
                     <Platform Name="iOSSimulator">
                         <Operation>1</Operation>
@@ -465,11 +455,11 @@
                 </DeployClass>
                 <DeployClass Name="ProjectiOSEntitlements">
                     <Platform Name="iOSDevice64">
-                        <RemoteDir>..\</RemoteDir>
+                        <RemoteDir>../</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                     <Platform Name="iOSDevice32">
-                        <RemoteDir>..\</RemoteDir>
+                        <RemoteDir>../</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
@@ -493,7 +483,7 @@
                 </DeployClass>
                 <DeployClass Name="ProjectOSXEntitlements">
                     <Platform Name="OSX32">
-                        <RemoteDir>..\</RemoteDir>
+                        <RemoteDir>../</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
@@ -616,12 +606,27 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <DeployClass Name="ProjectiOSDeviceResourceRules">
+                <DeployClass Name="DependencyModule">
+                    <Platform Name="Win32">
+                        <Operation>0</Operation>
+                        <Extensions>.dll;.bpl</Extensions>
+                    </Platform>
                     <Platform Name="iOSDevice64">
                         <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
+                    </Platform>
+                    <Platform Name="OSX32">
+                        <RemoteDir>Contents\MacOS</RemoteDir>
+                        <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
                     </Platform>
                     <Platform Name="iOSDevice32">
                         <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
+                    </Platform>
+                    <Platform Name="iOSSimulator">
+                        <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
                     </Platform>
                 </DeployClass>
                 <ProjectRoot Platform="iOSDevice64" Name="$(PROJECTNAME).app"/>

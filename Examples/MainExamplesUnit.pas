@@ -71,6 +71,9 @@ begin
           WriteLn('ResequenceRouteDestinations not called. RouteSingleDriverRoute10Stops = null.');
         end;
 
+        if (RouteSingleDriverRoute10Stops <> nil) then
+          Examples.ShareRoute(RouteSingleDriverRoute10Stops.RouteId, 'test@test.test');
+
         DestinationIds := Examples.AddRouteDestinations(RouteId_SingleDriverRoute10Stops);
         if (Length(DestinationIds) > 0) then
           Examples.RemoveRouteDestination(RouteId_SingleDriverRoute10Stops, DestinationIds[0]);

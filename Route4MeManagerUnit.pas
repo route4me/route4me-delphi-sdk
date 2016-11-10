@@ -5,7 +5,7 @@ interface
 uses
   Classes, SysUtils,
   OptimizationParametersUnit, DataObjectUnit, IRoute4MeManagerUnit,
-  AddressBookContactUnit, AddressBookContactActionsUnit, ConnectionUnit,
+  AddressBookContactUnit, AddressBookContactActionsUnit,
   OptimizationActionUnit, RouteActionUnit, IConnectionUnit, UserActionUnit,
   AddressNoteActionUnit, AddressActionUnit, AvoidanceZoneUnit,
   AvoidanceZoneActionUnit, OrderActionUnit, ActivityActionsUnit,
