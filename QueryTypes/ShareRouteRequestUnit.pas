@@ -12,7 +12,7 @@ type
     [JSONName('recipient_email')]
     FRecipientEmail: String;
   public
-    constructor Create(RecipientEmail: String);
+    constructor Create(RecipientEmail: String); reintroduce;
   end;
 
 implementation
@@ -21,6 +21,7 @@ implementation
 
 constructor TShareRouteRequest.Create(RecipientEmail: String);
 begin
+  Inherited Create;
   FRecipientEmail := RecipientEmail;
 end;
 
