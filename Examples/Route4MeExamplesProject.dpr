@@ -94,7 +94,6 @@ uses
   RouteParametersQueryUnit in '..\QueryTypes\RouteParametersQueryUnit.pas',
   SingleDriverRoundTripGenericRequestUnit in '..\QueryTypes\SingleDriverRoundTripGenericRequestUnit.pas',
   SingleDriverRoundTripGenericResponseUnit in '..\QueryTypes\SingleDriverRoundTripGenericResponseUnit.pas',
-  ShareRouteRequestUnit in '..\QueryTypes\ShareRouteRequestUnit.pas',
   StatusResponseUnit in '..\QueryTypes\StatusResponseUnit.pas';
 
 begin

@@ -41,6 +41,7 @@ type
     procedure ReoptimizeRoute;
     procedure GetRoute;
     procedure GetRoutes;
+    procedure ShareRoute;
     procedure GetUsers;
     procedure LogCustomActivity;
     procedure GetActivities;
@@ -99,6 +100,22 @@ begin
 
   FConnection := TConnectionStub.Create;
   FRoute4MeExamples := TRoute4MeExamples.Create(TOutputDummy.Create, FConnection);
+end;
+
+procedure TTestRoute4MeExamples.ShareRoute;
+var
+  RouteId: String;
+  Email: String;
+begin
+  RouteId := '68621A20B99EBA14F1A4F2FDAC907B42';
+  Email := 'test@mail.com';
+
+  FRoute4MeExamples.ShareRoute(RouteId, Email);
+
+  CheckEquals('recipient_email=test@mail.com', FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/actions/route/share_route.php?api_key=11111111111111111111111111111111&route_id=68621A20B99EBA14F1A4F2FDAC907B42&response_format=json', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
+  CheckTrue(TRESTContentType.ctAPPLICATION_X_WWW_FORM_URLENCODED = FConnection.ContentType);
 end;
 
 procedure TTestRoute4MeExamples.SingleDepotMultipleDriverNoTimeWindow;

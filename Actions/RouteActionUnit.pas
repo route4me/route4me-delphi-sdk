@@ -77,7 +77,7 @@ uses
   RemoveRouteDestinationRequestUnit, AddRouteDestinationRequestUnit,
   MoveDestinationToRouteResponseUnit,
   GenericParametersUnit, DeleteRouteResponseUnit, DuplicateRouteResponseUnit,
-  ShareRouteRequestUnit, StatusResponseUnit, EnumsUnit;
+  StatusResponseUnit, EnumsUnit;
 
 function TRouteActions.Add(RouteId: String; Addresses: TAddressesArray;
   OptimalPosition: boolean; out ErrorString: String): TArray<integer>;
@@ -299,13 +299,14 @@ end;
 function TRouteActions.Share(RouteId, RecipientEmail: String;
   out ErrorString: String): boolean;
 var
-  Request: TShareRouteRequest;
+  Request: TGenericParameters;
   Response: TStatusResponse;
 begin
-  Request := TShareRouteRequest.Create(RecipientEmail);
+  Request := TGenericParameters.Create;
   try
     Request.AddParameter('route_id', RouteId);
     Request.AddParameter('response_format', TOptimizationParametersFormatDescription[opJson]);
+    Request.AddBodyParameter('recipient_email', RecipientEmail);
 
     Response := FConnection.Post(TSettings.ShareRouteHost,
       Request, TStatusResponse, ErrorString) as TStatusResponse;

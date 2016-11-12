@@ -117,8 +117,7 @@ uses
   NullableArrayInterceptorUnit in '..\Json\NullableArrayInterceptorUnit.pas',
   NullableInterceptorUnit in '..\Json\NullableInterceptorUnit.pas',
   ActivityParametersUnit in '..\QueryTypes\ActivityParametersUnit.pas',
-  StatusResponseUnit in '..\QueryTypes\StatusResponseUnit.pas',
-  ShareRouteRequestUnit in '..\QueryTypes\ShareRouteRequestUnit.pas';
+  StatusResponseUnit in '..\QueryTypes\StatusResponseUnit.pas';
 
 {R *.RES}
 

@@ -323,6 +323,7 @@ begin
   FRESTRequest.Method := Method;
   FRESTRequest.ClearBody;
   FRESTRequest.AddBody(Body, ContentType);
+//  ContentType := TRESTContentType.ctMULTIPART_FORM_DATA;
   if (ContentType = TRESTContentType.ctAPPLICATION_X_WWW_FORM_URLENCODED) then
     FRESTRequest.Params[FRESTRequest.Params.Count - 1].Options :=
       FRESTRequest.Params[FRESTRequest.Params.Count - 1].Options + [TRESTRequestParameterOption.poDoNotEncode];

@@ -1284,15 +1284,19 @@ end;
 procedure TRoute4MeExamples.ShareRoute(RouteId, RecipientEmail: String);
 var
   ErrorString: String;
+  Success: boolean;
 begin
-  Route4MeManager.Route.Share(RouteId, RecipientEmail, ErrorString);
+  Success := Route4MeManager.Route.Share(RouteId, RecipientEmail, ErrorString);
 
   WriteLn('');
 
-  if (ErrorString = EmptyStr) then
-    WriteLn('ShareRoute executed successfully')
+  if not Success then
+    WriteLn('ShareRoute general error')
   else
-    WriteLn(Format('ShareRoute error: "%s"', [ErrorString]));
+    if (ErrorString = EmptyStr) then
+      WriteLn('ShareRoute executed successfully')
+    else
+      WriteLn(Format('ShareRoute error: "%s"', [ErrorString]));
 end;
 
 function TRoute4MeExamples.SingleDepotMultipleDriverNoTimeWindow: TDataObject;
