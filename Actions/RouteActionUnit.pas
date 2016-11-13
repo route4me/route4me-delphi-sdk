@@ -28,16 +28,6 @@ type
     function Add(RouteId: String; Addresses: TAddressesArray;
       OptimalPosition: boolean; out ErrorString: String): TArray<integer>; overload;
 
-    /// <summary>
-    /// Add address(es) into a route.
-    /// </summary>
-    /// <param name="RouteId"> Route ID </param>
-    /// <param name="Addresses"> Valid array of Address objects. </param>
-    /// <param name="ErrorString"> out: Error as string </param>
-    /// <returns> IDs of added addresses </returns>
-    function Add(RouteId: String; Addresses: TAddressesArray;
-      out ErrorString: String): TArray<integer>; overload;
-
     function Remove(RouteId: String; DestinationId: integer;
       out ErrorString: String): boolean;
 
@@ -62,9 +52,7 @@ type
     /// <summary>
     ///  Share a route via email.
     /// </summary>
-    function Share(RouteId: String; RecipientEmail: String;
-      out ErrorString: String): boolean;
-
+    procedure Share(RouteId: String; RecipientEmail: String; out ErrorString: String);
   end;
 
 implementation
@@ -121,12 +109,6 @@ begin
   finally
     FreeAndNil(Request);
   end;
-end;
-
-function TRouteActions.Add(RouteId: String; Addresses: TAddressesArray;
-  out ErrorString: String): TArray<integer>;
-begin
-  Result := Add(RouteId, Addresses, True, ErrorString);
 end;
 
 function TRouteActions.Delete(RouteIds: TStringArray;
@@ -296,8 +278,8 @@ begin
     AddressesOrderInfo, TDataObjectRoute, errorString) as TDataObjectRoute;
 end;
 
-function TRouteActions.Share(RouteId, RecipientEmail: String;
-  out ErrorString: String): boolean;
+procedure TRouteActions.Share(RouteId, RecipientEmail: String;
+  out ErrorString: String);
 var
   Request: TGenericParameters;
   Response: TStatusResponse;
@@ -311,7 +293,8 @@ begin
     Response := FConnection.Post(TSettings.ShareRouteHost,
       Request, TStatusResponse, ErrorString) as TStatusResponse;
     try
-      Result := (Response <> nil) and (Response.Status);
+      if (Response <> nil) and (Response.Status = False) and (ErrorString = EmptyStr) then
+        ErrorString := 'Rote not shared';
     finally
       FreeAndNil(Response);
     end;

@@ -74,6 +74,10 @@ begin
         if (RouteSingleDriverRoute10Stops <> nil) then
           Examples.ShareRoute(RouteSingleDriverRoute10Stops.RouteId, 'oooooo@gmail.com');
 
+        DestinationIds := Examples.AddRouteDestinationsOptimally(RouteId_SingleDriverRoute10Stops);
+        if (Length(DestinationIds) > 0) then
+          Examples.RemoveRouteDestination(RouteId_SingleDriverRoute10Stops, DestinationIds[0]);
+
         DestinationIds := Examples.AddRouteDestinations(RouteId_SingleDriverRoute10Stops);
         if (Length(DestinationIds) > 0) then
           Examples.RemoveRouteDestination(RouteId_SingleDriverRoute10Stops, DestinationIds[0]);

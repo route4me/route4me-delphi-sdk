@@ -11,8 +11,11 @@ type
   public
     function Get(OrderQuery: TOrderParameters;
       out Total: integer; out ErrorString: String): TOrderArray;
+
     function Add(Order: TOrder; out ErrorString: String): TOrder;
+
     function Update(Order: TOrder; out ErrorString: String): TOrder;
+
     function Remove(OrderIds: TStringArray; out ErrorString: String): boolean;
   end;
 

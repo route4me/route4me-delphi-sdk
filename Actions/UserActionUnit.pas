@@ -9,8 +9,7 @@ uses
 type
   TUserActions = class(TBaseAction)
   public
-    function Get(Parameters: TGenericParameters;
-      out ErrorString: String): TArray<TUser>;
+    function Get(out ErrorString: String): TArray<TUser>;
   end;
 
 implementation
@@ -18,20 +17,25 @@ implementation
 
 uses SettingsUnit;
 
-function TUserActions.Get(Parameters: TGenericParameters;
-  out ErrorString: String): TArray<TUser>;
+function TUserActions.Get(out ErrorString: String): TArray<TUser>;
 var
   List: TUserList;
+  Parameters: TGenericParameters;
 begin
-  List := FConnection.Get(TSettings.GetUsersHost,
-    Parameters, TUserList, ErrorString) as TUserList;
+  Parameters := TGenericParameters.Create;
   try
-    if (List <> nil) then
-      Result := List.ToArray
-    else
-      SetLength(Result, 0);
+    List := FConnection.Get(TSettings.GetUsersHost,
+      Parameters, TUserList, ErrorString) as TUserList;
+    try
+      if (List <> nil) then
+        Result := List.ToArray
+      else
+        SetLength(Result, 0);
+    finally
+      FreeAndNil(List);
+    end;
   finally
-    FreeAndNil(List);
+    FreeAndNil(Parameters);
   end;
 end;
 

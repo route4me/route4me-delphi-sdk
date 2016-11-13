@@ -12,6 +12,7 @@ type
   public
     function GetLastLocation(Parameters: TGenericParameters;
       out ErrorString: String): TDataObject;
+
     function SetGPS(Parameters: TGPSParameters;
       out ErrorString: String): String;
   end;

@@ -7,7 +7,7 @@ uses
   Route4MeManagerUnit, DataObjectUnit, NullableBasicTypesUnit, UtilsUnit,
   CommonTypesUnit, AddressBookContactUnit,
   SingleDriverRoundTripTestDataProviderUnit, IRoute4MeManagerUnit, OutputUnit,
-  IConnectionUnit, RouteParametersUnit, OrderUnit;
+  IConnectionUnit, RouteParametersUnit, OrderUnit, AddressUnit;
 
 type
   TRoute4MeExamples = class
@@ -27,6 +27,7 @@ type
     function SingleDriverRoute10Stops: TDataObject;
     procedure ResequenceRouteDestinations(Route: TDataObjectRoute);
     function AddRouteDestinations(RouteId: String): TArray<integer>;
+    function AddRouteDestinationsOptimally(RouteId: String): TArray<integer>;
     procedure RemoveRouteDestination(RouteId: String; DestinationId: integer);
     function SingleDriverRoundTrip: TDataObject;
     procedure MoveDestinationToRoute(ToRouteId: String;
@@ -82,7 +83,7 @@ implementation
 { TRoute4MeExamples }
 
 uses
-  AddressUnit, EnumsUnit, IOptimizationParametersProviderUnit,
+  EnumsUnit, IOptimizationParametersProviderUnit,
   OptimizationParametersUnit, SingleDriverRoute10StopsTestDataProviderUnit,
   GenericParametersUnit, AddressesOrderInfoUnit,
   MultipleDepotMultipleDriverTestDataProviderUnit,
@@ -286,6 +287,46 @@ var
   i: integer;
 begin
   // Prepare the addresses
+  SetLength(Addresses, 1);
+  try
+    Addresses[0] := TAddress.Create(
+      '146 Bill Johnson Rd NE Milledgeville GA 31061',
+      33.143526, -83.240354, 0);
+    Addresses[0].SequenceNo := 4;
+
+    // Run the query
+    OptimalPosition := False;
+    Result := Route4MeManager.Route.Add(RouteId, Addresses, OptimalPosition, ErrorString);
+
+    WriteLn('');
+
+    if (Length(Result) > 0) then
+    begin
+      WriteLn('AddRouteDestinations executed successfully');
+
+      SetLength(AddressIds, Length(Result));
+      for i := 0 to Length(Result) - 1 do
+        AddressIds[i] := IntToStr(Result[i]);
+      WriteLn(Format('Destination IDs: %s', [String.Join(' ', AddressIds)]));
+    end
+    else
+      WriteLn(Format('AddRouteDestinations error: "%s"', [errorString]));
+  finally
+    for i := Length(Addresses) - 1 downto 0 do
+      FreeAndNil(Addresses[i]);
+  end;
+end;
+
+function TRoute4MeExamples.AddRouteDestinationsOptimally(
+  RouteId: String): TArray<integer>;
+var
+  Addresses: TAddressesArray;
+  OptimalPosition: boolean;
+  ErrorString: String;
+  AddressIds: TStringArray;
+  i: integer;
+begin
+  // Prepare the addresses
   SetLength(Addresses, 2);
   try
     Addresses[0] := TAddress.Create(
@@ -329,27 +370,19 @@ end;
 procedure TRoute4MeExamples.DeleteAvoidanceZone(TerritoryId: String);
 var
   ErrorString: String;
-  Query: TAvoidanceZoneQuery;
 begin
-  Query := TAvoidanceZoneQuery.Create();
-  try
-    Query.TerritoryId := TerritoryId;
+  // Run the query
+  Route4MeManager.AvoidanceZone.Delete(TerritoryId, ErrorString);
 
-    // Run the query
-    Route4MeManager.AvoidanceZone.Delete(Query, ErrorString);
+  WriteLn('');
 
-    WriteLn('');
-
-    if (ErrorString = EmptyStr) then
-    begin
-      WriteLn('DeleteAvoidanceZone executed successfully');
-      WriteLn(Format('Territory ID: %s', [TerritoryId]));
-    end
-    else
-      WriteLn(Format('DeleteAvoidanceZone error: "%s"', [ErrorString]));
-  finally
-    FreeAndNil(Query);
-  end;
+  if (ErrorString = EmptyStr) then
+  begin
+    WriteLn('DeleteAvoidanceZone executed successfully');
+    WriteLn(Format('Territory ID: %s', [TerritoryId]));
+  end
+  else
+    WriteLn(Format('DeleteAvoidanceZone error: "%s"', [ErrorString]));
 end;
 
 procedure TRoute4MeExamples.DeleteRoutes(RouteIds: TStringArray);
@@ -628,56 +661,43 @@ end;
 procedure TRoute4MeExamples.GetAvoidanceZone(TerritoryId: String);
 var
   ErrorString: String;
-  Query: TAvoidanceZoneQuery;
   AvoidanceZone: TAvoidanceZone;
 begin
-  Query := TAvoidanceZoneQuery.Create();
+  // Run the query
+  AvoidanceZone := Route4MeManager.AvoidanceZone.Get(TerritoryId, ErrorString);
   try
-    Query.TerritoryId := TerritoryId;
-    // Run the query
-    AvoidanceZone := Route4MeManager.AvoidanceZone.Get(Query, ErrorString);
-    try
-      WriteLn('');
+    WriteLn('');
 
-      if (AvoidanceZone <> nil) then
-      begin
-        WriteLn('GetAvoidanceZone executed successfully');
-        WriteLn(Format('Territory ID: %s', [AvoidanceZone.TerritoryId.Value]));
-      end
-      else
-        WriteLn(Format('GetAvoidanceZone error: %s', [ErrorString]));
-    finally
-      FreeAndNil(AvoidanceZone);
-    end;
+    if (AvoidanceZone <> nil) then
+    begin
+      WriteLn('GetAvoidanceZone executed successfully');
+      WriteLn(Format('Territory ID: %s', [AvoidanceZone.TerritoryId.Value]));
+    end
+    else
+      WriteLn(Format('GetAvoidanceZone error: %s', [ErrorString]));
   finally
-    FreeAndNil(Query);
+    FreeAndNil(AvoidanceZone);
   end;
 end;
 
 procedure TRoute4MeExamples.GetAvoidanceZones;
 var
   ErrorString: String;
-  Query: TAvoidanceZoneQuery;
   AvoidanceZones: TAvoidanceZoneArray;
   i: integer;
 begin
-  Query := TAvoidanceZoneQuery.Create();
+  // Run the query
+  AvoidanceZones := Route4MeManager.AvoidanceZone.GetList(ErrorString);
   try
-    // Run the query
-    AvoidanceZones := Route4MeManager.AvoidanceZone.GetList(Query, ErrorString);
-    try
-      WriteLn('');
+    WriteLn('');
 
-      if (Length(AvoidanceZones) > 0) then
-        WriteLn(Format('GetAvoidanceZones executed successfully, %d zones returned', [Length(AvoidanceZones)]))
-      else
-        WriteLn(Format('GetAvoidanceZones error: "%s"', [ErrorString]));
-    finally
-      for i := Length(AvoidanceZones) - 1 downto 0 do
-        FreeAndNil(AvoidanceZones[i]);
-    end;
+    if (Length(AvoidanceZones) > 0) then
+      WriteLn(Format('GetAvoidanceZones executed successfully, %d zones returned', [Length(AvoidanceZones)]))
+    else
+      WriteLn(Format('GetAvoidanceZones error: "%s"', [ErrorString]));
   finally
-    FreeAndNil(Query);
+    for i := Length(AvoidanceZones) - 1 downto 0 do
+      FreeAndNil(AvoidanceZones[i]);
   end;
 end;
 
@@ -859,31 +879,25 @@ end;
 
 procedure TRoute4MeExamples.GetUsers;
 var
-  Parameters: TGenericParameters;
   ErrorString: String;
   Users: TArray<TUser>;
   i: integer;
 begin
-  Parameters := TGenericParameters.Create();
+  // Run the query
+  Users := Route4MeManager.User.Get(ErrorString);
   try
-    // Run the query
-    Users := Route4MeManager.User.Get(Parameters, ErrorString);
-    try
-      WriteLn('');
+    WriteLn('');
 
-      if (Length(Users) > 0) then
-      begin
-        WriteLn(Format('GetUsers executed successfully, %d users returned', [Length(Users)]));
-        WriteLn('');
-      end
-      else
-        WriteLn(Format('GetUsers error: "%s"', [ErrorString]));
-    finally
-      for i := Length(Users) - 1 downto 0 do
-        FreeAndNil(Users[i]);
-    end;
+    if (Length(Users) > 0) then
+    begin
+      WriteLn(Format('GetUsers executed successfully, %d users returned', [Length(Users)]));
+      WriteLn('');
+    end
+    else
+      WriteLn(Format('GetUsers error: "%s"', [ErrorString]));
   finally
-    FreeAndNil(Parameters);
+    for i := Length(Users) - 1 downto 0 do
+      FreeAndNil(Users[i]);
   end;
 end;
 
@@ -1284,19 +1298,15 @@ end;
 procedure TRoute4MeExamples.ShareRoute(RouteId, RecipientEmail: String);
 var
   ErrorString: String;
-  Success: boolean;
 begin
-  Success := Route4MeManager.Route.Share(RouteId, RecipientEmail, ErrorString);
+  Route4MeManager.Route.Share(RouteId, RecipientEmail, ErrorString);
 
   WriteLn('');
 
-  if not Success then
-    WriteLn('ShareRoute general error')
+  if (ErrorString = EmptyStr) then
+    WriteLn('ShareRoute executed successfully')
   else
-    if (ErrorString = EmptyStr) then
-      WriteLn('ShareRoute executed successfully')
-    else
-      WriteLn(Format('ShareRoute error: "%s"', [ErrorString]));
+    WriteLn(Format('ShareRoute error: "%s"', [ErrorString]));
 end;
 
 function TRoute4MeExamples.SingleDepotMultipleDriverNoTimeWindow: TDataObject;

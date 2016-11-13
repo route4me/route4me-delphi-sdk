@@ -53,7 +53,6 @@ begin
     Parameters.AddBodyParameter('strNoteContents', TNetEncoding.URL.Encode(NoteContents));
     NoteParameterPairs := NoteParameters.Serialize('');
     try
-      // эти параметры должны быть через url переданы
       for i := 0 to NoteParameterPairs.Count - 1 do
         Parameters.AddParameter(NoteParameterPairs[i].Key, NoteParameterPairs[i].Value);
     finally

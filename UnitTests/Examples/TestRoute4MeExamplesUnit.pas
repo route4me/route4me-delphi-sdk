@@ -23,6 +23,7 @@ type
     procedure SingleDriverRoute10Stops;
     procedure ResequenceRouteDestinations;
     procedure AddRouteDestinations;
+    procedure AddRouteDestinationsOptimally;
     procedure RemoveRouteDestination;
     procedure SingleDriverRoundTrip;
     procedure MoveDestinationToRoute;
@@ -287,6 +288,20 @@ begin
     CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
+procedure TTestRoute4MeExamples.AddRouteDestinationsOptimally;
+var
+  RouteId: String;
+  DestinationIds: TArray<integer>;
+begin
+  RouteId := '5BCEACC31C444BCF9D8AB604DA4DFCA7';
+  DestinationIds := FRoute4MeExamples.AddRouteDestinationsOptimally(RouteId);
+
+  CheckEqualsBody('AddRouteDestinationsOptimally', FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api.v4/route.php?api_key=11111111111111111111111111111111&route_id=5BCEACC31C444BCF9D8AB604DA4DFCA7', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmPUT = FConnection.Method);
+    CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
 procedure TTestRoute4MeExamples.TrackDeviceLastLocationHistory;
 begin
   // todo: нет примеров в C#
@@ -423,10 +438,6 @@ begin
     '68621A20B99EBA14F1A4F2FDAC907B42,585D2628AE1C5A4FBD7B4050CB9D9601,3535A4E466B05DDD7FB1826D33C7BF4B' +
     ',181AA7EA4C23DFCAD80DB4244B1BC605,5E335C48F3A35CC043C2D9F4B865B509,1275C40E330F6E54753688FCCD7B4055' +
     ',49924C49F5B845AA429770AD0D115C92', FConnection.Url);
-{  CheckEquals('https://www.route4me.com/api.v4/route.php?api_key=11111111111111111111111111111111&route_id=' +
-    '68621A20B99EBA14F1A4F2FDAC907B42%2C585D2628AE1C5A4FBD7B4050CB9D9601%2C3535A4E466B05DDD7FB1826D33C7BF4B' +
-    '%2C181AA7EA4C23DFCAD80DB4244B1BC605%2C5E335C48F3A35CC043C2D9F4B865B509%2C1275C40E330F6E54753688FCCD7B4055' +
-    '%2C49924C49F5B845AA429770AD0D115C92', FConnection.Url);}
   CheckTrue(TRESTRequestMethod.rmDELETE = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;

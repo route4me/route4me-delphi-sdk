@@ -11,13 +11,18 @@ type
   public
     function Run(OptimizationParameters: TOptimizationParameters;
       out ErrorString: String): TDataObject;
+
     function Get(OptimizationParameters: TOptimizationParameters;
       out ErrorString: String): TDataObject; overload;
+
     function Get(QueryParameters: TRouteParametersQuery;
       out ErrorString: String): TArray<TDataObject>; overload;
+
     function Update(OptimizationParameters: TOptimizationParameters;
       out ErrorString: String): TDataObject;
+
     function Remove(OptimizationId: String; out ErrorString: String): boolean;
+
     function RemoveDestination(OptimizationId: String; DestinationId: integer;
       out ErrorString: String): boolean;
   end;

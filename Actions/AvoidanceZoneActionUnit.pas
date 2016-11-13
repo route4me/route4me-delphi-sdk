@@ -9,14 +9,11 @@ uses
 type
   TAvoidanceZoneActions = class(TBaseAction)
   public
-    function Get(AvoidanceZoneQuery: TAvoidanceZoneQuery;
-      out ErrorString: String): TAvoidanceZone;
-    function GetList(AvoidanceZoneQuery: TAvoidanceZoneQuery;
-      out ErrorString: String): TAvoidanceZoneArray;
+    function Get(TerritoryId: String; out ErrorString: String): TAvoidanceZone;
+    function GetList(out ErrorString: String): TAvoidanceZoneArray;
     function Add(AvoidanceZoneParameters: TAvoidanceZoneParameters;
       out ErrorString: String): TAvoidanceZone;
-    function Delete(Query: TAvoidanceZoneQuery;
-      out ErrorString: String): boolean;
+    function Delete(TerritoryId: String; out ErrorString: String): boolean;
     function Update(Parameters: TAvoidanceZoneParameters;
       out ErrorString: String): TAvoidanceZone;
   end;
@@ -26,7 +23,7 @@ implementation
 { TAvoidanceZoneActions }
 
 uses
-  SettingsUnit;
+  SettingsUnit, GenericParametersUnit;
 
 function TAvoidanceZoneActions.Add(
   AvoidanceZoneParameters: TAvoidanceZoneParameters;
@@ -36,33 +33,56 @@ begin
     TAvoidanceZone, ErrorString) as TAvoidanceZone;
 end;
 
-function TAvoidanceZoneActions.Delete(Query: TAvoidanceZoneQuery;
+function TAvoidanceZoneActions.Delete(TerritoryId: String;
   out ErrorString: String): boolean;
+var
+  Query: TGenericParameters;
 begin
-  FConnection.Delete(TSettings.Avoidance, Query, TAvoidanceZone, ErrorString);
-  Result := (ErrorString <> EmptyStr);
+  Query := TGenericParameters.Create;
+  try
+    Query.AddParameter('territory_id', TerritoryId);
+
+    FConnection.Delete(TSettings.Avoidance, Query, TAvoidanceZone, ErrorString);
+    Result := (ErrorString <> EmptyStr);
+  finally
+    FreeAndNil(Query);
+  end;
 end;
 
-function TAvoidanceZoneActions.Get(AvoidanceZoneQuery: TAvoidanceZoneQuery;
+function TAvoidanceZoneActions.Get(TerritoryId: String;
   out ErrorString: String): TAvoidanceZone;
+var
+  Query: TGenericParameters;
 begin
-  Result := FConnection.Get(TSettings.Avoidance, AvoidanceZoneQuery,
-    TAvoidanceZone, ErrorString) as TAvoidanceZone;
+  Query := TGenericParameters.Create;
+  try
+    Query.AddParameter('territory_id', TerritoryId);
+
+    Result := FConnection.Get(TSettings.Avoidance, Query,
+      TAvoidanceZone, ErrorString) as TAvoidanceZone;
+  finally
+    FreeAndNil(Query);
+  end;
 end;
 
-function TAvoidanceZoneActions.GetList(AvoidanceZoneQuery: TAvoidanceZoneQuery;
-  out ErrorString: String): TAvoidanceZoneArray;
+function TAvoidanceZoneActions.GetList(out ErrorString: String): TAvoidanceZoneArray;
 var
   List: TAvoidanceZoneList;
+  Query: TGenericParameters;
 begin
-  SetLength(Result, 0);
-  List := FConnection.Get(TSettings.Avoidance, AvoidanceZoneQuery,
-    TAvoidanceZoneList, ErrorString) as TAvoidanceZoneList;
+  Query := TGenericParameters.Create;
   try
-    if (List <> nil) then
-      Result := List.ToArray;
+    SetLength(Result, 0);
+    List := FConnection.Get(TSettings.Avoidance, Query,
+      TAvoidanceZoneList, ErrorString) as TAvoidanceZoneList;
+    try
+      if (List <> nil) then
+        Result := List.ToArray;
+    finally
+      FreeAndNil(List);
+    end;
   finally
-    FreeAndNil(List);
+    FreeAndNil(Query);
   end;
 end;
 
