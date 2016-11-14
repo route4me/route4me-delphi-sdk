@@ -117,7 +117,10 @@ uses
   NullableArrayInterceptorUnit in '..\Json\NullableArrayInterceptorUnit.pas',
   NullableInterceptorUnit in '..\Json\NullableInterceptorUnit.pas',
   ActivityParametersUnit in '..\QueryTypes\ActivityParametersUnit.pas',
-  StatusResponseUnit in '..\QueryTypes\StatusResponseUnit.pas';
+  StatusResponseUnit in '..\QueryTypes\StatusResponseUnit.pas',
+  SingleDriverRoute10StopsUnit in '..\Examples\Examples\SingleDriverRoute10StopsUnit.pas',
+  BaseExampleUnit in '..\Examples\Examples\BaseExampleUnit.pas',
+  BaseOptimizationExampleUnit in '..\Examples\Examples\BaseOptimizationExampleUnit.pas';
 
 {R *.RES}
 

@@ -10,6 +10,19 @@ uses
   IConnectionUnit, RouteParametersUnit, OrderUnit, AddressUnit;
 
 type
+  TExampleBuilder = class
+  strict private
+    FOutput: IOutput;
+    FConnection: IConnection;
+
+    function MakeExample(Clazz: TClass): TObject;
+  public
+    constructor Create(Output: IOutput; Connection: IConnection);
+    destructor Destroy; override;
+
+    function SingleDriverRoute10Stops: TDataObject;
+  end;
+
   TRoute4MeExamples = class
   private
     FOutput: IOutput;
@@ -24,7 +37,6 @@ type
     constructor Create(Output: IOutput; Connection: IConnection); reintroduce;
     destructor Destroy; override;
 
-    function SingleDriverRoute10Stops: TDataObject;
     procedure ResequenceRouteDestinations(Route: TDataObjectRoute);
     function AddRouteDestinations(RouteId: String): TArray<integer>;
     function AddRouteDestinationsOptimally(RouteId: String): TArray<integer>;
@@ -98,7 +110,8 @@ uses
   AvoidanceZoneParametersUnit, TerritoryUnit, AvoidanceZoneUnit,
   AvoidanceZoneQueryUnit, ConnectionUnit, ActivityParametersUnit, ActivityUnit,
   AddressParametersUnit, AddressBookParametersUnit, OrderParametersUnit,
-  GPSParametersUnit, TrackingHistoryUnit;
+  GPSParametersUnit, TrackingHistoryUnit, SingleDriverRoute10StopsUnit,
+  BaseExampleUnit;
 
 function TRoute4MeExamples.AddAddressBookContact(
   FirstName, Address: String): TAddressBookContact;
@@ -1433,29 +1446,6 @@ begin
   end;
 end;
 
-function TRoute4MeExamples.SingleDriverRoute10Stops: TDataObject;
-var
-  DataProvider: IOptimizationParametersProvider;
-  ErrorString: String;
-  DataObject: TDataObject;
-  Parameters: TOptimizationParameters;
-begin
-  DataProvider := TSingleDriverRoute10StopsTestDataProvider.Create;
-
-  // Run the query
-  Parameters := DataProvider.OptimizationParameters;
-  try
-    DataObject := Route4MeManager.Optimization.Run(Parameters, ErrorString);
-  finally
-    FreeAndNil(Parameters);
-  end;
-
-  // Output the result
-  PrintExampleOptimizationResult('SingleDriverRoute10Stops', DataObject, ErrorString);
-
-  Result := DataObject;
-end;
-
 procedure TRoute4MeExamples.TrackDeviceLastLocationHistory(RouteId: String);
 var
   ErrorString: String;
@@ -1645,6 +1635,41 @@ end;
 procedure TRoute4MeExamples.WriteLn(Message: String);
 begin
   FOutput.Writeln(Message);
+end;
+
+constructor TExampleBuilder.Create(Output: IOutput; Connection: IConnection);
+begin
+  FOutput := Output;
+  FConnection := Connection;
+end;
+
+destructor TExampleBuilder.Destroy;
+begin
+  FOutput := nil;
+  FConnection := nil;
+
+  inherited;
+end;
+
+function TExampleBuilder.MakeExample(Clazz: TClass): TObject;
+var
+  Example: TBaseExample;
+begin
+  Example := Clazz.Create as TBaseExample;
+  Example.Init(FOutput, FConnection);
+  Result := Example;
+end;
+
+function TExampleBuilder.SingleDriverRoute10Stops: TDataObject;
+var
+  Example: TSingleDriverRoute10Stops;
+begin
+  Example := MakeExample(TSingleDriverRoute10Stops) as TSingleDriverRoute10Stops;
+  try
+    Result := Example.Run;
+  finally
+    FreeAndNil(Example);
+  end;
 end;
 
 end.

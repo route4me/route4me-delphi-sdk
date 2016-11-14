@@ -11,6 +11,7 @@ type
   TTestRoute4MeExamples = class(TTestCase)
   private
     FRoute4MeExamples: TRoute4MeExamples;
+    FExamples: TExampleBuilder;
     FConnection: TConnectionStub;
 
     procedure SaveString(s: String);
@@ -101,6 +102,7 @@ begin
 
   FConnection := TConnectionStub.Create;
   FRoute4MeExamples := TRoute4MeExamples.Create(TOutputDummy.Create, FConnection);
+  FExamples := TExampleBuilder.Create(TOutputDummy.Create, FConnection);
 end;
 
 procedure TTestRoute4MeExamples.ShareRoute;
@@ -180,7 +182,7 @@ procedure TTestRoute4MeExamples.SingleDriverRoute10Stops;
 var
   DataObject: TDataObject;
 begin
-  DataObject := FRoute4MeExamples.SingleDriverRoute10Stops;
+  DataObject := FExamples.SingleDriverRoute10Stops;
   try
     CheckEqualsBody('SingleDriverRoute10Stops', FConnection.RequestBody);
     CheckEquals('https://www.route4me.com/api.v4/optimization_problem.php?api_key=11111111111111111111111111111111', FConnection.Url);
@@ -193,6 +195,7 @@ end;
 
 procedure TTestRoute4MeExamples.TearDown;
 begin
+  FreeAndNil(FExamples);
   FreeAndNil(FRoute4MeExamples);
 
   inherited;

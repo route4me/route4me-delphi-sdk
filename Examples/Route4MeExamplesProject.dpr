@@ -94,7 +94,10 @@ uses
   RouteParametersQueryUnit in '..\QueryTypes\RouteParametersQueryUnit.pas',
   SingleDriverRoundTripGenericRequestUnit in '..\QueryTypes\SingleDriverRoundTripGenericRequestUnit.pas',
   SingleDriverRoundTripGenericResponseUnit in '..\QueryTypes\SingleDriverRoundTripGenericResponseUnit.pas',
-  StatusResponseUnit in '..\QueryTypes\StatusResponseUnit.pas';
+  StatusResponseUnit in '..\QueryTypes\StatusResponseUnit.pas',
+  BaseExampleUnit in 'Examples\BaseExampleUnit.pas',
+  SingleDriverRoute10StopsUnit in 'Examples\SingleDriverRoute10StopsUnit.pas',
+  BaseOptimizationExampleUnit in 'Examples\BaseOptimizationExampleUnit.pas';
 
 begin
   try

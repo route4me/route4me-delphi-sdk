@@ -26,7 +26,8 @@ const
 
 class procedure TExamples.Run;
 var
-  Examples: TRoute4MeExamples;
+  ExamplesOld: TRoute4MeExamples;
+  Examples: TExampleBuilder;
   DataObject, DataObject1, DataObject2: TDataObject;
   RouteSingleDriverRoute10Stops: TDataObjectRoute;
   RouteId_SingleDriverRoute10Stops: NullableString;
@@ -53,7 +54,8 @@ var
 begin
   try
     Connection := TConnection.Create(c_ApiKey);
-    Examples := TRoute4MeExamples.Create(TOutputConsole.Create, Connection);
+    ExamplesOld := TRoute4MeExamples.Create(TOutputConsole.Create, Connection);
+    Examples := TExampleBuilder.Create(TOutputConsole.Create, Connection);
     try
       try
         DataObject1 := Examples.SingleDriverRoute10Stops();
@@ -62,7 +64,7 @@ begin
         begin
           RouteSingleDriverRoute10Stops := DataObject1.Routes[0];
           RouteId_SingleDriverRoute10Stops := RouteSingleDriverRoute10Stops.RouteId;
-          Examples.ResequenceRouteDestinations(RouteSingleDriverRoute10Stops);
+          ExamplesOld.ResequenceRouteDestinations(RouteSingleDriverRoute10Stops);
         end
         else
         begin
@@ -72,17 +74,17 @@ begin
         end;
 
         if (RouteSingleDriverRoute10Stops <> nil) then
-          Examples.ShareRoute(RouteSingleDriverRoute10Stops.RouteId, 'oooooo@gmail.com');
+          ExamplesOld.ShareRoute(RouteSingleDriverRoute10Stops.RouteId, 'oooooo@gmail.com');
 
-        DestinationIds := Examples.AddRouteDestinationsOptimally(RouteId_SingleDriverRoute10Stops);
+        DestinationIds := ExamplesOld.AddRouteDestinationsOptimally(RouteId_SingleDriverRoute10Stops);
         if (Length(DestinationIds) > 0) then
-          Examples.RemoveRouteDestination(RouteId_SingleDriverRoute10Stops, DestinationIds[0]);
+          ExamplesOld.RemoveRouteDestination(RouteId_SingleDriverRoute10Stops, DestinationIds[0]);
 
-        DestinationIds := Examples.AddRouteDestinations(RouteId_SingleDriverRoute10Stops);
+        DestinationIds := ExamplesOld.AddRouteDestinations(RouteId_SingleDriverRoute10Stops);
         if (Length(DestinationIds) > 0) then
-          Examples.RemoveRouteDestination(RouteId_SingleDriverRoute10Stops, DestinationIds[0]);
+          ExamplesOld.RemoveRouteDestination(RouteId_SingleDriverRoute10Stops, DestinationIds[0]);
 
-        DataObject2 := Examples.SingleDriverRoundTrip();
+        DataObject2 := ExamplesOld.SingleDriverRoundTrip();
 
         if (DataObject2 <> nil) and (DataObject2.Routes <> nil) and (Length(DataObject2.Routes) > 0) then
           RouteId_SingleDriverRoundTrip := DataObject2.Routes[0].RouteId
@@ -107,15 +109,15 @@ begin
 
         if RouteIdToMoveTo.IsNotNull and RouteDestinationIdToMove.IsNotNull and
           AfterDestinationIdToMoveAfter.IsNotNull then
-          Examples.MoveDestinationToRoute(RouteIdToMoveTo, RouteDestinationIdToMove, AfterDestinationIdToMoveAfter)
+          ExamplesOld.MoveDestinationToRoute(RouteIdToMoveTo, RouteDestinationIdToMove, AfterDestinationIdToMoveAfter)
         else
           WriteLn(Format(
             'MoveDestinationToRoute not called. routeDestinationId = %d, afterDestinationId = %d.',
             [RouteDestinationIdToMove.Value, AfterDestinationIdToMoveAfter.Value]));
 
-        OptimizationProblemId := Examples.SingleDriverRoundTripGeneric();
+        OptimizationProblemId := ExamplesOld.SingleDriverRoundTripGeneric();
 
-        DataObject := Examples.MultipleDepotMultipleDriver();
+        DataObject := ExamplesOld.MultipleDepotMultipleDriver();
         try
           if (DataObject <> nil) and (Length(DataObject.Routes) > 0) then
             RouteId_MultipleDepotMultipleDriver := DataObject.Routes[0].RouteId
@@ -125,7 +127,7 @@ begin
           FreeAndNil(DataObject);
         end;
 
-        DataObject := Examples.MultipleDepotMultipleDriverTimeWindow();
+        DataObject := ExamplesOld.MultipleDepotMultipleDriverTimeWindow();
         try
           if (DataObject <> nil) and (Length(DataObject.Routes) > 0) then
             RouteId_MultipleDepotMultipleDriverTimeWindow := DataObject.Routes[0].RouteId
@@ -135,7 +137,7 @@ begin
           FreeAndNil(DataObject);
         end;
 
-        DataObject := Examples.SingleDepotMultipleDriverNoTimeWindow();
+        DataObject := ExamplesOld.SingleDepotMultipleDriverNoTimeWindow();
         try
           if (DataObject <> nil) and (Length(DataObject.Routes) > 0) then
             RouteId_SingleDepotMultipleDriverNoTimeWindow := DataObject.Routes[0].RouteId
@@ -145,7 +147,7 @@ begin
           FreeAndNil(DataObject);
         end;
 
-        DataObject := Examples.MultipleDepotMultipleDriverWith24StopsTimeWindow();
+        DataObject := ExamplesOld.MultipleDepotMultipleDriverWith24StopsTimeWindow();
         try
           if (DataObject <> nil) and (Length(DataObject.Routes) > 0) then
             RouteId_MultipleDepotMultipleDriverWith24StopsTimeWindow := DataObject.Routes[0].RouteId
@@ -155,7 +157,7 @@ begin
           FreeAndNil(DataObject);
         end;
 
-        DataObject := Examples.SingleDriverMultipleTimeWindows();
+        DataObject := ExamplesOld.SingleDriverMultipleTimeWindows();
         try
           if (DataObject <> nil) and (Length(DataObject.Routes) > 0) then
             RouteId_SingleDriverMultipleTimeWindows := DataObject.Routes[0].RouteId
@@ -166,14 +168,14 @@ begin
         end;
 
         if (OptimizationProblemId.IsNotNull) then
-          Examples.GetOptimization(OptimizationProblemId)
+          ExamplesOld.GetOptimization(OptimizationProblemId)
         else
           WriteLn('GetOptimization not called. OptimizationProblemID is null.');
 
-        Examples.GetOptimizations();
+        ExamplesOld.GetOptimizations();
 
         if (OptimizationProblemId.IsNotNull) then
-          DataObject := Examples.AddDestinationToOptimization(OptimizationProblemId, True)
+          DataObject := ExamplesOld.AddDestinationToOptimization(OptimizationProblemId, True)
         else
         begin
             WriteLn('AddDestinationToOptimization not called. optimizationProblemID is null.');
@@ -186,7 +188,7 @@ begin
               if (DataObject <> nil) and (Length(DataObject.Addresses) > 0) then
               begin
                 DestinationToRemove := DataObject.Addresses[High(DataObject.Addresses)];
-                Examples.RemoveDestinationFromOptimization(OptimizationProblemId,
+                ExamplesOld.RemoveDestinationFromOptimization(OptimizationProblemId,
                   DestinationToRemove.RouteDestinationId, False);
               end
               else
@@ -199,46 +201,46 @@ begin
         end;
 
         if (OptimizationProblemId.IsNotNull) then
-          Examples.ReOptimization(OptimizationProblemId)
+          ExamplesOld.ReOptimization(OptimizationProblemId)
         else
           WriteLn('ReOptimization not called. OptimizationProblemID is null.');
 
         if (RouteId_SingleDriverRoute10Stops.IsNotNull) then
         begin
-          Examples.UpdateRoute(RouteId_SingleDriverRoute10Stops);
-          Examples.ReoptimizeRoute(RouteId_SingleDriverRoute10Stops);
+          ExamplesOld.UpdateRoute(RouteId_SingleDriverRoute10Stops);
+          ExamplesOld.ReoptimizeRoute(RouteId_SingleDriverRoute10Stops);
           GetRouteDirections := True;
           GetRoutePathPoints := True;
-          Examples.GetRoute(RouteId_SingleDriverRoute10Stops, GetRouteDirections, GetRoutePathPoints);
+          ExamplesOld.GetRoute(RouteId_SingleDriverRoute10Stops, GetRouteDirections, GetRoutePathPoints);
         end
         else
             WriteLn('UpdateRoute, ReoptimizeRoute, GetRoute not called. routeId_SingleDriverRoute10Stops is null.');
 
-        Examples.GetRoutes();
-        Examples.GetUsers();
+        ExamplesOld.GetRoutes();
+        ExamplesOld.GetUsers();
 
         if (RouteId_SingleDriverRoute10Stops.IsNotNull) then
-          Examples.LogCustomActivity('Test User Activity ' + DateTimeToStr(Now), RouteId_SingleDriverRoute10Stops)
+          ExamplesOld.LogCustomActivity('Test User Activity ' + DateTimeToStr(Now), RouteId_SingleDriverRoute10Stops)
         else
           WriteLn('LogCustomActivity not called. routeId_SingleDriverRoute10Stops is null.');
 
         if (RouteId_SingleDriverRoute10Stops.IsNotNull) then
-          Examples.GetActivities(RouteId_SingleDriverRoute10Stops)
+          ExamplesOld.GetActivities(RouteId_SingleDriverRoute10Stops)
         else
           WriteLn('GetActivities not called. routeId_SingleDriverRoute10Stops is null.');
 
         if (RouteIdToMoveTo.IsNotNull) and (RouteDestinationIdToMove <> 0) then
         begin
-            Examples.GetAddress(RouteIdToMoveTo, RouteDestinationIdToMove);
-            Examples.AddAddressNote(RouteIdToMoveTo, RouteDestinationIdToMove);
-            Examples.GetAddressNotes(RouteIdToMoveTo, RouteDestinationIdToMove);
+            ExamplesOld.GetAddress(RouteIdToMoveTo, RouteDestinationIdToMove);
+            ExamplesOld.AddAddressNote(RouteIdToMoveTo, RouteDestinationIdToMove);
+            ExamplesOld.GetAddressNotes(RouteIdToMoveTo, RouteDestinationIdToMove);
         end
         else
           WriteLn('AddAddressNote, GetAddress, GetAddressNotes not called. routeIdToMoveTo == null || routeDestinationIdToMove == 0.');
 
         RouteId_DuplicateRoute := NullableString.Null;
         if (RouteId_SingleDriverRoute10Stops.IsNotNull) then
-          RouteId_DuplicateRoute := Examples.DuplicateRoute(RouteId_SingleDriverRoute10Stops)
+          RouteId_DuplicateRoute := ExamplesOld.DuplicateRoute(RouteId_SingleDriverRoute10Stops)
         else
           WriteLn('DuplicateRoute not called. routeId_SingleDriverRoute10Stops is null.');
 
@@ -246,8 +248,8 @@ begin
         //not all accounts are capable of storing gps data
         //if (RouteId_SingleDriverRoute10Stops.IsNotNull) then
         //begin
-        //  Examples.SetGPSPosition(RouteId_SingleDriverRoute10Stops);
-        //  Examples.TrackDeviceLastLocationHistory(RouteId_SingleDriverRoute10Stops);
+        //  ExamplesOld.SetGPSPosition(RouteId_SingleDriverRoute10Stops);
+        //  ExamplesOld.TrackDeviceLastLocationHistory(RouteId_SingleDriverRoute10Stops);
         //end
         //else
         //  WriteLn('SetGPSPosition, TrackDeviceLastLocationHistory not called. routeId_SingleDriverRoute10Stops is null.');
@@ -272,7 +274,7 @@ begin
             RouteIdsToDelete.Add(RouteId_SingleDriverMultipleTimeWindows);
 
           if (RouteIdsToDelete.Count > 0) then
-            Examples.DeleteRoutes(RouteIdsToDelete.ToArray())
+            ExamplesOld.DeleteRoutes(RouteIdsToDelete.ToArray())
           else
             WriteLn('RouteIdsToDelete.Count = 0. DeleteRoutes not called.');
         finally
@@ -282,21 +284,21 @@ begin
         // Remove optimization
         if (OptimizationProblemId.IsNotNull) then
         //todo: почему-то идет Content-Type: application/x-www-form-urlencoded вместо text/plain;
-          Examples.RemoveOptimization(optimizationProblemId)
+          ExamplesOld.RemoveOptimization(optimizationProblemId)
         else
           WriteLn('RemoveOptimization not called. optimizationProblemID is null.');
 
         Randomize;
 
         // Address Book
-        Contact1 := Examples.AddAddressBookContact('Test FirstName 1', 'Test Address 1');
-        Contact2 := Examples.AddAddressBookContact('Test FirstName 2', 'Test Address 2');
+        Contact1 := ExamplesOld.AddAddressBookContact('Test FirstName 1', 'Test Address 1');
+        Contact2 := ExamplesOld.AddAddressBookContact('Test FirstName 2', 'Test Address 2');
         try
-          Examples.GetAddressBookContacts();
+          ExamplesOld.GetAddressBookContacts();
           if (Contact1 <> nil) then
           begin
             Contact1.LastName := 'Updated ' + IntToStr(Random(100));
-            Examples.UpdateAddressBookContact(Contact1);
+            ExamplesOld.UpdateAddressBookContact(Contact1);
           end
           else
             WriteLn('contact1 = null. UpdateAddressBookContact not called.');
@@ -307,7 +309,7 @@ begin
               AddressIdsToRemove.Add(Contact1.Id);
             if (Contact2 <> nil) then
               AddressIdsToRemove.Add(Contact2.Id);
-            Examples.RemoveAddressBookContacts(AddressIdsToRemove.ToArray());
+            ExamplesOld.RemoveAddressBookContacts(AddressIdsToRemove.ToArray());
           finally
             FreeAndNil(AddressIdsToRemove);
           end;
@@ -318,32 +320,32 @@ begin
 
 
         // Avoidance Zones
-        TerritoryId := Examples.AddAvoidanceZone();
-        Examples.GetAvoidanceZones();
+        TerritoryId := ExamplesOld.AddAvoidanceZone();
+        ExamplesOld.GetAvoidanceZones();
         if (TerritoryId.IsNotNull) then
-          Examples.GetAvoidanceZone(TerritoryId)
+          ExamplesOld.GetAvoidanceZone(TerritoryId)
         else
           WriteLn('GetAvoidanceZone not called. territoryId is null.');
 
         if (TerritoryId.IsNotNull) then
-          Examples.UpdateAvoidanceZone(TerritoryId)
+          ExamplesOld.UpdateAvoidanceZone(TerritoryId)
         else
           WriteLn('UpdateAvoidanceZone not called. territoryId is null.');
 
         if (TerritoryId.IsNotNull) then
-          examples.DeleteAvoidanceZone(TerritoryId)
+          ExamplesOld.DeleteAvoidanceZone(TerritoryId)
         else
           WriteLn('DeleteAvoidanceZone not called. territoryId is null.');
 
         // Orders
-        Order1 := Examples.AddOrder();
-        Order2 := Examples.AddOrder();
+        Order1 := ExamplesOld.AddOrder();
+        Order2 := ExamplesOld.AddOrder();
         try
-          Examples.GetOrders();
+          ExamplesOld.GetOrders();
           if (Order1 <> nil) then
           begin
             Order1.LastName := 'Updated ' + IntToStr(Random(100));
-            Examples.UpdateOrder(Order1);
+            ExamplesOld.UpdateOrder(Order1);
           end
           else
             WriteLn('Order1 == null. UpdateOrder not called.');
@@ -354,7 +356,7 @@ begin
               OrderIdsToRemove.Add(Order1.OrderId);
             if (Order2 <> nil) then
               OrderIdsToRemove.Add(Order2.OrderId);
-            Examples.RemoveOrders(OrderIdsToRemove.ToArray());
+            ExamplesOld.RemoveOrders(OrderIdsToRemove.ToArray());
           finally
             FreeAndNil(OrderIdsToRemove);
           end;
@@ -363,14 +365,15 @@ begin
           FreeAndNil(Order1);
         end;
 
-        Examples.GenericExample(Connection);
-        Examples.GenericExampleShortcut(Connection);
+        ExamplesOld.GenericExample(Connection);
+        ExamplesOld.GenericExampleShortcut(Connection);
       except
         on E: Exception do
           Writeln(E.ClassName, ': ', E.Message);
       end;
     finally
       FreeAndNil(Examples);
+      FreeAndNil(ExamplesOld);
     end;
   finally
     WriteLn('');

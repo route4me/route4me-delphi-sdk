@@ -2,19 +2,20 @@ unit SingleDriverRoute10StopsUnit;
 
 interface
 
-uses SysUtils, Route4MeExamplesUnit, DataObjectUnit;
+uses
+  SysUtils,
+  Route4MeExamplesUnit, DataObjectUnit, BaseOptimizationExampleUnit;
 
 type
-  TSingleDriverRoute10Stops = class(TRoute4MeExamples)
+  TSingleDriverRoute10Stops = class(TBaseOptimizationExample)
   public
-    function Run(): TDataObject;
+    function Run: TDataObject;
   end;
 
 implementation
 
-{ TSingleDriverRoute10Stops }
-
-uses IOptimizationParametersProviderUnit, OptimizationParametersUnit,
+uses
+  IOptimizationParametersProviderUnit, OptimizationParametersUnit,
   SingleDriverRoute10StopsTestDataProviderUnit;
 
 function TSingleDriverRoute10Stops.Run: TDataObject;
