@@ -10,8 +10,7 @@ uses
 type
   TTestRoute4MeExamples = class(TTestCase)
   private
-    FRoute4MeExamples: TRoute4MeExamples;
-    FExamples: TExampleBuilder;
+    FExamples: TRoute4MeExamples;
     FConnection: TConnectionStub;
 
     procedure SaveString(s: String);
@@ -41,6 +40,7 @@ type
     procedure ReOptimization;
     procedure UpdateRoute;
     procedure ReoptimizeRoute;
+    procedure MergeRoutes;
     procedure GetRoute;
     procedure GetRoutes;
     procedure ShareRoute;
@@ -101,8 +101,7 @@ begin
   inherited;
 
   FConnection := TConnectionStub.Create;
-  FRoute4MeExamples := TRoute4MeExamples.Create(TOutputDummy.Create, FConnection);
-  FExamples := TExampleBuilder.Create(TOutputDummy.Create, FConnection);
+  FExamples := TRoute4MeExamples.Create(TOutputDummy.Create, FConnection);
 end;
 
 procedure TTestRoute4MeExamples.ShareRoute;
@@ -113,7 +112,7 @@ begin
   RouteId := '68621A20B99EBA14F1A4F2FDAC907B42';
   Email := 'test@mail.com';
 
-  FRoute4MeExamples.ShareRoute(RouteId, Email);
+  FExamples.ShareRoute(RouteId, Email);
 
   CheckEquals('recipient_email=test@mail.com', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/actions/route/share_route.php?api_key=11111111111111111111111111111111&route_id=68621A20B99EBA14F1A4F2FDAC907B42&response_format=json', FConnection.Url);
@@ -125,7 +124,7 @@ procedure TTestRoute4MeExamples.SingleDepotMultipleDriverNoTimeWindow;
 var
   DataObject: TDataObject;
 begin
-  DataObject := FRoute4MeExamples.SingleDepotMultipleDriverNoTimeWindow;
+  DataObject := FExamples.SingleDepotMultipleDriverNoTimeWindow;
   try
     CheckEqualsBody('SingleDepotMultipleDriverNoTimeWindow', FConnection.RequestBody);
     CheckEquals('https://www.route4me.com/api.v4/optimization_problem.php?api_key=11111111111111111111111111111111', FConnection.Url);
@@ -140,7 +139,7 @@ procedure TTestRoute4MeExamples.SingleDriverMultipleTimeWindows;
 var
   DataObject: TDataObject;
 begin
-  DataObject := FRoute4MeExamples.SingleDriverMultipleTimeWindows;
+  DataObject := FExamples.SingleDriverMultipleTimeWindows;
   try
     CheckEqualsBody('SingleDriverMultipleTimeWindows', FConnection.RequestBody);
     CheckEquals('https://www.route4me.com/api.v4/optimization_problem.php?api_key=11111111111111111111111111111111', FConnection.Url);
@@ -155,7 +154,7 @@ procedure TTestRoute4MeExamples.SingleDriverRoundTrip;
 var
   DataObject: TDataObject;
 begin
-  DataObject := FRoute4MeExamples.SingleDriverRoundTrip;
+  DataObject := FExamples.SingleDriverRoundTrip;
   try
     CheckEqualsBody('SingleDriverRoundTrip', FConnection.RequestBody);
     CheckEquals('https://www.route4me.com/api.v4/optimization_problem.php?api_key=11111111111111111111111111111111', FConnection.Url);
@@ -170,7 +169,7 @@ procedure TTestRoute4MeExamples.SingleDriverRoundTripGeneric;
 var
   OptimizationProblemId: NullableString;
 begin
-  OptimizationProblemId := FRoute4MeExamples.SingleDriverRoundTripGeneric;
+  OptimizationProblemId := FExamples.SingleDriverRoundTripGeneric;
 
   CheckEqualsBody('SingleDriverRoundTripGeneric', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/optimization_problem.php?api_key=11111111111111111111111111111111', FConnection.Url);
@@ -196,7 +195,6 @@ end;
 procedure TTestRoute4MeExamples.TearDown;
 begin
   FreeAndNil(FExamples);
-  FreeAndNil(FRoute4MeExamples);
 
   inherited;
 end;
@@ -207,7 +205,7 @@ var
 begin
   FirstName := 'Test FirstName 37';
   Address := 'Test Address1 28';
-  FRoute4MeExamples.AddAddressBookContact(FirstName, Address);
+  FExamples.AddAddressBookContact(FirstName, Address);
 
   CheckEqualsBody('AddAddressBookContact', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/address_book.php?api_key=11111111111111111111111111111111', FConnection.Url);
@@ -223,7 +221,7 @@ var
 begin
   RouteId := '585D2628AE1C5A4FBD7B4050CB9D9601';
   AddressId := 194622711;
-  FRoute4MeExamples.AddAddressNote(RouteId, AddressId);
+  FExamples.AddAddressNote(RouteId, AddressId);
 
   CheckEquals('strUpdateType=dropoff&strNoteContents=Test+Note+Contents+' + TNetEncoding.URL.Encode(DateTimeToStr(Now)),
     FConnection.RequestBody);
@@ -239,7 +237,7 @@ end;
 
 procedure TTestRoute4MeExamples.AddAvoidanceZone;
 begin
-  FRoute4MeExamples.AddAvoidanceZone;
+  FExamples.AddAvoidanceZone;
 
   CheckEqualsBody('AddAvoidanceZone', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/avoidance.php?api_key=11111111111111111111111111111111', FConnection.Url);
@@ -256,7 +254,7 @@ begin
   OptimizationProblemId := '6084D999940BDCF13A568724DBE8FFE4';
   AndReOptimize := True;
 
-  DataObject := FRoute4MeExamples.AddDestinationToOptimization(OptimizationProblemId, AndReOptimize);
+  DataObject := FExamples.AddDestinationToOptimization(OptimizationProblemId, AndReOptimize);
   try
     CheckEqualsBody('AddDestinationToOptimization', FConnection.RequestBody);
     CheckEquals('https://www.route4me.com/api.v4/optimization_problem.php?api_key=11111111111111111111111111111111&optimization_problem_id=6084D999940BDCF13A568724DBE8FFE4&reoptimize=1', FConnection.Url);
@@ -269,7 +267,7 @@ end;
 
 procedure TTestRoute4MeExamples.AddOrder;
 begin
-  FRoute4MeExamples.AddOrder;
+  FExamples.AddOrder;
 
   CheckEqualsBody('AddOrder', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/order.php?api_key=11111111111111111111111111111111', FConnection.Url);
@@ -283,7 +281,7 @@ var
   DestinationIds: TArray<integer>;
 begin
   RouteId := '5BCEACC31C444BCF9D8AB604DA4DFCA7';
-  DestinationIds := FRoute4MeExamples.AddRouteDestinations(RouteId);
+  DestinationIds := FExamples.AddRouteDestinations(RouteId);
 
   CheckEqualsBody('AddRouteDestinations', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/route.php?api_key=11111111111111111111111111111111&route_id=5BCEACC31C444BCF9D8AB604DA4DFCA7', FConnection.Url);
@@ -297,7 +295,7 @@ var
   DestinationIds: TArray<integer>;
 begin
   RouteId := '5BCEACC31C444BCF9D8AB604DA4DFCA7';
-  DestinationIds := FRoute4MeExamples.AddRouteDestinationsOptimally(RouteId);
+  DestinationIds := FExamples.AddRouteDestinationsOptimally(RouteId);
 
   CheckEqualsBody('AddRouteDestinationsOptimally', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/route.php?api_key=11111111111111111111111111111111&route_id=5BCEACC31C444BCF9D8AB604DA4DFCA7', FConnection.Url);
@@ -323,7 +321,7 @@ begin
     Contact.Longitude := -77.338814;
     Contact.FirstName := 'Test FirstName 768611171';
     Contact.LastName := 'Updated 640291126';
-    FRoute4MeExamples.UpdateAddressBookContact(Contact);
+    FExamples.UpdateAddressBookContact(Contact);
 
     CheckEqualsBody('UpdateAddressBookContact', FConnection.RequestBody);
     CheckEquals('https://www.route4me.com/api.v4/address_book.php?api_key=11111111111111111111111111111111', FConnection.Url);
@@ -339,7 +337,7 @@ var
   TerritoryId: String;
 begin
   TerritoryId := '503F8B59E9719FE310836C830F7E82A0';
-  FRoute4MeExamples.UpdateAvoidanceZone(TerritoryId);
+  FExamples.UpdateAvoidanceZone(TerritoryId);
 
   CheckEqualsBody('UpdateAvoidanceZone', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/avoidance.php?api_key=11111111111111111111111111111111', FConnection.Url);
@@ -364,7 +362,7 @@ begin
     Order.MemberId := '1';
     Order.OrderId := '1414';
     Order.OrderStatusId := '0';
-    FRoute4MeExamples.UpdateOrder(Order);
+    FExamples.UpdateOrder(Order);
 
     CheckEqualsBody('UpdateOrder', FConnection.RequestBody);
     CheckEquals('https://www.route4me.com/api.v4/order.php?api_key=11111111111111111111111111111111', FConnection.Url);
@@ -381,7 +379,7 @@ var
 begin
   RouteId := '5BCEACC31C444BCF9D8AB604DA4DFCA7';
 
-  FRoute4MeExamples.UpdateRoute(RouteId);
+  FExamples.UpdateRoute(RouteId);
 
   CheckEqualsBody('UpdateRoute', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/route.php?api_key=11111111111111111111111111111111&route_id=5BCEACC31C444BCF9D8AB604DA4DFCA7', FConnection.Url);
@@ -413,7 +411,7 @@ var
   TerritoryId: String;
 begin
   TerritoryId := '503F8B59E9719FE310836C830F7E82A0';
-  FRoute4MeExamples.DeleteAvoidanceZone(TerritoryId);
+  FExamples.DeleteAvoidanceZone(TerritoryId);
 
   CheckEqualsBody('DeleteAvoidanceZone', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/avoidance.php?api_key=11111111111111111111111111111111&territory_id=503F8B59E9719FE310836C830F7E82A0', FConnection.Url);
@@ -434,7 +432,7 @@ begin
   RouteIds[5] := '1275C40E330F6E54753688FCCD7B4055';
   RouteIds[6] := '49924C49F5B845AA429770AD0D115C92';
 
-  FRoute4MeExamples.DeleteRoutes(RouteIds);
+  FExamples.DeleteRoutes(RouteIds);
 
   CheckEqualsBody('DeleteRoutes', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/route.php?api_key=11111111111111111111111111111111&route_id=' +
@@ -450,7 +448,7 @@ var
   RouteId: String;
 begin
   RouteId := '68621A20B99EBA14F1A4F2FDAC907B42';
-  FRoute4MeExamples.DuplicateRoute(RouteId);
+  FExamples.DuplicateRoute(RouteId);
 
   CheckEquals(EmptyStr, FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/actions/duplicate_route.php?api_key=11111111111111111111111111111111&to=none&route_id=68621A20B99EBA14F1A4F2FDAC907B42', FConnection.Url);
@@ -460,7 +458,7 @@ end;
 
 procedure TTestRoute4MeExamples.GenericExample;
 begin
-  FRoute4MeExamples.GenericExample(FConnection);
+  FExamples.GenericExample(FConnection);
 
   CheckEquals(EmptyStr, FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/route.php?api_key=11111111111111111111111111111111&limit=10&Offset=5', FConnection.Url);
@@ -470,7 +468,7 @@ end;
 
 procedure TTestRoute4MeExamples.GenericExampleShortcut;
 begin
-  FRoute4MeExamples.GenericExampleShortcut(FConnection);
+  FExamples.GenericExampleShortcut(FConnection);
 
   CheckEquals(EmptyStr, FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/route.php?api_key=11111111111111111111111111111111&limit=10&offset=5', FConnection.Url);
@@ -483,7 +481,7 @@ var
   RouteId: String;
 begin
   RouteId := '68621A20B99EBA14F1A4F2FDAC907B42';
-  FRoute4MeExamples.GetActivities(RouteId);
+  FExamples.GetActivities(RouteId);
 
   CheckEquals(EmptyStr, FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/activity_feed.php?api_key=11111111111111111111111111111111&route_id=68621A20B99EBA14F1A4F2FDAC907B42&limit=10&offset=0', FConnection.Url);
@@ -498,7 +496,7 @@ var
 begin
   RouteId := '585D2628AE1C5A4FBD7B4050CB9D9601';
   RouteDestinationId := 194622711;
-  FRoute4MeExamples.GetAddress(RouteId, RouteDestinationId);
+  FExamples.GetAddress(RouteId, RouteDestinationId);
 
   CheckEquals(EmptyStr, FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/address.php?api_key=11111111111111111111111111111111&route_id=585D2628AE1C5A4FBD7B4050CB9D9601&route_destination_id=194622711&notes=1', FConnection.Url);
@@ -508,7 +506,7 @@ end;
 
 procedure TTestRoute4MeExamples.GetAddressBookContacts;
 begin
-  FRoute4MeExamples.GetAddressBookContacts;
+  FExamples.GetAddressBookContacts;
 
   CheckEquals(EmptyStr, FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/address_book.php?api_key=11111111111111111111111111111111&limit=10&offset=0', FConnection.Url);
@@ -523,7 +521,7 @@ var
 begin
   RouteId := '585D2628AE1C5A4FBD7B4050CB9D9601';
   RouteDestinationId := 194622711;
-  FRoute4MeExamples.GetAddressNotes(RouteId, RouteDestinationId);
+  FExamples.GetAddressNotes(RouteId, RouteDestinationId);
 
   CheckEquals(EmptyStr, FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/address.php?api_key=11111111111111111111111111111111&route_id=585D2628AE1C5A4FBD7B4050CB9D9601&route_destination_id=194622711&notes=1', FConnection.Url);
@@ -536,7 +534,7 @@ var
   TerritoryId: String;
 begin
   TerritoryId := '503F8B59E9719FE310836C830F7E82A0';
-  FRoute4MeExamples.GetAvoidanceZone(TerritoryId);
+  FExamples.GetAvoidanceZone(TerritoryId);
 
   CheckEquals(EmptyStr, FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/avoidance.php?api_key=11111111111111111111111111111111&territory_id=503F8B59E9719FE310836C830F7E82A0', FConnection.Url);
@@ -546,7 +544,7 @@ end;
 
 procedure TTestRoute4MeExamples.GetAvoidanceZones;
 begin
-  FRoute4MeExamples.GetAvoidanceZones;
+  FExamples.GetAvoidanceZones;
 
   CheckEquals(EmptyStr, FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/avoidance.php?api_key=11111111111111111111111111111111', FConnection.Url);
@@ -559,7 +557,7 @@ var
   OptimizationProblemId: String;
 begin
   OptimizationProblemId := '6084D999940BDCF13A568724DBE8FFE4';
-  FRoute4MeExamples.GetOptimization(OptimizationProblemId);
+  FExamples.GetOptimization(OptimizationProblemId);
 
   CheckEquals('', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/optimization_problem.php?api_key=11111111111111111111111111111111&optimization_problem_id=6084D999940BDCF13A568724DBE8FFE4', FConnection.Url);
@@ -569,7 +567,7 @@ end;
 
 procedure TTestRoute4MeExamples.GetOptimizations;
 begin
-  FRoute4MeExamples.GetOptimizations;
+  FExamples.GetOptimizations;
 
   CheckEquals('', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/optimization_problem.php?api_key=11111111111111111111111111111111&limit=10&offset=5', FConnection.Url);
@@ -579,7 +577,7 @@ end;
 
 procedure TTestRoute4MeExamples.GetOrders;
 begin
-  FRoute4MeExamples.GetOrders;
+  FExamples.GetOrders;
 
   CheckEquals(EmptyStr, FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/order.php?api_key=11111111111111111111111111111111&limit=10', FConnection.Url);
@@ -596,7 +594,7 @@ begin
   GetRouteDirections := True;
   GetRoutePathPoints := True;
 
-  FRoute4MeExamples.GetRoute(RouteId, GetRouteDirections, GetRoutePathPoints);
+  FExamples.GetRoute(RouteId, GetRouteDirections, GetRoutePathPoints);
 
   CheckEquals(EmptyStr, FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/route.php?api_key=11111111111111111111111111111111&route_id=68621A20B99EBA14F1A4F2FDAC907B42&directions=1&route_path_output=Points', FConnection.Url);
@@ -605,18 +603,25 @@ begin
 end;
 
 procedure TTestRoute4MeExamples.GetRoutes;
+var
+  Routes: TDataObjectRouteArray;
+  i: integer;
 begin
-  FRoute4MeExamples.GetRoutes;
-
-  CheckEquals(EmptyStr, FConnection.RequestBody);
-  CheckEquals('https://www.route4me.com/api.v4/route.php?api_key=11111111111111111111111111111111&limit=10&offset=5', FConnection.Url);
-  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
-  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+  Routes := FExamples.GetRoutes;
+  try
+    CheckEquals(EmptyStr, FConnection.RequestBody);
+    CheckEquals('https://www.route4me.com/api.v4/route.php?api_key=11111111111111111111111111111111&limit=10&offset=5', FConnection.Url);
+    CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+    CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+  finally
+    for i := Length(Routes) - 1 downto 0 do
+      FreeAndNil(Routes[i]);
+  end;
 end;
 
 procedure TTestRoute4MeExamples.GetUsers;
 begin
-  FRoute4MeExamples.GetUsers;
+  FExamples.GetUsers;
 
   CheckEquals(EmptyStr, FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api/member/view_users.php?api_key=11111111111111111111111111111111', FConnection.Url);
@@ -631,12 +636,32 @@ var
 begin
   RouteId := '68621A20B99EBA14F1A4F2FDAC907B42';
   Message := 'Test User Activity 27.10.2016 19:21:19';
-  FRoute4MeExamples.LogCustomActivity(Message, RouteId);
+  FExamples.LogCustomActivity(Message, RouteId);
 
   CheckEqualsBody('LogCustomActivity', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/activity_feed.php?api_key=11111111111111111111111111111111', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestRoute4MeExamples.MergeRoutes;
+var
+  RouteIds: TListString;
+begin
+  RouteIds := TListString.Create;
+  try
+    RouteIds.Add('3A2DD89E6E1A044B2098AD1313E3138C');
+    RouteIds.Add('C963990B11B6E3BB0648C0195E683EF0');
+
+    FExamples.MergeRoutes(RouteIds);
+
+    CheckEqualsBody('MergeRoutes', FConnection.RequestBody);
+    CheckEquals('https://www.route4me.com/actions/merge_routes.php?api_key=11111111111111111111111111111111', FConnection.Url);
+    CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
+    CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+  finally
+    FreeAndNil(RouteIds);
+  end;
 end;
 
 procedure TTestRoute4MeExamples.MoveDestinationToRoute;
@@ -647,7 +672,7 @@ begin
   ToRouteId := '5669728DF43FCE78F6CBD3DD5B533197';
   RouteDestinationId := 194447367;
   AfterDestinationId := 194451895;
-  FRoute4MeExamples.MoveDestinationToRoute(ToRouteId, RouteDestinationId, AfterDestinationId);
+  FExamples.MoveDestinationToRoute(ToRouteId, RouteDestinationId, AfterDestinationId);
 
   CheckEqualsBody('MoveDestinationToRoute', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/actions/route/move_route_destination.php?api_key=11111111111111111111111111111111', FConnection.Url);
@@ -659,7 +684,7 @@ procedure TTestRoute4MeExamples.MultipleDepotMultipleDriver;
 var
   DataObject: TDataObject;
 begin
-  DataObject := FRoute4MeExamples.MultipleDepotMultipleDriver;
+  DataObject := FExamples.MultipleDepotMultipleDriver;
   try
     CheckEqualsBody('MultipleDepotMultipleDriver', FConnection.RequestBody);
     CheckEquals('https://www.route4me.com/api.v4/optimization_problem.php?api_key=11111111111111111111111111111111', FConnection.Url);
@@ -674,7 +699,7 @@ procedure TTestRoute4MeExamples.MultipleDepotMultipleDriverTimeWindow;
 var
   DataObject: TDataObject;
 begin
-  DataObject := FRoute4MeExamples.MultipleDepotMultipleDriverTimeWindow;
+  DataObject := FExamples.MultipleDepotMultipleDriverTimeWindow;
   try
     CheckEqualsBody('MultipleDepotMultipleDriverTimeWindow', FConnection.RequestBody);
     CheckEquals('https://www.route4me.com/api.v4/optimization_problem.php?api_key=11111111111111111111111111111111', FConnection.Url);
@@ -689,7 +714,7 @@ procedure TTestRoute4MeExamples.MultipleDepotMultipleDriverWith24StopsTimeWindow
 var
   DataObject: TDataObject;
 begin
-  DataObject := FRoute4MeExamples.MultipleDepotMultipleDriverWith24StopsTimeWindow;
+  DataObject := FExamples.MultipleDepotMultipleDriverWith24StopsTimeWindow;
   try
     CheckEqualsBody('MultipleDepotMultipleDriverWith24StopsTimeWindow', FConnection.RequestBody);
     CheckEquals('https://www.route4me.com/api.v4/optimization_problem.php?api_key=11111111111111111111111111111111', FConnection.Url);
@@ -707,7 +732,7 @@ begin
   SetLength(AddressIds, 2);
   AddressIds[0] := 10494328;
   AddressIds[1] := 10494329;
-  FRoute4MeExamples.RemoveAddressBookContacts(AddressIds);
+  FExamples.RemoveAddressBookContacts(AddressIds);
 
   CheckEqualsBody('RemoveAddressBookContacts', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/address_book.php?api_key=11111111111111111111111111111111', FConnection.Url);
@@ -725,7 +750,7 @@ begin
   DestinationId := 194457563;
   AndReOptimize := True;
 
-  FRoute4MeExamples.RemoveDestinationFromOptimization(OptimizationProblemId, DestinationId, AndReOptimize);
+  FExamples.RemoveDestinationFromOptimization(OptimizationProblemId, DestinationId, AndReOptimize);
 
   CheckEqualsBody('RemoveDestinationFromOptimization', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/address.php?api_key=11111111111111111111111111111111&optimization_problem_id=6084D999940BDCF13A568724DBE8FFE4&route_destination_id=194457563', FConnection.Url);
@@ -738,7 +763,7 @@ var
   OptimizationProblemId: String;
 begin
   OptimizationProblemId := 'EECF1B409E2491B80C860C5A7E6565AB';
-  FRoute4MeExamples.RemoveOptimization(OptimizationProblemId);
+  FExamples.RemoveOptimization(OptimizationProblemId);
 
   CheckEqualsBody('RemoveOptimization', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/optimization_problem.php?api_key=11111111111111111111111111111111&optimization_problem_id=EECF1B409E2491B80C860C5A7E6565AB', FConnection.Url);
@@ -753,7 +778,7 @@ begin
   SetLength(OrderIds, 2);
   OrderIds[0] := '1414';
   OrderIds[1] := '1415';
-  FRoute4MeExamples.RemoveOrders(OrderIds);
+  FExamples.RemoveOrders(OrderIds);
 
   CheckEqualsBody('RemoveOrders', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/order.php?api_key=11111111111111111111111111111111', FConnection.Url);
@@ -768,7 +793,7 @@ var
 begin
   RouteId := '5BCEACC31C444BCF9D8AB604DA4DFCA7';
   DestinationId := 194450192;
-  FRoute4MeExamples.RemoveRouteDestination(RouteId, DestinationId);
+  FExamples.RemoveRouteDestination(RouteId, DestinationId);
 
   CheckEqualsBody('RemoveRouteDestination', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/address.php?api_key=11111111111111111111111111111111&route_id=5BCEACC31C444BCF9D8AB604DA4DFCA7&route_destination_id=194450192', FConnection.Url);
@@ -782,7 +807,7 @@ var
 begin
   OptimizationProblemId := '6084D999940BDCF13A568724DBE8FFE4';
 
-  FRoute4MeExamples.ReOptimization(OptimizationProblemId);
+  FExamples.ReOptimization(OptimizationProblemId);
 
   CheckEqualsBody('ReOptimization', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/optimization_problem.php?api_key=11111111111111111111111111111111&optimization_problem_id=6084D999940BDCF13A568724DBE8FFE4&reoptimize=1', FConnection.Url);
@@ -796,7 +821,7 @@ var
 begin
   RouteId := '68621A20B99EBA14F1A4F2FDAC907B42';
 
-  FRoute4MeExamples.ReoptimizeRoute(RouteId);
+  FExamples.ReoptimizeRoute(RouteId);
 
   CheckEqualsBody('ReoptimizeRoute', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/route.php?api_key=11111111111111111111111111111111&route_id=68621A20B99EBA14F1A4F2FDAC907B42&reoptimize=1', FConnection.Url);
@@ -829,7 +854,7 @@ begin
     Route.AddAddress(MakeTestAddress(False, 194447368, 8));
     Route.AddAddress(MakeTestAddress(False, 194447375, 9));
 
-    FRoute4MeExamples.ResequenceRouteDestinations(Route);
+    FExamples.ResequenceRouteDestinations(Route);
 
     CheckEqualsBody('ResequenceRouteDestinations', FConnection.RequestBody);
     CheckEquals('https://www.route4me.com/api.v4/route.php?api_key=11111111111111111111111111111111&route_id=5BCEACC31C444BCF9D8AB604DA4DFCA7', FConnection.Url);

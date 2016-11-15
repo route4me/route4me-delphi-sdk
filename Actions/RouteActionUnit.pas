@@ -53,6 +53,8 @@ type
     ///  Share a route via email.
     /// </summary>
     procedure Share(RouteId: String; RecipientEmail: String; out ErrorString: String);
+
+    procedure Merge(RouteIds: TStringArray; out ErrorString: String);
   end;
 
 implementation
@@ -65,7 +67,7 @@ uses
   RemoveRouteDestinationRequestUnit, AddRouteDestinationRequestUnit,
   MoveDestinationToRouteResponseUnit,
   GenericParametersUnit, DeleteRouteResponseUnit, DuplicateRouteResponseUnit,
-  StatusResponseUnit, EnumsUnit;
+  StatusResponseUnit, EnumsUnit, MergeRouteRequestUnit;
 
 function TRouteActions.Add(RouteId: String; Addresses: TAddressesArray;
   OptimalPosition: boolean; out ErrorString: String): TArray<integer>;
@@ -212,6 +214,28 @@ begin
     end;
   finally
     FreeAndNil(GenericParameters);
+  end;
+end;
+
+procedure TRouteActions.Merge(RouteIds: TStringArray; out ErrorString: String);
+var
+  Request: TMergeRouteRequest;
+  Response: TStatusResponse;
+begin
+  Request := TMergeRouteRequest.Create;
+  try
+    Request.RouteIds := RouteIds;
+
+    Response := FConnection.Post(TSettings.MergeRouteHost,
+      Request, TStatusResponse, ErrorString) as TStatusResponse;
+    try
+      if (Response <> nil) and (Response.Status = False) and (ErrorString = EmptyStr) then
+        ErrorString := 'Rotes not merged';
+    finally
+      FreeAndNil(Response);
+    end;
+  finally
+    FreeAndnil(Request);
   end;
 end;
 

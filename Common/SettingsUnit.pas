@@ -16,6 +16,7 @@ type
     const ShowRouteHost = MainHost + '/route4me.php';
     const RouteHost = MainHost + '/api.v4/route.php';
     const ShareRouteHost = MainHost + '/actions/route/share_route.php';
+    const MergeRouteHost = MainHost + '/actions/merge_routes.php';
     const SetGpsHost = MainHost + '/track/set.php';
     const GetUsersHost = MainHost + '/api/member/view_users.php';
     const AddRouteNotesHost = MainHost + '/actions/addRouteNotes.php';

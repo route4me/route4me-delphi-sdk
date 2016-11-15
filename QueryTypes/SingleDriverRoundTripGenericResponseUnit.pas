@@ -3,11 +3,10 @@ unit SingleDriverRoundTripGenericResponseUnit;
 interface
 
 uses
-  REST.Json.Types, HttpQueryMemberAttributeUnit,
-  GenericParametersUnit, AddressUnit, RouteParametersUnit;
+  REST.Json.Types,
+  AddressUnit, RouteParametersUnit;
 
 type
-  // Inherit from GenericParameters and add any JSON serializable content
   TSingleDriverRoundTripGenericResponse = class
   private
     [JSONNameAttribute('addresses')]
