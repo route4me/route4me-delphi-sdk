@@ -53,6 +53,7 @@ var
   OrderIdsToRemove: TList<String>;
   Connection: TConnection;
   Routes: TDataObjectRouteArray;
+  CustomFields: TListStringPair;
 begin
   try
     Connection := TConnection.Create(c_ApiKey);
@@ -209,13 +210,26 @@ begin
         if (RouteId_SingleDriverRoute10Stops.IsNotNull) then
         begin
           Examples.UpdateRoute(RouteId_SingleDriverRoute10Stops);
+
+          CustomFields := TListStringPair.Create;
+          try
+            CustomFields.Add(TStringPair.Create('animal', 'lion'));
+            CustomFields.Add(TStringPair.Create('form', 'rectangle'));
+
+            Examples.UpdateRoutesCustomFields(RouteId_SingleDriverRoute10Stops,
+              RouteDestinationIdToMove, {AfterDestinationIdToMoveAfter, }CustomFields);
+          finally
+            FreeAndNil(CustomFields);
+          end;
+
           Examples.ReoptimizeRoute(RouteId_SingleDriverRoute10Stops);
           GetRouteDirections := True;
           GetRoutePathPoints := True;
           Examples.GetRoute(RouteId_SingleDriverRoute10Stops, GetRouteDirections, GetRoutePathPoints);
         end
         else
-            WriteLn('UpdateRoute, ReoptimizeRoute, GetRoute not called. routeId_SingleDriverRoute10Stops is null.');
+            WriteLn('UpdateRoute, UpdateRoutesCustomFields, ReoptimizeRoute, GetRoute not called. ' +
+              'routeId_SingleDriverRoute10Stops is null.');
 
         Routes := Examples.GetRoutes();
         try

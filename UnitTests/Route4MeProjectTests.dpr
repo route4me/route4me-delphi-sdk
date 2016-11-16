@@ -170,7 +170,9 @@ uses
   ShareRouteUnit in '..\Examples\Examples\Routes\ShareRouteUnit.pas',
   UpdateRouteUnit in '..\Examples\Examples\Routes\UpdateRouteUnit.pas',
   MergeRouteRequestUnit in '..\QueryTypes\MergeRouteRequestUnit.pas',
-  MergeRoutesUnit in '..\Examples\Examples\Routes\MergeRoutesUnit.pas';
+  MergeRoutesUnit in '..\Examples\Examples\Routes\MergeRoutesUnit.pas',
+  UpdateRoutesCustomDataRequestUnit in '..\QueryTypes\UpdateRoutesCustomDataRequestUnit.pas',
+  UpdateRoutesCustomFieldsUnit in '..\Examples\Examples\Routes\UpdateRoutesCustomFieldsUnit.pas';
 
 {R *.RES}
 

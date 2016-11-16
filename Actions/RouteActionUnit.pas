@@ -6,7 +6,7 @@ uses
   SysUtils, BaseActionUnit,
   DataObjectUnit, RouteParametersUnit, AddressUnit,
   AddressesOrderInfoUnit, RouteParametersQueryUnit,
-  CommonTypesUnit, NullableBasicTypesUnit;
+  CommonTypesUnit, NullableBasicTypesUnit, EnumsUnit;
 
 type
   TRouteActions = class(TBaseAction)
@@ -33,6 +33,9 @@ type
 
     function Update(RouteParameters: TRouteParametersQuery;
       out ErrorString: String): TDataObjectRoute;
+
+    procedure UpdateCustomFields(RouteId: String; RouteDestinationId: integer;
+      CustomFields: TListStringPair; out ErrorString: String);
 
     function MoveDestinationToRoute(ToRouteId: String;
       RouteDestinationId, AfterDestinationId: integer; out ErrorString: String): boolean;
@@ -67,7 +70,7 @@ uses
   RemoveRouteDestinationRequestUnit, AddRouteDestinationRequestUnit,
   MoveDestinationToRouteResponseUnit,
   GenericParametersUnit, DeleteRouteResponseUnit, DuplicateRouteResponseUnit,
-  StatusResponseUnit, EnumsUnit, MergeRouteRequestUnit;
+  StatusResponseUnit, MergeRouteRequestUnit, UpdateRoutesCustomDataRequestUnit;
 
 function TRouteActions.Add(RouteId: String; Addresses: TAddressesArray;
   OptimalPosition: boolean; out ErrorString: String): TArray<integer>;
@@ -324,6 +327,33 @@ begin
     end;
   finally
     FreeAndnil(Request);
+  end;
+end;
+
+procedure TRouteActions.UpdateCustomFields(RouteId: String; RouteDestinationId: integer;
+  CustomFields: TListStringPair; out ErrorString: String);
+var
+  Request: TUpdateRoutesCustomDataRequest;
+  Pair: TStringPair;
+  Address: TAddress;
+begin
+  Request := TUpdateRoutesCustomDataRequest.Create;
+  try
+    Request.RouteId := RouteId;
+    Request.RouteDestinationId := RouteDestinationId;
+    for Pair in CustomFields do
+      Request.AddCustomField(Pair.Key, Pair.Value);
+
+    Address := FConnection.Put(TSettings.GetAddress, Request,
+      TAddress, ErrorString) as TAddress;
+    try
+      if (Address = nil) and (ErrorString = EmptyStr) then
+        ErrorString := 'Custom data of the route destinations not updated';
+    finally
+      FreeAndNil(Address);
+    end;
+  finally
+    FreeAndNil(Request);
   end;
 end;
 

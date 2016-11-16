@@ -3,16 +3,17 @@ unit JSONDictionaryIntermediateObjectUnit;
 interface
 
 uses
-  Classes, SysUtils, System.Generics.Collections, System.Rtti, REST.JsonReflect;
+  Classes, SysUtils, System.Generics.Collections, System.Rtti, REST.JsonReflect,
+  CommonTypesUnit;
 
 type
   TStringPair = TPair<String,String>;
   TDictionaryStringIntermediateObject = class
   private
     // This field can not be renamed
-    FDictionaryIntermediateObject: TArray<TStringPair>;
+    FDictionaryIntermediateObject: TArrayStringPair;
 
-    function GetPair(Key: String; List: TArray<TStringPair>; out Pair: TStringPair): boolean;
+    function GetPair(Key: String; List: TArrayStringPair; out Pair: TStringPair): boolean;
   public
     constructor Create;
     destructor Destroy; override;
@@ -45,8 +46,6 @@ type
   end;
 
 implementation
-
-uses CommonTypesUnit;
 
 function GetPairs(JsonString: String): TArrayStringPair;
 var
@@ -134,7 +133,7 @@ begin
 end;
 
 function TDictionaryStringIntermediateObject.GetPair(Key: String;
-  List: TArray<TStringPair>; out Pair: TStringPair): boolean;
+  List: TArrayStringPair; out Pair: TStringPair): boolean;
 var
   APair: TStringPair;
 begin

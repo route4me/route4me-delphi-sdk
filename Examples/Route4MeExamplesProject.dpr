@@ -147,7 +147,9 @@ uses
   GenericExampleShortcutUnit in 'Examples\Generic\GenericExampleShortcutUnit.pas',
   Route4MeExamplesUnit in 'Examples\Route4MeExamplesUnit.pas',
   MergeRouteRequestUnit in '..\QueryTypes\MergeRouteRequestUnit.pas',
-  MergeRoutesUnit in 'Examples\Routes\MergeRoutesUnit.pas';
+  MergeRoutesUnit in 'Examples\Routes\MergeRoutesUnit.pas',
+  UpdateRoutesCustomDataRequestUnit in '..\QueryTypes\UpdateRoutesCustomDataRequestUnit.pas',
+  UpdateRoutesCustomFieldsUnit in 'Examples\Routes\UpdateRoutesCustomFieldsUnit.pas';
 
 begin
   try

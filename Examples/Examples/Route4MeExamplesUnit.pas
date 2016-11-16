@@ -46,6 +46,8 @@ type
     procedure ReoptimizeRoute(RouteId: String);
     procedure MergeRoutes(RouteIds: TListString);
     procedure UpdateRoute(RouteId: String);
+    procedure UpdateRoutesCustomFields(RouteId: String; RouteDestinationId: integer;
+      CustomFields: TListStringPair);
     procedure GetRoute(RouteId: String; GetRouteDirections, GetRoutePathPoints: boolean);
     function GetRoutes: TDataObjectRouteArray;
     procedure GetUsers();
@@ -99,7 +101,7 @@ uses
   UpdateAvoidanceZoneUnit, DeleteAvoidanceZoneUnit, AddOrderUnit, GetOrdersUnit,
   UpdateOrderUnit, RemoveOrdersUnit, SetGPSPositionUnit,
   TrackDeviceLastLocationHistoryUnit, GenericExampleShortcutUnit,
-  GenericExampleUnit, MergeRoutesUnit;
+  GenericExampleUnit, MergeRoutesUnit, UpdateRoutesCustomFieldsUnit;
 
 function TRoute4MeExamples.AddAddressBookContact(FirstName,
   Address: String): TAddressBookContact;
@@ -706,6 +708,19 @@ begin
   Example := MakeExample(TUpdateAvoidanceZone) as TUpdateAvoidanceZone;
   try
     Example.Execute(TerritoryId);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.UpdateRoutesCustomFields(RouteId: String;
+  RouteDestinationId: integer; CustomFields: TListStringPair);
+var
+  Example: TUpdateRoutesCustomFields;
+begin
+  Example := MakeExample(TUpdateRoutesCustomFields) as TUpdateRoutesCustomFields;
+  try
+    Example.Execute(RouteId, RouteDestinationId, CustomFields);
   finally
     FreeAndNil(Example);
   end;
