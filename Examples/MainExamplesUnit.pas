@@ -53,7 +53,6 @@ var
   OrderIdsToRemove: TList<String>;
   Connection: TConnection;
   Routes: TDataObjectRouteArray;
-  CustomFields: TListStringPair;
 begin
   try
     Connection := TConnection.Create(c_ApiKey);
@@ -211,16 +210,8 @@ begin
         begin
           Examples.UpdateRoute(RouteId_SingleDriverRoute10Stops);
 
-          CustomFields := TListStringPair.Create;
-          try
-            CustomFields.Add(TStringPair.Create('animal', 'lion'));
-            CustomFields.Add(TStringPair.Create('form', 'rectangle'));
-
-            Examples.UpdateRoutesCustomFields(RouteId_SingleDriverRoute10Stops,
-              RouteDestinationIdToMove, {AfterDestinationIdToMoveAfter, }CustomFields);
-          finally
-            FreeAndNil(CustomFields);
-          end;
+          Examples.UpdateRoutesCustomFields(RouteId_SingleDriverRoute10Stops,
+              RouteDestinationIdToMove);
 
           Examples.ReoptimizeRoute(RouteId_SingleDriverRoute10Stops);
           GetRouteDirections := True;

@@ -392,25 +392,16 @@ procedure TTestRoute4MeExamples.UpdateRouteCustomFields;
 var
   RouteId: String;
   RouteDestinationId: integer;
-  CustomFields: TListStringPair;
 begin
   RouteId := '5BCEACC31C444BCF9D8AB604DA4DFCA7';
   RouteDestinationId := 194622711;
 
-  CustomFields := TListStringPair.Create;
-  try
-    CustomFields.Add(TStringPair.Create('animal', 'Lion'));
-    CustomFields.Add(TStringPair.Create('type', 'none'));
+  FExamples.UpdateRoutesCustomFields(RouteId, RouteDestinationId);
 
-    FExamples.UpdateRoutesCustomFields(RouteId, RouteDestinationId, CustomFields);
-
-    CheckEqualsBody('UpdateRouteCustomFields', FConnection.RequestBody);
-    CheckEquals('https://www.route4me.com/api.v4/address.php?api_key=11111111111111111111111111111111&route_id=5BCEACC31C444BCF9D8AB604DA4DFCA7&route_destination_id=194622711', FConnection.Url);
-    CheckTrue(TRESTRequestMethod.rmPUT = FConnection.Method);
-    CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
-  finally
-    FreeAndNil(CustomFields);
-  end;
+  CheckEqualsBody('UpdateRouteCustomFields', FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api.v4/address.php?api_key=11111111111111111111111111111111&route_id=5BCEACC31C444BCF9D8AB604DA4DFCA7&route_destination_id=194622711', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmPUT = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
 procedure TTestRoute4MeExamples.CheckEqualsBody(TestName, Actual: String);

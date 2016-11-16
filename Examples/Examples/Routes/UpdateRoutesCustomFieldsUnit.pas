@@ -7,29 +7,37 @@ uses SysUtils, BaseExampleUnit, CommonTypesUnit;
 type
   TUpdateRoutesCustomFields = class(TBaseExample)
   public
-    procedure Execute(RouteId: String; RouteDestinationId: integer;
-      CustomFields: TListStringPair);
+    procedure Execute(RouteId: String; RouteDestinationId: integer);
   end;
 
 implementation
 
 procedure TUpdateRoutesCustomFields.Execute(RouteId: String;
-  RouteDestinationId: integer; CustomFields: TListStringPair);
+  RouteDestinationId: integer);
 var
   ErrorString: String;
+  CustomFields: TListStringPair;
 begin
-  Route4MeManager.Route.UpdateCustomFields(RouteId, RouteDestinationId,
-    CustomFields, ErrorString);
+  CustomFields := TListStringPair.Create;
+  try
+    CustomFields.Add(TStringPair.Create('animal', 'lion'));
+    CustomFields.Add(TStringPair.Create('form', 'rectangle'));
 
-  WriteLn('');
+    Route4MeManager.Route.UpdateCustomFields(RouteId, RouteDestinationId,
+      CustomFields, ErrorString);
 
-  if (ErrorString = EmptyStr) then
-  begin
-    WriteLn('UpdateCustomFields executed successfully');
-    WriteLn(Format('Route ID: %s', [RouteId]));
-  end
-  else
-    WriteLn(Format('UpdateCustomFields error: %s', [ErrorString]));
+    WriteLn('');
+
+    if (ErrorString = EmptyStr) then
+    begin
+      WriteLn('UpdateCustomFields executed successfully');
+      WriteLn(Format('Route ID: %s', [RouteId]));
+    end
+    else
+      WriteLn(Format('UpdateCustomFields error: %s', [ErrorString]));
+  finally
+    FreeAndNil(CustomFields);
+  end;
 end;
 
 end.

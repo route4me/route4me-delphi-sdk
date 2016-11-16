@@ -46,8 +46,7 @@ type
     procedure ReoptimizeRoute(RouteId: String);
     procedure MergeRoutes(RouteIds: TListString);
     procedure UpdateRoute(RouteId: String);
-    procedure UpdateRoutesCustomFields(RouteId: String; RouteDestinationId: integer;
-      CustomFields: TListStringPair);
+    procedure UpdateRoutesCustomFields(RouteId: String; RouteDestinationId: integer);
     procedure GetRoute(RouteId: String; GetRouteDirections, GetRoutePathPoints: boolean);
     function GetRoutes: TDataObjectRouteArray;
     procedure GetUsers();
@@ -714,13 +713,13 @@ begin
 end;
 
 procedure TRoute4MeExamples.UpdateRoutesCustomFields(RouteId: String;
-  RouteDestinationId: integer; CustomFields: TListStringPair);
+  RouteDestinationId: integer);
 var
   Example: TUpdateRoutesCustomFields;
 begin
   Example := MakeExample(TUpdateRoutesCustomFields) as TUpdateRoutesCustomFields;
   try
-    Example.Execute(RouteId, RouteDestinationId, CustomFields);
+    Example.Execute(RouteId, RouteDestinationId);
   finally
     FreeAndNil(Example);
   end;
