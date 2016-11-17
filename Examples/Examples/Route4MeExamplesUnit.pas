@@ -4,11 +4,10 @@ interface
 
 uses
   SysUtils, System.Generics.Collections,
-  Route4MeManagerUnit, DataObjectUnit, NullableBasicTypesUnit,
-  CommonTypesUnit, AddressBookContactUnit,
-  OutputUnit,
-  IConnectionUnit, OrderUnit, DeleteRoutesUnit,
-  RemoveOptimizationUnit;
+  Route4MeManagerUnit, OutputUnit, NullableBasicTypesUnit,
+  CommonTypesUnit, IConnectionUnit,
+  DataObjectUnit, AddressBookContactUnit, OrderUnit, RouteParametersUnit,
+  AddOrderToRouteRequestUnit;
 
 type
   TRoute4MeExamples = class
@@ -30,6 +29,7 @@ type
     function MultipleDepotMultipleDriverWith24StopsTimeWindow: TDataObject;
     function SingleDriverMultipleTimeWindows: TDataObject;
     procedure ResequenceRouteDestinations(Route: TDataObjectRoute);
+    procedure ResequenceAllRouteDestinations(RouteId: String);
     function AddRouteDestinations(RouteId: String): TArray<integer>;
     function AddRouteDestinationsOptimally(RouteId: String): TArray<integer>;
     procedure RemoveRouteDestination(RouteId: String; DestinationId: integer);
@@ -71,6 +71,8 @@ type
     procedure GetOrders;
     procedure UpdateOrder(Order: TOrder);
     procedure RemoveOrders(OrderIds: TStringArray);
+    procedure AddOrderToRoute(RouteId: String; Parameters: TRouteParameters;
+      OrderedAddresses: TOrderedAddressArray);
     procedure SetGPSPosition(RouteId: String);
     procedure TrackDeviceLastLocationHistory(RouteId: String);
     procedure GenericExample(Connection: IConnection);
@@ -100,7 +102,9 @@ uses
   UpdateAvoidanceZoneUnit, DeleteAvoidanceZoneUnit, AddOrderUnit, GetOrdersUnit,
   UpdateOrderUnit, RemoveOrdersUnit, SetGPSPositionUnit,
   TrackDeviceLastLocationHistoryUnit, GenericExampleShortcutUnit,
-  GenericExampleUnit, MergeRoutesUnit, UpdateRoutesCustomFieldsUnit;
+  GenericExampleUnit, MergeRoutesUnit, UpdateRoutesCustomFieldsUnit,
+  DeleteRoutesUnit, RemoveOptimizationUnit, ResequenceAllRouteDestinationsUnit,
+  AddOrderToRouteUnit;
 
 function TRoute4MeExamples.AddAddressBookContact(FirstName,
   Address: String): TAddressBookContact;
@@ -159,6 +163,19 @@ begin
   Example := MakeExample(TAddOrder) as TAddOrder;
   try
     Result := Example.Execute;
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.AddOrderToRoute(RouteId: String;
+  Parameters: TRouteParameters; OrderedAddresses: TOrderedAddressArray);
+var
+  Example: TAddOrderToRoute;
+begin
+  Example := MakeExample(TAddOrderToRoute) as TAddOrderToRoute;
+  try
+    Example.Execute(RouteId, Parameters, OrderedAddresses);
   finally
     FreeAndNil(Example);
   end;
@@ -572,6 +589,18 @@ var
   Example: TReoptimizeRoute;
 begin
   Example := MakeExample(TReoptimizeRoute) as TReoptimizeRoute;
+  try
+    Example.Execute(RouteId);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.ResequenceAllRouteDestinations(RouteId: String);
+var
+  Example: TResequenceAllRouteDestinations;
+begin
+  Example := MakeExample(TResequenceAllRouteDestinations) as TResequenceAllRouteDestinations;
   try
     Example.Execute(RouteId);
   finally

@@ -302,7 +302,7 @@ type
     ///  Constructor with 0-arguments must be and be public.
     ///  For JSON-deserialization.
     /// </remarks>
-    constructor Create; overload;
+    constructor Create; overload; virtual;
     constructor Create(AddressString: String; Latitude, Longitude: double; Time: NullableInteger); overload;
     constructor Create(AddressString: String; Alias: String; Latitude, Longitude: double; Time: NullableInteger); overload;
     constructor Create(AddressString: String; Latitude, Longitude: double; Time: NullableInteger; TimeWindowStart, TimeWindowEnd: integer); overload;

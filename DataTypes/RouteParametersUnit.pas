@@ -112,7 +112,7 @@ type
     [Nullable]
     FVehicleId: NullableString;
 
-    [JSONName('route_type')]
+    [JSONName('routeType')]
     [Nullable]
     FRouteType: NullableString;
 

@@ -5,7 +5,7 @@ interface
 uses
   REST.Json.Types, System.Generics.Collections, Generics.Defaults,
   JSONNullableAttributeUnit, NullableBasicTypesUnit,
-  GenericParametersUnit, HttpQueryMemberAttributeUnit, TerritoryUnit;
+  GenericParametersUnit, TerritoryUnit;
 
 type
   /// <summary>

@@ -5,7 +5,7 @@ interface
 uses
   SysUtils, BaseActionUnit,
   DataObjectUnit, RouteParametersUnit, AddressUnit,
-  AddressesOrderInfoUnit, RouteParametersQueryUnit,
+  AddressesOrderInfoUnit, RouteParametersQueryUnit, AddOrderToRouteRequestUnit,
   CommonTypesUnit, NullableBasicTypesUnit, EnumsUnit;
 
 type
@@ -16,6 +16,9 @@ type
   public
     function Resequence(AddressesOrderInfo: TAddressesOrderInfo;
       out ErrorString: String): TDataObjectRoute;
+
+    procedure ResequenceAll(RouteId: String; DisableOptimization: boolean;
+      WhatOptimize: TOptimize; out ErrorString: String);
 
     /// <summary>
     /// Add address(es) into a route.
@@ -58,6 +61,12 @@ type
     procedure Share(RouteId: String; RecipientEmail: String; out ErrorString: String);
 
     procedure Merge(RouteIds: TStringArray; out ErrorString: String);
+
+    /// <summary>
+    ///  Insert an existing order into an existing route.
+    /// </summary>
+    function AddOrder(Parameters: TAddOrderToRouteRequest;
+      out ErrorString: String): TDataObjectRoute;
   end;
 
 implementation
@@ -70,7 +79,8 @@ uses
   RemoveRouteDestinationRequestUnit, AddRouteDestinationRequestUnit,
   MoveDestinationToRouteResponseUnit,
   GenericParametersUnit, DeleteRouteResponseUnit, DuplicateRouteResponseUnit,
-  StatusResponseUnit, MergeRouteRequestUnit, UpdateRoutesCustomDataRequestUnit;
+  StatusResponseUnit, MergeRouteRequestUnit, UpdateRoutesCustomDataRequestUnit,
+  ErrorResponseUnit, ResequenceAllRoutesRequestUnit;
 
 function TRouteActions.Add(RouteId: String; Addresses: TAddressesArray;
   OptimalPosition: boolean; out ErrorString: String): TArray<integer>;
@@ -116,6 +126,16 @@ begin
   end;
 end;
 
+function TRouteActions.AddOrder(Parameters: TAddOrderToRouteRequest;
+  out ErrorString: String): TDataObjectRoute;
+begin
+  Result := FConnection.Put(TSettings.RouteHost,
+    Parameters, TDataObjectRoute, ErrorString) as TDataObjectRoute;
+
+  if (Result = nil) and (ErrorString = EmptyStr) then
+    ErrorString := 'Order to a Route not added';
+end;
+
 function TRouteActions.Delete(RouteIds: TStringArray;
   out ErrorString: String): TStringArray;
 var
@@ -133,7 +153,6 @@ begin
       RouteIdsAsString := RouteIdsAsString + ',';
     RouteIdsAsString := RouteIdsAsString + RouteId;
   end;
-//  RouteIdsAsString := EncodeURL(RouteIdsAsString);
 
   Parameters := TGenericParameters.Create;
   try
@@ -297,12 +316,37 @@ begin
   end;
 end;
 
-function TRouteActions.Resequence(
-  AddressesOrderInfo: TAddressesOrderInfo;
+function TRouteActions.Resequence(AddressesOrderInfo: TAddressesOrderInfo;
   out ErrorString: String): TDataObjectRoute;
 begin
   Result := FConnection.Put(TSettings.RouteHost,
-    AddressesOrderInfo, TDataObjectRoute, errorString) as TDataObjectRoute;
+    AddressesOrderInfo, TDataObjectRoute, ErrorString) as TDataObjectRoute;
+
+  if (Result = nil) and (ErrorString = EmptyStr) then
+    ErrorString := 'Route not re-sequenced';
+end;
+
+procedure TRouteActions.ResequenceAll(RouteId: String;
+  DisableOptimization: boolean; WhatOptimize: TOptimize;
+  out ErrorString: String);
+var
+  Request: TResequenceAllRoutesRequest;
+  Response: TStatusResponse;
+  DisableOptimizationStr: String;
+begin
+  Request := TResequenceAllRoutesRequest.Create(RouteId, DisableOptimization, WhatOptimize);
+  try
+    Response := FConnection.Get(TSettings.ResequenceRouteHost,
+      Request, TStatusResponse, ErrorString) as TStatusResponse;
+    try
+      if (Response <> nil) and (Response.Status = False) and (ErrorString = EmptyStr) then
+        ErrorString := 'Routes not resequenced';
+    finally
+      FreeAndNil(Response);
+    end;
+  finally
+    FreeAndNil(Request);
+  end;
 end;
 
 procedure TRouteActions.Share(RouteId, RecipientEmail: String;
@@ -362,6 +406,9 @@ function TRouteActions.Update(RouteParameters: TRouteParametersQuery;
 begin
   Result := FConnection.Put(TSettings.RouteHost,
     RouteParameters, TDataObjectRoute, errorString) as TDataObjectRoute;
+
+  if (Result = nil) and (ErrorString = EmptyStr) then
+    ErrorString := 'Route not updated';
 end;
 
 end.

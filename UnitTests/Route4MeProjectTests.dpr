@@ -172,7 +172,12 @@ uses
   MergeRouteRequestUnit in '..\QueryTypes\MergeRouteRequestUnit.pas',
   MergeRoutesUnit in '..\Examples\Examples\Routes\MergeRoutesUnit.pas',
   UpdateRoutesCustomDataRequestUnit in '..\QueryTypes\UpdateRoutesCustomDataRequestUnit.pas',
-  UpdateRoutesCustomFieldsUnit in '..\Examples\Examples\Routes\UpdateRoutesCustomFieldsUnit.pas';
+  UpdateRoutesCustomFieldsUnit in '..\Examples\Examples\Routes\UpdateRoutesCustomFieldsUnit.pas',
+  ResequenceAllRouteDestinationsUnit in '..\Examples\Examples\Routes\ResequenceAllRouteDestinationsUnit.pas',
+  ResequenceAllRoutesRequestUnit in '..\QueryTypes\ResequenceAllRoutesRequestUnit.pas',
+  AddOrderToRouteRequestUnit in '..\QueryTypes\AddOrderToRouteRequestUnit.pas',
+  AddOrderToRouteUnit in '..\Examples\Examples\Orders\AddOrderToRouteUnit.pas',
+  AddOrderToRouteParameterProviderUnit in '..\Examples\TestDataProviders\AddOrderToRouteParameterProviderUnit.pas';
 
 {R *.RES}
 

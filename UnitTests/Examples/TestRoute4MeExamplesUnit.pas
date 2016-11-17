@@ -22,6 +22,7 @@ type
   published
     procedure SingleDriverRoute10Stops;
     procedure ResequenceRouteDestinations;
+    procedure ResequenceAllRouteDestinations;
     procedure AddRouteDestinations;
     procedure AddRouteDestinationsOptimally;
     procedure RemoveRouteDestination;
@@ -69,6 +70,7 @@ type
     procedure GetOrders;
     procedure UpdateOrder;
     procedure RemoveOrders;
+    procedure AddOrderToRoute;
     procedure GenericExample;
     procedure GenericExampleShortcut;
   end;
@@ -77,7 +79,8 @@ implementation
 
 uses
   OutputUnit, DataObjectUnit, NullableBasicTypesUnit, AddressUnit,
-  CommonTypesUnit, OrderUnit, AddressBookContactUnit;
+  CommonTypesUnit, OrderUnit, AddressBookContactUnit, RouteParametersUnit,
+  AddOrderToRouteRequestUnit, AddOrderToRouteParameterProviderUnit;
 
 procedure TTestRoute4MeExamples.SaveString(s: String);
 var
@@ -276,6 +279,34 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
+procedure TTestRoute4MeExamples.AddOrderToRoute;
+var
+  RouteId: String;
+  Parameters: TRouteParameters;
+  OrderedAddresses: TOrderedAddressArray;
+  Provider: IAddOrderToRouteParameterProvider;
+  AParameters: TAddOrderToRouteRequest;
+begin
+  Provider := TAddOrderToRouteParameterProvider.Create;
+  AParameters := Provider.GetParameters;
+  AParameters.IsOwned := False;
+  try
+    RouteId := '5BCEACC31C444BCF9D8AB604DA4DFCA7';
+    Parameters := AParameters.Parameters.Value as TRouteParameters;
+    OrderedAddresses := AParameters.Addresses;
+
+    FExamples.AddOrderToRoute(RouteId, Parameters, OrderedAddresses);
+
+    CheckEqualsBody('AddOrderToRoute', FConnection.RequestBody);
+    CheckEquals('https://www.route4me.com/api.v4/route.php?api_key=11111111111111111111111111111111&' +
+      'route_id=5BCEACC31C444BCF9D8AB604DA4DFCA7&redirect=0', FConnection.Url);
+    CheckTrue(TRESTRequestMethod.rmPUT = FConnection.Method);
+    CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+  finally
+    FreeAndNil(AParameters);
+  end;
+end;
+
 procedure TTestRoute4MeExamples.AddRouteDestinations;
 var
   RouteId: String;
@@ -416,7 +447,7 @@ begin
   EtalonList := TStringList.Create;
   try
     EtalonList.LoadFromFile(EtalonFilename);
-    SaveString(Actual);
+//    SaveString(Actual);
     CheckEquals(EtalonList[0], Actual);
   finally
     FreeAndNil(EtalonList);
@@ -843,6 +874,21 @@ begin
   CheckEqualsBody('ReoptimizeRoute', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/route.php?api_key=11111111111111111111111111111111&route_id=68621A20B99EBA14F1A4F2FDAC907B42&reoptimize=1', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmPUT = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestRoute4MeExamples.ResequenceAllRouteDestinations;
+var
+  RouteId: String;
+begin
+  RouteId := '5BCEACC31C444BCF9D8AB604DA4DFCA7';
+
+  FExamples.ResequenceAllRouteDestinations(RouteId);
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api.v3/route/reoptimize_2.php?api_key=11111111111111111111111111111111&' +
+    'route_id=5BCEACC31C444BCF9D8AB604DA4DFCA7&disable_optimization=0&optimize=Distance', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 

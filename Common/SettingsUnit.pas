@@ -15,6 +15,7 @@ type
     const ApiHost = MainHost + '/api.v4/optimization_problem.php';
     const ShowRouteHost = MainHost + '/route4me.php';
     const RouteHost = MainHost + '/api.v4/route.php';
+    const ResequenceRouteHost = MainHost + '/api.v3/route/reoptimize_2.php';
     const ShareRouteHost = MainHost + '/actions/route/share_route.php';
     const MergeRouteHost = MainHost + '/actions/merge_routes.php';
     const SetGpsHost = MainHost + '/track/set.php';

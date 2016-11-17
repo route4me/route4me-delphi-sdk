@@ -17,7 +17,7 @@ uses
   System.Generics.Collections,
   DataObjectUnit, Route4MeExamplesUnit, NullableBasicTypesUnit, AddressUnit,
   AddressBookContactUnit, OutputUnit, ConnectionUnit, OrderUnit,
-  CommonTypesUnit;
+  CommonTypesUnit, AddOrderToRouteParameterProviderUnit, AddOrderToRouteRequestUnit;
 
 const
   //your api key
@@ -53,6 +53,9 @@ var
   OrderIdsToRemove: TList<String>;
   Connection: TConnection;
   Routes: TDataObjectRouteArray;
+  OrderedAddresses: TOrderedAddressArray;
+  ParametersProvider: IAddOrderToRouteParameterProvider;
+  Parameters: TAddOrderToRouteRequest;
 begin
   try
     Connection := TConnection.Create(c_ApiKey);
@@ -66,12 +69,14 @@ begin
           RouteSingleDriverRoute10Stops := DataObject1.Routes[0];
           RouteId_SingleDriverRoute10Stops := RouteSingleDriverRoute10Stops.RouteId;
           Examples.ResequenceRouteDestinations(RouteSingleDriverRoute10Stops);
+          Examples.ResequenceAllRouteDestinations(RouteId_SingleDriverRoute10Stops);
         end
         else
         begin
           RouteSingleDriverRoute10Stops := nil;
           RouteId_SingleDriverRoute10Stops := NullableString.Null;
-          WriteLn('ResequenceRouteDestinations not called. RouteSingleDriverRoute10Stops = null.');
+          WriteLn('ResequenceRouteDestinations, ResequenceAllRouteDestinations not called. ' +
+            'RouteSingleDriverRoute10Stops = null.');
         end;
 
         if (RouteSingleDriverRoute10Stops <> nil) then
@@ -374,6 +379,31 @@ begin
           end
           else
             WriteLn('Order1 == null. UpdateOrder not called.');
+
+          // AddOrderToRoute sample
+          DataObject := Examples.MultipleDepotMultipleDriver();
+          try
+            if (DataObject <> nil) and (Length(DataObject.Routes) > 0) then
+            begin
+              RouteId_MultipleDepotMultipleDriver := DataObject.Routes[0].RouteId;
+
+              ParametersProvider := TAddOrderToRouteParameterProvider.Create;
+              try
+                OrderedAddresses := ParametersProvider.GetAddresses;
+                OrderedAddresses[0].OrderId := Order1.OrderId;
+                OrderedAddresses[1].OrderId := Order2.OrderId;
+
+                Examples.AddOrderToRoute(RouteId_MultipleDepotMultipleDriver,
+                  DataObject.Parameters, OrderedAddresses);
+              finally
+                ParametersProvider := nil;
+              end;
+
+              Examples.DeleteRoutes([RouteId_MultipleDepotMultipleDriver]);
+            end;
+          finally
+            //FreeAndNil(DataObject); // it is a memory leak but it is only for sample
+          end;
 
           OrderIdsToRemove := TList<String>.Create();
           try

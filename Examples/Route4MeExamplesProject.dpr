@@ -149,7 +149,12 @@ uses
   MergeRouteRequestUnit in '..\QueryTypes\MergeRouteRequestUnit.pas',
   MergeRoutesUnit in 'Examples\Routes\MergeRoutesUnit.pas',
   UpdateRoutesCustomDataRequestUnit in '..\QueryTypes\UpdateRoutesCustomDataRequestUnit.pas',
-  UpdateRoutesCustomFieldsUnit in 'Examples\Routes\UpdateRoutesCustomFieldsUnit.pas';
+  UpdateRoutesCustomFieldsUnit in 'Examples\Routes\UpdateRoutesCustomFieldsUnit.pas',
+  ResequenceAllRoutesRequestUnit in '..\QueryTypes\ResequenceAllRoutesRequestUnit.pas',
+  ResequenceAllRouteDestinationsUnit in 'Examples\Routes\ResequenceAllRouteDestinationsUnit.pas',
+  AddOrderToRouteUnit in 'Examples\Orders\AddOrderToRouteUnit.pas',
+  AddOrderToRouteRequestUnit in '..\QueryTypes\AddOrderToRouteRequestUnit.pas',
+  AddOrderToRouteParameterProviderUnit in 'TestDataProviders\AddOrderToRouteParameterProviderUnit.pas';
 
 begin
   try

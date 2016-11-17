@@ -229,6 +229,11 @@
         <DCCReference Include="Examples\Routes\MergeRoutesUnit.pas"/>
         <DCCReference Include="..\QueryTypes\UpdateRoutesCustomDataRequestUnit.pas"/>
         <DCCReference Include="Examples\Routes\UpdateRoutesCustomFieldsUnit.pas"/>
+        <DCCReference Include="..\QueryTypes\ResequenceAllRoutesRequestUnit.pas"/>
+        <DCCReference Include="Examples\Routes\ResequenceAllRouteDestinationsUnit.pas"/>
+        <DCCReference Include="Examples\Orders\AddOrderToRouteUnit.pas"/>
+        <DCCReference Include="..\QueryTypes\AddOrderToRouteRequestUnit.pas"/>
+        <DCCReference Include="TestDataProviders\AddOrderToRouteParameterProviderUnit.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
