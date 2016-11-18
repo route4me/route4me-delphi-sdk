@@ -154,7 +154,12 @@ uses
   ResequenceAllRouteDestinationsUnit in 'Examples\Routes\ResequenceAllRouteDestinationsUnit.pas',
   AddOrderToRouteUnit in 'Examples\Orders\AddOrderToRouteUnit.pas',
   AddOrderToRouteRequestUnit in '..\QueryTypes\AddOrderToRouteRequestUnit.pas',
-  AddOrderToRouteParameterProviderUnit in 'TestDataProviders\AddOrderToRouteParameterProviderUnit.pas';
+  AddOrderToRouteParameterProviderUnit in 'TestDataProviders\AddOrderToRouteParameterProviderUnit.pas',
+  AddOrderToOptimizationUnit in 'Examples\Orders\AddOrderToOptimizationUnit.pas',
+  AddOrderToOptimizationRequestUnit in '..\QueryTypes\AddOrderToOptimizationRequestUnit.pas',
+  GetOrderUnit in 'Examples\Orders\GetOrderUnit.pas',
+  GetOrdersByDateUnit in 'Examples\Orders\GetOrdersByDateUnit.pas',
+  GetOrdersScheduledForUnit in 'Examples\Orders\GetOrdersScheduledForUnit.pas';
 
 begin
   try

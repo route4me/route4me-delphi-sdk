@@ -19,7 +19,6 @@ function TGetRoutes.Execute: TDataObjectRouteArray;
   Parameters: TRouteParametersQuery;
   ErrorString: String;
   Route: TDataObjectRoute;
-  i: integer;
 begin
   Parameters := TRouteParametersQuery.Create();
   try

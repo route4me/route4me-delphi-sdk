@@ -7,7 +7,7 @@ uses
   Route4MeManagerUnit, OutputUnit, NullableBasicTypesUnit,
   CommonTypesUnit, IConnectionUnit,
   DataObjectUnit, AddressBookContactUnit, OrderUnit, RouteParametersUnit,
-  AddOrderToRouteRequestUnit;
+  AddOrderToRouteRequestUnit, AddressUnit;
 
 type
   TRoute4MeExamples = class
@@ -68,11 +68,16 @@ type
     procedure UpdateAvoidanceZone(TerritoryId: String);
     procedure DeleteAvoidanceZone(TerritoryId: String);
     function AddOrder(): TOrder;
-    procedure GetOrders;
+    procedure GetOrders; overload;
+    procedure GetOrder(OrderId: String);
+    procedure GetOrders(Date: TDate); overload;
+    procedure GetOrdersScheduledFor(Date: TDate);
     procedure UpdateOrder(Order: TOrder);
     procedure RemoveOrders(OrderIds: TStringArray);
     procedure AddOrderToRoute(RouteId: String; Parameters: TRouteParameters;
       OrderedAddresses: TOrderedAddressArray);
+    procedure AddOrderToOptimization(OptimizationId: String;
+      Parameters: TRouteParameters; OrderedAddresses: TOrderedAddressArray);
     procedure SetGPSPosition(RouteId: String);
     procedure TrackDeviceLastLocationHistory(RouteId: String);
     procedure GenericExample(Connection: IConnection);
@@ -104,7 +109,8 @@ uses
   TrackDeviceLastLocationHistoryUnit, GenericExampleShortcutUnit,
   GenericExampleUnit, MergeRoutesUnit, UpdateRoutesCustomFieldsUnit,
   DeleteRoutesUnit, RemoveOptimizationUnit, ResequenceAllRouteDestinationsUnit,
-  AddOrderToRouteUnit;
+  AddOrderToRouteUnit, AddOrderToOptimizationUnit, GetOrderUnit,
+  GetOrdersByDateUnit, GetOrdersScheduledForUnit;
 
 function TRoute4MeExamples.AddAddressBookContact(FirstName,
   Address: String): TAddressBookContact;
@@ -163,6 +169,19 @@ begin
   Example := MakeExample(TAddOrder) as TAddOrder;
   try
     Result := Example.Execute;
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.AddOrderToOptimization(OptimizationId: String;
+  Parameters: TRouteParameters; OrderedAddresses: TOrderedAddressArray);
+var
+  Example: TAddOrderToOptimization;
+begin
+  Example := MakeExample(TAddOrderToOptimization) as TAddOrderToOptimization;
+  try
+    Example.Execute(OptimizationId, Parameters, OrderedAddresses);
   finally
     FreeAndNil(Example);
   end;
@@ -373,6 +392,42 @@ begin
   Example := MakeExample(TGetOptimizations) as TGetOptimizations;
   try
     Example.Execute;
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.GetOrder(OrderId: String);
+var
+  Example: TGetOrder;
+begin
+  Example := MakeExample(TGetOrder) as TGetOrder;
+  try
+    Example.Execute(OrderId);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.GetOrders(Date: TDate);
+var
+  Example: TGetOrdersByDate;
+begin
+  Example := MakeExample(TGetOrdersByDate) as TGetOrdersByDate;
+  try
+    Example.Execute(Date);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.GetOrdersScheduledFor(Date: TDate);
+var
+  Example: TGetOrdersScheduledFor;
+begin
+  Example := MakeExample(TGetOrdersScheduledFor) as TGetOrdersScheduledFor;
+  try
+    Example.Execute(Date);
   finally
     FreeAndNil(Example);
   end;

@@ -663,6 +663,18 @@ type
   TAddressesArray = TArray<TAddress>;
   TAddressesList = TList<TAddress>;
 
+  TOrderedAddress = class(TAddress)
+  private
+    [JSONName('order_id')]
+    [Nullable]
+    FOrderId: NullableString;
+  public
+    constructor Create(); override;
+
+    property OrderId: NullableString read FOrderId write FOrderId;
+  end;
+  TOrderedAddressArray = TArray<TOrderedAddress>;
+
   function SortAddresses(Addresses: TAddressesArray): TAddressesArray;
 
 implementation
@@ -1015,6 +1027,15 @@ begin
         Result := IfThen(Address1.IsDepot.IsNotNull and Address1.IsDepot.Value, 0, 1) -
           IfThen(Address2.IsDepot.IsNotNull and Address2.IsDepot.Value, 0, 1)
     end));
+end;
+
+{ TOrderedAddress }
+
+constructor TOrderedAddress.Create;
+begin
+  Inherited Create;
+
+  FOrderId := NullableString.Null;
 end;
 
 end.

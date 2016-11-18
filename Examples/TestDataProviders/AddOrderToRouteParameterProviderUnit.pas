@@ -2,26 +2,26 @@ unit AddOrderToRouteParameterProviderUnit;
 
 interface
 
-uses AddOrderToRouteRequestUnit;
+uses AddOrderToRouteRequestUnit, AddressUnit, RouteParametersUnit;
 
 type
   IAddOrderToRouteParameterProvider = interface
     ['{794E1351-AC94-40F7-8D02-DC4D7FFDFC59}']
-    function GetParameters: TAddOrderToRouteRequest;
+    function GetParameters: TRouteParameters;
     function GetAddresses: TOrderedAddressArray;
   end;
 
   TAddOrderToRouteParameterProvider = class(TInterfacedObject, IAddOrderToRouteParameterProvider)
   public
-    function GetParameters: TAddOrderToRouteRequest;
     function GetAddresses: TOrderedAddressArray;
+    function GetParameters: TRouteParameters;
   end;
 
 implementation
 
 { TAddOrderToRouteParameterProvider }
 
-uses RouteParametersUnit, EnumsUnit;
+uses EnumsUnit;
 
 function TAddOrderToRouteParameterProvider.GetAddresses: TOrderedAddressArray;
 var
@@ -52,29 +52,19 @@ begin
   Result[1] := Address;
 end;
 
-function TAddOrderToRouteParameterProvider.GetParameters: TAddOrderToRouteRequest;
-var
-  RouteParameters: TRouteParameters;
-  Address: TOrderedAddress;
+function TAddOrderToRouteParameterProvider.GetParameters: TRouteParameters;
 begin
-  Result := TAddOrderToRouteRequest.Create;
-
-  for Address in GetAddresses do
-    Result.AddAddress(Address);
-
-  RouteParameters := TRouteParameters.Create;
-  RouteParameters.RouteName := 'Wednesday 15th of June 2016 07:01 PM (+03:00)';
-  RouteParameters.RouteDate := 1465948800;
-  RouteParameters.RouteTime := 14400;
-  RouteParameters.Optimize := TOptimize.Time;
-  RouteParameters.RouteType := 'single';
-  RouteParameters.AlgorithmType := TAlgorithmType.TSP;
-  RouteParameters.RT := False;
-  RouteParameters.LockLast := False;
-  RouteParameters.MemberId := '1116';
-  RouteParameters.DisableOptimization := False;
-
-  Result.Parameters := RouteParameters;
+  Result := TRouteParameters.Create;
+  Result.RouteName := 'Wednesday 15th of June 2016 07:01 PM (+03:00)';
+  Result.RouteDate := 1465948800;
+  Result.RouteTime := 14400;
+  Result.Optimize := TOptimize.Time;
+  Result.RouteType := 'single';
+  Result.AlgorithmType := TAlgorithmType.TSP;
+  Result.RT := False;
+  Result.LockLast := False;
+  Result.MemberId := '1116';
+  Result.DisableOptimization := False;
 end;
 
 end.

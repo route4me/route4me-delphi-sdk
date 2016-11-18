@@ -8,15 +8,30 @@ uses
 
 type
   TOrderActions = class(TBaseAction)
+  private
+    function GetDateStr(Date: TDate): String;
   public
     function Get(OrderQuery: TOrderParameters;
-      out Total: integer; out ErrorString: String): TOrderArray;
+      out Total: integer; out ErrorString: String): TOrderArray; overload;
+
+    function Get(OrderId: String; out ErrorString: String): TOrder; overload;
+
+    /// <summary>
+    ///  Retrieve orders inserted on a specified date.
+    /// </summary>
+    function Get(AddedDate: TDate; out ErrorString: String): TOrderArray; overload;
+
+    /// <summary>
+    ///  Retrieve orders scheduled for a specified date.
+    /// </summary>
+    function GetOrdersScheduledFor(ScheduledDate: TDate; out ErrorString: String): TOrderArray;
 
     function Add(Order: TOrder; out ErrorString: String): TOrder;
 
     function Update(Order: TOrder; out ErrorString: String): TOrder;
 
     function Remove(OrderIds: TStringArray; out ErrorString: String): boolean;
+
   end;
 
 implementation
@@ -25,7 +40,7 @@ implementation
 
 uses
   SettingsUnit, GetOrdersResponseUnit, RemoveOrdersRequestUnit,
-  StatusResponseUnit;
+  StatusResponseUnit, GenericParametersUnit;
 
 function TOrderActions.Add(Order: TOrder; out ErrorString: String): TOrder;
 begin
@@ -51,6 +66,23 @@ begin
     end;
   finally
     FreeAndNil(Response);
+  end;
+end;
+
+function TOrderActions.Get(OrderId: String; out ErrorString: String): TOrder;
+var
+  Request: TGenericParameters;
+begin
+  Request := TGenericParameters.Create;
+  try
+    Request.AddParameter('order_id', OrderId);
+
+    Result := FConnection.Get(TSettings.Order, Request, TOrder, ErrorString) as TOrder;
+
+    if (Result = nil) and (ErrorString = EmptyStr) then
+      ErrorString := 'Order details not got';
+  finally
+    FreeAndNil(Request);
   end;
 end;
 
@@ -81,4 +113,70 @@ begin
   Result := FConnection.Put(TSettings.Order, Order, TOrder, ErrorString) as TOrder;
 end;
 
+function TOrderActions.Get(AddedDate: TDate; out ErrorString: String): TOrderArray;
+var
+  Response: TGetOrdersResponse;
+  Request: TGenericParameters;
+begin
+  SetLength(Result, 0);
+
+  Request := TGenericParameters.Create;
+  try
+    Request.AddParameter('day_added_YYMMDD', GetDateStr(AddedDate));
+
+    Response := FConnection.Get(TSettings.Order, Request,
+      TGetOrdersResponse, ErrorString) as TGetOrdersResponse;
+    try
+      if (Response <> nil) then
+        Result := Response.Results
+      else
+      if (ErrorString = EmptyStr) then
+        ErrorString := 'Order details not got';
+    finally
+      FreeAndNil(Response);
+    end;
+  finally
+    FreeAndNil(Request);
+  end;
+end;
+
+function TOrderActions.GetDateStr(Date: TDate): String;
+var
+  FormatSettings: TFormatSettings;
+begin
+  FormatSettings := TFormatSettings.Create;
+  FormatSettings.ShortDateFormat := 'yyyy mm dd';
+  FormatSettings.DateSeparator := '-';
+
+  Result := DateToStr(Date, FormatSettings);
+end;
+
+function TOrderActions.GetOrdersScheduledFor(ScheduledDate: TDate;
+  out ErrorString: String): TOrderArray;
+var
+  Response: TGetOrdersResponse;
+  Request: TGenericParameters;
+begin
+  SetLength(Result, 0);
+
+  Request := TGenericParameters.Create;
+  try
+    Request.AddParameter('scheduled_for_YYMMDD', GetDateStr(ScheduledDate));
+
+    Response := FConnection.Get(TSettings.Order, Request,
+      TGetOrdersResponse, ErrorString) as TGetOrdersResponse;
+    try
+      if (Response <> nil) then
+        Result := Response.Results
+      else
+      if (ErrorString = EmptyStr) then
+        ErrorString := 'Order details not got';
+    finally
+      FreeAndNil(Response);
+    end;
+  finally
+    FreeAndNil(Request);
+  end;
+end;
+
 end.

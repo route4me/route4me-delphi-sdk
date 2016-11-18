@@ -371,7 +371,18 @@ begin
         Order1 := Examples.AddOrder();
         Order2 := Examples.AddOrder();
         try
+          // Get an order by order_id
+          Examples.GetOrder(Order1.OrderId);
+
+          // Get all the orders created under the specific Route4Me account.
           Examples.GetOrders();
+
+          // Retrieve orders inserted on a specified date
+          Examples.GetOrders(Now);
+
+          // Retrieve orders scheduled for a specified date
+          Examples.GetOrdersScheduledFor(Now);
+
           if (Order1 <> nil) then
           begin
             Order1.LastName := 'Updated ' + IntToStr(Random(100));
@@ -383,26 +394,37 @@ begin
           // AddOrderToRoute sample
           DataObject := Examples.MultipleDepotMultipleDriver();
           try
-            if (DataObject <> nil) and (Length(DataObject.Routes) > 0) then
+            if (DataObject <> nil) then
             begin
-              RouteId_MultipleDepotMultipleDriver := DataObject.Routes[0].RouteId;
-
               ParametersProvider := TAddOrderToRouteParameterProvider.Create;
+              OrderedAddresses := ParametersProvider.GetAddresses;
               try
-                OrderedAddresses := ParametersProvider.GetAddresses;
                 OrderedAddresses[0].OrderId := Order1.OrderId;
                 OrderedAddresses[1].OrderId := Order2.OrderId;
 
-                Examples.AddOrderToRoute(RouteId_MultipleDepotMultipleDriver,
+                // AddOrderToOptimization sample
+                OptimizationProblemId := DataObject.OptimizationProblemId;
+                Examples.AddOrderToOptimization(OptimizationProblemId,
                   DataObject.Parameters, OrderedAddresses);
+
+                // AddOrderToRoute sample
+                if (Length(DataObject.Routes) > 0) then
+                begin
+                  RouteId_MultipleDepotMultipleDriver := DataObject.Routes[0].RouteId;
+
+                  Examples.AddOrderToRoute(RouteId_MultipleDepotMultipleDriver,
+                    DataObject.Parameters, OrderedAddresses);
+                end;
               finally
+                for i := Length(OrderedAddresses) - 1 downto 0 do
+                  FreeAndNil(OrderedAddresses[i]);
                 ParametersProvider := nil;
               end;
 
               Examples.DeleteRoutes([RouteId_MultipleDepotMultipleDriver]);
             end;
           finally
-            //FreeAndNil(DataObject); // it is a memory leak but it is only for sample
+            FreeAndNil(DataObject);
           end;
 
           OrderIdsToRemove := TList<String>.Create();

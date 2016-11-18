@@ -177,7 +177,12 @@ uses
   ResequenceAllRoutesRequestUnit in '..\QueryTypes\ResequenceAllRoutesRequestUnit.pas',
   AddOrderToRouteRequestUnit in '..\QueryTypes\AddOrderToRouteRequestUnit.pas',
   AddOrderToRouteUnit in '..\Examples\Examples\Orders\AddOrderToRouteUnit.pas',
-  AddOrderToRouteParameterProviderUnit in '..\Examples\TestDataProviders\AddOrderToRouteParameterProviderUnit.pas';
+  AddOrderToRouteParameterProviderUnit in '..\Examples\TestDataProviders\AddOrderToRouteParameterProviderUnit.pas',
+  AddOrderToOptimizationRequestUnit in '..\QueryTypes\AddOrderToOptimizationRequestUnit.pas',
+  AddOrderToOptimizationUnit in '..\Examples\Examples\Orders\AddOrderToOptimizationUnit.pas',
+  GetOrderUnit in '..\Examples\Examples\Orders\GetOrderUnit.pas',
+  GetOrdersByDateUnit in '..\Examples\Examples\Orders\GetOrdersByDateUnit.pas',
+  GetOrdersScheduledForUnit in '..\Examples\Examples\Orders\GetOrdersScheduledForUnit.pas';
 
 {R *.RES}
 

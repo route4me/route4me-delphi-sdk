@@ -68,9 +68,13 @@ type
     procedure DeleteAvoidanceZone;
     procedure AddOrder;
     procedure GetOrders;
+    procedure GetOrder;
+    procedure GetOrdersByDate;
+    procedure GetOrdersScheduledFor;
     procedure UpdateOrder;
     procedure RemoveOrders;
     procedure AddOrderToRoute;
+    procedure AddOrderToOptimization;
     procedure GenericExample;
     procedure GenericExampleShortcut;
   end;
@@ -80,7 +84,8 @@ implementation
 uses
   OutputUnit, DataObjectUnit, NullableBasicTypesUnit, AddressUnit,
   CommonTypesUnit, OrderUnit, AddressBookContactUnit, RouteParametersUnit,
-  AddOrderToRouteRequestUnit, AddOrderToRouteParameterProviderUnit;
+  AddOrderToRouteRequestUnit, AddOrderToRouteParameterProviderUnit,
+  AddOrderToOptimizationRequestUnit;
 
 procedure TTestRoute4MeExamples.SaveString(s: String);
 var
@@ -279,22 +284,48 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
+procedure TTestRoute4MeExamples.AddOrderToOptimization;
+var
+  Provider: IAddOrderToRouteParameterProvider;
+  OptimizationId: String;
+  Parameters: TRouteParameters;
+  OrderedAddresses: TOrderedAddressArray;
+  i: integer;
+begin
+  Provider := TAddOrderToRouteParameterProvider.Create;
+
+  OptimizationId := '5BCEACC31C444BCF9D8AB604DA4DFCA7';
+  Parameters := Provider.GetParameters;
+  OrderedAddresses := Provider.GetAddresses;
+  try
+    FExamples.AddOrderToOptimization(OptimizationId, Parameters, OrderedAddresses);
+
+    CheckEqualsBody('AddOrderToRoute', FConnection.RequestBody);
+    CheckEquals('https://www.route4me.com/api.v4/optimization_problem.php?api_key=11111111111111111111111111111111&' +
+      'optimization_problem_id=5BCEACC31C444BCF9D8AB604DA4DFCA7&redirect=0', FConnection.Url);
+    CheckTrue(TRESTRequestMethod.rmPUT = FConnection.Method);
+    CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+  finally
+    FreeAndNil(Parameters);
+    for i := Length(OrderedAddresses) - 1 downto 0 do
+      FreeAndNil(OrderedAddresses[i]);
+  end;
+end;
+
 procedure TTestRoute4MeExamples.AddOrderToRoute;
 var
   RouteId: String;
   Parameters: TRouteParameters;
   OrderedAddresses: TOrderedAddressArray;
   Provider: IAddOrderToRouteParameterProvider;
-  AParameters: TAddOrderToRouteRequest;
+  i: integer;
 begin
   Provider := TAddOrderToRouteParameterProvider.Create;
-  AParameters := Provider.GetParameters;
-  AParameters.IsOwned := False;
-  try
-    RouteId := '5BCEACC31C444BCF9D8AB604DA4DFCA7';
-    Parameters := AParameters.Parameters.Value as TRouteParameters;
-    OrderedAddresses := AParameters.Addresses;
 
+  RouteId := '5BCEACC31C444BCF9D8AB604DA4DFCA7';
+  Parameters := Provider.GetParameters;
+  OrderedAddresses := Provider.GetAddresses;
+  try
     FExamples.AddOrderToRoute(RouteId, Parameters, OrderedAddresses);
 
     CheckEqualsBody('AddOrderToRoute', FConnection.RequestBody);
@@ -303,7 +334,9 @@ begin
     CheckTrue(TRESTRequestMethod.rmPUT = FConnection.Method);
     CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
   finally
-    FreeAndNil(AParameters);
+    FreeAndNil(Parameters);
+    for i := Length(OrderedAddresses) - 1 downto 0 do
+      FreeAndNil(OrderedAddresses[i]);
   end;
 end;
 
@@ -619,6 +652,51 @@ begin
 
   CheckEquals('', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/optimization_problem.php?api_key=11111111111111111111111111111111&limit=10&offset=5', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestRoute4MeExamples.GetOrder;
+var
+  OrderId: String;
+begin
+  OrderId := '68621A20B99EBA14F1A4F2FDAC907B42';
+
+  FExamples.GetOrder(OrderId);
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api.v4/order.php?api_key=11111111111111111111111111111111&' +
+    'order_id=68621A20B99EBA14F1A4F2FDAC907B42', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestRoute4MeExamples.GetOrdersByDate;
+var
+  Date: TDate;
+begin
+  Date := 56454;
+
+  FExamples.GetOrders(Date);
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api.v4/order.php?api_key=11111111111111111111111111111111&' +
+    'day_added_YYMMDD=2054%252007%252024', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestRoute4MeExamples.GetOrdersScheduledFor;
+var
+  Date: TDate;
+begin
+  Date := 56454;
+
+  FExamples.GetOrdersScheduledFor(Date);
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api.v4/order.php?api_key=11111111111111111111111111111111&' +
+    'scheduled_for_YYMMDD=2054%252007%252024', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;

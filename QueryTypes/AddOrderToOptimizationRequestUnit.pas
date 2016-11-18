@@ -1,4 +1,4 @@
-unit AddOrderToRouteRequestUnit;
+unit AddOrderToOptimizationRequestUnit;
 
 interface
 
@@ -9,12 +9,12 @@ uses
   NullableBasicTypesUnit, EnumsUnit;
 
 type
-  TAddOrderToRouteRequest = class(TGenericParameters)
+  TAddOrderToOptimizationRequest = class(TGenericParameters)
   private
     [JSONMarshalled(False)]
-    [HttpQueryMember('route_id')]
+    [HttpQueryMember('optimization_problem_id')]
     [Nullable]
-    FRouteId: NullableString;
+    FOptimizationProblemId: NullableString;
 
     [JSONMarshalled(False)]
     [HttpQueryMember('redirect')]
@@ -47,54 +47,54 @@ type
     property Addresses: TOrderedAddressArray read FAddresses;
     procedure AddAddress(Address: TOrderedAddress);
 
-    property RouteId: NullableString read FRouteId write FRouteId;
+    property OptimizationProblemId: NullableString read FOptimizationProblemId write FOptimizationProblemId;
     property Redirect: NullableBoolean read FRedirect write FRedirect;
   end;
 
 implementation
 
-{ TAddOrderToRouteRequest }
+{ TAddOrderToOptimizationRequest }
 
-procedure TAddOrderToRouteRequest.AddAddress(Address: TOrderedAddress);
+procedure TAddOrderToOptimizationRequest.AddAddress(Address: TOrderedAddress);
 begin
   SetLength(FAddresses, Length(FAddresses) + 1);
   FAddresses[High(FAddresses)] := Address;
 end;
 
-constructor TAddOrderToRouteRequest.Create;
+constructor TAddOrderToOptimizationRequest.Create;
 begin
   Inherited;
 
   SetLength(FAddresses, 0);
   FParameters := NullableObject.Null;
 
-  FRouteId := NullableString.Null;
+  FOptimizationProblemId := NullableString.Null;
   FRedirect := NullableBoolean.Null;
 end;
 
-destructor TAddOrderToRouteRequest.Destroy;
+destructor TAddOrderToOptimizationRequest.Destroy;
 begin
 // Request does not own objects
 
   inherited;
 end;
 
-function TAddOrderToRouteRequest.Equals(Obj: TObject): Boolean;
+function TAddOrderToOptimizationRequest.Equals(Obj: TObject): Boolean;
 var
-  Other: TAddOrderToRouteRequest;
+  Other: TAddOrderToOptimizationRequest;
   Address, OtherAddress: TAddress;
   AddressEquals: boolean;
 begin
   Result := False;
 
-  if not (Obj is TAddOrderToRouteRequest) then
+  if not (Obj is TAddOrderToOptimizationRequest) then
     Exit;
 
-  Other := TAddOrderToRouteRequest(Obj);
+  Other := TAddOrderToOptimizationRequest(Obj);
 
   Result :=
     (FParameters = Other.FParameters) and
-    (FRouteId = Other.FRouteId) and
+    (FOptimizationProblemId = Other.FOptimizationProblemId) and
     (FRedirect = Other.FRedirect);
 
   if (not Result) then
@@ -118,7 +118,7 @@ begin
   end;
 end;
 
-function TAddOrderToRouteRequest.GetAddress(AddressString: String;
+function TAddOrderToOptimizationRequest.GetAddress(AddressString: String;
   Addresses: TOrderedAddressArray): TOrderedAddress;
 var
   Address: TOrderedAddress;

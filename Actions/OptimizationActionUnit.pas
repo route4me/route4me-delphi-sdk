@@ -4,7 +4,8 @@ interface
 
 uses
   SysUtils, BaseActionUnit,
-  DataObjectUnit, OptimizationParametersUnit, RouteParametersQueryUnit;
+  DataObjectUnit, OptimizationParametersUnit, RouteParametersQueryUnit,
+  AddOrderToOptimizationRequestUnit;
 
 type
   TOptimizationActions = class(TBaseAction)
@@ -25,6 +26,12 @@ type
 
     function RemoveDestination(OptimizationId: String; DestinationId: integer;
       out ErrorString: String): boolean;
+
+    /// <summary>
+    ///  Insert an existing order into an existing optimization.
+    /// </summary>
+    function AddOrder(Parameters: TAddOrderToOptimizationRequest;
+      out ErrorString: String): TDataObjectRoute;
   end;
 
 implementation
@@ -42,6 +49,17 @@ function TOptimizationActions.Get(
 begin
   Result := FConnection.Get(TSettings.ApiHost, OptimizationParameters,
     TDataObject, ErrorString) as TDataObject;
+end;
+
+function TOptimizationActions.AddOrder(
+  Parameters: TAddOrderToOptimizationRequest;
+  out ErrorString: String): TDataObjectRoute;
+begin
+  Result := FConnection.Put(TSettings.ApiHost,
+    Parameters, TDataObjectRoute, ErrorString) as TDataObjectRoute;
+
+  if (Result = nil) and (ErrorString = EmptyStr) then
+    ErrorString := 'Order to an optimization not added';
 end;
 
 function TOptimizationActions.Get(QueryParameters: TRouteParametersQuery;

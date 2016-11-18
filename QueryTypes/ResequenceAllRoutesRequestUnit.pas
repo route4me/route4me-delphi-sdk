@@ -17,7 +17,7 @@ type
     [HttpQueryMember('optimize')]
     FOptimize: String;
   public
-    constructor Create(RouteId: String; DisableOptimization: boolean; Optimize: Toptimize);
+    constructor Create(RouteId: String; DisableOptimization: boolean; Optimize: Toptimize); reintroduce;
   end;
 
 implementation

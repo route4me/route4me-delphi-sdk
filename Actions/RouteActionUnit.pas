@@ -332,7 +332,6 @@ procedure TRouteActions.ResequenceAll(RouteId: String;
 var
   Request: TResequenceAllRoutesRequest;
   Response: TStatusResponse;
-  DisableOptimizationStr: String;
 begin
   Request := TResequenceAllRoutesRequest.Create(RouteId, DisableOptimization, WhatOptimize);
   try

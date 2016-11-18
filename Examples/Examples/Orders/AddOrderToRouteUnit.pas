@@ -2,7 +2,7 @@ unit AddOrderToRouteUnit;
 
 interface
 
-uses SysUtils, BaseExampleUnit, RouteParametersUnit, AddOrderToRouteRequestUnit;
+uses SysUtils, BaseExampleUnit, RouteParametersUnit, AddressUnit;
 
 type
   TAddOrderToRoute = class(TBaseExample)
@@ -13,8 +13,9 @@ type
 
 implementation
 
-uses DataObjectUnit;
-
+uses
+  AddOrderToRouteRequestUnit;
+
 procedure TAddOrderToRoute.Execute(RouteId: String;
   RouteParameters: TRouteParameters; OrderedAddresses: TOrderedAddressArray);
 var
