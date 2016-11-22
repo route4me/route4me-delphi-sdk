@@ -1,4 +1,4 @@
-unit MarkAddressAsDepartedRequestUnit;
+unit MarkAddressAsDetectedAsDepartedRequestUnit;
 
 interface
 
@@ -8,7 +8,7 @@ uses
   GenericParametersUnit;
 
 type
-  TMarkAddressAsDepartedRequest = class(TGenericParameters)
+  TMarkAddressAsDetectedAsDepartedRequest = class(TGenericParameters)
   private
     [JSONMarshalled(False)]
     [HttpQueryMember('route_id')]
@@ -26,9 +26,9 @@ type
 
 implementation
 
-{ TMarkAddressAsDepartedRequest }
+{ TMarkAddressAsDetectedAsDepartedRequest }
 
-constructor TMarkAddressAsDepartedRequest.Create(RouteId: String;
+constructor TMarkAddressAsDetectedAsDepartedRequest.Create(RouteId: String;
   RouteDestinationId: Integer; IsDeparted: boolean);
 begin
   Inherited Create;

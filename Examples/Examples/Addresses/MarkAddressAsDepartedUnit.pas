@@ -7,19 +7,19 @@ uses SysUtils, BaseExampleUnit;
 type
   TMarkAddressAsDeparted = class(TBaseExample)
   public
-    procedure Execute(RouteId: String; RouteDestinationId: integer;
+    procedure Execute(RouteId: String; AddressId, MemberId: integer;
       IsDeparted: boolean);
   end;
 
 implementation
 
 procedure TMarkAddressAsDeparted.Execute(RouteId: String;
-  RouteDestinationId: integer; IsDeparted: boolean);
+  AddressId, MemberId: integer; IsDeparted: boolean);
 var
   ErrorString: String;
 begin
   Route4MeManager.Address.MarkAsDeparted(
-    RouteId, RouteDestinationId, IsDeparted, ErrorString);
+    RouteId, AddressId, MemberId, IsDeparted, ErrorString);
 
   WriteLn('');
 

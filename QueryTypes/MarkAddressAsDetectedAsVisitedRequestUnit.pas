@@ -1,4 +1,4 @@
-unit MarkAddressAsVisitedRequestUnit;
+unit MarkAddressAsDetectedAsVisitedRequestUnit;
 
 interface
 
@@ -8,7 +8,7 @@ uses
   GenericParametersUnit;
 
 type
-  TMarkAddressAsVisitedRequest = class(TGenericParameters)
+  TMarkAddressAsDetectedAsVisitedRequest = class(TGenericParameters)
   private
     [JSONMarshalled(False)]
     [HttpQueryMember('route_id')]
@@ -26,9 +26,9 @@ type
 
 implementation
 
-{ TMarkAddressAsVisitedRequest }
+{ TMarkAddressAsDetectedAsVisitedRequest }
 
-constructor TMarkAddressAsVisitedRequest.Create(RouteId: String;
+constructor TMarkAddressAsDetectedAsVisitedRequest.Create(RouteId: String;
   RouteDestinationId: Integer; IsVisited: boolean);
 begin
   Inherited Create;

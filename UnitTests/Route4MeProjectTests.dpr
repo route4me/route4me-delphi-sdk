@@ -187,10 +187,12 @@ uses
   GetOrdersWithCustomFieldsUnit in '..\Examples\Examples\Orders\GetOrdersWithCustomFieldsUnit.pas',
   TestUnmarshalMultipleArrayUnit in 'Json\Unmarshal\TestUnmarshalMultipleArrayUnit.pas',
   GetOrdersWithSpecifiedTextUnit in '..\Examples\Examples\Orders\GetOrdersWithSpecifiedTextUnit.pas',
-  MarkAddressAsVisitedRequestUnit in '..\QueryTypes\MarkAddressAsVisitedRequestUnit.pas',
-  MarkAddressAsDepartedRequestUnit in '..\QueryTypes\MarkAddressAsDepartedRequestUnit.pas',
   MarkAddressAsDepartedUnit in '..\Examples\Examples\Addresses\MarkAddressAsDepartedUnit.pas',
-  MarkAddressAsVisitedUnit in '..\Examples\Examples\Addresses\MarkAddressAsVisitedUnit.pas';
+  MarkAddressAsVisitedUnit in '..\Examples\Examples\Addresses\MarkAddressAsVisitedUnit.pas',
+  MarkAddressAsDetectedAsDepartedRequestUnit in '..\QueryTypes\MarkAddressAsDetectedAsDepartedRequestUnit.pas',
+  MarkAddressAsDetectedAsVisitedRequestUnit in '..\QueryTypes\MarkAddressAsDetectedAsVisitedRequestUnit.pas',
+  MarkAddressAsDetectedAsDepartedUnit in '..\Examples\Examples\Addresses\MarkAddressAsDetectedAsDepartedUnit.pas',
+  MarkAddressAsDetectedAsVisitedUnit in '..\Examples\Examples\Addresses\MarkAddressAsDetectedAsVisitedUnit.pas';
 
 {R *.RES}
 

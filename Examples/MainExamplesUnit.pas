@@ -58,6 +58,8 @@ var
   Parameters: TAddOrderToRouteRequest;
   RouteId: String;
   RouteDestinationId: integer;
+  AddressId: NullableInteger;
+  MemberId: integer;
 begin
   try
     Connection := TConnection.Create(c_ApiKey);
@@ -262,14 +264,57 @@ begin
         else
           WriteLn('GetActivities not called. routeId_SingleDriverRoute10Stops is null.');
 
+
+        Randomize;
+
+        // Address Book
+        Contact1 := Examples.AddAddressBookContact('Test FirstName 1', 'Test Address 1');
+        Contact2 := Examples.AddAddressBookContact('Test FirstName 2', 'Test Address 2');
+        try
+          Examples.GetAddressBookContacts();
+          if (Contact1 <> nil) then
+          begin
+            AddressId := Contact1.Id;
+            Contact1.LastName := 'Updated ' + IntToStr(Random(100));
+            Examples.UpdateAddressBookContact(Contact1);
+          end
+          else
+            WriteLn('contact1 = null. UpdateAddressBookContact not called.');
+
+
+          AddressIdsToRemove := TList<integer>.Create();
+          try
+            if (Contact1 <> nil) then
+              AddressIdsToRemove.Add(Contact1.Id);
+            if (Contact2 <> nil) then
+              AddressIdsToRemove.Add(Contact2.Id);
+            Examples.RemoveAddressBookContacts(AddressIdsToRemove.ToArray());
+          finally
+            FreeAndNil(AddressIdsToRemove);
+          end;
+        finally
+          FreeAndNil(Contact2);
+          FreeAndNil(Contact1);
+        end;
+
+
+        // Addresses
         if (RouteIdToMoveTo.IsNotNull) and (RouteDestinationIdToMove <> 0) then
         begin
           RouteId := RouteIdToMoveTo;
           RouteDestinationId := RouteDestinationIdToMove;
 
           Examples.GetAddress(RouteId, RouteDestinationId);
-          Examples.MarkAddressAsVisited(RouteId, RouteDestinationId, True);
-          Examples.MarkAddressAsDeparted(RouteId, RouteDestinationId, True);
+          Examples.MarkAddressAsDetectedAsVisited(RouteId, RouteDestinationId, True);
+          Examples.MarkAddressAsDetectedAsDeparted(RouteId, RouteDestinationId, True);
+          if AddressId.IsNotNull then
+          begin
+            MemberId := 1;
+            // todo: в ответ возвращается 0, а не status=true/false. Может MemberId нужен другой?
+            Examples.MarkAddressAsVisited(RouteId, AddressId, MemberId, True);
+            // todo: status возвращается False, может MemberId нужен другой?
+            Examples.MarkAddressAsDeparted(RouteId, AddressId, MemberId, True);
+          end;
           Examples.AddAddressNote(RouteId, RouteDestinationId);
           Examples.GetAddressNotes(RouteId, RouteDestinationId);
         end
@@ -324,36 +369,6 @@ begin
           Examples.RemoveOptimization(OptimizationProblemId)
         else
           WriteLn('RemoveOptimization not called. OptimizationProblemID is null.');
-
-        Randomize;
-
-        // Address Book
-        Contact1 := Examples.AddAddressBookContact('Test FirstName 1', 'Test Address 1');
-        Contact2 := Examples.AddAddressBookContact('Test FirstName 2', 'Test Address 2');
-        try
-          Examples.GetAddressBookContacts();
-          if (Contact1 <> nil) then
-          begin
-            Contact1.LastName := 'Updated ' + IntToStr(Random(100));
-            Examples.UpdateAddressBookContact(Contact1);
-          end
-          else
-            WriteLn('contact1 = null. UpdateAddressBookContact not called.');
-
-          AddressIdsToRemove := TList<integer>.Create();
-          try
-            if (Contact1 <> nil) then
-              AddressIdsToRemove.Add(Contact1.Id);
-            if (Contact2 <> nil) then
-              AddressIdsToRemove.Add(Contact2.Id);
-            Examples.RemoveAddressBookContacts(AddressIdsToRemove.ToArray());
-          finally
-            FreeAndNil(AddressIdsToRemove);
-          end;
-        finally
-          FreeAndNil(Contact2);
-          FreeAndNil(Contact1);
-        end;
 
 
         // Avoidance Zones

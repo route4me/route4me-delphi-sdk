@@ -50,6 +50,8 @@ type
     procedure LogCustomActivity;
     procedure GetActivities;
     procedure GetAddress;
+    procedure MarkAddressAsDetectedAsVisited;
+    procedure MarkAddressAsDetectedAsDeparted;
     procedure MarkAddressAsVisited;
     procedure MarkAddressAsDeparted;
     procedure AddAddressNote;
@@ -805,22 +807,42 @@ end;
 procedure TTestRoute4MeExamples.MarkAddressAsDeparted;
 var
   RouteId: String;
+  AddressId: integer;
+  MemberId: integer;
+  IsDeparted: boolean;
+begin
+  RouteId := '585D2628AE1C5A4FBD7B4050CB9D9601';
+  AddressId := 194622711;
+  MemberId := 2;
+  IsDeparted := True;
+  FExamples.MarkAddressAsDeparted(RouteId, AddressId, MemberId, IsDeparted);
+
+  CheckEquals('', FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api/route/mark_address_departed.php?api_key=11111111111111111111111111111111&' +
+    'route_id=585D2628AE1C5A4FBD7B4050CB9D9601&address_id=194622711&member_id=2&is_departed=1', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestRoute4MeExamples.MarkAddressAsDetectedAsDeparted;
+var
+  RouteId: String;
   RouteDestinationId: integer;
   IsDeparted: boolean;
 begin
   RouteId := '585D2628AE1C5A4FBD7B4050CB9D9601';
   RouteDestinationId := 194622711;
   IsDeparted := True;
-  FExamples.MarkAddressAsDeparted(RouteId, RouteDestinationId, IsDeparted);
+  FExamples.MarkAddressAsDetectedAsDeparted(RouteId, RouteDestinationId, IsDeparted);
 
-  CheckEqualsBody('MarkAddressAsDeparted', FConnection.RequestBody);
+  CheckEqualsBody('MarkAddressAsDetectedAsDeparted', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/address.php?api_key=11111111111111111111111111111111&' +
     'route_id=585D2628AE1C5A4FBD7B4050CB9D9601&route_destination_id=194622711', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmPUT = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
-
-procedure TTestRoute4MeExamples.MarkAddressAsVisited;
+
+procedure TTestRoute4MeExamples.MarkAddressAsDetectedAsVisited;
 var
   RouteId: String;
   RouteDestinationId: integer;
@@ -829,12 +851,32 @@ begin
   RouteId := '585D2628AE1C5A4FBD7B4050CB9D9601';
   RouteDestinationId := 194622711;
   IsVisited := True;
-  FExamples.MarkAddressAsVisited(RouteId, RouteDestinationId, IsVisited);
+  FExamples.MarkAddressAsDetectedAsVisited(RouteId, RouteDestinationId, IsVisited);
 
-  CheckEqualsBody('MarkAddressAsVisited', FConnection.RequestBody);
+  CheckEqualsBody('MarkAddressAsDetectedAsVisited', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/address.php?api_key=11111111111111111111111111111111&' +
     'route_id=585D2628AE1C5A4FBD7B4050CB9D9601&route_destination_id=194622711', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmPUT = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestRoute4MeExamples.MarkAddressAsVisited;
+var
+  RouteId: String;
+  AddressId: integer;
+  MemberId: integer;
+  IsVisited: boolean;
+begin
+  RouteId := '585D2628AE1C5A4FBD7B4050CB9D9601';
+  AddressId := 194622711;
+  MemberId := 2;
+  IsVisited := True;
+  FExamples.MarkAddressAsVisited(RouteId, AddressId, MemberId, IsVisited);
+
+  CheckEquals('', FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/actions/address/update_address_visited.php?api_key=11111111111111111111111111111111&' +
+    'route_id=585D2628AE1C5A4FBD7B4050CB9D9601&address_id=194622711&member_id=2&is_visited=1', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 

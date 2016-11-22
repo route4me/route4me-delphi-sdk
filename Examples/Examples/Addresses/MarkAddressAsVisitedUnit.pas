@@ -7,19 +7,19 @@ uses SysUtils, BaseExampleUnit;
 type
   TMarkAddressAsVisited = class(TBaseExample)
   public
-    procedure Execute(RouteId: String; RouteDestinationId: integer;
+    procedure Execute(RouteId: String; AddressId, MemberId: integer;
       IsVisited: boolean);
   end;
 
 implementation
 
 procedure TMarkAddressAsVisited.Execute(RouteId: String;
-  RouteDestinationId: integer; IsVisited: boolean);
+  AddressId, MemberId: integer; IsVisited: boolean);
 var
   ErrorString: String;
 begin
   Route4MeManager.Address.MarkAsVisited(
-    RouteId, RouteDestinationId, IsVisited, ErrorString);
+    RouteId, AddressId, MemberId, IsVisited, ErrorString);
 
   WriteLn('');
 

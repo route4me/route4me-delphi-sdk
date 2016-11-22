@@ -2,7 +2,7 @@ unit GetAddressUnit;
 
 interface
 
-uses SysUtils, BaseExampleUnit;
+uses SysUtils, BaseExampleUnit, AddressUnit;
 
 type
   TGetAddress = class(TBaseExample)
@@ -12,7 +12,7 @@ type
 
 implementation
 
-uses AddressParametersUnit, AddressUnit;
+uses AddressParametersUnit;
 
 procedure TGetAddress.Execute(RouteId: String; RouteDestinationId: integer);
 var

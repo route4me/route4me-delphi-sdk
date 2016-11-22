@@ -27,6 +27,8 @@ type
     const MoveRouteDestination = MainHost + '/actions/route/move_route_destination.php';
     const AddressBook = MainHost + '/api.v4/address_book.php';
     const Address = MainHost + '/api.v4/address.php';
+    const MarkAddressAsVisited = MainHost + '/actions/address/update_address_visited.php';
+    const MarkAddressAsDeparted = MainHost + '/api/route/mark_address_departed.php';
     const Avoidance = MainHost + '/api.v4/avoidance.php';
     const Order = MainHost + '/api.v4/order.php';
 

@@ -163,10 +163,12 @@ uses
   GetOrdersWithCustomFieldsResponseUnit in '..\QueryTypes\GetOrdersWithCustomFieldsResponseUnit.pas',
   GetOrdersWithCustomFieldsUnit in 'Examples\Orders\GetOrdersWithCustomFieldsUnit.pas',
   GetOrdersWithSpecifiedTextUnit in 'Examples\Orders\GetOrdersWithSpecifiedTextUnit.pas',
-  MarkAddressAsDepartedRequestUnit in '..\QueryTypes\MarkAddressAsDepartedRequestUnit.pas',
-  MarkAddressAsVisitedRequestUnit in '..\QueryTypes\MarkAddressAsVisitedRequestUnit.pas',
+  MarkAddressAsDetectedAsVisitedRequestUnit in '..\QueryTypes\MarkAddressAsDetectedAsVisitedRequestUnit.pas',
   MarkAddressAsDepartedUnit in 'Examples\Addresses\MarkAddressAsDepartedUnit.pas',
-  MarkAddressAsVisitedUnit in 'Examples\Addresses\MarkAddressAsVisitedUnit.pas';
+  MarkAddressAsVisitedUnit in 'Examples\Addresses\MarkAddressAsVisitedUnit.pas',
+  MarkAddressAsDetectedAsVisitedUnit in 'Examples\Addresses\MarkAddressAsDetectedAsVisitedUnit.pas',
+  MarkAddressAsDetectedAsDepartedUnit in 'Examples\Addresses\MarkAddressAsDetectedAsDepartedUnit.pas',
+  MarkAddressAsDetectedAsDepartedRequestUnit in '..\QueryTypes\MarkAddressAsDetectedAsDepartedRequestUnit.pas';
 
 begin
   try

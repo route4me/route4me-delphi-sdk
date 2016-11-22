@@ -53,9 +53,13 @@ type
     function LogCustomActivity(Message: String; RouteId: String): boolean;
     procedure GetActivities(RouteId: String);
     procedure GetAddress(RouteId: String; RouteDestinationId: integer);
-    procedure MarkAddressAsVisited(RouteId: String; RouteDestinationId: integer;
+    procedure MarkAddressAsDetectedAsVisited(RouteId: String; RouteDestinationId: integer;
       IsVisited: boolean);
-    procedure MarkAddressAsDeparted(RouteId: String; RouteDestinationId: integer;
+    procedure MarkAddressAsDetectedAsDeparted(RouteId: String; RouteDestinationId: integer;
+      IsDeparted: boolean);
+    procedure MarkAddressAsVisited(RouteId: String; AddressId, MemberId: integer;
+      IsVisited: boolean);
+    procedure MarkAddressAsDeparted(RouteId: String; AddressId, MemberId: integer;
       IsDeparted: boolean);
     procedure AddAddressNote(RouteId: String; AddressId: integer);
     procedure GetAddressNotes(RouteId: String; RouteDestinationId: integer);
@@ -118,7 +122,8 @@ uses
   AddOrderToRouteUnit, AddOrderToOptimizationUnit, GetOrderUnit,
   GetOrdersByDateUnit, GetOrdersScheduledForUnit, GetOrdersWithCustomFieldsUnit,
   GetOrdersWithSpecifiedTextUnit, MarkAddressAsDepartedUnit,
-  MarkAddressAsVisitedUnit;
+  MarkAddressAsVisitedUnit, MarkAddressAsDetectedAsVisitedUnit,
+  MarkAddressAsDetectedAsDepartedUnit;
 
 function TRoute4MeExamples.AddAddressBookContact(FirstName,
   Address: String): TAddressBookContact;
@@ -536,11 +541,24 @@ begin
 end;
 
 procedure TRoute4MeExamples.MarkAddressAsDeparted(RouteId: String;
-  RouteDestinationId: integer; IsDeparted: boolean);
+  AddressId, MemberId: integer; IsDeparted: boolean);
 var
   Example: TMarkAddressAsDeparted;
 begin
   Example := MakeExample(TMarkAddressAsDeparted) as TMarkAddressAsDeparted;
+  try
+    Example.Execute(RouteId, AddressId, MemberId, IsDeparted);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.MarkAddressAsDetectedAsDeparted(RouteId: String;
+  RouteDestinationId: integer; IsDeparted: boolean);
+var
+  Example: TMarkAddressAsDetectedAsDeparted;
+begin
+  Example := MakeExample(TMarkAddressAsDetectedAsDeparted) as TMarkAddressAsDetectedAsDeparted;
   try
     Example.Execute(RouteId, RouteDestinationId, IsDeparted);
   finally
@@ -548,14 +566,27 @@ begin
   end;
 end;
 
-procedure TRoute4MeExamples.MarkAddressAsVisited(RouteId: String;
+procedure TRoute4MeExamples.MarkAddressAsDetectedAsVisited(RouteId: String;
   RouteDestinationId: integer; IsVisited: boolean);
+var
+  Example: TMarkAddressAsDetectedAsVisited;
+begin
+  Example := MakeExample(TMarkAddressAsDetectedAsVisited) as TMarkAddressAsDetectedAsVisited;
+  try
+    Example.Execute(RouteId, RouteDestinationId, IsVisited);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.MarkAddressAsVisited(RouteId: String;
+  AddressId, MemberId: integer; IsVisited: boolean);
 var
   Example: TMarkAddressAsVisited;
 begin
   Example := MakeExample(TMarkAddressAsVisited) as TMarkAddressAsVisited;
   try
-    Example.Execute(RouteId, RouteDestinationId, IsVisited);
+    Example.Execute(RouteId, AddressId, MemberId, IsVisited);
   finally
     FreeAndNil(Example);
   end;
