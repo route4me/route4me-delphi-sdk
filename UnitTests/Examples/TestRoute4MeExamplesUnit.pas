@@ -50,6 +50,8 @@ type
     procedure LogCustomActivity;
     procedure GetActivities;
     procedure GetAddress;
+    procedure MarkAddressAsVisited;
+    procedure MarkAddressAsDeparted;
     procedure AddAddressNote;
     procedure GetAddressNotes;
     procedure DuplicateRoute;
@@ -71,6 +73,8 @@ type
     procedure GetOrder;
     procedure GetOrdersByDate;
     procedure GetOrdersScheduledFor;
+    procedure GetOrdersWithCustomFields;
+    procedure GetOrdersWithSpecifiedText;
     procedure UpdateOrder;
     procedure RemoveOrders;
     procedure AddOrderToRoute;
@@ -701,6 +705,34 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
+procedure TTestRoute4MeExamples.GetOrdersWithCustomFields;
+var
+  Fields: String;
+begin
+  Fields := 'Test Fields';
+  FExamples.GetOrdersWithCustomFields(Fields);
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api.v4/order.php?api_key=11111111111111111111111111111111&' +
+    'fields=Test%2520Fields&offset=0&limit=10', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestRoute4MeExamples.GetOrdersWithSpecifiedText;
+var
+  Text: String;
+begin
+  Text := 'Test Fields';
+  FExamples.GetOrdersWithSpecifiedText(Text);
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api.v4/order.php?api_key=11111111111111111111111111111111&' +
+    'query=Test%2520Fields&offset=0&limit=10', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
 procedure TTestRoute4MeExamples.GetOrders;
 begin
   FExamples.GetOrders;
@@ -767,6 +799,42 @@ begin
   CheckEqualsBody('LogCustomActivity', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/activity_feed.php?api_key=11111111111111111111111111111111', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestRoute4MeExamples.MarkAddressAsDeparted;
+var
+  RouteId: String;
+  RouteDestinationId: integer;
+  IsDeparted: boolean;
+begin
+  RouteId := '585D2628AE1C5A4FBD7B4050CB9D9601';
+  RouteDestinationId := 194622711;
+  IsDeparted := True;
+  FExamples.MarkAddressAsDeparted(RouteId, RouteDestinationId, IsDeparted);
+
+  CheckEqualsBody('MarkAddressAsDeparted', FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api.v4/address.php?api_key=11111111111111111111111111111111&' +
+    'route_id=585D2628AE1C5A4FBD7B4050CB9D9601&route_destination_id=194622711', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmPUT = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestRoute4MeExamples.MarkAddressAsVisited;
+var
+  RouteId: String;
+  RouteDestinationId: integer;
+  IsVisited: boolean;
+begin
+  RouteId := '585D2628AE1C5A4FBD7B4050CB9D9601';
+  RouteDestinationId := 194622711;
+  IsVisited := True;
+  FExamples.MarkAddressAsVisited(RouteId, RouteDestinationId, IsVisited);
+
+  CheckEqualsBody('MarkAddressAsVisited', FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api.v4/address.php?api_key=11111111111111111111111111111111&' +
+    'route_id=585D2628AE1C5A4FBD7B4050CB9D9601&route_destination_id=194622711', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmPUT = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 

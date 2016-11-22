@@ -26,6 +26,18 @@ type
     /// </summary>
     function GetOrdersScheduledFor(ScheduledDate: TDate; out ErrorString: String): TOrderArray;
 
+    /// <summary>
+    ///  Searching all Orders with specified custom fields
+    /// </summary>
+    function GetOrdersWithCustomFields(Fields: String; Offset, Limit: integer;
+      out Total: integer; out ErrorString: String): TIntegerArray;
+
+    /// <summary>
+    ///  Search for all order records which contain specified text in any field
+    /// </summary>
+    function GetOrdersWithSpecifiedText(SpecifiedText: String; Offset, Limit: integer;
+      out Total: integer; out ErrorString: String): TOrderArray;
+
     function Add(Order: TOrder; out ErrorString: String): TOrder;
 
     function Update(Order: TOrder; out ErrorString: String): TOrder;
@@ -40,7 +52,8 @@ implementation
 
 uses
   SettingsUnit, GetOrdersResponseUnit, RemoveOrdersRequestUnit,
-  StatusResponseUnit, GenericParametersUnit;
+  StatusResponseUnit, GenericParametersUnit,
+  GetOrdersWithCustomFieldsResponseUnit;
 
 function TOrderActions.Add(Order: TOrder; out ErrorString: String): TOrder;
 begin
@@ -168,6 +181,77 @@ begin
     try
       if (Response <> nil) then
         Result := Response.Results
+      else
+      if (ErrorString = EmptyStr) then
+        ErrorString := 'Order details not got';
+    finally
+      FreeAndNil(Response);
+    end;
+  finally
+    FreeAndNil(Request);
+  end;
+end;
+
+function TOrderActions.GetOrdersWithCustomFields(Fields: String;
+  Offset, Limit: integer; out Total: integer; out ErrorString: String): TIntegerArray;
+var
+  Response: TGetOrdersWithCustomFieldsResponse;
+  Request: TGenericParameters;
+  i: integer;
+begin
+  SetLength(Result, 0);
+  Total := 0;
+
+  Request := TGenericParameters.Create;
+  try
+    Request.AddParameter('fields', Fields);
+    Request.AddParameter('offset', IntToStr(Offset));
+    Request.AddParameter('limit', IntToStr(Limit));
+
+    Response := FConnection.Get(TSettings.Order, Request,
+      TGetOrdersWithCustomFieldsResponse, ErrorString) as TGetOrdersWithCustomFieldsResponse;
+    try
+      if (Response <> nil) then
+      begin
+        SetLength(Result, Length(Response.Results));
+        for i := 0 to Length(Response.Results) - 1 do
+          Result[i] := Response.Results[i].Id;
+        Total := Response.Total;
+      end
+      else
+      if (ErrorString = EmptyStr) then
+        ErrorString := 'Order details not got';
+    finally
+      FreeAndNil(Response);
+    end;
+  finally
+    FreeAndNil(Request);
+  end;
+end;
+
+function TOrderActions.GetOrdersWithSpecifiedText(SpecifiedText: String; Offset,
+  Limit: integer; out Total: integer; out ErrorString: String): TOrderArray;
+var
+  Response: TGetOrdersResponse;
+  Request: TGenericParameters;
+begin
+  SetLength(Result, 0);
+  Total := 0;
+
+  Request := TGenericParameters.Create;
+  try
+    Request.AddParameter('query', SpecifiedText);
+    Request.AddParameter('offset', IntToStr(Offset));
+    Request.AddParameter('limit', IntToStr(Limit));
+
+    Response := FConnection.Get(TSettings.Order, Request,
+      TGetOrdersResponse, ErrorString) as TGetOrdersResponse;
+    try
+      if (Response <> nil) then
+      begin
+        Result := Response.Results;
+        Total := Response.Total;
+      end
       else
       if (ErrorString = EmptyStr) then
         ErrorString := 'Order details not got';

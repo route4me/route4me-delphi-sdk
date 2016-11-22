@@ -56,6 +56,8 @@ var
   OrderedAddresses: TOrderedAddressArray;
   ParametersProvider: IAddOrderToRouteParameterProvider;
   Parameters: TAddOrderToRouteRequest;
+  RouteId: String;
+  RouteDestinationId: integer;
 begin
   try
     Connection := TConnection.Create(c_ApiKey);
@@ -262,9 +264,14 @@ begin
 
         if (RouteIdToMoveTo.IsNotNull) and (RouteDestinationIdToMove <> 0) then
         begin
-            Examples.GetAddress(RouteIdToMoveTo, RouteDestinationIdToMove);
-            Examples.AddAddressNote(RouteIdToMoveTo, RouteDestinationIdToMove);
-            Examples.GetAddressNotes(RouteIdToMoveTo, RouteDestinationIdToMove);
+          RouteId := RouteIdToMoveTo;
+          RouteDestinationId := RouteDestinationIdToMove;
+
+          Examples.GetAddress(RouteId, RouteDestinationId);
+          Examples.MarkAddressAsVisited(RouteId, RouteDestinationId, True);
+          Examples.MarkAddressAsDeparted(RouteId, RouteDestinationId, True);
+          Examples.AddAddressNote(RouteId, RouteDestinationId);
+          Examples.GetAddressNotes(RouteId, RouteDestinationId);
         end
         else
           WriteLn('AddAddressNote, GetAddress, GetAddressNotes not called. routeIdToMoveTo == null || routeDestinationIdToMove == 0.');
@@ -382,6 +389,9 @@ begin
 
           // Retrieve orders scheduled for a specified date
           Examples.GetOrdersScheduledFor(Now);
+
+          // Search for all order records which contain specified text in any field
+          Examples.GetOrdersWithSpecifiedText('John');
 
           if (Order1 <> nil) then
           begin

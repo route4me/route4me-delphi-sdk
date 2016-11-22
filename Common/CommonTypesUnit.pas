@@ -6,6 +6,7 @@ uses
   System.Generics.Collections, Generics.Defaults, SysUtils;
 
 type
+  TIntegerArray = TArray<integer>;
   TStringArray = TArray<String>;
   TStringPair = TPair<String,String>;
   TArrayStringPair = TArray<TStringPair>;

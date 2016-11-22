@@ -259,6 +259,14 @@
         <DCCReference Include="..\Examples\Examples\Orders\GetOrderUnit.pas"/>
         <DCCReference Include="..\Examples\Examples\Orders\GetOrdersByDateUnit.pas"/>
         <DCCReference Include="..\Examples\Examples\Orders\GetOrdersScheduledForUnit.pas"/>
+        <DCCReference Include="..\QueryTypes\GetOrdersWithCustomFieldsResponseUnit.pas"/>
+        <DCCReference Include="..\Examples\Examples\Orders\GetOrdersWithCustomFieldsUnit.pas"/>
+        <DCCReference Include="Json\Unmarshal\TestUnmarshalMultipleArrayUnit.pas"/>
+        <DCCReference Include="..\Examples\Examples\Orders\GetOrdersWithSpecifiedTextUnit.pas"/>
+        <DCCReference Include="..\QueryTypes\MarkAddressAsVisitedRequestUnit.pas"/>
+        <DCCReference Include="..\QueryTypes\MarkAddressAsDepartedRequestUnit.pas"/>
+        <DCCReference Include="..\Examples\Examples\Addresses\MarkAddressAsDepartedUnit.pas"/>
+        <DCCReference Include="..\Examples\Examples\Addresses\MarkAddressAsVisitedUnit.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

@@ -53,6 +53,10 @@ type
     function LogCustomActivity(Message: String; RouteId: String): boolean;
     procedure GetActivities(RouteId: String);
     procedure GetAddress(RouteId: String; RouteDestinationId: integer);
+    procedure MarkAddressAsVisited(RouteId: String; RouteDestinationId: integer;
+      IsVisited: boolean);
+    procedure MarkAddressAsDeparted(RouteId: String; RouteDestinationId: integer;
+      IsDeparted: boolean);
     procedure AddAddressNote(RouteId: String; AddressId: integer);
     procedure GetAddressNotes(RouteId: String; RouteDestinationId: integer);
     function DuplicateRoute(RouteId: String): NullableString;
@@ -72,6 +76,8 @@ type
     procedure GetOrder(OrderId: String);
     procedure GetOrders(Date: TDate); overload;
     procedure GetOrdersScheduledFor(Date: TDate);
+    procedure GetOrdersWithCustomFields(Fields: String);
+    procedure GetOrdersWithSpecifiedText(SpecifiedText: String);
     procedure UpdateOrder(Order: TOrder);
     procedure RemoveOrders(OrderIds: TStringArray);
     procedure AddOrderToRoute(RouteId: String; Parameters: TRouteParameters;
@@ -110,7 +116,9 @@ uses
   GenericExampleUnit, MergeRoutesUnit, UpdateRoutesCustomFieldsUnit,
   DeleteRoutesUnit, RemoveOptimizationUnit, ResequenceAllRouteDestinationsUnit,
   AddOrderToRouteUnit, AddOrderToOptimizationUnit, GetOrderUnit,
-  GetOrdersByDateUnit, GetOrdersScheduledForUnit;
+  GetOrdersByDateUnit, GetOrdersScheduledForUnit, GetOrdersWithCustomFieldsUnit,
+  GetOrdersWithSpecifiedTextUnit, MarkAddressAsDepartedUnit,
+  MarkAddressAsVisitedUnit;
 
 function TRoute4MeExamples.AddAddressBookContact(FirstName,
   Address: String): TAddressBookContact;
@@ -433,6 +441,30 @@ begin
   end;
 end;
 
+procedure TRoute4MeExamples.GetOrdersWithCustomFields(Fields: String);
+var
+  Example: TGetOrdersWithCustomFields;
+begin
+  Example := MakeExample(TGetOrdersWithCustomFields) as TGetOrdersWithCustomFields;
+  try
+    Example.Execute(Fields);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.GetOrdersWithSpecifiedText(SpecifiedText: String);
+var
+  Example: TGetOrdersWithSpecifiedText;
+begin
+  Example := MakeExample(TGetOrdersWithSpecifiedText) as TGetOrdersWithSpecifiedText;
+  try
+    Example.Execute(SpecifiedText);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
 procedure TRoute4MeExamples.GetOrders;
 var
   Example: TGetOrders;
@@ -503,6 +535,32 @@ begin
   Result := Example;
 end;
 
+procedure TRoute4MeExamples.MarkAddressAsDeparted(RouteId: String;
+  RouteDestinationId: integer; IsDeparted: boolean);
+var
+  Example: TMarkAddressAsDeparted;
+begin
+  Example := MakeExample(TMarkAddressAsDeparted) as TMarkAddressAsDeparted;
+  try
+    Example.Execute(RouteId, RouteDestinationId, IsDeparted);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.MarkAddressAsVisited(RouteId: String;
+  RouteDestinationId: integer; IsVisited: boolean);
+var
+  Example: TMarkAddressAsVisited;
+begin
+  Example := MakeExample(TMarkAddressAsVisited) as TMarkAddressAsVisited;
+  try
+    Example.Execute(RouteId, RouteDestinationId, IsVisited);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
 procedure TRoute4MeExamples.MergeRoutes(RouteIds: TListString);
 var
   Example: TMergeRoutes;

@@ -182,7 +182,15 @@ uses
   AddOrderToOptimizationUnit in '..\Examples\Examples\Orders\AddOrderToOptimizationUnit.pas',
   GetOrderUnit in '..\Examples\Examples\Orders\GetOrderUnit.pas',
   GetOrdersByDateUnit in '..\Examples\Examples\Orders\GetOrdersByDateUnit.pas',
-  GetOrdersScheduledForUnit in '..\Examples\Examples\Orders\GetOrdersScheduledForUnit.pas';
+  GetOrdersScheduledForUnit in '..\Examples\Examples\Orders\GetOrdersScheduledForUnit.pas',
+  GetOrdersWithCustomFieldsResponseUnit in '..\QueryTypes\GetOrdersWithCustomFieldsResponseUnit.pas',
+  GetOrdersWithCustomFieldsUnit in '..\Examples\Examples\Orders\GetOrdersWithCustomFieldsUnit.pas',
+  TestUnmarshalMultipleArrayUnit in 'Json\Unmarshal\TestUnmarshalMultipleArrayUnit.pas',
+  GetOrdersWithSpecifiedTextUnit in '..\Examples\Examples\Orders\GetOrdersWithSpecifiedTextUnit.pas',
+  MarkAddressAsVisitedRequestUnit in '..\QueryTypes\MarkAddressAsVisitedRequestUnit.pas',
+  MarkAddressAsDepartedRequestUnit in '..\QueryTypes\MarkAddressAsDepartedRequestUnit.pas',
+  MarkAddressAsDepartedUnit in '..\Examples\Examples\Addresses\MarkAddressAsDepartedUnit.pas',
+  MarkAddressAsVisitedUnit in '..\Examples\Examples\Addresses\MarkAddressAsVisitedUnit.pas';
 
 {R *.RES}
 

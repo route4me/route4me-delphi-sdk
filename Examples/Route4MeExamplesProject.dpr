@@ -159,7 +159,14 @@ uses
   AddOrderToOptimizationRequestUnit in '..\QueryTypes\AddOrderToOptimizationRequestUnit.pas',
   GetOrderUnit in 'Examples\Orders\GetOrderUnit.pas',
   GetOrdersByDateUnit in 'Examples\Orders\GetOrdersByDateUnit.pas',
-  GetOrdersScheduledForUnit in 'Examples\Orders\GetOrdersScheduledForUnit.pas';
+  GetOrdersScheduledForUnit in 'Examples\Orders\GetOrdersScheduledForUnit.pas',
+  GetOrdersWithCustomFieldsResponseUnit in '..\QueryTypes\GetOrdersWithCustomFieldsResponseUnit.pas',
+  GetOrdersWithCustomFieldsUnit in 'Examples\Orders\GetOrdersWithCustomFieldsUnit.pas',
+  GetOrdersWithSpecifiedTextUnit in 'Examples\Orders\GetOrdersWithSpecifiedTextUnit.pas',
+  MarkAddressAsDepartedRequestUnit in '..\QueryTypes\MarkAddressAsDepartedRequestUnit.pas',
+  MarkAddressAsVisitedRequestUnit in '..\QueryTypes\MarkAddressAsVisitedRequestUnit.pas',
+  MarkAddressAsDepartedUnit in 'Examples\Addresses\MarkAddressAsDepartedUnit.pas',
+  MarkAddressAsVisitedUnit in 'Examples\Addresses\MarkAddressAsVisitedUnit.pas';
 
 begin
   try

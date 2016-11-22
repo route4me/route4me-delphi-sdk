@@ -21,6 +21,7 @@ begin
   try
     Order.Address1 := 'Test Address1';
     Order.AddressAlias := 'Test AddressAlias';
+    Order.FirstName := 'John';
     Order.CachedLatitude := 37.773972;
     Order.CachedLongitude := -122.431297;
 

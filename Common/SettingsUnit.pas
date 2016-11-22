@@ -26,6 +26,7 @@ type
     const DuplicateRoute = MainHost + '/actions/duplicate_route.php';
     const MoveRouteDestination = MainHost + '/actions/route/move_route_destination.php';
     const AddressBook = MainHost + '/api.v4/address_book.php';
+    const Address = MainHost + '/api.v4/address.php';
     const Avoidance = MainHost + '/api.v4/avoidance.php';
     const Order = MainHost + '/api.v4/order.php';
 
