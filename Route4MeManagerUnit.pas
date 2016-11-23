@@ -9,7 +9,7 @@ uses
   OptimizationActionUnit, RouteActionUnit, IConnectionUnit, UserActionUnit,
   AddressNoteActionUnit, AddressActionUnit, AvoidanceZoneUnit,
   AvoidanceZoneActionUnit, OrderActionUnit, ActivityActionsUnit,
-  TrackingActionsUnit;
+  TrackingActionsUnit, GeocodingActionsUnit;
 
 type
   TRoute4MeManager = class(TInterfacedObject, IRoute4MeManager)
@@ -23,6 +23,7 @@ type
     FAddressNote: TAddressNoteActions;
     FAddress: TAddressActions;
     FAvoidanceZone: TAvoidanceZoneActions;
+    FGeocoding: TGeocodingActions;
     FOrder: TOrderActions;
     FActivity: TActivityActions;
     FTracking: TTrackingActions;
@@ -39,6 +40,7 @@ type
     function AddressNote: TAddressNoteActions;
     function Address: TAddressActions;
     function AvoidanceZone: TAvoidanceZoneActions;
+    function Geocoding: TGeocodingActions;
     function Order: TOrderActions;
     function Activity: TActivityActions;
     function Tracking: TTrackingActions;
@@ -82,6 +84,7 @@ begin
   FAddressNote := nil;
   FAddress := nil;
   FAvoidanceZone := nil;
+  FGeocoding := nil;
   FOrder := nil;
   FActivity := nil;
   FTracking := nil;
@@ -93,6 +96,7 @@ begin
   FreeAndNil(FActivity);
   FreeAndNil(FOrder);
   FreeAndNil(FAvoidanceZone);
+  FreeAndNil(FGeocoding);
   FreeAndNil(FAddress);
   FreeAndNil(FAddressNote);
   FreeAndNil(FUser);
@@ -102,6 +106,13 @@ begin
 
   FConnection := nil;
   inherited;
+end;
+
+function TRoute4MeManager.Geocoding: TGeocodingActions;
+begin
+  if (FGeocoding = nil) then
+    FGeocoding := TGeocodingActions.Create(FConnection);
+  Result := FGeocoding;
 end;
 
 function TRoute4MeManager.Optimization: TOptimizationActions;

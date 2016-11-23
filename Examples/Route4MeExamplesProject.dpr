@@ -168,7 +168,9 @@ uses
   MarkAddressAsVisitedUnit in 'Examples\Addresses\MarkAddressAsVisitedUnit.pas',
   MarkAddressAsDetectedAsVisitedUnit in 'Examples\Addresses\MarkAddressAsDetectedAsVisitedUnit.pas',
   MarkAddressAsDetectedAsDepartedUnit in 'Examples\Addresses\MarkAddressAsDetectedAsDepartedUnit.pas',
-  MarkAddressAsDetectedAsDepartedRequestUnit in '..\QueryTypes\MarkAddressAsDetectedAsDepartedRequestUnit.pas';
+  MarkAddressAsDetectedAsDepartedRequestUnit in '..\QueryTypes\MarkAddressAsDetectedAsDepartedRequestUnit.pas',
+  ForwardGeocodeAddressUnit in 'Examples\Geocoding\ForwardGeocodeAddressUnit.pas',
+  GeocodingActionsUnit in '..\Actions\GeocodingActionsUnit.pas';
 
 begin
   try

@@ -269,6 +269,8 @@
         <DCCReference Include="..\QueryTypes\MarkAddressAsDetectedAsVisitedRequestUnit.pas"/>
         <DCCReference Include="..\Examples\Examples\Addresses\MarkAddressAsDetectedAsDepartedUnit.pas"/>
         <DCCReference Include="..\Examples\Examples\Addresses\MarkAddressAsDetectedAsVisitedUnit.pas"/>
+        <DCCReference Include="..\Actions\GeocodingActionsUnit.pas"/>
+        <DCCReference Include="..\Examples\Examples\Geocoding\ForwardGeocodeAddressUnit.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

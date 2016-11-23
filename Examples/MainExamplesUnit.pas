@@ -66,6 +66,7 @@ begin
     Examples := TRoute4MeExamples.Create(TOutputConsole.Create, Connection);
     try
       try
+        Examples.ForwardGeocodeAddress('Los20%Angeles20%International20%Airport,20%CA');
         DataObject1 := Examples.SingleDriverRoute10Stops();
 
         if (DataObject1 <> nil) and (DataObject1.Routes <> nil) and (Length(DataObject1.Routes) > 0) then

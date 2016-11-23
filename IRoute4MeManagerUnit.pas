@@ -7,7 +7,8 @@ uses
   AddressBookContactActionsUnit,
   OptimizationActionUnit, RouteActionUnit, IConnectionUnit, UserActionUnit,
   AddressNoteActionUnit, AddressActionUnit, AvoidanceZoneActionUnit,
-  OrderActionUnit, ActivityActionsUnit, TrackingActionsUnit;
+  OrderActionUnit, ActivityActionsUnit, TrackingActionsUnit,
+  GeocodingActionsUnit;
 
 type
   IRoute4MeManager = interface
@@ -19,6 +20,7 @@ type
     function AddressNote: TAddressNoteActions;
     function Address: TAddressActions;
     function AvoidanceZone: TAvoidanceZoneActions;
+    function Geocoding: TGeocodingActions;
     function Order: TOrderActions;
     function Activity: TActivityActions;
     function Tracking: TTrackingActions;

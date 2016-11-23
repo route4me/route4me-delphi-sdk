@@ -43,6 +43,7 @@ type
   end;
 
   TDirectionPathPointArray = TArray<TDirectionPathPoint>;
+  TDirectionPathPointList = TList<TDirectionPathPoint>;
 
 function SortDirectionPathPoints(DirectionPathPoints: TDirectionPathPointArray): TDirectionPathPointArray;
 

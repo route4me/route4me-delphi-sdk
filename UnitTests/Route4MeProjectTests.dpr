@@ -192,7 +192,9 @@ uses
   MarkAddressAsDetectedAsDepartedRequestUnit in '..\QueryTypes\MarkAddressAsDetectedAsDepartedRequestUnit.pas',
   MarkAddressAsDetectedAsVisitedRequestUnit in '..\QueryTypes\MarkAddressAsDetectedAsVisitedRequestUnit.pas',
   MarkAddressAsDetectedAsDepartedUnit in '..\Examples\Examples\Addresses\MarkAddressAsDetectedAsDepartedUnit.pas',
-  MarkAddressAsDetectedAsVisitedUnit in '..\Examples\Examples\Addresses\MarkAddressAsDetectedAsVisitedUnit.pas';
+  MarkAddressAsDetectedAsVisitedUnit in '..\Examples\Examples\Addresses\MarkAddressAsDetectedAsVisitedUnit.pas',
+  GeocodingActionsUnit in '..\Actions\GeocodingActionsUnit.pas',
+  ForwardGeocodeAddressUnit in '..\Examples\Examples\Geocoding\ForwardGeocodeAddressUnit.pas';
 
 {R *.RES}
 

@@ -49,6 +49,7 @@ type
     procedure UpdateRoutesCustomFields(RouteId: String; RouteDestinationId: integer);
     procedure GetRoute(RouteId: String; GetRouteDirections, GetRoutePathPoints: boolean);
     function GetRoutes: TDataObjectRouteArray;
+    procedure ForwardGeocodeAddress(Address: String);
     procedure GetUsers();
     function LogCustomActivity(Message: String; RouteId: String): boolean;
     procedure GetActivities(RouteId: String);
@@ -123,7 +124,7 @@ uses
   GetOrdersByDateUnit, GetOrdersScheduledForUnit, GetOrdersWithCustomFieldsUnit,
   GetOrdersWithSpecifiedTextUnit, MarkAddressAsDepartedUnit,
   MarkAddressAsVisitedUnit, MarkAddressAsDetectedAsVisitedUnit,
-  MarkAddressAsDetectedAsDepartedUnit;
+  MarkAddressAsDetectedAsDepartedUnit, ForwardGeocodeAddressUnit;
 
 function TRoute4MeExamples.AddAddressBookContact(FirstName,
   Address: String): TAddressBookContact;
@@ -283,6 +284,18 @@ begin
   Example := MakeExample(TDuplicateRoute) as TDuplicateRoute;
   try
     Result := Example.Execute(RouteId);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.ForwardGeocodeAddress(Address: String);
+var
+  Example: TForwardGeocodeAddress;
+begin
+  Example := MakeExample(TForwardGeocodeAddress) as TForwardGeocodeAddress;
+  try
+    Example.Execute(Address);
   finally
     FreeAndNil(Example);
   end;
