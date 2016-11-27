@@ -7,7 +7,7 @@ uses
   Route4MeManagerUnit, OutputUnit, NullableBasicTypesUnit,
   CommonTypesUnit, IConnectionUnit,
   DataObjectUnit, AddressBookContactUnit, OrderUnit, RouteParametersUnit,
-  AddOrderToRouteRequestUnit, AddressUnit;
+  AddOrderToRouteRequestUnit, AddressUnit, EnumsUnit, UserParametersUnit;
 
 type
   TRoute4MeExamples = class
@@ -51,6 +51,15 @@ type
     function GetRoutes: TDataObjectRouteArray;
     procedure ForwardGeocodeAddress(Address: String);
     procedure GetUsers();
+    procedure ValidateSession(SessionId: String; MemberId: integer);
+    procedure RegisterAccount(Plan, Industry, FirstName, LastName, Email: String;
+      Terms: boolean; DeviceType: TDeviceType;
+      Password, PasswordConfirmation: String);
+    procedure GetUserDetails(MemberId: integer);
+    function AddNewUser(Parameters: TUserParameters): NullableInteger;
+    procedure UpdateUser(Parameters: TUserParameters);
+    procedure RemoveUser(MemberId: integer);
+    function Authentication(EMail, Password: String): NullableString;
     function LogCustomActivity(Message: String; RouteId: String): boolean;
     procedure GetActivities(RouteId: String);
     procedure GetAddress(RouteId: String; RouteDestinationId: integer);
@@ -124,7 +133,10 @@ uses
   GetOrdersByDateUnit, GetOrdersScheduledForUnit, GetOrdersWithCustomFieldsUnit,
   GetOrdersWithSpecifiedTextUnit, MarkAddressAsDepartedUnit,
   MarkAddressAsVisitedUnit, MarkAddressAsDetectedAsVisitedUnit,
-  MarkAddressAsDetectedAsDepartedUnit, ForwardGeocodeAddressUnit;
+  MarkAddressAsDetectedAsDepartedUnit, ForwardGeocodeAddressUnit,
+  ValidateSessionUnit, RegisterAccountUnit, GetUserDetailsUnit, AddNewUserUnit,
+  UpdateUserUnit, RemoveAddressBookContactsRequestUnit, RemoveUserUnit,
+  AuthenticationUnit;
 
 function TRoute4MeExamples.AddAddressBookContact(FirstName,
   Address: String): TAddressBookContact;
@@ -171,6 +183,18 @@ begin
   Example := MakeExample(TAddDestinationToOptimization) as TAddDestinationToOptimization;
   try
     Result := Example.Execute(OptimizationId, AndReOptimize);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+function TRoute4MeExamples.AddNewUser(Parameters: TUserParameters): NullableInteger;
+var
+  Example: TAddNewUser;
+begin
+  Example := MakeExample(TAddNewUser) as TAddNewUser;
+  try
+    Result := Example.Execute(Parameters);
   finally
     FreeAndNil(Example);
   end;
@@ -234,6 +258,19 @@ begin
   Example := MakeExample(TAddRouteDestinationsOptimally) as TAddRouteDestinationsOptimally;
   try
     Result := Example.Execute(RouteId);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+function TRoute4MeExamples.Authentication(EMail,
+  Password: String): NullableString;
+var
+  Example: TAuthentication;
+begin
+  Example := MakeExample(TAuthentication) as TAuthentication;
+  try
+    Result := Example.Execute(EMail, Password);
   finally
     FreeAndNil(Example);
   end;
@@ -520,6 +557,18 @@ begin
   end;
 end;
 
+procedure TRoute4MeExamples.GetUserDetails(MemberId: integer);
+var
+  Example: TGetUserDetails;
+begin
+  Example := MakeExample(TGetUserDetails) as TGetUserDetails;
+  try
+    Example.Execute(MemberId);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
 procedure TRoute4MeExamples.GetUsers;
 var
   Example: TGetUsers;
@@ -666,6 +715,21 @@ begin
   end;
 end;
 
+procedure TRoute4MeExamples.RegisterAccount(Plan, Industry, FirstName, LastName,
+  Email: String; Terms: boolean; DeviceType: TDeviceType; Password,
+  PasswordConfirmation: String);
+var
+  Example: TRegisterAccount;
+begin
+  Example := MakeExample(TRegisterAccount) as TRegisterAccount;
+  try
+    Example.Execute(Plan, Industry, FirstName, LastName, Email, Terms,
+      DeviceType, Password, PasswordConfirmation);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
 procedure TRoute4MeExamples.RemoveAddressBookContacts(
   AddressIds: TArray<integer>);
 var
@@ -724,6 +788,18 @@ begin
   Example := MakeExample(TRemoveRouteDestination) as TRemoveRouteDestination;
   try
     Example.Execute(RouteId, DestinationId);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.RemoveUser(MemberId: integer);
+var
+  Example: TRemoveUser;
+begin
+  Example := MakeExample(TRemoveUser) as TRemoveUser;
+  try
+    Example.Execute(MemberId);
   finally
     FreeAndNil(Example);
   end;
@@ -906,6 +982,31 @@ begin
   Example := MakeExample(TUpdateRoutesCustomFields) as TUpdateRoutesCustomFields;
   try
     Example.Execute(RouteId, RouteDestinationId);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.UpdateUser(Parameters: TUserParameters);
+var
+  Example: TUpdateUser;
+begin
+  Example := MakeExample(TUpdateUser) as TUpdateUser;
+  try
+    Example.Execute(Parameters);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.ValidateSession(SessionId: String;
+  MemberId: integer);
+var
+  Example: TValidateSession;
+begin
+  Example := MakeExample(TValidateSession) as TValidateSession;
+  try
+    Example.Execute(SessionId, MemberId);
   finally
     FreeAndNil(Example);
   end;

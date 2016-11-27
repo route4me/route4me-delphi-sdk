@@ -41,7 +41,7 @@ type
     FApiKey: String;
 
     function ExecuteRequest(Url: String; Data: TGenericParameters;
-      Method: TRESTRequestMethod; ResultClassType: TClass;
+      Method: TRESTRequestMethod; PossibleResultClassType: TClassArray;
       out ErrorString: String): TObject;
 
     function UrlParameters(Parameters: TListStringPair): String;
@@ -57,7 +57,9 @@ type
     function Get(Url: String; Data: TGenericParameters;
       ResultClassType: TClass; out ErrorString: String): TObject;
     function Post(Url: String; Data: TGenericParameters;
-      ResultClassType: TClass; out ErrorString: String): TObject;
+      ResultClassType: TClass; out ErrorString: String): TObject; overload;
+    function Post(Url: String; Data: TGenericParameters;
+      PossibleResultClassType: TClassArray; out ErrorString: String): TObject; overload;
     function Put(Url: String; Data: TGenericParameters;
       ResultClassType: TClass; out ErrorString: String): TObject;
     function Delete(Url: String; Data: TGenericParameters;
@@ -73,13 +75,19 @@ uses SettingsUnit, MarshalUnMarshalUnit, ErrorResponseUnit;
 function TConnection.Post(Url: String; Data: TGenericParameters;
   ResultClassType: TClass; out ErrorString: String): TObject;
 begin
-  Result := ExecuteRequest(Url, Data, rmPOST, ResultClassType, ErrorString);
+  Result := ExecuteRequest(Url, Data, rmPOST, [ResultClassType], ErrorString);
+end;
+
+function TConnection.Post(Url: String; Data: TGenericParameters;
+  PossibleResultClassType: TClassArray; out ErrorString: String): TObject;
+begin
+  Result := ExecuteRequest(Url, Data, rmPOST, PossibleResultClassType, ErrorString);
 end;
 
 function TConnection.Put(Url: String; Data: TGenericParameters;
   ResultClassType: TClass; out ErrorString: String): TObject;
 begin
-  Result := ExecuteRequest(Url, Data, rmPUT, ResultClassType, ErrorString);
+  Result := ExecuteRequest(Url, Data, rmPUT, [ResultClassType], ErrorString);
 end;
 
 constructor TConnection.Create(ApiKey: String);
@@ -91,7 +99,7 @@ end;
 function TConnection.Delete(Url: String; Data: TGenericParameters;
   ResultClassType: TClass; out ErrorString: String): TObject;
 begin
-  Result := ExecuteRequest(Url, Data, rmDELETE, ResultClassType, ErrorString);
+  Result := ExecuteRequest(Url, Data, rmDELETE, [ResultClassType], ErrorString);
 end;
 
 destructor TConnection.Destroy;
@@ -104,11 +112,11 @@ end;
 function TConnection.Get(Url: String; Data: TGenericParameters;
   ResultClassType: TClass; out ErrorString: String): TObject;
 begin
-  Result := ExecuteRequest(Url, Data, rmGET, ResultClassType, ErrorString);
+  Result := ExecuteRequest(Url, Data, rmGET, [ResultClassType], ErrorString);
 end;
 
 function TConnection.ExecuteRequest(Url: String; Data: TGenericParameters;
-  Method: TRESTRequestMethod; ResultClassType: TClass;
+  Method: TRESTRequestMethod; PossibleResultClassType: TClassArray;
   out ErrorString: String): TObject;
 var
   Responce: TJSONValue;
@@ -117,7 +125,11 @@ var
   Body: String;
   Pair: TStringPair;
   ContentType: TRESTContentType;
+  ResultClassType: TClass;
+  IsError: boolean;
 begin
+  Result := nil;
+
   Parameters := Data.Serialize(FApiKey);
   try
     Body := EmptyStr;
@@ -144,15 +156,23 @@ begin
     FreeAndNil(Parameters);
   end;
 
-  if (Responce = nil) then
-    Result := nil
-  else
+  if (Responce <> nil) then
   begin
     st := TStringList.Create;
     st.Text := Responce.ToString;
 //    st.SaveToFile('d:\post.json');
     FreeAndNil(st);
-    Result := TMarshalUnMarshal.FromJson(ResultClassType, Responce);
+    for ResultClassType in PossibleResultClassType do
+    begin
+      IsError := False;
+      try
+        Result := TMarshalUnMarshal.FromJson(ResultClassType, Responce);
+      except
+        IsError := True;
+      end;
+      if not IsError then
+        Break;
+    end;
   end;
 end;
 

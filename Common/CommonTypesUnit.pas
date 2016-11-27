@@ -12,6 +12,7 @@ type
   TArrayStringPair = TArray<TStringPair>;
   TListStringPair = TList<TStringPair>;
   TListString = TList<String>;
+  TClassArray = TArray<TClass>;
 
   function SortStringArray(Strings: TStringArray): TStringArray;
   function EncodeURL(URL: String): String;

@@ -194,7 +194,21 @@ uses
   MarkAddressAsDetectedAsDepartedUnit in '..\Examples\Examples\Addresses\MarkAddressAsDetectedAsDepartedUnit.pas',
   MarkAddressAsDetectedAsVisitedUnit in '..\Examples\Examples\Addresses\MarkAddressAsDetectedAsVisitedUnit.pas',
   GeocodingActionsUnit in '..\Actions\GeocodingActionsUnit.pas',
-  ForwardGeocodeAddressUnit in '..\Examples\Examples\Geocoding\ForwardGeocodeAddressUnit.pas';
+  ForwardGeocodeAddressUnit in '..\Examples\Examples\Geocoding\ForwardGeocodeAddressUnit.pas',
+  ValidateSessionResponseUnit in '..\QueryTypes\ValidateSessionResponseUnit.pas',
+  ValidateSessionUnit in '..\Examples\Examples\Members\ValidateSessionUnit.pas',
+  AddNewUserResponseUnit in '..\QueryTypes\AddNewUserResponseUnit.pas',
+  RegisterAccountUnit in '..\Examples\Examples\Members\RegisterAccountUnit.pas',
+  GetUserDetailsUnit in '..\Examples\Examples\Members\GetUserDetailsUnit.pas',
+  AddNewUserUnit in '..\Examples\Examples\Members\AddNewUserUnit.pas',
+  UserParametersUnit in '..\QueryTypes\UserParametersUnit.pas',
+  RegisterAccountResponseUnit in '..\QueryTypes\RegisterAccountResponseUnit.pas',
+  UserParameterProviderUnit in '..\Examples\TestDataProviders\UserParameterProviderUnit.pas',
+  UpdateUserUnit in '..\Examples\Examples\Members\UpdateUserUnit.pas',
+  RemoveUserRequestUnit in '..\QueryTypes\RemoveUserRequestUnit.pas',
+  RemoveUserUnit in '..\Examples\Examples\Members\RemoveUserUnit.pas',
+  AuthenticationResponseUnit in '..\QueryTypes\AuthenticationResponseUnit.pas',
+  AuthenticationUnit in '..\Examples\Examples\Members\AuthenticationUnit.pas';
 
 {R *.RES}
 

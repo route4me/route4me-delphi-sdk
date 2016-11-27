@@ -19,7 +19,11 @@ type
     const ShareRouteHost = MainHost + '/actions/route/share_route.php';
     const MergeRouteHost = MainHost + '/actions/merge_routes.php';
     const SetGpsHost = MainHost + '/track/set.php';
+    const Authenticate = MainHost + '/actions/authenticate.php';
     const GetUsersHost = MainHost + '/api/member/view_users.php';
+    const RegisterAccount = MainHost + '/actions/register_action.php';
+    const UsersHost = MainHost + '/api.v4/user.php';
+    const ValidateSessionHost = MainHost + '/datafeed/session/validate_session.php';
     const AddRouteNotesHost = MainHost + '/actions/addRouteNotes.php';
     const ActivityFeedHost = MainHost + '/api.v4/activity_feed.php';
     const GeocodingHost = MainHost + '/api/geocoder.php';

@@ -17,7 +17,8 @@ uses
   System.Generics.Collections,
   DataObjectUnit, Route4MeExamplesUnit, NullableBasicTypesUnit, AddressUnit,
   AddressBookContactUnit, OutputUnit, ConnectionUnit, OrderUnit,
-  CommonTypesUnit, AddOrderToRouteParameterProviderUnit, AddOrderToRouteRequestUnit;
+  CommonTypesUnit, AddOrderToRouteParameterProviderUnit, AddOrderToRouteRequestUnit,
+  EnumsUnit, UserParameterProviderUnit, UserParametersUnit;
 
 const
   //your api key
@@ -55,17 +56,47 @@ var
   Routes: TDataObjectRouteArray;
   OrderedAddresses: TOrderedAddressArray;
   ParametersProvider: IAddOrderToRouteParameterProvider;
+  UserParameters: TUserParameters;
+  AddNewUserParameterProvider: IUserParameterProvider;
   Parameters: TAddOrderToRouteRequest;
   RouteId: String;
   RouteDestinationId: integer;
   AddressId: NullableInteger;
   MemberId: integer;
+  SessionId: NullableString;
+  EMail: String;
 begin
   try
     Connection := TConnection.Create(c_ApiKey);
     Examples := TRoute4MeExamples.Create(TOutputConsole.Create, Connection);
     try
       try
+        Randomize;
+
+        Examples.RegisterAccount('enterprise_plan', 'Gifting', 'Olman',
+          'Oland', 'ololol' + IntToStr(Random(5000)) + '@outlook.com', True, TDeviceType.Web, '123', '123');
+
+        AddNewUserParameterProvider := TUserParameterProvider.Create;
+        EMail := 'skrynkovskyy' + IntToStr(Random(10000)) + '@gmail.com';
+        UserParameters := AddNewUserParameterProvider.GetParameters(EMail);
+        try
+          MemberId := Examples.AddNewUser(UserParameters);
+          Examples.GetUserDetails(MemberId);
+
+          UserParameters.MemberId := MemberId;
+          UserParameters.FirstName := 'John';
+          Examples.UpdateUser(UserParameters);
+
+          SessionId := Examples.Authentication(UserParameters.Email, UserParameters.Password);
+        finally
+          FreeAndNil(UserParameters);
+        end;
+
+        if SessionId.IsNotNull then
+          Examples.ValidateSession(SessionId, MemberId);
+        Examples.GetUsers();
+        Examples.RemoveUser(MemberId);
+
         Examples.ForwardGeocodeAddress('Los20%Angeles20%International20%Airport,20%CA');
         DataObject1 := Examples.SingleDriverRoute10Stops();
 
@@ -252,8 +283,6 @@ begin
           for i := Length(Routes) - 1 downto 0 do
             FreeAndNil(Routes[i]);
         end;
-
-        Examples.GetUsers();
 
         if (RouteId_SingleDriverRoute10Stops.IsNotNull) then
           Examples.LogCustomActivity('Test User Activity ' + DateTimeToStr(Now), RouteId_SingleDriverRoute10Stops)

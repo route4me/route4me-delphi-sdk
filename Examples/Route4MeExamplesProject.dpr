@@ -170,7 +170,21 @@ uses
   MarkAddressAsDetectedAsDepartedUnit in 'Examples\Addresses\MarkAddressAsDetectedAsDepartedUnit.pas',
   MarkAddressAsDetectedAsDepartedRequestUnit in '..\QueryTypes\MarkAddressAsDetectedAsDepartedRequestUnit.pas',
   ForwardGeocodeAddressUnit in 'Examples\Geocoding\ForwardGeocodeAddressUnit.pas',
-  GeocodingActionsUnit in '..\Actions\GeocodingActionsUnit.pas';
+  GeocodingActionsUnit in '..\Actions\GeocodingActionsUnit.pas',
+  ValidateSessionResponseUnit in '..\QueryTypes\ValidateSessionResponseUnit.pas',
+  ValidateSessionUnit in 'Examples\Members\ValidateSessionUnit.pas',
+  AddNewUserResponseUnit in '..\QueryTypes\AddNewUserResponseUnit.pas',
+  RegisterAccountUnit in 'Examples\Members\RegisterAccountUnit.pas',
+  GetUserDetailsUnit in 'Examples\Members\GetUserDetailsUnit.pas',
+  RegisterAccountResponseUnit in '..\QueryTypes\RegisterAccountResponseUnit.pas',
+  AddNewUserUnit in 'Examples\Members\AddNewUserUnit.pas',
+  UserParameterProviderUnit in 'TestDataProviders\UserParameterProviderUnit.pas',
+  UserParametersUnit in '..\QueryTypes\UserParametersUnit.pas',
+  UpdateUserUnit in 'Examples\Members\UpdateUserUnit.pas',
+  RemoveUserUnit in 'Examples\Members\RemoveUserUnit.pas',
+  RemoveUserRequestUnit in '..\QueryTypes\RemoveUserRequestUnit.pas',
+  AuthenticationUnit in 'Examples\Members\AuthenticationUnit.pas',
+  AuthenticationResponseUnit in '..\QueryTypes\AuthenticationResponseUnit.pas';
 
 begin
   try

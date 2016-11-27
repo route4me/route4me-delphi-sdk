@@ -47,6 +47,13 @@ type
     procedure GetRoutes;
     procedure ShareRoute;
     procedure GetUsers;
+    procedure ValidateSession;
+    procedure RegisterAccount;
+    procedure GetUserDetails;
+    procedure AddNewUser;
+    procedure Authentication;
+    procedure UpdateUser;
+    procedure RemoveUser;
     procedure LogCustomActivity;
     procedure GetActivities;
     procedure GetAddress;
@@ -91,7 +98,8 @@ uses
   OutputUnit, DataObjectUnit, NullableBasicTypesUnit, AddressUnit,
   CommonTypesUnit, OrderUnit, AddressBookContactUnit, RouteParametersUnit,
   AddOrderToRouteRequestUnit, AddOrderToRouteParameterProviderUnit,
-  AddOrderToOptimizationRequestUnit;
+  AddOrderToOptimizationRequestUnit, EnumsUnit, UserParametersUnit,
+  UserParameterProviderUnit;
 
 procedure TTestRoute4MeExamples.SaveString(s: String);
 var
@@ -280,6 +288,27 @@ begin
   end;
 end;
 
+procedure TTestRoute4MeExamples.AddNewUser;
+var
+  Parameters: TUserParameters;
+  Provider: IUserParameterProvider;
+  EMail: String;
+begin
+  Provider := TUserParameterProvider.Create;
+  EMail := 'skrynkovskyy+newdispatcher@gmail.com';
+  Parameters := Provider.GetParameters(EMail);
+  try
+    FExamples.AddNewUser(Parameters);
+
+    CheckEqualsBody('AddNewUser', FConnection.RequestBody);
+    CheckEquals('https://www.route4me.com/api.v4/user.php?api_key=11111111111111111111111111111111', FConnection.Url);
+    CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
+    CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+  finally
+    FreeAndNil(Parameters);
+  end;
+end;
+
 procedure TTestRoute4MeExamples.AddOrder;
 begin
   FExamples.AddOrder;
@@ -372,6 +401,21 @@ begin
   CheckEquals('https://www.route4me.com/api.v4/route.php?api_key=11111111111111111111111111111111&route_id=5BCEACC31C444BCF9D8AB604DA4DFCA7', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmPUT = FConnection.Method);
     CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestRoute4MeExamples.Authentication;
+var
+  EMail, Password: String;
+begin
+  EMail := 'user@mail.com';
+  Password := '123';
+
+  FExamples.Authentication(EMail, Password);
+
+  CheckEqualsBody('Authentication', FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/actions/authenticate.php?api_key=11111111111111111111111111111111', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
+  CheckTrue(TRESTContentType.ctAPPLICATION_X_WWW_FORM_URLENCODED = FConnection.ContentType);
 end;
 
 procedure TTestRoute4MeExamples.TrackDeviceLastLocationHistory;
@@ -471,6 +515,44 @@ begin
   CheckEqualsBody('UpdateRouteCustomFields', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/address.php?api_key=11111111111111111111111111111111&route_id=5BCEACC31C444BCF9D8AB604DA4DFCA7&route_destination_id=194622711', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmPUT = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestRoute4MeExamples.UpdateUser;
+var
+  Parameters: TUserParameters;
+  Provider: IUserParameterProvider;
+  Email: String;
+begin
+  Provider := TUserParameterProvider.Create;
+  EMail := 'skrynkovskyy+newdispatcher@gmail.com';
+  Parameters := Provider.GetParameters(Email);
+  try
+    FExamples.UpdateUser(Parameters);
+
+    CheckEqualsBody('UpdateUser', FConnection.RequestBody);
+    CheckEquals('https://www.route4me.com/api.v4/user.php?api_key=11111111111111111111111111111111', FConnection.Url);
+    CheckTrue(TRESTRequestMethod.rmPUT = FConnection.Method);
+    CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+  finally
+    FreeAndNil(Parameters);
+  end;
+end;
+
+procedure TTestRoute4MeExamples.ValidateSession;
+var
+  SessionId: String;
+  MemberId: integer;
+begin
+  SessionId := '503F8B59E9719FE310836C830F7E82A0';
+  MemberId := 194622711;
+
+  FExamples.ValidateSession(SessionId, MemberId);
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/datafeed/session/validate_session.php?api_key=11111111111111111111111111111111&' +
+    'session_guid=503F8B59E9719FE310836C830F7E82A0&member_id=194622711&format=json', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
@@ -779,6 +861,21 @@ begin
   end;
 end;
 
+procedure TTestRoute4MeExamples.GetUserDetails;
+var
+  MemberId: integer;
+begin
+  MemberId := 194622711;
+
+  FExamples.GetUserDetails(MemberId);
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api.v4/user.php?api_key=11111111111111111111111111111111&' +
+    'member_id=194622711', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
 procedure TTestRoute4MeExamples.GetUsers;
 begin
   FExamples.GetUsers;
@@ -961,6 +1058,33 @@ begin
   end;
 end;
 
+procedure TTestRoute4MeExamples.RegisterAccount;
+var
+  Plan, Industry, FirstName, LastName, Email: String;
+  Terms: boolean;
+  DeviceType: TDeviceType;
+  Password, PasswordConfirmation: String;
+begin
+  Plan := 'enterprise_plan';
+  Industry := 'Gifting';
+  FirstName := 'Olman';
+  LastName := 'Oland';
+  Email := 'ololol@outlook.com';
+  Terms := True;
+  DeviceType := TDeviceType.Web;
+  Password := '123';
+  PasswordConfirmation := '123';
+
+  FExamples.RegisterAccount(Plan, Industry, FirstName, LastName, Email, Terms,
+    DeviceType, Password, PasswordConfirmation);
+
+  CheckEqualsBody('RegisterAccount', FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/actions/register_action.php?api_key=11111111111111111111111111111111&' +
+    'plan=enterprise_plan', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
+  CheckTrue(TRESTContentType.ctAPPLICATION_X_WWW_FORM_URLENCODED = FConnection.ContentType);
+end;
+
 procedure TTestRoute4MeExamples.RemoveAddressBookContacts;
 var
   AddressIds: TArray<integer>;
@@ -1033,6 +1157,19 @@ begin
 
   CheckEqualsBody('RemoveRouteDestination', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/address.php?api_key=11111111111111111111111111111111&route_id=5BCEACC31C444BCF9D8AB604DA4DFCA7&route_destination_id=194450192', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmDELETE = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestRoute4MeExamples.RemoveUser;
+var
+  MemberId: integer;
+begin
+  MemberId := 194450192;
+  FExamples.RemoveUser(MemberId);
+
+  CheckEqualsBody('RemoveUser', FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api.v4/user.php?api_key=11111111111111111111111111111111', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmDELETE = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
