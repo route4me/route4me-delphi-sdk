@@ -208,7 +208,9 @@ uses
   RemoveUserRequestUnit in '..\QueryTypes\RemoveUserRequestUnit.pas',
   RemoveUserUnit in '..\Examples\Examples\Members\RemoveUserUnit.pas',
   AuthenticationResponseUnit in '..\QueryTypes\AuthenticationResponseUnit.pas',
-  AuthenticationUnit in '..\Examples\Examples\Members\AuthenticationUnit.pas';
+  AuthenticationUnit in '..\Examples\Examples\Members\AuthenticationUnit.pas',
+  DeviceLicenseRequestUnit in '..\QueryTypes\DeviceLicenseRequestUnit.pas',
+  DeviceLicenseUnit in '..\Examples\Examples\Members\DeviceLicenseUnit.pas';
 
 {R *.RES}
 

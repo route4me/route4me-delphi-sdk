@@ -54,6 +54,7 @@ type
     procedure Authentication;
     procedure UpdateUser;
     procedure RemoveUser;
+    procedure DeviceLicense;
     procedure LogCustomActivity;
     procedure GetActivities;
     procedure GetAddress;
@@ -609,6 +610,21 @@ begin
     ',181AA7EA4C23DFCAD80DB4244B1BC605,5E335C48F3A35CC043C2D9F4B865B509,1275C40E330F6E54753688FCCD7B4055' +
     ',49924C49F5B845AA429770AD0D115C92', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmDELETE = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestRoute4MeExamples.DeviceLicense;
+var
+  DeviceId: String;
+  DeviceType: TDeviceType;
+begin
+  DeviceId := '546546516';
+  DeviceType := TDeviceType.IPad;
+  FExamples.DeviceLicense(DeviceId, DeviceType);
+
+  CheckEqualsBody('DeviceLicense', FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api/device/verify_device_license.php?api_key=11111111111111111111111111111111', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 

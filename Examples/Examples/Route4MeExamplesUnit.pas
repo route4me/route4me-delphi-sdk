@@ -60,6 +60,7 @@ type
     procedure UpdateUser(Parameters: TUserParameters);
     procedure RemoveUser(MemberId: integer);
     function Authentication(EMail, Password: String): NullableString;
+    procedure DeviceLicense(DeviceId: String; DeviceType: TDeviceType);
     function LogCustomActivity(Message: String; RouteId: String): boolean;
     procedure GetActivities(RouteId: String);
     procedure GetAddress(RouteId: String; RouteDestinationId: integer);
@@ -136,7 +137,7 @@ uses
   MarkAddressAsDetectedAsDepartedUnit, ForwardGeocodeAddressUnit,
   ValidateSessionUnit, RegisterAccountUnit, GetUserDetailsUnit, AddNewUserUnit,
   UpdateUserUnit, RemoveAddressBookContactsRequestUnit, RemoveUserUnit,
-  AuthenticationUnit;
+  AuthenticationUnit, DeviceLicenseUnit;
 
 function TRoute4MeExamples.AddAddressBookContact(FirstName,
   Address: String): TAddressBookContact;
@@ -314,6 +315,18 @@ begin
   inherited;
 end;
 
+procedure TRoute4MeExamples.DeviceLicense(DeviceId: String; DeviceType: TDeviceType);
+var
+  Example: TDeviceLicense;
+begin
+  Example := MakeExample(TDeviceLicense) as TDeviceLicense;
+  try
+    Example.Execute(DeviceId, DeviceType);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
 function TRoute4MeExamples.DuplicateRoute(RouteId: String): NullableString;
 var
   Example: TDuplicateRoute;

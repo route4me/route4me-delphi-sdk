@@ -184,7 +184,9 @@ uses
   RemoveUserUnit in 'Examples\Members\RemoveUserUnit.pas',
   RemoveUserRequestUnit in '..\QueryTypes\RemoveUserRequestUnit.pas',
   AuthenticationUnit in 'Examples\Members\AuthenticationUnit.pas',
-  AuthenticationResponseUnit in '..\QueryTypes\AuthenticationResponseUnit.pas';
+  AuthenticationResponseUnit in '..\QueryTypes\AuthenticationResponseUnit.pas',
+  DeviceLicenseUnit in 'Examples\Members\DeviceLicenseUnit.pas',
+  DeviceLicenseRequestUnit in '..\QueryTypes\DeviceLicenseRequestUnit.pas';
 
 begin
   try

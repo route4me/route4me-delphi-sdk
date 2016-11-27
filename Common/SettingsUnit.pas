@@ -23,6 +23,7 @@ type
     const GetUsersHost = MainHost + '/api/member/view_users.php';
     const RegisterAccount = MainHost + '/actions/register_action.php';
     const UsersHost = MainHost + '/api.v4/user.php';
+    const VerifyDeviceLicenseHost = MainHost + '/api/device/verify_device_license.php';
     const ValidateSessionHost = MainHost + '/datafeed/session/validate_session.php';
     const AddRouteNotesHost = MainHost + '/actions/addRouteNotes.php';
     const ActivityFeedHost = MainHost + '/api.v4/activity_feed.php';

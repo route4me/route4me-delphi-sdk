@@ -60,6 +60,9 @@ type
     ///  Remove existing user from a member’s account.
     /// </summary>
     procedure Remove(MemberId: integer; out ErrorString: String);
+
+    function DeviceLicense(DeviceId: String; DeviceType: TDeviceType;
+      out ErrorString: String): boolean;
   end;
 
 implementation
@@ -68,7 +71,7 @@ implementation
 
 uses SettingsUnit, ValidateSessionResponseUnit, AddNewUserResponseUnit,
   RegisterAccountResponseUnit, StatusResponseUnit, RemoveUserRequestUnit,
-  AuthenticationResponseUnit, CommonTypesUnit;
+  AuthenticationResponseUnit, CommonTypesUnit, DeviceLicenseRequestUnit;
 
 function TUserActions.RegisterAccount(Plan, Industry, FirstName, LastName, Email: String;
   Terms: boolean; DeviceType: TDeviceType; Password,
@@ -216,6 +219,27 @@ begin
       ErrorString := 'User authentication error';
   finally
     FreeAndNil(Parameters);
+  end;
+end;
+
+function TUserActions.DeviceLicense(DeviceId: String; DeviceType: TDeviceType;
+  out ErrorString: String): boolean;
+var
+  Request: TDeviceLicenseRequest;
+  Response: TObject;
+begin
+  Result := False;
+
+  Request := TDeviceLicenseRequest.Create(DeviceId, DeviceType, 'json');
+  try
+    // todo: возвращает просто строку: "Missing or Invalid Device ID"
+{    Response := FConnection.Post(TSettings.VerifyDeviceLicenseHost,
+      Request, TUser, ErrorString) as TUser;
+
+    if (Response = nil) and (ErrorString = EmptyStr) then
+      ErrorString := 'DeviceLicense fault';}
+  finally
+    FreeAndNil(Request);
   end;
 end;
 

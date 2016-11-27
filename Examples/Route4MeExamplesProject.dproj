@@ -255,6 +255,8 @@
         <DCCReference Include="..\QueryTypes\RemoveUserRequestUnit.pas"/>
         <DCCReference Include="Examples\Members\AuthenticationUnit.pas"/>
         <DCCReference Include="..\QueryTypes\AuthenticationResponseUnit.pas"/>
+        <DCCReference Include="Examples\Members\DeviceLicenseUnit.pas"/>
+        <DCCReference Include="..\QueryTypes\DeviceLicenseRequestUnit.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
