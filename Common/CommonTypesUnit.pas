@@ -14,6 +14,15 @@ type
   TListString = TList<String>;
   TClassArray = TArray<TClass>;
 
+  TSimpleString = class
+  private
+    FValue: String;
+  public
+    constructor Create(Value: String);
+
+    property Value: String read FValue;
+  end;
+
   function SortStringArray(Strings: TStringArray): TStringArray;
   function EncodeURL(URL: String): String;
 
@@ -41,6 +50,13 @@ begin
   Result := TIdURI.ParamsEncode(URL);
 //  Result := TNetEncoding.URL.Encode(URL);
 
+end;
+
+{ TSimpleString }
+
+constructor TSimpleString.Create(Value: String);
+begin
+  FValue := Value;
 end;
 
 end.

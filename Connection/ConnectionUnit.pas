@@ -30,7 +30,8 @@ type
     destructor Destroy; override;
 
     function ExecuteRequest(URL: String; Method: TRESTRequestMethod;
-      Body: String; ContentType: TRESTContentType; out ErrorString: String): TJsonValue;
+      Body: String; ContentType: TRESTContentType; out ErrorString: String;
+      out ResponseAsString: String): TJsonValue;
 
     procedure SetProxy(Host: String; Port: integer; Username, Password: String);
   end;
@@ -47,7 +48,8 @@ type
     function UrlParameters(Parameters: TListStringPair): String;
   protected
     function RunRequest(URL: String; Method: TRESTRequestMethod;
-      Body: String; ContentType: TRESTContentType; out ErrorString: String): TJsonValue; virtual;
+      Body: String; ContentType: TRESTContentType; out ErrorString: String;
+      out ResponseAsString: String): TJsonValue; virtual;
   public
     constructor Create(ApiKey: String);
     destructor Destroy; override;
@@ -127,6 +129,7 @@ var
   ContentType: TRESTContentType;
   ResultClassType: TClass;
   IsError: boolean;
+  ResponseAsString: String;
 begin
   Result := nil;
 
@@ -151,35 +154,36 @@ begin
 
     Responce := RunRequest(
       Url + UrlParameters(Parameters),
-      Method, Body, ContentType, ErrorString);
+      Method, Body, ContentType, ErrorString, ResponseAsString);
   finally
     FreeAndNil(Parameters);
   end;
 
-  if (Responce <> nil) then
+  for ResultClassType in PossibleResultClassType do
   begin
-    st := TStringList.Create;
-    st.Text := Responce.ToString;
-//    st.SaveToFile('d:\post.json');
-    FreeAndNil(st);
-    for ResultClassType in PossibleResultClassType do
+    if (ResultClassType = TSimpleString) then
     begin
-      IsError := False;
-      try
-        Result := TMarshalUnMarshal.FromJson(ResultClassType, Responce);
-      except
-        IsError := True;
-      end;
-      if not IsError then
-        Break;
+      Result := TSimpleString.Create(ResponseAsString);
+      Break;
     end;
+
+    IsError := False;
+    try
+      if (Responce <> nil) then
+        Result := TMarshalUnMarshal.FromJson(ResultClassType, Responce);
+    except
+      IsError := True;
+    end;
+    if not IsError then
+      Break;
   end;
 end;
 
 function TConnection.RunRequest(URL: String; Method: TRESTRequestMethod;
-  Body: String; ContentType: TRESTContentType; out ErrorString: String): TJsonValue;
+  Body: String; ContentType: TRESTContentType; out ErrorString: String;
+  out ResponseAsString: String): TJsonValue;
 begin
-  Result := FConnection.ExecuteRequest(URL, Method, Body, ContentType, ErrorString);
+  Result := FConnection.ExecuteRequest(URL, Method, Body, ContentType, ErrorString, ResponseAsString);
 end;
 
 procedure TConnection.SetProxy(Host: String; Port: integer; Username, Password: String);
@@ -272,7 +276,7 @@ end;
 
 function TConnectionFacade.ExecuteRequest(URL: String;
   Method: TRESTRequestMethod; Body: String; ContentType: TRESTContentType;
-  out ErrorString: String): TJsonValue;
+  out ErrorString: String; out ResponseAsString: String): TJsonValue;
   function GetHeaderValue(Name: String): String;
   var
     s: String;
@@ -295,7 +299,6 @@ var
   Success: boolean;
   StatusCode: integer;
   JSONValue: TJsonValue;
-  ResponseContent: String;
 begin
   Result := nil;
   ErrorString := EmptyStr;
@@ -303,21 +306,22 @@ begin
   FClient.BaseURL := URL;
   if (Method = TRESTRequestMethod.rmDELETE) and (Body <> EmptyStr) then
     DeleteRequest(URL, Body, ContentType,
-      Success, StatusCode, JSONValue, ResponseContent)
+      Success, StatusCode, JSONValue, ResponseAsString)
   else
     RESTRequest(URL, Method, Body, ContentType,
-      Success, StatusCode, JSONValue, ResponseContent);
+      Success, StatusCode, JSONValue, ResponseAsString);
 
   if (Success) then
     Result := JSONValue
   else
   if (StatusCode = 303) then
     Result := ExecuteRequest(
-      GetHeaderValue('Location'), TRESTRequestMethod.rmGET, EmptyStr, ContentType, ErrorString)
+      GetHeaderValue('Location'), TRESTRequestMethod.rmGET, EmptyStr,
+        ContentType, ErrorString, ResponseAsString)
   else
   begin
     ErrorString := EmptyStr;
-    JsonResponce := TJSONObject.ParseJSONValue(ResponseContent);
+    JsonResponce := TJSONObject.ParseJSONValue(ResponseAsString);
     if (JsonResponce <> nil) then
     begin
       ErrorResponse := TMarshalUnMarshal.FromJson(TErrorResponse, JsonResponce) as TErrorResponse;

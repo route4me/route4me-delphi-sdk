@@ -7,12 +7,12 @@ uses SysUtils, BaseExampleUnit, NullableBasicTypesUnit, UserParametersUnit;
 type
   TAuthentication = class(TBaseExample)
   public
-    function Execute(EMail, Password: String): NullableString;
+    function Execute(EMail, Password: String): NullableInteger;
   end;
 
 implementation
 
-function TAuthentication.Execute(EMail, Password: String): NullableString;
+function TAuthentication.Execute(EMail, Password: String): NullableInteger;
 var
   ErrorString: String;
 begin
@@ -22,7 +22,7 @@ begin
 
   if (ErrorString = EmptyStr) then
   begin
-    WriteLn(Format('Authentication successfully, SessionId = %s', [Result.Value]));
+    WriteLn(Format('Authentication successfully, SessionId = %d', [Result.Value]));
     WriteLn('');
   end
   else

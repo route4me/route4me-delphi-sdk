@@ -17,24 +17,22 @@ uses UserUnit;
 procedure TGetUsers.Execute;
 var
   ErrorString: String;
-  Users: TArray<TUser>;
-  i: integer;
+  Users: TUserList;
 begin
   Users := Route4MeManager.User.Get(ErrorString);
   try
     WriteLn('');
 
-    if (Length(Users) > 0) then
+    if (Users.Count > 0) then
     begin
       WriteLn(Format('GetUsers executed successfully, %d users returned',
-        [Length(Users)]));
+        [Users.Count]));
       WriteLn('');
     end
     else
       WriteLn(Format('GetUsers error: "%s"', [ErrorString]));
   finally
-    for i := Length(Users) - 1 downto 0 do
-      FreeAndNil(Users[i]);
+    FreeAndNil(Users);
   end;
 end;
 

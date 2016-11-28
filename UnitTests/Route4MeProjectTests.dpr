@@ -210,7 +210,13 @@ uses
   AuthenticationResponseUnit in '..\QueryTypes\AuthenticationResponseUnit.pas',
   AuthenticationUnit in '..\Examples\Examples\Members\AuthenticationUnit.pas',
   DeviceLicenseRequestUnit in '..\QueryTypes\DeviceLicenseRequestUnit.pas',
-  DeviceLicenseUnit in '..\Examples\Examples\Members\DeviceLicenseUnit.pas';
+  DeviceLicenseUnit in '..\Examples\Examples\Members\DeviceLicenseUnit.pas',
+  TestOnlineExamplesUnit in 'Examples\Online\TestOnlineExamplesUnit.pas',
+  TestMemberSamplesUnit in 'Examples\Online\TestMemberSamplesUnit.pas',
+  UserLicenseRequestUnit in '..\QueryTypes\UserLicenseRequestUnit.pas',
+  UserLicenseUnit in '..\Examples\Examples\Members\UserLicenseUnit.pas',
+  RegisterWebinarRequestUnit in '..\QueryTypes\RegisterWebinarRequestUnit.pas',
+  RegisterWebinarUnit in '..\Examples\Examples\Members\RegisterWebinarUnit.pas';
 
 {R *.RES}
 

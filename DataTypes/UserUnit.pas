@@ -127,7 +127,7 @@ type
     property HashedMemberId: NullableString read FHashedMemberId write FHashedMemberId;
   end;
 
-  TUserList = TList<TUser>;
+  TUserList = TObjectList<TUser>;
 
 implementation
 

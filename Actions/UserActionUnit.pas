@@ -3,7 +3,7 @@ unit UserActionUnit;
 interface
 
 uses
-  SysUtils, BaseActionUnit,
+  SysUtils, BaseActionUnit, System.Generics.Collections,
   DataObjectUnit, GenericParametersUnit, UserUnit, EnumsUnit,
   NullableBasicTypesUnit, UserParametersUnit;
 
@@ -12,7 +12,7 @@ type
   public
     function Get(MemberId: integer; out ErrorString: String): TUser; overload;
 
-    function Get(out ErrorString: String): TArray<TUser>; overload;
+    function Get(out ErrorString: String): TUserList; overload;
 
     /// <summary>
     ///  Authentication of a user with an email and password
@@ -21,12 +21,12 @@ type
     ///  SessionGuid
     /// </returns>
     function Authentication(Email, Password: String;
-      out ErrorString: String): NullableString;
+      out ErrorString: String): NullableInteger;
 
     /// <summary>
     ///  Check if a session is valid.
     /// </summary>
-    function IsSessionValid(SessionId: String; MemberId: integer;
+    function IsSessionValid(SessionId, MemberId: integer;
       out ErrorString: String): boolean;
 
     /// <summary>
@@ -37,7 +37,7 @@ type
     /// </returns>
     function RegisterAccount(Plan, Industry, FirstName, LastName, Email: String;
       Terms: boolean; DeviceType: TDeviceType; Password, PasswordConfirmation: String;
-      out ErrorString: String): NullableInteger;
+      out ErrorString: String): NullableInteger; deprecated;
 
     /// <summary>
     ///  Create new user
@@ -59,10 +59,17 @@ type
     /// <summary>
     ///  Remove existing user from a member’s account.
     /// </summary>
-    procedure Remove(MemberId: integer; out ErrorString: String);
+    function Remove(MemberId: integer; out ErrorString: String): boolean;
 
     function DeviceLicense(DeviceId: String; DeviceType: TDeviceType;
       out ErrorString: String): boolean;
+
+    function UserLicense(MemberId, SessionId: integer;
+      DeviceId: String; DeviceType: TDeviceType; Subscription: String;
+      Token: String; Payload: String; out ErrorString: String): boolean;
+
+    function RegisterWebinar(Email, FirstName, LastName, Phone, Company: String;
+      MemberId: integer; StartDate: TDateTime; out ErrorString: String): boolean;
   end;
 
 implementation
@@ -71,7 +78,8 @@ implementation
 
 uses SettingsUnit, ValidateSessionResponseUnit, AddNewUserResponseUnit,
   RegisterAccountResponseUnit, StatusResponseUnit, RemoveUserRequestUnit,
-  AuthenticationResponseUnit, CommonTypesUnit, DeviceLicenseRequestUnit;
+  AuthenticationResponseUnit, CommonTypesUnit, DeviceLicenseRequestUnit,
+  UserLicenseRequestUnit, RegisterWebinarRequestUnit;
 
 function TUserActions.RegisterAccount(Plan, Industry, FirstName, LastName, Email: String;
   Terms: boolean; DeviceType: TDeviceType; Password,
@@ -117,7 +125,32 @@ begin
   end;
 end;
 
-procedure TUserActions.Remove(MemberId: integer; out ErrorString: String);
+function TUserActions.RegisterWebinar(Email, FirstName, LastName, Phone,
+  Company: String; MemberId: integer; StartDate: TDateTime;
+  out ErrorString: String): boolean;
+var
+  Request: TRegisterWebinarRequest;
+  Response: TSimpleString;
+begin
+  Result := False;
+
+  Request := TRegisterWebinarRequest.Create(Email, FirstName, LastName, Phone,
+    Company, MemberId, StartDate);
+  try
+    Response := FConnection.Post(TSettings.RegisterWebinarHost,
+      Request, TSimpleString, ErrorString) as TSimpleString;
+    try
+      if (Response = nil) and (ErrorString = EmptyStr) then
+        ErrorString := 'RegisterWebinar fault';
+    finally
+      FreeAndNil(Response);
+    end;
+  finally
+    FreeAndNil(Request);
+  end;
+end;
+
+function TUserActions.Remove(MemberId: integer; out ErrorString: String): boolean;
 var
   Request: TRemoveUserRequest;
   Response: TStatusResponse;
@@ -127,6 +160,8 @@ begin
     Response := FConnection.Delete(TSettings.UsersHost,
       Request, TStatusResponse, ErrorString) as TStatusResponse;
     try
+      Result := (Response <> nil) and (Response.Status);
+
       if ((Response = nil) and (ErrorString = EmptyStr)) or
         ((Response <> nil) and (not Response.Status)) then
         ErrorString := 'User not removed';
@@ -150,6 +185,34 @@ begin
       ErrorString := 'User not updated';
   finally
     FreeAndNil(Response);
+  end;
+end;
+
+function TUserActions.UserLicense(MemberId, SessionId: integer;
+  DeviceId: String; DeviceType: TDeviceType; Subscription: String;
+  Token: String; Payload: String; out ErrorString: String): boolean;
+var
+  Request: TUserLicenseRequest;
+  Response: TSimpleString;
+begin
+  Result := False;
+
+  Request := TUserLicenseRequest.Create(MemberId, SessionId, DeviceId,
+    DeviceType, Subscription, Token, Payload);
+  try
+    Response := FConnection.Post(TSettings.UserLicenseHost,
+      Request, TSimpleString, ErrorString) as TSimpleString;
+    try
+      if (Response <> nil) and (ErrorString = EmptyStr) then
+        ErrorString := Response.Value;
+
+      if (Response = nil) and (ErrorString = EmptyStr) then
+        ErrorString := 'UserLicense fault';
+    finally
+      FreeAndNil(Response);
+    end;
+  finally
+    FreeAndNil(Request);
   end;
 end;
 
@@ -181,13 +244,13 @@ begin
 end;
 
 function TUserActions.Authentication(Email, Password: String;
-  out ErrorString: String): NullableString;
+  out ErrorString: String): NullableInteger;
 var
   Parameters: TGenericParameters;
   Response: TObject;
   PossibleResponses: TClassArray;
 begin
-  Result := NullableString.Null;
+  Result := NullableInteger.Null;
 
   Parameters := TGenericParameters.Create;
   try
@@ -207,7 +270,7 @@ begin
       if Response is TGoodAuthenticationResponse then
       begin
         if (TGoodAuthenticationResponse(Response).Status) then
-          Result := TGoodAuthenticationResponse(Response).SessionGuid
+          Result := TGoodAuthenticationResponse(Response).SessionId
         else
           ErrorString := 'User authentication error';
       end
@@ -226,18 +289,24 @@ function TUserActions.DeviceLicense(DeviceId: String; DeviceType: TDeviceType;
   out ErrorString: String): boolean;
 var
   Request: TDeviceLicenseRequest;
-  Response: TObject;
+  Response: TSimpleString;
 begin
   Result := False;
 
   Request := TDeviceLicenseRequest.Create(DeviceId, DeviceType, 'json');
   try
     // todo: возвращает просто строку: "Missing or Invalid Device ID"
-{    Response := FConnection.Post(TSettings.VerifyDeviceLicenseHost,
-      Request, TUser, ErrorString) as TUser;
+    Response := FConnection.Post(TSettings.VerifyDeviceLicenseHost,
+      Request, TSimpleString, ErrorString) as TSimpleString;
+    try
+      if (Response <> nil) and (ErrorString = EmptyStr) then
+        ErrorString := Response.Value;
 
-    if (Response = nil) and (ErrorString = EmptyStr) then
-      ErrorString := 'DeviceLicense fault';}
+      if (Response = nil) and (ErrorString = EmptyStr) then
+        ErrorString := 'DeviceLicense fault';
+    finally
+      FreeAndNil(Response);
+    end;
   finally
     FreeAndNil(Request);
   end;
@@ -261,29 +330,23 @@ begin
   end;
 end;
 
-function TUserActions.Get(out ErrorString: String): TArray<TUser>;
+function TUserActions.Get(out ErrorString: String): TUserList;
 var
-  List: TUserList;
   Parameters: TGenericParameters;
 begin
   Parameters := TGenericParameters.Create;
   try
-    List := FConnection.Get(TSettings.GetUsersHost,
+    Result := FConnection.Get(TSettings.GetUsersHost,
       Parameters, TUserList, ErrorString) as TUserList;
-    try
-      if (List <> nil) then
-        Result := List.ToArray
-      else
-        SetLength(Result, 0);
-    finally
-      FreeAndNil(List);
-    end;
+    if (Result = nil) then
+      Result := TUserList.Create;
+    Result.OwnsObjects := True;
   finally
     FreeAndNil(Parameters);
   end;
 end;
 
-function TUserActions.IsSessionValid(SessionId: String; MemberId: integer;
+function TUserActions.IsSessionValid(SessionId, MemberId: integer;
   out ErrorString: String): boolean;
 var
   Parameters: TGenericParameters;
@@ -293,7 +356,7 @@ begin
 
   Parameters := TGenericParameters.Create;
   try
-    Parameters.AddParameter('session_guid', SessionId);
+    Parameters.AddParameter('session_guid', IntToStr(SessionId));
     Parameters.AddParameter('member_id', IntToStr(MemberId));
     Parameters.AddParameter('format', 'json');
 

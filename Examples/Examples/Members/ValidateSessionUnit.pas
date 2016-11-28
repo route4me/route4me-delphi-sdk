@@ -7,14 +7,14 @@ uses SysUtils, BaseExampleUnit;
 type
   TValidateSession = class(TBaseExample)
   public
-    procedure Execute(SessionId: String; MemberId: integer);
+    procedure Execute(SessionId, MemberId: integer);
   end;
 
 implementation
 
 uses UserUnit;
 
-procedure TValidateSession.Execute(SessionId: String; MemberId: integer);
+procedure TValidateSession.Execute(SessionId, MemberId: integer);
 var
   ErrorString: String;
   IsSessionValid: boolean;

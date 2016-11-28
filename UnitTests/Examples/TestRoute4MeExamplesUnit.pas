@@ -55,6 +55,8 @@ type
     procedure UpdateUser;
     procedure RemoveUser;
     procedure DeviceLicense;
+    procedure UserLicense;
+    procedure RegisterWebinar;
     procedure LogCustomActivity;
     procedure GetActivities;
     procedure GetAddress;
@@ -540,19 +542,46 @@ begin
   end;
 end;
 
+procedure TTestRoute4MeExamples.UserLicense;
+var
+  MemberId: integer;
+  SessionId: integer;
+  DeviceId: String;
+  DeviceType: TDeviceType;
+  Subscription: String;
+  Token: String;
+  Payload: String;
+begin
+  MemberId := 777777;
+  SessionId := 454563;
+  Subscription := 'IPAD_MONTHLY';
+  Token := '4/P7q7W91a-oMsCeLvIaQm6bTrgtp7';
+  Payload := 'APA91bHun4MxP5egoKMwt2KZFBaFUH-1RYqx';
+  DeviceId := '54564';
+  DeviceType := TDeviceType.IPad;
+
+  FExamples.UserLicense(MemberId, SessionId, DeviceId, DeviceType,
+    Subscription, Token, Payload);
+
+  CheckEqualsBody('UserLicense', FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api/member/user_license.php?api_key=11111111111111111111111111111111', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
 procedure TTestRoute4MeExamples.ValidateSession;
 var
-  SessionId: String;
+  SessionId: integer;
   MemberId: integer;
 begin
-  SessionId := '503F8B59E9719FE310836C830F7E82A0';
+  SessionId := 454563;
   MemberId := 194622711;
 
   FExamples.ValidateSession(SessionId, MemberId);
 
   CheckEquals(EmptyStr, FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/datafeed/session/validate_session.php?api_key=11111111111111111111111111111111&' +
-    'session_guid=503F8B59E9719FE310836C830F7E82A0&member_id=194622711&format=json', FConnection.Url);
+    'session_guid=454563&member_id=194622711&format=json', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
@@ -1101,6 +1130,28 @@ begin
   CheckTrue(TRESTContentType.ctAPPLICATION_X_WWW_FORM_URLENCODED = FConnection.ContentType);
 end;
 
+procedure TTestRoute4MeExamples.RegisterWebinar;
+var
+  EMail, FirstName, LastName, Phone, Company: String;
+  MemberId: integer;
+  Date: TDateTime;
+begin
+  MemberId := 123456;
+  EMail := 'oooooo@yahoo.com';
+  FirstName := 'Mmmmm';
+  LastName := 'Ccccc';
+  Phone := '454-454544';
+  Company := 'c_name';
+  Date := 42702.8408228241;
+
+  FExamples.RegisterWebinar(EMail, FirstName, LastName, Phone, Company, MemberId, Date);
+
+  CheckEqualsBody('RegisterWebinar', FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/actions/webinar_register.php?api_key=11111111111111111111111111111111', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
 procedure TTestRoute4MeExamples.RemoveAddressBookContacts;
 var
   AddressIds: TArray<integer>;
@@ -1271,5 +1322,5 @@ end;
 
 initialization
   // Register any test cases with the test runner
-  RegisterTest('Examples\', TTestRoute4MeExamples.Suite);
+  RegisterTest('Examples\Requests\', TTestRoute4MeExamples.Suite);
 end.

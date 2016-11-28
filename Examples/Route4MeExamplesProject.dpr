@@ -186,7 +186,11 @@ uses
   AuthenticationUnit in 'Examples\Members\AuthenticationUnit.pas',
   AuthenticationResponseUnit in '..\QueryTypes\AuthenticationResponseUnit.pas',
   DeviceLicenseUnit in 'Examples\Members\DeviceLicenseUnit.pas',
-  DeviceLicenseRequestUnit in '..\QueryTypes\DeviceLicenseRequestUnit.pas';
+  DeviceLicenseRequestUnit in '..\QueryTypes\DeviceLicenseRequestUnit.pas',
+  UserLicenseRequestUnit in '..\QueryTypes\UserLicenseRequestUnit.pas',
+  UserLicenseUnit in 'Examples\Members\UserLicenseUnit.pas',
+  RegisterWebinarRequestUnit in '..\QueryTypes\RegisterWebinarRequestUnit.pas',
+  RegisterWebinarUnit in 'Examples\Members\RegisterWebinarUnit.pas';
 
 begin
   try

@@ -63,10 +63,8 @@ var
   RouteDestinationId: integer;
   AddressId: NullableInteger;
   MemberId: integer;
-  SessionId: NullableString;
+  SessionId: NullableInteger;
   EMail: String;
-  DeviceId: String;
-  DeviceType: TDeviceType;
 begin
   try
     Connection := TConnection.Create(c_ApiKey);
@@ -74,13 +72,6 @@ begin
     try
       try
         Randomize;
-
-        DeviceId := '546546516';
-        DeviceType := TDeviceType.IPad;
-        Examples.DeviceLicense(DeviceId, DeviceType);
-
-        Examples.RegisterAccount('enterprise_plan', 'Gifting', 'Olman',
-          'Oland', 'ololol' + IntToStr(Random(5000)) + '@outlook.com', True, TDeviceType.Web, '123', '123');
 
         AddNewUserParameterProvider := TUserParameterProvider.Create;
         EMail := 'skrynkovskyy' + IntToStr(Random(10000)) + '@gmail.com';

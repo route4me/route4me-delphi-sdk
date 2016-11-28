@@ -51,7 +51,7 @@ type
     function GetRoutes: TDataObjectRouteArray;
     procedure ForwardGeocodeAddress(Address: String);
     procedure GetUsers();
-    procedure ValidateSession(SessionId: String; MemberId: integer);
+    procedure ValidateSession(SessionId, MemberId: integer);
     procedure RegisterAccount(Plan, Industry, FirstName, LastName, Email: String;
       Terms: boolean; DeviceType: TDeviceType;
       Password, PasswordConfirmation: String);
@@ -59,8 +59,12 @@ type
     function AddNewUser(Parameters: TUserParameters): NullableInteger;
     procedure UpdateUser(Parameters: TUserParameters);
     procedure RemoveUser(MemberId: integer);
-    function Authentication(EMail, Password: String): NullableString;
+    function Authentication(EMail, Password: String): NullableInteger;
     procedure DeviceLicense(DeviceId: String; DeviceType: TDeviceType);
+    procedure UserLicense(MemberId, SessionId: integer; DeviceId: String;
+      DeviceType: TDeviceType; Subscription, Token, Payload: String);
+    procedure RegisterWebinar(EMail, FirstName, LastName, Phone, Company: String;
+      MemberId: integer; Date: TDateTime);
     function LogCustomActivity(Message: String; RouteId: String): boolean;
     procedure GetActivities(RouteId: String);
     procedure GetAddress(RouteId: String; RouteDestinationId: integer);
@@ -137,7 +141,7 @@ uses
   MarkAddressAsDetectedAsDepartedUnit, ForwardGeocodeAddressUnit,
   ValidateSessionUnit, RegisterAccountUnit, GetUserDetailsUnit, AddNewUserUnit,
   UpdateUserUnit, RemoveAddressBookContactsRequestUnit, RemoveUserUnit,
-  AuthenticationUnit, DeviceLicenseUnit;
+  AuthenticationUnit, DeviceLicenseUnit, UserLicenseUnit, RegisterWebinarUnit;
 
 function TRoute4MeExamples.AddAddressBookContact(FirstName,
   Address: String): TAddressBookContact;
@@ -265,7 +269,7 @@ begin
 end;
 
 function TRoute4MeExamples.Authentication(EMail,
-  Password: String): NullableString;
+  Password: String): NullableInteger;
 var
   Example: TAuthentication;
 begin
@@ -743,6 +747,19 @@ begin
   end;
 end;
 
+procedure TRoute4MeExamples.RegisterWebinar(EMail, FirstName, LastName, Phone,
+  Company: String; MemberId: integer; Date: TDateTime);
+var
+  Example: TRegisterWebinar;
+begin
+  Example := MakeExample(TRegisterWebinar) as TRegisterWebinar;
+  try
+    Example.Execute(EMail, FirstName, LastName, Phone, Company, MemberId, Date);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
 procedure TRoute4MeExamples.RemoveAddressBookContacts(
   AddressIds: TArray<integer>);
 var
@@ -1012,8 +1029,22 @@ begin
   end;
 end;
 
-procedure TRoute4MeExamples.ValidateSession(SessionId: String;
-  MemberId: integer);
+procedure TRoute4MeExamples.UserLicense(MemberId, SessionId: integer;
+  DeviceId: String; DeviceType: TDeviceType;
+  Subscription, Token, Payload: String);
+var
+  Example: TUserLicense;
+begin
+  Example := MakeExample(TUserLicense) as TUserLicense;
+  try
+    Example.Execute(MemberId, SessionId, DeviceId, DeviceType,
+      Subscription, Token, Payload);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.ValidateSession(SessionId, MemberId: integer);
 var
   Example: TValidateSession;
 begin
