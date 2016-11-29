@@ -7,14 +7,14 @@ uses SysUtils, BaseExampleUnit, CommonTypesUnit, OrderUnit;
 type
   TRemoveOrders = class(TBaseExample)
   public
-    procedure Execute(OrderIds: TStringArray);
+    procedure Execute(OrderIds: TIntegerArray);
   end;
 
 implementation
 
 uses OrderParametersUnit;
 
-procedure TRemoveOrders.Execute(OrderIds: TStringArray);
+procedure TRemoveOrders.Execute(OrderIds: TIntegerArray);
 var
   ErrorString: String;
   Removed: boolean;

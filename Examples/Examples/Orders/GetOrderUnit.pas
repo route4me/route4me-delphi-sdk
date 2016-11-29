@@ -7,12 +7,12 @@ uses SysUtils, BaseExampleUnit, OrderUnit;
 type
   TGetOrder = class(TBaseExample)
   public
-    procedure Execute(OrderId: String);
+    procedure Execute(OrderId: integer);
   end;
 
 implementation
 
-procedure TGetOrder.Execute(OrderId: String);
+procedure TGetOrder.Execute(OrderId: integer);
 var
   ErrorString: String;
   Order: TOrder;

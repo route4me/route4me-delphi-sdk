@@ -39,8 +39,8 @@ function TGeocodingActions.ForwardGeocodeAddress(Address: String;
   out ErrorString: String): TGeocoding;
 var
   Request: TGenericParameters;
-  Response: TGenericParameters;
-  Format: TFormatEnum;
+{  Response: TGenericParameters;
+  Format: TFormatEnum;}
 begin
   Request := TGenericParameters.Create;
   try

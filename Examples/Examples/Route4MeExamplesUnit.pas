@@ -92,13 +92,13 @@ type
     procedure DeleteAvoidanceZone(TerritoryId: String);
     function AddOrder(): TOrder;
     procedure GetOrders; overload;
-    procedure GetOrder(OrderId: String);
+    procedure GetOrder(OrderId: integer);
     procedure GetOrders(Date: TDate); overload;
     procedure GetOrdersScheduledFor(Date: TDate);
     procedure GetOrdersWithCustomFields(Fields: String);
     procedure GetOrdersWithSpecifiedText(SpecifiedText: String);
     procedure UpdateOrder(Order: TOrder);
-    procedure RemoveOrders(OrderIds: TStringArray);
+    procedure RemoveOrders(OrderIds: TIntegerArray);
     procedure AddOrderToRoute(RouteId: String; Parameters: TRouteParameters;
       OrderedAddresses: TOrderedAddressArray);
     procedure AddOrderToOptimization(OptimizationId: String;
@@ -477,7 +477,7 @@ begin
   end;
 end;
 
-procedure TRoute4MeExamples.GetOrder(OrderId: String);
+procedure TRoute4MeExamples.GetOrder(OrderId: integer);
 var
   Example: TGetOrder;
 begin
@@ -798,7 +798,7 @@ begin
   end;
 end;
 
-procedure TRoute4MeExamples.RemoveOrders(OrderIds: TStringArray);
+procedure TRoute4MeExamples.RemoveOrders(OrderIds: TIntegerArray);
 var
   Example: TRemoveOrders;
 begin

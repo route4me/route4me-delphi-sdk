@@ -32,7 +32,7 @@ begin
     if (Result <> nil) then
     begin
       WriteLn('AddOrder executed successfully');
-      WriteLn(Format('Order ID: %s', [Result.OrderId.Value]));
+      WriteLn(Format('Order ID: %d', [Result.Id.Value]));
     end
     else
       WriteLn(Format('AddOrder error: "%s"', [ErrorString]));

@@ -19,8 +19,7 @@ var
   ErrorString: String;
   Parameters: TOrderParameters;
   Total: integer;
-  Orders: TOrderArray;
-  i: integer;
+  Orders: TOrderList;
 begin
   Parameters := TOrderParameters.Create();
   try
@@ -30,15 +29,14 @@ begin
     try
       WriteLn('');
 
-      if (Length(Orders) > 0) then
+      if (Orders.Count > 0) then
         WriteLn(Format(
           'GetOrders executed successfully, %d orders returned, total = %d',
-          [Length(Orders), Total]))
+          [Orders.Count, Total]))
       else
         WriteLn(Format('GetOrders error: "%s"', [ErrorString]));
     finally
-      for i := Length(Orders) - 1 downto 0 do
-        FreeAndNil(Orders[i]);
+      FreeAndNil(Orders);
     end;
   finally
     FreeAndNil(Parameters);

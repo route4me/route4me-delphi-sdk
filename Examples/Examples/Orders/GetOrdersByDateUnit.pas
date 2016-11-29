@@ -15,21 +15,19 @@ implementation
 procedure TGetOrdersByDate.Execute(Date: TDate);
 var
   ErrorString: String;
-  Orders: TOrderArray;
-  i: integer;
+  Orders: TOrderList;
 begin
   Orders := Route4MeManager.Order.Get(Date, ErrorString);
   try
     WriteLn('');
 
-    if (Length(Orders) > 0) then
+    if (Orders.Count > 0) then
       WriteLn(Format(
-        'GetOrderByDate executed successfully, %d orders returned', [Length(Orders)]))
+        'GetOrderByDate executed successfully, %d orders returned', [Orders.Count]))
     else
       WriteLn(Format('GetOrderByDate error: "%s"', [ErrorString]));
   finally
-    for i := Length(Orders) - 1 downto 0 do
-      FreeAndNil(Orders[i]);
+    FreeAndNil(Orders);
   end;
 end;
 

@@ -15,21 +15,19 @@ implementation
 procedure TGetOrdersScheduledFor.Execute(Date: TDate);
 var
   ErrorString: String;
-  Orders: TOrderArray;
-  i: integer;
+  Orders: TOrderList;
 begin
   Orders := Route4MeManager.Order.GetOrdersScheduledFor(Date, ErrorString);
   try
     WriteLn('');
 
-    if (Length(Orders) > 0) then
+    if (Orders.Count > 0) then
       WriteLn(Format(
-        'GetOrdersScheduledFor executed successfully, %d orders returned', [Length(Orders)]))
+        'GetOrdersScheduledFor executed successfully, %d orders returned', [Orders.Count]))
     else
       WriteLn(Format('GetOrdersScheduledFor error: "%s"', [ErrorString]));
   finally
-    for i := Length(Orders) - 1 downto 0 do
-      FreeAndNil(Orders[i]);
+    FreeAndNil(Orders);
   end;
 end;
 

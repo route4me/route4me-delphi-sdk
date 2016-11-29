@@ -4,7 +4,7 @@ interface
 
 uses
   TestFramework, Classes, SysUtils, DateUtils,
-  TestOnlineExamplesUnit, NullableBasicTypesUnit;
+  BaseTestOnlineExamplesUnit;
 
 type
   TTestMemberSamples = class(TTestOnlineExamples)
@@ -28,7 +28,8 @@ implementation
 
 { TTestMemberSamples }
 
-uses UserParametersUnit, UserParameterProviderUnit, UserUnit, EnumsUnit;
+uses UserParametersUnit, UserParameterProviderUnit, UserUnit, EnumsUnit,
+  NullableBasicTypesUnit;
 
 var
   FMemberId: NullableInteger;

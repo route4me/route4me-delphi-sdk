@@ -12,19 +12,19 @@ type
     function GetDateStr(Date: TDate): String;
   public
     function Get(OrderQuery: TOrderParameters;
-      out Total: integer; out ErrorString: String): TOrderArray; overload;
+      out Total: integer; out ErrorString: String): TOrderList; overload;
 
-    function Get(OrderId: String; out ErrorString: String): TOrder; overload;
+    function Get(OrderId: integer; out ErrorString: String): TOrder; overload;
 
     /// <summary>
     ///  Retrieve orders inserted on a specified date.
     /// </summary>
-    function Get(AddedDate: TDate; out ErrorString: String): TOrderArray; overload;
+    function Get(AddedDate: TDate; out ErrorString: String): TOrderList; overload;
 
     /// <summary>
     ///  Retrieve orders scheduled for a specified date.
     /// </summary>
-    function GetOrdersScheduledFor(ScheduledDate: TDate; out ErrorString: String): TOrderArray;
+    function GetOrdersScheduledFor(ScheduledDate: TDate; out ErrorString: String): TOrderList;
 
     /// <summary>
     ///  Searching all Orders with specified custom fields
@@ -42,8 +42,9 @@ type
 
     function Update(Order: TOrder; out ErrorString: String): TOrder;
 
-    function Remove(OrderIds: TStringArray; out ErrorString: String): boolean;
+    function Remove(OrderIds: TIntegerArray; out ErrorString: String): boolean;
 
+    procedure ScheduleOrder(OrderId: integer; ScheduleDate: TDate; out ErrorString: String);
   end;
 
 implementation
@@ -62,11 +63,12 @@ begin
 end;
 
 function TOrderActions.Get(OrderQuery: TOrderParameters;
-  out Total: integer; out ErrorString: String): TOrderArray;
+  out Total: integer; out ErrorString: String): TOrderList;
 var
   Response: TGetOrdersResponse;
+  i: integer;
 begin
-  SetLength(Result, 0);
+  Result := TOrderList.Create;
 
   Total := 0;
   Response := FConnection.Get(TSettings.Order, OrderQuery,
@@ -74,7 +76,8 @@ begin
   try
     if (Response <> nil) then
     begin
-      Result := Response.Results;
+      for i := 0 to Length(Response.Results) - 1 do
+        Result.Add(Response.Results[i]);
       Total := Response.Total;
     end;
   finally
@@ -82,13 +85,13 @@ begin
   end;
 end;
 
-function TOrderActions.Get(OrderId: String; out ErrorString: String): TOrder;
+function TOrderActions.Get(OrderId: integer; out ErrorString: String): TOrder;
 var
   Request: TGenericParameters;
 begin
   Request := TGenericParameters.Create;
   try
-    Request.AddParameter('order_id', OrderId);
+    Request.AddParameter('order_id', IntToStr(OrderId));
 
     Result := FConnection.Get(TSettings.Order, Request, TOrder, ErrorString) as TOrder;
 
@@ -99,7 +102,7 @@ begin
   end;
 end;
 
-function TOrderActions.Remove(OrderIds: TStringArray;
+function TOrderActions.Remove(OrderIds: TIntegerArray;
   out ErrorString: String): boolean;
 var
   Request: TRemoveOrdersRequest;
@@ -121,17 +124,42 @@ begin
   end;
 end;
 
+procedure TOrderActions.ScheduleOrder(OrderId: integer; ScheduleDate: TDate;
+  out ErrorString: String);
+var
+  Order: TOrder;
+  UpdatedOrder: TOrder;
+begin
+  Order := Get(OrderId, ErrorString);
+  try
+    if (Order = nil) then
+      Exit;
+
+    Order.ScheduleDate := ScheduleDate;
+    UpdatedOrder := Update(Order, ErrorString);
+    try
+      if (Order.ScheduleDate <> UpdatedOrder.ScheduleDate) then
+        ErrorString := 'Set schedule order error';
+    finally
+      FreeAndNil(UpdatedOrder);
+    end;
+  finally
+    FreeAndNil(Order);
+  end;
+end;
+
 function TOrderActions.Update(Order: TOrder; out ErrorString: String): TOrder;
 begin
   Result := FConnection.Put(TSettings.Order, Order, TOrder, ErrorString) as TOrder;
 end;
 
-function TOrderActions.Get(AddedDate: TDate; out ErrorString: String): TOrderArray;
+function TOrderActions.Get(AddedDate: TDate; out ErrorString: String): TOrderList;
 var
   Response: TGetOrdersResponse;
   Request: TGenericParameters;
+  i: integer;
 begin
-  SetLength(Result, 0);
+  Result := TOrderList.Create;
 
   Request := TGenericParameters.Create;
   try
@@ -141,7 +169,8 @@ begin
       TGetOrdersResponse, ErrorString) as TGetOrdersResponse;
     try
       if (Response <> nil) then
-        Result := Response.Results
+        for i := 0 to Length(Response.Results) - 1 do
+          Result.Add(Response.Results[i])
       else
       if (ErrorString = EmptyStr) then
         ErrorString := 'Order details not got';
@@ -158,19 +187,20 @@ var
   FormatSettings: TFormatSettings;
 begin
   FormatSettings := TFormatSettings.Create;
-  FormatSettings.ShortDateFormat := 'yyyy mm dd';
+  FormatSettings.ShortDateFormat := 'yyyy-mm-dd';
   FormatSettings.DateSeparator := '-';
 
   Result := DateToStr(Date, FormatSettings);
 end;
 
 function TOrderActions.GetOrdersScheduledFor(ScheduledDate: TDate;
-  out ErrorString: String): TOrderArray;
+  out ErrorString: String): TOrderList;
 var
   Response: TGetOrdersResponse;
   Request: TGenericParameters;
+  i: integer;
 begin
-  SetLength(Result, 0);
+  Result := TOrderList.Create;
 
   Request := TGenericParameters.Create;
   try
@@ -180,7 +210,8 @@ begin
       TGetOrdersResponse, ErrorString) as TGetOrdersResponse;
     try
       if (Response <> nil) then
-        Result := Response.Results
+        for i := 0 to Length(Response.Results) - 1 do
+          Result.Add(Response.Results[i])
       else
       if (ErrorString = EmptyStr) then
         ErrorString := 'Order details not got';

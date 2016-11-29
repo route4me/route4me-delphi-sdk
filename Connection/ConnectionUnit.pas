@@ -123,7 +123,6 @@ function TConnection.ExecuteRequest(Url: String; Data: TGenericParameters;
 var
   Responce: TJSONValue;
   Parameters: TListStringPair;
-  st: TStringList;
   Body: String;
   Pair: TStringPair;
   ContentType: TRESTContentType;

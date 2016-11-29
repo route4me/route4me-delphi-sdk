@@ -667,11 +667,11 @@ type
   private
     [JSONName('order_id')]
     [Nullable]
-    FOrderId: NullableString;
+    FOrderId: NullableInteger;
   public
     constructor Create(); override;
 
-    property OrderId: NullableString read FOrderId write FOrderId;
+    property OrderId: NullableInteger read FOrderId write FOrderId;
   end;
   TOrderedAddressArray = TArray<TOrderedAddress>;
 
@@ -1035,7 +1035,7 @@ constructor TOrderedAddress.Create;
 begin
   Inherited Create;
 
-  FOrderId := NullableString.Null;
+  FOrderId := NullableInteger.Null;
 end;
 
 end.

@@ -10,9 +10,9 @@ type
   TRemoveOrdersRequest = class(TGenericParameters)
   private
     [JSONName('order_ids')]
-    FOrderIds: TStringArray;
+    FOrderIds: TIntegerArray;
   public
-    property OrderIds: TStringArray read FOrderIds write FOrderIds;
+    property OrderIds: TIntegerArray read FOrderIds write FOrderIds;
   end;
 
 implementation

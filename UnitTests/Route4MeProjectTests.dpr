@@ -50,7 +50,7 @@ uses
   RouteParametersQueryUnit in '..\QueryTypes\RouteParametersQueryUnit.pas',
   DataObjectOptimizationsResponseUnit in '..\QueryTypes\DataObjectOptimizationsResponseUnit.pas',
   RemoveDestinationFromOptimizationResponseUnit in '..\QueryTypes\RemoveDestinationFromOptimizationResponseUnit.pas',
-  TestRoute4MeExamplesUnit in 'Examples\TestRoute4MeExamplesUnit.pas',
+  TestExamplesRequestsUnit in 'Examples\TestExamplesRequestsUnit.pas',
   SingleDriverRoundTripGenericRequestUnit in '..\QueryTypes\SingleDriverRoundTripGenericRequestUnit.pas',
   SingleDriverRoundTripGenericResponseUnit in '..\QueryTypes\SingleDriverRoundTripGenericResponseUnit.pas',
   OutputUnit in '..\Common\OutputUnit.pas',
@@ -211,12 +211,13 @@ uses
   AuthenticationUnit in '..\Examples\Examples\Members\AuthenticationUnit.pas',
   DeviceLicenseRequestUnit in '..\QueryTypes\DeviceLicenseRequestUnit.pas',
   DeviceLicenseUnit in '..\Examples\Examples\Members\DeviceLicenseUnit.pas',
-  TestOnlineExamplesUnit in 'Examples\Online\TestOnlineExamplesUnit.pas',
+  BaseTestOnlineExamplesUnit in 'Examples\Online\BaseTestOnlineExamplesUnit.pas',
   TestMemberSamplesUnit in 'Examples\Online\TestMemberSamplesUnit.pas',
   UserLicenseRequestUnit in '..\QueryTypes\UserLicenseRequestUnit.pas',
   UserLicenseUnit in '..\Examples\Examples\Members\UserLicenseUnit.pas',
   RegisterWebinarRequestUnit in '..\QueryTypes\RegisterWebinarRequestUnit.pas',
-  RegisterWebinarUnit in '..\Examples\Examples\Members\RegisterWebinarUnit.pas';
+  RegisterWebinarUnit in '..\Examples\Examples\Members\RegisterWebinarUnit.pas',
+  TestOrderSamplesUnit in 'Examples\Online\TestOrderSamplesUnit.pas';
 
 {R *.RES}
 

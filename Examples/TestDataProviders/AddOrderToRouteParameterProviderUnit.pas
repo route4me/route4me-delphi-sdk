@@ -37,7 +37,7 @@ begin
   Address.CurbsideLatitude := 40.71615;
   Address.CurbsideLongitude := -74.00505;
   Address.Phone := '(212) 227-7535';
-  Address.OrderId := '7205704';
+  Address.OrderId := 7205704;
   Result[0] := Address;
 
   Address := TOrderedAddress.Create;
@@ -48,7 +48,7 @@ begin
   Address.CurbsideLatitude := 40.73073;
   Address.CurbsideLongitude := -73.459283;
   Address.Phone := '(212) 566-5132';
-  Address.OrderId := '7205703';
+  Address.OrderId := 7205703;
   Result[1] := Address;
 end;
 

@@ -51,7 +51,7 @@ var
   AddressIdsToRemove: TList<integer>;
   TerritoryId: NullableString;
   Order1, Order2: TOrder;
-  OrderIdsToRemove: TList<String>;
+  OrderIdsToRemove: TList<integer>;
   Connection: TConnection;
   Routes: TDataObjectRouteArray;
   OrderedAddresses: TOrderedAddressArray;
@@ -421,7 +421,7 @@ begin
         Order2 := Examples.AddOrder();
         try
           // Get an order by order_id
-          Examples.GetOrder(Order1.OrderId);
+          Examples.GetOrder(Order1.Id);
 
           // Get all the orders created under the specific Route4Me account.
           Examples.GetOrders();
@@ -451,8 +451,8 @@ begin
               ParametersProvider := TAddOrderToRouteParameterProvider.Create;
               OrderedAddresses := ParametersProvider.GetAddresses;
               try
-                OrderedAddresses[0].OrderId := Order1.OrderId;
-                OrderedAddresses[1].OrderId := Order2.OrderId;
+                OrderedAddresses[0].OrderId := Order1.Id;
+                OrderedAddresses[1].OrderId := Order2.Id;
 
                 // AddOrderToOptimization sample
                 OptimizationProblemId := DataObject.OptimizationProblemId;
@@ -479,12 +479,12 @@ begin
             FreeAndNil(DataObject);
           end;
 
-          OrderIdsToRemove := TList<String>.Create();
+          OrderIdsToRemove := TList<integer>.Create();
           try
             if (Order1 <> nil) then
-              OrderIdsToRemove.Add(Order1.OrderId);
+              OrderIdsToRemove.Add(Order1.Id);
             if (Order2 <> nil) then
-              OrderIdsToRemove.Add(Order2.OrderId);
+              OrderIdsToRemove.Add(Order2.Id);
             Examples.RemoveOrders(OrderIdsToRemove.ToArray());
           finally
             FreeAndNil(OrderIdsToRemove);

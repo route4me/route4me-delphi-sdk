@@ -19,7 +19,7 @@ type
   private
     [JSONName('order_id')]
     [Nullable]
-    FOrderId: NullableString;
+    FId: NullableInteger;
 
     [JSONName('address_1')]
     FAddress1: String;
@@ -88,6 +88,16 @@ type
     [JSONName('EXT_FIELD_custom_data')]
     [NullableObject(TDictionaryStringIntermediateObject)]
     FCustomData: NullableObject;
+
+    [JSONName('day_scheduled_for_YYMMDD')]
+    [Nullable]
+    FScheduleDate: NullableString;
+
+    [JSONMarshalled(False)]
+    FFormatSettings: TFormatSettings;
+
+    function GetScheduleDate: TDate;
+    procedure SetScheduleDate(const Value: TDate);
   public
     /// <remarks>
     ///  Constructor with 0-arguments must be and be public.
@@ -96,13 +106,14 @@ type
     constructor Create; overload; override;
     constructor Create(Address: String; AddressAlias: String;
       Latitude, Longitude: double); reintroduce; overload;
+    destructor Destroy; override;
 
     function Equals(Obj: TObject): Boolean; override;
 
     /// <summary>
     /// Order Id
     /// </summary>
-    property OrderId: NullableString read FOrderId write FOrderId;
+    property Id: NullableInteger read FId write FId;
 
     /// <summary>
     /// Address 1 field
@@ -190,6 +201,11 @@ type
     property Phone: NullableString read FPhone write FPhone;
 
     /// <summary>
+    /// ScheduleDate
+    /// </summary>
+    property ScheduleDate: TDate read GetScheduleDate write SetScheduleDate;
+
+    /// <summary>
     /// Custom data
     /// </summary>
     property CustomData: NullableObject read FCustomData;
@@ -197,6 +213,7 @@ type
   end;
 
   TOrderArray = TArray<TOrder>;
+  TOrderList = TObjectList<TOrder>;
 
 implementation
 
@@ -206,12 +223,16 @@ constructor TOrder.Create;
 begin
   Inherited;
 
+  FFormatSettings := TFormatSettings.Create;
+  FFormatSettings.ShortDateFormat := 'yyyy-mm-dd';
+  FFormatSettings.DateSeparator := '-';
+
   FAddress1 := EmptyStr;
   FAddressAlias := EmptyStr;
   FCachedLatitude := Double.NaN;
   FCachedLongitude := Double.NaN;
 
-  FOrderId := NullableString.Null;
+  FId := NullableInteger.Null;
   FAddress2 := NullableString.Null;
   FCurbsideLatitude := NullableDouble.Null;
   FCurbsideLongitude := NullableDouble.Null;
@@ -225,6 +246,7 @@ begin
   FLastName := NullableString.Null;
   FEmail := NullableString.Null;
   FPhone := NullableString.Null;
+  FScheduleDate := NullableString.Null;
   FCustomData := NullableObject.Null;
 end;
 
@@ -249,6 +271,13 @@ begin
   FCachedLongitude := Longitude;
 end;
 
+destructor TOrder.Destroy;
+begin
+  FCustomData.Free;
+
+  inherited;
+end;
+
 function TOrder.Equals(Obj: TObject): Boolean;
 var
   Other: TOrder;
@@ -260,7 +289,7 @@ begin
 
   Other := TOrder(Obj);
 
-  Result := (FOrderId = Other.FOrderId) and
+  Result := (FId = Other.FId) and
     (FAddress1 = Other.FAddress1) and
     (FAddress2 = Other.FAddress2) and
     (FAddressAlias = Other.FAddressAlias) and
@@ -279,7 +308,24 @@ begin
     (FLastName = Other.FLastName) and
     (FEmail = Other.FEmail) and
     (FPhone = Other.FPhone) and
+    (FScheduleDate = Other.FScheduleDate) and
     (FCustomData = Other.FCustomData);
 end;
+
+function TOrder.GetScheduleDate: TDate;
+begin
+  if FScheduleDate.IsNotNull then
+    Result := StrToDate(FScheduleDate.Value, FFormatSettings)
+  else
+    Result := 0;
+end;
+
+procedure TOrder.SetScheduleDate(const Value: TDate);
+begin
+  if (Value = 0) then
+    FScheduleDate := NullableString.Null
+  else
+    FScheduleDate := DateToStr(Value, FFormatSettings);
+end;
 
 end.

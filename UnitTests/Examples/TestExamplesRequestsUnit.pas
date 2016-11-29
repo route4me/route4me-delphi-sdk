@@ -1,4 +1,4 @@
-unit TestRoute4MeExamplesUnit;
+unit TestExamplesRequestsUnit;
 
 interface
 
@@ -8,7 +8,7 @@ uses
   ConnectionStubUnit;
 
 type
-  TTestRoute4MeExamples = class(TTestCase)
+  TTestExamplesRequests = class(TTestCase)
   private
     FExamples: TRoute4MeExamples;
     FConnection: TConnectionStub;
@@ -104,7 +104,7 @@ uses
   AddOrderToOptimizationRequestUnit, EnumsUnit, UserParametersUnit,
   UserParameterProviderUnit;
 
-procedure TTestRoute4MeExamples.SaveString(s: String);
+procedure TTestExamplesRequests.SaveString(s: String);
 var
   st: TStringList;
 begin
@@ -117,12 +117,12 @@ begin
   end;
 end;
 
-procedure TTestRoute4MeExamples.SetGPSPosition;
+procedure TTestExamplesRequests.SetGPSPosition;
 begin
   // todo: нет примеров в C#
 end;
 
-procedure TTestRoute4MeExamples.SetUp;
+procedure TTestExamplesRequests.SetUp;
 begin
   inherited;
 
@@ -130,7 +130,7 @@ begin
   FExamples := TRoute4MeExamples.Create(TOutputDummy.Create, FConnection);
 end;
 
-procedure TTestRoute4MeExamples.ShareRoute;
+procedure TTestExamplesRequests.ShareRoute;
 var
   RouteId: String;
   Email: String;
@@ -146,7 +146,7 @@ begin
   CheckTrue(TRESTContentType.ctAPPLICATION_X_WWW_FORM_URLENCODED = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.SingleDepotMultipleDriverNoTimeWindow;
+procedure TTestExamplesRequests.SingleDepotMultipleDriverNoTimeWindow;
 var
   DataObject: TDataObject;
 begin
@@ -161,7 +161,7 @@ begin
   end;
 end;
 
-procedure TTestRoute4MeExamples.SingleDriverMultipleTimeWindows;
+procedure TTestExamplesRequests.SingleDriverMultipleTimeWindows;
 var
   DataObject: TDataObject;
 begin
@@ -176,7 +176,7 @@ begin
   end;
 end;
 
-procedure TTestRoute4MeExamples.SingleDriverRoundTrip;
+procedure TTestExamplesRequests.SingleDriverRoundTrip;
 var
   DataObject: TDataObject;
 begin
@@ -191,7 +191,7 @@ begin
   end;
 end;
 
-procedure TTestRoute4MeExamples.SingleDriverRoundTripGeneric;
+procedure TTestExamplesRequests.SingleDriverRoundTripGeneric;
 var
   OptimizationProblemId: NullableString;
 begin
@@ -203,7 +203,7 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.SingleDriverRoute10Stops;
+procedure TTestExamplesRequests.SingleDriverRoute10Stops;
 var
   DataObject: TDataObject;
 begin
@@ -218,14 +218,14 @@ begin
   end;
 end;
 
-procedure TTestRoute4MeExamples.TearDown;
+procedure TTestExamplesRequests.TearDown;
 begin
   FreeAndNil(FExamples);
 
   inherited;
 end;
 
-procedure TTestRoute4MeExamples.AddAddressBookContact;
+procedure TTestExamplesRequests.AddAddressBookContact;
 var
   FirstName, Address: String;
 begin
@@ -239,7 +239,7 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.AddAddressNote;
+procedure TTestExamplesRequests.AddAddressNote;
 var
   RouteId: String;
   AddressId: integer;
@@ -261,7 +261,7 @@ begin
   CheckTrue(TRESTContentType.ctAPPLICATION_X_WWW_FORM_URLENCODED = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.AddAvoidanceZone;
+procedure TTestExamplesRequests.AddAvoidanceZone;
 begin
   FExamples.AddAvoidanceZone;
 
@@ -271,7 +271,7 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.AddDestinationToOptimization;
+procedure TTestExamplesRequests.AddDestinationToOptimization;
 var
   OptimizationProblemId: String;
   DataObject: TDataObject;
@@ -291,7 +291,7 @@ begin
   end;
 end;
 
-procedure TTestRoute4MeExamples.AddNewUser;
+procedure TTestExamplesRequests.AddNewUser;
 var
   Parameters: TUserParameters;
   Provider: IUserParameterProvider;
@@ -312,7 +312,7 @@ begin
   end;
 end;
 
-procedure TTestRoute4MeExamples.AddOrder;
+procedure TTestExamplesRequests.AddOrder;
 begin
   FExamples.AddOrder;
 
@@ -322,7 +322,7 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.AddOrderToOptimization;
+procedure TTestExamplesRequests.AddOrderToOptimization;
 var
   Provider: IAddOrderToRouteParameterProvider;
   OptimizationId: String;
@@ -350,7 +350,7 @@ begin
   end;
 end;
 
-procedure TTestRoute4MeExamples.AddOrderToRoute;
+procedure TTestExamplesRequests.AddOrderToRoute;
 var
   RouteId: String;
   Parameters: TRouteParameters;
@@ -378,7 +378,7 @@ begin
   end;
 end;
 
-procedure TTestRoute4MeExamples.AddRouteDestinations;
+procedure TTestExamplesRequests.AddRouteDestinations;
 var
   RouteId: String;
   DestinationIds: TArray<integer>;
@@ -392,7 +392,7 @@ begin
     CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.AddRouteDestinationsOptimally;
+procedure TTestExamplesRequests.AddRouteDestinationsOptimally;
 var
   RouteId: String;
   DestinationIds: TArray<integer>;
@@ -406,7 +406,7 @@ begin
     CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.Authentication;
+procedure TTestExamplesRequests.Authentication;
 var
   EMail, Password: String;
 begin
@@ -421,12 +421,12 @@ begin
   CheckTrue(TRESTContentType.ctAPPLICATION_X_WWW_FORM_URLENCODED = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.TrackDeviceLastLocationHistory;
+procedure TTestExamplesRequests.TrackDeviceLastLocationHistory;
 begin
   // todo: нет примеров в C#
 end;
 
-procedure TTestRoute4MeExamples.UpdateAddressBookContact;
+procedure TTestExamplesRequests.UpdateAddressBookContact;
 var
   Contact: TAddressBookContact;
 begin
@@ -450,7 +450,7 @@ begin
   end;
 end;
 
-procedure TTestRoute4MeExamples.UpdateAvoidanceZone;
+procedure TTestExamplesRequests.UpdateAvoidanceZone;
 var
   TerritoryId: String;
 begin
@@ -463,7 +463,7 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.UpdateOrder;
+procedure TTestExamplesRequests.UpdateOrder;
 var
   Order: TOrder;
 begin
@@ -478,7 +478,7 @@ begin
     Order.CurbsideLatitude := 37.773972;
     Order.CurbsideLongitude := -122.431297;
     Order.MemberId := '1';
-    Order.OrderId := '1414';
+    Order.Id := 1414;
     Order.OrderStatusId := '0';
     FExamples.UpdateOrder(Order);
 
@@ -491,7 +491,7 @@ begin
   end;
 end;
 
-procedure TTestRoute4MeExamples.UpdateRoute;
+procedure TTestExamplesRequests.UpdateRoute;
 var
   RouteId: String;
 begin
@@ -505,7 +505,7 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.UpdateRouteCustomFields;
+procedure TTestExamplesRequests.UpdateRouteCustomFields;
 var
   RouteId: String;
   RouteDestinationId: integer;
@@ -521,7 +521,7 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.UpdateUser;
+procedure TTestExamplesRequests.UpdateUser;
 var
   Parameters: TUserParameters;
   Provider: IUserParameterProvider;
@@ -542,7 +542,7 @@ begin
   end;
 end;
 
-procedure TTestRoute4MeExamples.UserLicense;
+procedure TTestExamplesRequests.UserLicense;
 var
   MemberId: integer;
   SessionId: integer;
@@ -569,7 +569,7 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.ValidateSession;
+procedure TTestExamplesRequests.ValidateSession;
 var
   SessionId: integer;
   MemberId: integer;
@@ -586,7 +586,7 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.CheckEqualsBody(TestName, Actual: String);
+procedure TTestExamplesRequests.CheckEqualsBody(TestName, Actual: String);
 var
   EtalonFilename: String;
   EtalonList: TStringList;
@@ -605,7 +605,7 @@ begin
   end;
 end;
 
-procedure TTestRoute4MeExamples.DeleteAvoidanceZone;
+procedure TTestExamplesRequests.DeleteAvoidanceZone;
 var
   TerritoryId: String;
 begin
@@ -618,7 +618,7 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.DeleteRoutes;
+procedure TTestExamplesRequests.DeleteRoutes;
 var
   RouteIds: TStringArray;
 begin
@@ -642,7 +642,7 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.DeviceLicense;
+procedure TTestExamplesRequests.DeviceLicense;
 var
   DeviceId: String;
   DeviceType: TDeviceType;
@@ -657,7 +657,7 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.DuplicateRoute;
+procedure TTestExamplesRequests.DuplicateRoute;
 var
   RouteId: String;
 begin
@@ -670,7 +670,7 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.GenericExample;
+procedure TTestExamplesRequests.GenericExample;
 begin
   FExamples.GenericExample(FConnection);
 
@@ -680,7 +680,7 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.GenericExampleShortcut;
+procedure TTestExamplesRequests.GenericExampleShortcut;
 begin
   FExamples.GenericExampleShortcut(FConnection);
 
@@ -690,7 +690,7 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.GetActivities;
+procedure TTestExamplesRequests.GetActivities;
 var
   RouteId: String;
 begin
@@ -703,7 +703,7 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.GetAddress;
+procedure TTestExamplesRequests.GetAddress;
 var
   RouteId: String;
   RouteDestinationId: integer;
@@ -718,7 +718,7 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.GetAddressBookContacts;
+procedure TTestExamplesRequests.GetAddressBookContacts;
 begin
   FExamples.GetAddressBookContacts;
 
@@ -728,7 +728,7 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.GetAddressNotes;
+procedure TTestExamplesRequests.GetAddressNotes;
 var
   RouteId: String;
   RouteDestinationId: integer;
@@ -743,7 +743,7 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.GetAvoidanceZone;
+procedure TTestExamplesRequests.GetAvoidanceZone;
 var
   TerritoryId: String;
 begin
@@ -756,7 +756,7 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.GetAvoidanceZones;
+procedure TTestExamplesRequests.GetAvoidanceZones;
 begin
   FExamples.GetAvoidanceZones;
 
@@ -766,7 +766,7 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.GetOptimization;
+procedure TTestExamplesRequests.GetOptimization;
 var
   OptimizationProblemId: String;
 begin
@@ -779,7 +779,7 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.GetOptimizations;
+procedure TTestExamplesRequests.GetOptimizations;
 begin
   FExamples.GetOptimizations;
 
@@ -789,22 +789,22 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.GetOrder;
+procedure TTestExamplesRequests.GetOrder;
 var
-  OrderId: String;
+  OrderId: integer;
 begin
-  OrderId := '68621A20B99EBA14F1A4F2FDAC907B42';
+  OrderId := 68621;
 
   FExamples.GetOrder(OrderId);
 
   CheckEquals(EmptyStr, FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/order.php?api_key=11111111111111111111111111111111&' +
-    'order_id=68621A20B99EBA14F1A4F2FDAC907B42', FConnection.Url);
+    'order_id=68621', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.GetOrdersByDate;
+procedure TTestExamplesRequests.GetOrdersByDate;
 var
   Date: TDate;
 begin
@@ -814,12 +814,12 @@ begin
 
   CheckEquals(EmptyStr, FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/order.php?api_key=11111111111111111111111111111111&' +
-    'day_added_YYMMDD=2054%252007%252024', FConnection.Url);
+    'day_added_YYMMDD=2054-07-24', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.GetOrdersScheduledFor;
+procedure TTestExamplesRequests.GetOrdersScheduledFor;
 var
   Date: TDate;
 begin
@@ -829,12 +829,12 @@ begin
 
   CheckEquals(EmptyStr, FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/order.php?api_key=11111111111111111111111111111111&' +
-    'scheduled_for_YYMMDD=2054%252007%252024', FConnection.Url);
+    'scheduled_for_YYMMDD=2054-07-24', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.GetOrdersWithCustomFields;
+procedure TTestExamplesRequests.GetOrdersWithCustomFields;
 var
   Fields: String;
 begin
@@ -848,7 +848,7 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.GetOrdersWithSpecifiedText;
+procedure TTestExamplesRequests.GetOrdersWithSpecifiedText;
 var
   Text: String;
 begin
@@ -862,7 +862,7 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.GetOrders;
+procedure TTestExamplesRequests.GetOrders;
 begin
   FExamples.GetOrders;
 
@@ -872,7 +872,7 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.GetRoute;
+procedure TTestExamplesRequests.GetRoute;
 var
   RouteId: String;
   GetRouteDirections, GetRoutePathPoints: boolean;
@@ -889,7 +889,7 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.GetRoutes;
+procedure TTestExamplesRequests.GetRoutes;
 var
   Routes: TDataObjectRouteArray;
   i: integer;
@@ -906,7 +906,7 @@ begin
   end;
 end;
 
-procedure TTestRoute4MeExamples.GetUserDetails;
+procedure TTestExamplesRequests.GetUserDetails;
 var
   MemberId: integer;
 begin
@@ -921,7 +921,7 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.GetUsers;
+procedure TTestExamplesRequests.GetUsers;
 begin
   FExamples.GetUsers;
 
@@ -931,7 +931,7 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.LogCustomActivity;
+procedure TTestExamplesRequests.LogCustomActivity;
 var
   Message: String;
   RouteId: String;
@@ -946,7 +946,7 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.MarkAddressAsDeparted;
+procedure TTestExamplesRequests.MarkAddressAsDeparted;
 var
   RouteId: String;
   AddressId: integer;
@@ -966,7 +966,7 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.MarkAddressAsDetectedAsDeparted;
+procedure TTestExamplesRequests.MarkAddressAsDetectedAsDeparted;
 var
   RouteId: String;
   RouteDestinationId: integer;
@@ -984,7 +984,7 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.MarkAddressAsDetectedAsVisited;
+procedure TTestExamplesRequests.MarkAddressAsDetectedAsVisited;
 var
   RouteId: String;
   RouteDestinationId: integer;
@@ -1002,7 +1002,7 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.MarkAddressAsVisited;
+procedure TTestExamplesRequests.MarkAddressAsVisited;
 var
   RouteId: String;
   AddressId: integer;
@@ -1022,7 +1022,7 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.MergeRoutes;
+procedure TTestExamplesRequests.MergeRoutes;
 var
   RouteIds: TListString;
 begin
@@ -1042,7 +1042,7 @@ begin
   end;
 end;
 
-procedure TTestRoute4MeExamples.MoveDestinationToRoute;
+procedure TTestExamplesRequests.MoveDestinationToRoute;
 var
   ToRouteId: String;
   RouteDestinationId, AfterDestinationId: integer;
@@ -1058,7 +1058,7 @@ begin
   CheckTrue(TRESTContentType.ctAPPLICATION_X_WWW_FORM_URLENCODED = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.MultipleDepotMultipleDriver;
+procedure TTestExamplesRequests.MultipleDepotMultipleDriver;
 var
   DataObject: TDataObject;
 begin
@@ -1073,7 +1073,7 @@ begin
   end;
 end;
 
-procedure TTestRoute4MeExamples.MultipleDepotMultipleDriverTimeWindow;
+procedure TTestExamplesRequests.MultipleDepotMultipleDriverTimeWindow;
 var
   DataObject: TDataObject;
 begin
@@ -1088,7 +1088,7 @@ begin
   end;
 end;
 
-procedure TTestRoute4MeExamples.MultipleDepotMultipleDriverWith24StopsTimeWindow;
+procedure TTestExamplesRequests.MultipleDepotMultipleDriverWith24StopsTimeWindow;
 var
   DataObject: TDataObject;
 begin
@@ -1103,7 +1103,7 @@ begin
   end;
 end;
 
-procedure TTestRoute4MeExamples.RegisterAccount;
+procedure TTestExamplesRequests.RegisterAccount;
 var
   Plan, Industry, FirstName, LastName, Email: String;
   Terms: boolean;
@@ -1130,7 +1130,7 @@ begin
   CheckTrue(TRESTContentType.ctAPPLICATION_X_WWW_FORM_URLENCODED = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.RegisterWebinar;
+procedure TTestExamplesRequests.RegisterWebinar;
 var
   EMail, FirstName, LastName, Phone, Company: String;
   MemberId: integer;
@@ -1152,7 +1152,7 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.RemoveAddressBookContacts;
+procedure TTestExamplesRequests.RemoveAddressBookContacts;
 var
   AddressIds: TArray<integer>;
 begin
@@ -1167,7 +1167,7 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.RemoveDestinationFromOptimization;
+procedure TTestExamplesRequests.RemoveDestinationFromOptimization;
 var
   OptimizationProblemId: String;
   DestinationId: integer;
@@ -1185,7 +1185,7 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.RemoveOptimization;
+procedure TTestExamplesRequests.RemoveOptimization;
 var
   OptimizationProblemId: String;
 begin
@@ -1198,13 +1198,13 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.RemoveOrders;
+procedure TTestExamplesRequests.RemoveOrders;
 var
-  OrderIds: TStringArray;
+  OrderIds: TIntegerArray;
 begin
   SetLength(OrderIds, 2);
-  OrderIds[0] := '1414';
-  OrderIds[1] := '1415';
+  OrderIds[0] := 1414;
+  OrderIds[1] := 1415;
   FExamples.RemoveOrders(OrderIds);
 
   CheckEqualsBody('RemoveOrders', FConnection.RequestBody);
@@ -1213,7 +1213,7 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.RemoveRouteDestination;
+procedure TTestExamplesRequests.RemoveRouteDestination;
 var
   RouteId: String;
   DestinationId: integer;
@@ -1228,7 +1228,7 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.RemoveUser;
+procedure TTestExamplesRequests.RemoveUser;
 var
   MemberId: integer;
 begin
@@ -1241,7 +1241,7 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.ReOptimization;
+procedure TTestExamplesRequests.ReOptimization;
 var
   OptimizationProblemId: String;
 begin
@@ -1255,7 +1255,7 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.ReoptimizeRoute;
+procedure TTestExamplesRequests.ReoptimizeRoute;
 var
   RouteId: String;
 begin
@@ -1269,7 +1269,7 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.ResequenceAllRouteDestinations;
+procedure TTestExamplesRequests.ResequenceAllRouteDestinations;
 var
   RouteId: String;
 begin
@@ -1284,7 +1284,7 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestRoute4MeExamples.ResequenceRouteDestinations;
+procedure TTestExamplesRequests.ResequenceRouteDestinations;
   function MakeTestAddress(IsDepot: boolean; DestinationId: integer; SequenceNo: integer): TAddress;
   begin
     Result := TAddress.Create;
@@ -1322,5 +1322,5 @@ end;
 
 initialization
   // Register any test cases with the test runner
-  RegisterTest('Examples\Requests\', TTestRoute4MeExamples.Suite);
+  RegisterTest('Examples\Requests\', TTestExamplesRequests.Suite);
 end.
