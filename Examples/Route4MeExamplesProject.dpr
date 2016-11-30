@@ -127,7 +127,6 @@ uses
   DeleteRoutesUnit in 'Examples\Routes\DeleteRoutesUnit.pas',
   RemoveOptimizationUnit in 'Examples\Optimization\RemoveOptimizationUnit.pas',
   AddAddressBookContactUnit in 'Examples\AddressBookContact\AddAddressBookContactUnit.pas',
-  LogCustomActivityUnit in 'Examples\ActivityFeed\LogCustomActivityUnit.pas',
   GetAddressBookContactsUnit in 'Examples\AddressBookContact\GetAddressBookContactsUnit.pas',
   UpdateAddressBookContactUnit in 'Examples\AddressBookContact\UpdateAddressBookContactUnit.pas',
   RemoveAddressBookContactsUnit in 'Examples\AddressBookContact\RemoveAddressBookContactsUnit.pas',
@@ -135,7 +134,7 @@ uses
   UpdateAvoidanceZoneUnit in 'Examples\AvoidanceZones\UpdateAvoidanceZoneUnit.pas',
   DeleteAvoidanceZoneUnit in 'Examples\AvoidanceZones\DeleteAvoidanceZoneUnit.pas',
   GetAvoidanceZonesUnit in 'Examples\AvoidanceZones\GetAvoidanceZonesUnit.pas',
-  GetActivitiesUnit in 'Examples\Activities\GetActivitiesUnit.pas',
+  GetAllActivitiesUnit in 'Examples\Activities\GetAllActivitiesUnit.pas',
   AddAvoidanceZoneUnit in 'Examples\AvoidanceZones\AddAvoidanceZoneUnit.pas',
   AddOrderUnit in 'Examples\Orders\AddOrderUnit.pas',
   GetOrdersUnit in 'Examples\Orders\GetOrdersUnit.pas',
@@ -190,7 +189,9 @@ uses
   UserLicenseRequestUnit in '..\QueryTypes\UserLicenseRequestUnit.pas',
   UserLicenseUnit in 'Examples\Members\UserLicenseUnit.pas',
   RegisterWebinarRequestUnit in '..\QueryTypes\RegisterWebinarRequestUnit.pas',
-  RegisterWebinarUnit in 'Examples\Members\RegisterWebinarUnit.pas';
+  RegisterWebinarUnit in 'Examples\Members\RegisterWebinarUnit.pas',
+  LogCustomActivityUnit in 'Examples\Activities\LogCustomActivityUnit.pas',
+  GetTeamActivitiesUnit in 'Examples\Activities\GetTeamActivitiesUnit.pas';
 
 begin
   try

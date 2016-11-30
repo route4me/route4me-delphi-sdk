@@ -37,7 +37,8 @@ type
     [Nullable]
     FEnd: NullableInteger;
   public
-    constructor Create; override;
+    constructor Create; overload; override;
+    constructor Create(Limit, Offset: integer); overload;
 
     property RouteId: NullableString read FRouteId write FRouteId;
     property DeviceID: NullableString read FDeviceID write FDeviceID;
@@ -63,6 +64,14 @@ begin
   Offset := NullableInteger.Null;
   Start := NullableInteger.Null;
   End_ := NullableInteger.Null;
+end;
+
+constructor TActivityParameters.Create(Limit, Offset: integer);
+begin
+  Create();
+
+  FLimit := Limit;
+  FOffset := Offset;
 end;
 
 end.

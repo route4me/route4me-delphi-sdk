@@ -48,7 +48,7 @@ type
     procedure UpdateRoute(RouteId: String);
     procedure UpdateRoutesCustomFields(RouteId: String; RouteDestinationId: integer);
     procedure GetRoute(RouteId: String; GetRouteDirections, GetRoutePathPoints: boolean);
-    function GetRoutes: TDataObjectRouteArray;
+    function GetRoutes(Limit, Offset: integer): TDataObjectRouteList;
     procedure ForwardGeocodeAddress(Address: String);
     procedure GetUsers();
     procedure ValidateSession(SessionId, MemberId: integer);
@@ -66,7 +66,8 @@ type
     procedure RegisterWebinar(EMail, FirstName, LastName, Phone, Company: String;
       MemberId: integer; Date: TDateTime);
     function LogCustomActivity(Message: String; RouteId: String): boolean;
-    procedure GetActivities(RouteId: String);
+    procedure GetAllActivities(Limit, Offset: integer);
+    procedure GetTeamActivities(RouteId: String; Limit, Offset: integer);
     procedure GetAddress(RouteId: String; RouteDestinationId: integer);
     procedure MarkAddressAsDetectedAsVisited(RouteId: String; RouteDestinationId: integer;
       IsVisited: boolean);
@@ -124,7 +125,7 @@ uses
   MoveDestinationToRouteUnit, GetOptimizationsUnit, GetOptimizationUnit,
   AddDestinationToOptimizationUnit, RemoveDestinationFromOptimizationUnit,
   ReoptimizeRouteUnit, ReOptimizationUnit, UpdateRouteUnit, GetRoutesUnit,
-  GetRouteUnit, GetUsersUnit, LogCustomActivityUnit, GetActivitiesUnit,
+  GetRouteUnit, GetUsersUnit, LogCustomActivityUnit, GetAllActivitiesUnit,
   GetAddressUnit, GetAddressNotesUnit, AddAddressNoteUnit, DuplicateRouteUnit,
   ShareRouteUnit, AddAddressBookContactUnit, GetAddressBookContactsUnit,
   UpdateAddressBookContactUnit, RemoveAddressBookContactsUnit,
@@ -141,7 +142,8 @@ uses
   MarkAddressAsDetectedAsDepartedUnit, ForwardGeocodeAddressUnit,
   ValidateSessionUnit, RegisterAccountUnit, GetUserDetailsUnit, AddNewUserUnit,
   UpdateUserUnit, RemoveAddressBookContactsRequestUnit, RemoveUserUnit,
-  AuthenticationUnit, DeviceLicenseUnit, UserLicenseUnit, RegisterWebinarUnit;
+  AuthenticationUnit, DeviceLicenseUnit, UserLicenseUnit, RegisterWebinarUnit,
+  GetTeamActivitiesUnit;
 
 function TRoute4MeExamples.AddAddressBookContact(FirstName,
   Address: String): TAddressBookContact;
@@ -379,13 +381,13 @@ begin
   end;
 end;
 
-procedure TRoute4MeExamples.GetActivities(RouteId: String);
+procedure TRoute4MeExamples.GetTeamActivities(RouteId: String; Limit, Offset: integer);
 var
-  Example: TGetActivities;
+  Example: TGetTeamActivities;
 begin
-  Example := MakeExample(TGetActivities) as TGetActivities;
+  Example := MakeExample(TGetTeamActivities) as TGetTeamActivities;
   try
-    Example.Execute(RouteId);
+    Example.Execute(RouteId, Limit, Offset);
   finally
     FreeAndNil(Example);
   end;
@@ -424,6 +426,18 @@ begin
   Example := MakeExample(TGetAddressNotes) as TGetAddressNotes;
   try
     Example.Execute(RouteId, RouteDestinationId);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.GetAllActivities(Limit, Offset: integer);
+var
+  Example: TGetAllActivities;
+begin
+  Example := MakeExample(TGetAllActivities) as TGetAllActivities;
+  try
+    Example.Execute(Limit, Offset);
   finally
     FreeAndNil(Example);
   end;
@@ -562,13 +576,13 @@ begin
   end;
 end;
 
-function TRoute4MeExamples.GetRoutes: TDataObjectRouteArray;
+function TRoute4MeExamples.GetRoutes(Limit, Offset: integer): TDataObjectRouteList;
 var
   Example: TGetRoutes;
 begin
   Example := MakeExample(TGetRoutes) as TGetRoutes;
   try
-    Result := Example.Execute;
+    Result := Example.Execute(Limit, Offset);
   finally
     FreeAndNil(Example);
   end;

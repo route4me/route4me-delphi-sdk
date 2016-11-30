@@ -18,24 +18,23 @@ procedure TGenericExampleShortcut.Execute(Connection: IConnection);
 var
   ErrorMessage: String;
   Parameters: TRouteParametersQuery;
-  Routes: TArray<TDataObjectRoute>;
+  Routes: TDataObjectRouteList;
   Route: TDataObjectRoute;
   Route4Me: TRoute4MeManager;
+  Limit, Offset: integer;
 begin
   Route4Me := TRoute4MeManager.Create(Connection);
   try
-    Parameters := TRouteParametersQuery.Create();
+    Limit := 10;
+    Offset := 5;
+
+    Routes := Route4Me.Route.GetList(Limit, Offset, ErrorMessage);
     try
-      Parameters.Limit := 10;
-      Parameters.Offset := 5;
-
-      Routes := Route4Me.Route.GetList(Parameters, ErrorMessage);
-
-      if (Length(Routes) > 0) then
+      if (Routes <> nil) and (Routes.Count > 0) then
       begin
         WriteLn(Format(
           'GenericExampleShortcut executed successfully, %d routes returned',
-          [Length(Routes)]));
+          [Routes.Count]));
         WriteLn('');
 
         for Route in Routes do
@@ -44,7 +43,7 @@ begin
       else
         WriteLn(Format('GenericExampleShortcut error "%s"', [ErrorMessage]));
     finally
-      FreeAndNil(Parameters);
+      FreeAndNil(Routes);
     end;
   finally
     FreeAndNil(Route4Me);

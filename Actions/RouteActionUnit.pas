@@ -46,8 +46,8 @@ type
     function Get(RouteParameters: TRouteParametersQuery;
       out ErrorString: String): TDataObjectRoute;
 
-    function GetList(RouteParameters: TRouteParametersQuery;
-      out ErrorString: String): TArray<TDataObjectRoute>;
+    function GetList(Limit, Offset: integer;
+      out ErrorString: String): TDataObjectRouteList;
 
     function Delete(RouteIds: TStringArray;
       out ErrorString: String): TStringArray;
@@ -194,20 +194,20 @@ begin
     RouteParameters, TDataObjectRoute, ErrorString) as TDataObjectRoute;
 end;
 
-function TRouteActions.GetList(RouteParameters: TRouteParametersQuery;
-  out ErrorString: String): TArray<TDataObjectRoute>;
+function TRouteActions.GetList(Limit, Offset: integer;
+  out ErrorString: String): TDataObjectRouteList;
 var
-  List: TDataObjectRouteList;
+  RouteParameters: TRouteParametersQuery;
 begin
-  List := FConnection.Get(TSettings.RouteHost,
-    RouteParameters, TDataObjectRouteList, ErrorString) as TDataObjectRouteList;
+  RouteParameters := TRouteParametersQuery.Create;
   try
-    if (List <> nil) then
-      Result := List.ToArray
-    else
-      SetLength(Result, 0);
+    RouteParameters.Limit := Limit;
+    RouteParameters.Offset := Offset;
+
+    Result := FConnection.Get(TSettings.RouteHost,
+      RouteParameters, TDataObjectRouteList, ErrorString) as TDataObjectRouteList;
   finally
-    FreeAndNil(List);
+    FreeAndNil(RouteParameters);
   end;
 end;
 

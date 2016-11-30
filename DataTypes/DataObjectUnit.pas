@@ -203,7 +203,7 @@ type
     /// </summary>
     property Path: TDirectionPathPointArray read FDirectionPathPoints write FDirectionPathPoints;
   end;
-  TDataObjectRouteList = TList<TDataObjectRoute>;
+  TDataObjectRouteList = TObjectList<TDataObjectRoute>;
 
   function SortRoutes(Routes: TDataObjectRouteArray): TDataObjectRouteArray;
 

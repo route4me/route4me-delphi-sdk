@@ -128,8 +128,7 @@ uses
   SingleDriverRoundTripUnit in '..\Examples\Examples\Optimization\SingleDriverRoundTripUnit.pas',
   SingleDriverRoute10StopsUnit in '..\Examples\Examples\Optimization\SingleDriverRoute10StopsUnit.pas',
   Route4MeExamplesUnit in '..\Examples\Examples\Route4MeExamplesUnit.pas',
-  GetActivitiesUnit in '..\Examples\Examples\Activities\GetActivitiesUnit.pas',
-  LogCustomActivityUnit in '..\Examples\Examples\ActivityFeed\LogCustomActivityUnit.pas',
+  GetAllActivitiesUnit in '..\Examples\Examples\Activities\GetAllActivitiesUnit.pas',
   AddAddressBookContactUnit in '..\Examples\Examples\AddressBookContact\AddAddressBookContactUnit.pas',
   GetAddressBookContactsUnit in '..\Examples\Examples\AddressBookContact\GetAddressBookContactsUnit.pas',
   RemoveAddressBookContactsUnit in '..\Examples\Examples\AddressBookContact\RemoveAddressBookContactsUnit.pas',
@@ -217,7 +216,10 @@ uses
   UserLicenseUnit in '..\Examples\Examples\Members\UserLicenseUnit.pas',
   RegisterWebinarRequestUnit in '..\QueryTypes\RegisterWebinarRequestUnit.pas',
   RegisterWebinarUnit in '..\Examples\Examples\Members\RegisterWebinarUnit.pas',
-  TestOrderSamplesUnit in 'Examples\Online\TestOrderSamplesUnit.pas';
+  TestOrderSamplesUnit in 'Examples\Online\TestOrderSamplesUnit.pas',
+  LogCustomActivityUnit in '..\Examples\Examples\Activities\LogCustomActivityUnit.pas',
+  GetTeamActivitiesUnit in '..\Examples\Examples\Activities\GetTeamActivitiesUnit.pas',
+  TestActivitiesSamplesUnit in 'Examples\Online\TestActivitiesSamplesUnit.pas';
 
 {R *.RES}
 

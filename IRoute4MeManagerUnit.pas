@@ -22,7 +22,7 @@ type
     function AvoidanceZone: TAvoidanceZoneActions;
     function Geocoding: TGeocodingActions;
     function Order: TOrderActions;
-    function Activity: TActivityActions;
+    function ActivityFeed: TActivityActions;
     function Tracking: TTrackingActions;
 
     procedure SetConnectionProxy(Host: String; Port: integer; Username, Password: String);

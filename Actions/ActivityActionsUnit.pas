@@ -12,19 +12,24 @@ type
     /// <summary>
     /// Get Activity Feed
     /// </summary>
-    /// <param name="activityParameters"> Input parameters </param>
-    /// <param name="errorString"> Error string </param>
     /// <returns> List of Activity objects </returns>
-    function GetActivityFeed(Parameters: TActivityParameters;
-      out ErrorString: String): TActivityArray;
+    function GetAllActivities(Limit, Offset: integer; out Total: integer;
+      out ErrorString: String): TActivityList;
+
+    /// <summary>
+    /// Get all recorded activities associated not only with a specific Route4Me account,
+    /// but also with other users of a memberТs team.
+    /// </summary>
+    /// <returns> List of Activity objects </returns>
+    function GetTeamActivities(RouteId: String; Limit, Offset: integer;
+      out Total: integer; out ErrorString: String): TActivityList;
 
     /// <summary>
     /// Create User Activity. Send custom message to Activity Stream.
     /// </summary>
-    /// <param name="activity"> Input Activity object to add </param>
-    /// <param name="errorString"> Error string </param>
     /// <returns> True/False </returns>
-    function LogCustomActivity(Activity: TActivity; out ErrorString: String): boolean;
+    function LogCustomActivity(RouteId: String; Message: String;
+      out ErrorString: String): boolean;
   end;
 
 implementation
@@ -34,33 +39,88 @@ implementation
 uses
   SettingsUnit, GetActivitiesResponseUnit, StatusResponseUnit;
 
-function TActivityActions.GetActivityFeed(Parameters: TActivityParameters;
-  out ErrorString: String): TActivityArray;
+function TActivityActions.GetAllActivities(Limit, Offset: integer;
+  out Total: integer; out ErrorString: String): TActivityList;
 var
   Response: TGetActivitiesResponse;
+  Parameters: TActivityParameters;
+  i: integer;
 begin
-  SetLength(Result, 0);
+  Result := TActivityList.Create;
+  Total := 0;
 
-  Response := FConnection.Get(TSettings.ActivityFeedHost, Parameters,
-    TGetActivitiesResponse, ErrorString) as TGetActivitiesResponse;
+  Parameters := TActivityParameters.Create(Limit, Offset);
   try
-    if (Response <> nil) then
-      Result := Response.Results;
+    Response := FConnection.Get(TSettings.ActivityFeedHost, Parameters,
+      TGetActivitiesResponse, ErrorString) as TGetActivitiesResponse;
+    try
+      if (Response <> nil) then
+      begin
+        for i := 0 to Length(Response.Results) - 1 do
+          Result.Add(Response.Results[i]);
+        Total := Response.Total;
+      end;
+    finally
+      FreeAndNil(Response);
+    end;
   finally
-    FreeAndNil(Response);
+    FreeAndNil(Parameters);
   end;
 end;
 
-function TActivityActions.LogCustomActivity(Activity: TActivity; out ErrorString: String): boolean;
+function TActivityActions.GetTeamActivities(RouteId: String;
+  Limit, Offset: integer; out Total: integer; out ErrorString: String): TActivityList;
+var
+  Response: TGetActivitiesResponse;
+  Request: TActivityParameters;
+  i: integer;
+begin
+  Result := TActivityList.Create;
+
+  // todo: проверить limit и offset применимы ли
+  Request := TActivityParameters.Create(Limit, Offset);
+  try
+    Request.AddParameter('route_id', RouteId);
+    Request.AddParameter('team', 'true');
+
+    Response := FConnection.Get(TSettings.ActivityFeedHost, Request,
+      TGetActivitiesResponse, ErrorString) as TGetActivitiesResponse;
+    try
+      if (Response <> nil) then
+      begin
+        for i := 0 to Length(Response.Results) - 1 do
+          Result.Add(Response.Results[i]);
+        Total := Response.Total;
+      end;
+    finally
+      FreeAndNil(Response);
+    end;
+  finally
+    FreeAndNil(Request);
+  end;
+end;
+
+function TActivityActions.LogCustomActivity(RouteId: String; Message: String;
+  out ErrorString: String): boolean;
 var
   Response: TStatusResponse;
+  Activity: TActivity;
 begin
-  Response := FConnection.Post(TSettings.ActivityFeedHost, Activity,
-    TStatusResponse, ErrorString) as TStatusResponse;
+  Activity := TActivity.Create;
   try
-    Result := (Response <> nil) and (Response.Status);
+    Activity.RouteId := RouteId;
+    Activity.ActivityMessage := Message;
+    Activity.ActivityType := 'user_message';
+
+    Response := FConnection.Post(TSettings.ActivityFeedHost, Activity,
+      TStatusResponse, ErrorString) as TStatusResponse;
+    try
+      Result := (Response <> nil) and (Response.Status);
+    finally
+      FreeAndNil(Response);
+    end;
   finally
-    FreeAndNil(Response);
+    FreeAndNil(Activity);
   end;
 end;
 

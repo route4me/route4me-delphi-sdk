@@ -3,7 +3,7 @@ unit ActivityUnit;
 interface
 
 uses
-  REST.Json.Types,
+  REST.Json.Types, System.Generics.Collections,
   JSONNullableAttributeUnit, GenericParametersUnit, NullableBasicTypesUnit;
 
 type
@@ -50,7 +50,7 @@ type
     /// <summary>
     /// Activity ID
     /// </summary>
-    property ActivityId: NullableString read FActivityId write FActivityId;
+    property Id: NullableString read FActivityId write FActivityId;
 
     /// <summary>
     /// Route ID
@@ -92,6 +92,7 @@ type
   end;
 
   TActivityArray = TArray<TActivity>;
+  TActivityList = TObjectList<TActivity>;
 
 implementation
 

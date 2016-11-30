@@ -58,7 +58,8 @@ type
     procedure UserLicense;
     procedure RegisterWebinar;
     procedure LogCustomActivity;
-    procedure GetActivities;
+    procedure GetAllActivities;
+    procedure GetTeamActivities;
     procedure GetAddress;
     procedure MarkAddressAsDetectedAsVisited;
     procedure MarkAddressAsDetectedAsDeparted;
@@ -690,15 +691,19 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestExamplesRequests.GetActivities;
+procedure TTestExamplesRequests.GetTeamActivities;
 var
   RouteId: String;
+  Limit, Offset: integer;
 begin
   RouteId := '68621A20B99EBA14F1A4F2FDAC907B42';
-  FExamples.GetActivities(RouteId);
+  Limit := 10;
+  Offset := 0;
+  FExamples.GetTeamActivities(RouteId, Limit, Offset);
 
   CheckEquals(EmptyStr, FConnection.RequestBody);
-  CheckEquals('https://www.route4me.com/api.v4/activity_feed.php?api_key=11111111111111111111111111111111&route_id=68621A20B99EBA14F1A4F2FDAC907B42&limit=10&offset=0', FConnection.Url);
+  CheckEquals('https://www.route4me.com/api.v4/activity_feed.php?api_key=11111111111111111111111111111111&' +
+    'route_id=68621A20B99EBA14F1A4F2FDAC907B42&team=true&limit=10&offset=0', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
@@ -739,6 +744,20 @@ begin
 
   CheckEquals(EmptyStr, FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/address.php?api_key=11111111111111111111111111111111&route_id=585D2628AE1C5A4FBD7B4050CB9D9601&route_destination_id=194622711&notes=1', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.GetAllActivities;
+var
+  Limit, Offset: integer;
+begin
+  Limit := 10;
+  Offset := 0;
+  FExamples.GetAllActivities(Limit, Offset);
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api.v4/activity_feed.php?api_key=11111111111111111111111111111111&limit=10&offset=0', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
@@ -891,18 +910,19 @@ end;
 
 procedure TTestExamplesRequests.GetRoutes;
 var
-  Routes: TDataObjectRouteArray;
-  i: integer;
+  Routes: TDataObjectRouteList;
+  Limit, Offset: integer;
 begin
-  Routes := FExamples.GetRoutes;
+  Limit := 10;
+  Offset := 5;
+  Routes := FExamples.GetRoutes(Limit, Offset);
   try
     CheckEquals(EmptyStr, FConnection.RequestBody);
     CheckEquals('https://www.route4me.com/api.v4/route.php?api_key=11111111111111111111111111111111&limit=10&offset=5', FConnection.Url);
     CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
     CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
   finally
-    for i := Length(Routes) - 1 downto 0 do
-      FreeAndNil(Routes[i]);
+    FreeAndNil(Routes);
   end;
 end;
 

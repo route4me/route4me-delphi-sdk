@@ -42,7 +42,7 @@ type
     function AvoidanceZone: TAvoidanceZoneActions;
     function Geocoding: TGeocodingActions;
     function Order: TOrderActions;
-    function Activity: TActivityActions;
+    function ActivityFeed: TActivityActions;
     function Tracking: TTrackingActions;
 
     function Connection: IConnection;
@@ -155,7 +155,7 @@ begin
   Result := FUser;
 end;
 
-function TRoute4MeManager.Activity: TActivityActions;
+function TRoute4MeManager.ActivityFeed: TActivityActions;
 begin
   if (FActivity = nil) then
     FActivity := TActivityActions.Create(FConnection);

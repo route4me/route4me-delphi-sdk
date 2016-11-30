@@ -53,7 +53,7 @@ var
   Order1, Order2: TOrder;
   OrderIdsToRemove: TList<integer>;
   Connection: TConnection;
-  Routes: TDataObjectRouteArray;
+  Routes: TDataObjectRouteList;
   OrderedAddresses: TOrderedAddressArray;
   ParametersProvider: IAddOrderToRouteParameterProvider;
   UserParameters: TUserParameters;
@@ -65,6 +65,7 @@ var
   MemberId: integer;
   SessionId: NullableInteger;
   EMail: String;
+  Limit, Offset: integer;
 begin
   try
     Connection := TConnection.Create(c_ApiKey);
@@ -260,13 +261,15 @@ begin
             WriteLn('UpdateRoute, UpdateRoutesCustomFields, ReoptimizeRoute, GetRoute not called. ' +
               'routeId_SingleDriverRoute10Stops is null.');
 
-        Routes := Examples.GetRoutes();
+        Limit := 10;
+        Offset := 5;
+        Routes := Examples.GetRoutes(Limit, Offset);
         try
           RouteIdsToMerge := TListString.Create;
           try
-            if (Length(Routes) > 0) then
+            if (Routes.Count > 0) then
               RouteIdsToMerge.Add(Routes[0].RouteId);
-            if (Length(Routes) > 1) then
+            if (Routes.Count > 1) then
               RouteIdsToMerge.Add(Routes[1].RouteId);
 
             if (RouteIdsToMerge.Count > 0) then
@@ -277,8 +280,7 @@ begin
             FreeAndNil(RouteIdsToMerge);
           end;
         finally
-          for i := Length(Routes) - 1 downto 0 do
-            FreeAndNil(Routes[i]);
+          FreeAndNil(Routes);
         end;
 
         if (RouteId_SingleDriverRoute10Stops.IsNotNull) then
@@ -286,11 +288,13 @@ begin
         else
           WriteLn('LogCustomActivity not called. routeId_SingleDriverRoute10Stops is null.');
 
+        Limit := 5;
+        Offset := 0;
+        Examples.GetAllActivities(Limit, Offset);
         if (RouteId_SingleDriverRoute10Stops.IsNotNull) then
-          Examples.GetActivities(RouteId_SingleDriverRoute10Stops)
+          Examples.GetTeamActivities(RouteId_SingleDriverRoute10Stops, Limit, Offset)
         else
           WriteLn('GetActivities not called. routeId_SingleDriverRoute10Stops is null.');
-
 
         Randomize;
 
