@@ -28,7 +28,7 @@ type
 
     [JSONName('member_id')]
     [Nullable]
-    FMemberId: NullableString;
+    FMemberId: NullableInteger;
 
     [JSONName('address')]
     FAddressString: String;
@@ -330,7 +330,7 @@ type
     /// <summary>
     /// Member ID
     /// </summary>
-    property MemberId: NullableString read FMemberId write FMemberId;
+    property MemberId: NullableInteger read FMemberId write FMemberId;
 
     /// <summary>
     /// This address is a depot
@@ -718,7 +718,7 @@ begin
 
   FCurbsideLatitude := NullableDouble.Null;
   FCurbsideLongitude := NullableDouble.Null;
-  FMemberId := NullableString.Null;
+  FMemberId := NullableInteger.Null;
   FRouteDestinationId := NullableInteger.Null;
   FRouteId := NullableString.Null;
   FIsDepot := NullableBoolean.Null;

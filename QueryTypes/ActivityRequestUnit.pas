@@ -1,4 +1,4 @@
-unit ActivityUnit;
+unit ActivityRequestUnit;
 
 interface
 
@@ -12,7 +12,7 @@ type
   ///  Activity
   /// </summary>
   /// <remarks>
-  ///  https://github.com/route4me/json-schemas/blob/master/Activity_response.dtd
+  ///  https://github.com/route4me/json-schemas/blob/master/Activity.dtd
   /// </remarks>
   TActivity = class(TGenericParameters)
   private
@@ -40,18 +40,6 @@ type
     [Nullable]
     FActivityMessage: NullableString;
 
-    [JSONName('note_id')]
-    [Nullable]
-    FNoteId: NullableString;
-
-    [JSONName('note_attachment_url')]
-    [Nullable]
-    FNoteAttachmentUrl: NullableString;
-
-    [JSONName('activity_timestamp')]
-    [Nullable]
-    FActivityTimestamp: NullableInteger;
-
     function GetActivityType: TActivityType;
     procedure SetActivityType(const Value: TActivityType);
   public
@@ -69,22 +57,22 @@ type
     property Id: NullableString read FActivityId write FActivityId;
 
     /// <summary>
-    /// Parent route
+    /// Route ID
     /// </summary>
     property RouteId: NullableString read FRouteId write FRouteId;
 
     /// <summary>
-    /// An address on the route
+    /// Route destination ID
     /// </summary>
     property RouteDestinationId: NullableInteger read FRouteDestinationId write FRouteDestinationId;
 
     /// <summary>
-    /// Route's owner member's unique ID number
+    /// Member Id
     /// </summary>
     property MemberId: NullableInteger read FMemberId write FMemberId;
 
     /// <summary>
-    ///  Activity type
+    /// Activity type
     /// </summary>
     property ActivityType: TActivityType read GetActivityType write SetActivityType;
 
@@ -92,21 +80,6 @@ type
     /// Activity message
     /// </summary>
     property ActivityMessage: NullableString read FActivityMessage write FActivityMessage;
-
-    /// <summary>
-    /// Note ID
-    /// </summary>
-    property NoteId: NullableString read FNoteId write FNoteId;
-
-    /// <summary>
-    /// URL of the uploaded note
-    /// </summary>
-    property NoteAttachmentUrl: NullableString read FNoteAttachmentUrl write FNoteAttachmentUrl;
-
-    /// <summary>
-    /// Time when activity happened
-    /// </summary>
-    property ActivityTimestamp: NullableInteger read FActivityTimestamp write FActivityTimestamp;
   end;
 
   TActivityArray = TArray<TActivity>;
@@ -126,9 +99,6 @@ begin
   FActivityType := NullableString.Null;
   FMemberId := NullableInteger.Null;
   FActivityMessage := NullableString.Null;
-  FNoteId := NullableString.Null;
-  FNoteAttachmentUrl := NullableString.Null;
-  FActivityTimestamp := NullableInteger.Null;
 end;
 
 function TActivity.Equals(Obj: TObject): Boolean;
@@ -148,9 +118,6 @@ begin
     (FRouteDestinationId = Other.FRouteDestinationId) and
     (FActivityType = Other.FActivityType) and
     (FMemberId = Other.FMemberId) and
-    (FNoteId = Other.FNoteId) and
-    (FNoteAttachmentUrl = Other.FNoteAttachmentUrl) and
-    (FActivityTimestamp = Other.FActivityTimestamp) and
     (FActivityMessage = Other.FActivityMessage);
 end;
 

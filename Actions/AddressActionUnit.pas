@@ -30,9 +30,9 @@ implementation
 { TAddressActions }
 
 uses
-  SettingsUnit, GenericParametersUnit, GetAddressUnit,
-  MarkAddressAsDetectedAsVisitedRequestUnit, MarkAddressAsDetectedAsDepartedRequestUnit,
-  StatusResponseUnit;
+  SettingsUnit, GenericParametersUnit, GetAddressUnit, StatusResponseUnit,
+  MarkAddressAsDetectedAsVisitedRequestUnit,
+  MarkAddressAsDetectedAsDepartedRequestUnit;
 
 function TAddressActions.Get(AddressParameters: TAddressParameters;
   out ErrorString: String): TAddress;

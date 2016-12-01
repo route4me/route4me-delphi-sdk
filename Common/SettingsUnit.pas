@@ -29,6 +29,7 @@ type
     const ValidateSessionHost = MainHost + '/datafeed/session/validate_session.php';
     const AddRouteNotesHost = MainHost + '/actions/addRouteNotes.php';
     const ActivityFeedHost = MainHost + '/api.v4/activity_feed.php';
+    const GetActivitiesHost = MainHost + '/api/get_activities.php';
     const GeocodingHost = MainHost + '/api/geocoder.php';
     const GetAddress = MainHost + '/api.v4/address.php';
     const DuplicateRoute = MainHost + '/actions/duplicate_route.php';

@@ -106,7 +106,6 @@
         <DCCReference Include="..\Actions\AvoidanceZoneActionUnit.pas"/>
         <DCCReference Include="..\Actions\OrderActionUnit.pas"/>
         <DCCReference Include="..\Actions\TrackingActionsUnit.pas"/>
-        <DCCReference Include="..\DataTypes\ActivityUnit.pas"/>
         <DCCReference Include="..\DataTypes\AddressNoteUnit.pas"/>
         <DCCReference Include="..\DataTypes\AvoidanceZoneUnit.pas"/>
         <DCCReference Include="..\DataTypes\OrderUnit.pas"/>
@@ -262,6 +261,11 @@
         <DCCReference Include="Examples\Members\RegisterWebinarUnit.pas"/>
         <DCCReference Include="Examples\Activities\LogCustomActivityUnit.pas"/>
         <DCCReference Include="Examples\Activities\GetTeamActivitiesUnit.pas"/>
+        <DCCReference Include="..\QueryTypes\ActivityRequestUnit.pas"/>
+        <DCCReference Include="..\DataTypes\ActivityUnit.pas"/>
+        <DCCReference Include="Examples\Activities\ActivityAreaAddedUnit.pas"/>
+        <DCCReference Include="Examples\Activities\ActivityAreaRemovedUnit.pas"/>
+        <DCCReference Include="Examples\Activities\ActivityAreaUpdatedUnit.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -287,7 +291,7 @@
                     <Excluded_Packages Name="$(BDSBIN)\dclofficexp230.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
                 </Excluded_Packages>
             </Delphi.Personality>
-            <Deployment Version="3">
+            <Deployment Version="2">
                 <DeployFile LocalName="$(BDS)\Redist\osx32\libcgunwind.1.0.dylib" Class="DependencyModule">
                     <Platform Name="OSX32">
                         <Overwrite>true</Overwrite>
@@ -371,20 +375,17 @@
                     </Platform>
                 </DeployClass>
                 <DeployClass Required="true" Name="ProjectOutput">
-                    <Platform Name="iOSDevice64">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice32">
-                        <Operation>1</Operation>
-                    </Platform>
                     <Platform Name="Win32">
                         <Operation>0</Operation>
                     </Platform>
-                    <Platform Name="Linux64">
+                    <Platform Name="iOSDevice64">
                         <Operation>1</Operation>
                     </Platform>
                     <Platform Name="OSX32">
                         <RemoteDir>Contents\MacOS</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice32">
                         <Operation>1</Operation>
                     </Platform>
                     <Platform Name="Android">
@@ -445,7 +446,12 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <DeployClass Name="AndroidLibnativeX86File"/>
+                <DeployClass Name="AndroidLibnativeX86File">
+                    <Platform Name="Android">
+                        <RemoteDir>library\lib\x86</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
                 <DeployClass Name="iPhone_Launch320">
                     <Platform Name="iOSSimulator">
                         <Operation>1</Operation>
@@ -538,11 +544,11 @@
                 </DeployClass>
                 <DeployClass Name="ProjectiOSEntitlements">
                     <Platform Name="iOSDevice64">
-                        <RemoteDir>..\</RemoteDir>
+                        <RemoteDir>../</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                     <Platform Name="iOSDevice32">
-                        <RemoteDir>..\</RemoteDir>
+                        <RemoteDir>../</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
@@ -566,7 +572,7 @@
                 </DeployClass>
                 <DeployClass Name="ProjectOSXEntitlements">
                     <Platform Name="OSX32">
-                        <RemoteDir>..\</RemoteDir>
+                        <RemoteDir>../</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>

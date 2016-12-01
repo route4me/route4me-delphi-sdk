@@ -57,7 +57,6 @@ uses
   ConnectionStubUnit in 'Connection\ConnectionStubUnit.pas',
   UserActionUnit in '..\Actions\UserActionUnit.pas',
   UserUnit in '..\DataTypes\UserUnit.pas',
-  ActivityUnit in '..\DataTypes\ActivityUnit.pas',
   OrderUnit in '..\DataTypes\OrderUnit.pas',
   NoteParametersUnit in '..\QueryTypes\NoteParametersUnit.pas',
   AddressNoteUnit in '..\DataTypes\AddressNoteUnit.pas',
@@ -219,7 +218,13 @@ uses
   TestOrderSamplesUnit in 'Examples\Online\TestOrderSamplesUnit.pas',
   LogCustomActivityUnit in '..\Examples\Examples\Activities\LogCustomActivityUnit.pas',
   GetTeamActivitiesUnit in '..\Examples\Examples\Activities\GetTeamActivitiesUnit.pas',
-  TestActivitiesSamplesUnit in 'Examples\Online\TestActivitiesSamplesUnit.pas';
+  TestActivitiesSamplesUnit in 'Examples\Online\TestActivitiesSamplesUnit.pas',
+  ActivityUnit in '..\DataTypes\ActivityUnit.pas',
+  ActivityRequestUnit in '..\QueryTypes\ActivityRequestUnit.pas',
+  ActivityAreaAddedUnit in '..\Examples\Examples\Activities\ActivityAreaAddedUnit.pas',
+  ActivityAreaUpdatedUnit in '..\Examples\Examples\Activities\ActivityAreaUpdatedUnit.pas',
+  ActivityAreaRemovedUnit in '..\Examples\Examples\Activities\ActivityAreaRemovedUnit.pas',
+  TestAddressesSamplesUnit in 'Examples\Online\TestAddressesSamplesUnit.pas';
 
 {R *.RES}
 

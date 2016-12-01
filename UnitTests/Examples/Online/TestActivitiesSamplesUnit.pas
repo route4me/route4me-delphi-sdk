@@ -14,12 +14,39 @@ type
     procedure GetAllActivities;
     procedure GetTeamActivities;
     procedure LogCustomActivity;
+    procedure ActivityAreaAdded;
+    procedure ActivityAreaUpdated;
+    procedure ActivityAreaRemoved;
   end;
 
 implementation
 
 
 uses EnumsUnit, ActivityUnit, CommonTypesUnit, DataObjectUnit;
+
+procedure TTestActivitiesSamples.ActivityAreaAdded;
+var
+  ErrorString: String;
+begin
+  FRoute4MeManager.ActivityFeed.AreaAdded(ErrorString);
+  CheckEquals(EmptyStr, ErrorString);
+end;
+
+procedure TTestActivitiesSamples.ActivityAreaRemoved;
+var
+  ErrorString: String;
+begin
+  FRoute4MeManager.ActivityFeed.AreaRemoved(ErrorString);
+  CheckEquals(EmptyStr, ErrorString);
+end;
+
+procedure TTestActivitiesSamples.ActivityAreaUpdated;
+var
+  ErrorString: String;
+begin
+  FRoute4MeManager.ActivityFeed.AreaUpdated(ErrorString);
+  CheckEquals(EmptyStr, ErrorString);
+end;
 
 procedure TTestActivitiesSamples.GetAllActivities;
 var

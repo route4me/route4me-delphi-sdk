@@ -25,8 +25,6 @@ type
 
 implementation
 
-{ TAddAddressNoteResponse }
-
 constructor TGetActivitiesResponse.Create;
 begin
   inherited;

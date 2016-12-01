@@ -17,27 +17,25 @@ uses CommonTypesUnit, OrderUnit;
 procedure TGetOrdersWithSpecifiedText.Execute(SpecifiedText: String);
 var
   ErrorString: String;
-  Orders: TOrderArray;
-  i: integer;
+  Orders: TOrderList;
   Offset, Limit: integer;
   Total: integer;
 begin
-  Offset := 0;
   Limit := 10;
+  Offset := 0;
   Orders := Route4MeManager.Order.GetOrdersWithSpecifiedText(
-    SpecifiedText, Offset, Limit, Total, ErrorString);
+    SpecifiedText, Limit, Offset, Total, ErrorString);
   try
     WriteLn('');
 
-    if (Length(Orders) > 0) then
+    if (Orders.Count > 0) then
       WriteLn(Format(
         'GetOrdersWithSpecifiedText executed successfully, %d orders returned, %d total',
-          [Length(Orders), Total]))
+          [Orders.Count, Total]))
     else
       WriteLn(Format('GetOrdersWithSpecifiedText error: "%s"', [ErrorString]));
   finally
-    for i := Length(Orders) - 1 downto 0 do
-      FreeAndNil(Orders[i]);
+    FreeAndNil(Orders);
   end;
 end;
 

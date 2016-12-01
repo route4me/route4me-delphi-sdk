@@ -68,6 +68,9 @@ type
     function LogCustomActivity(Message: String; RouteId: String): boolean;
     procedure GetAllActivities(Limit, Offset: integer);
     procedure GetTeamActivities(RouteId: String; Limit, Offset: integer);
+    procedure ActivityAreaAdded;
+    procedure ActivityAreaUpdated;
+    procedure ActivityAreaRemoved;
     procedure GetAddress(RouteId: String; RouteDestinationId: integer);
     procedure MarkAddressAsDetectedAsVisited(RouteId: String; RouteDestinationId: integer;
       IsVisited: boolean);
@@ -143,8 +146,45 @@ uses
   ValidateSessionUnit, RegisterAccountUnit, GetUserDetailsUnit, AddNewUserUnit,
   UpdateUserUnit, RemoveAddressBookContactsRequestUnit, RemoveUserUnit,
   AuthenticationUnit, DeviceLicenseUnit, UserLicenseUnit, RegisterWebinarUnit,
-  GetTeamActivitiesUnit;
+  GetTeamActivitiesUnit, ActivityAreaAddedUnit, ActivityAreaRemovedUnit,
+  ActivityAreaUpdatedUnit;
 
+procedure TRoute4MeExamples.ActivityAreaAdded;
+var
+  Example: TActivityAreaAdded;
+begin
+  Example := MakeExample(TActivityAreaAdded) as TActivityAreaAdded;
+  try
+    Example.Execute;
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.ActivityAreaRemoved;
+var
+  Example: TActivityAreaRemoved;
+begin
+  Example := MakeExample(TActivityAreaRemoved) as TActivityAreaRemoved;
+  try
+    Example.Execute;
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.ActivityAreaUpdated;
+var
+  Example: TActivityAreaUpdated;
+begin
+  Example := MakeExample(TActivityAreaUpdated) as TActivityAreaUpdated;
+  try
+    Example.Execute;
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
 function TRoute4MeExamples.AddAddressBookContact(FirstName,
   Address: String): TAddressBookContact;
 var

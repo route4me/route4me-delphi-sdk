@@ -80,7 +80,7 @@ begin
   RouteParameters.Ip := '2998453096';
 
   OptimizationParameters.Addresses[Index(0)].RouteDestinationId := 193721035;
-  OptimizationParameters.Addresses[Index(0)].MemberId := '1';
+  OptimizationParameters.Addresses[Index(0)].MemberId := 1;
   OptimizationParameters.Addresses[Index(0)].CurbsideLatitude := 33.1326752;
   OptimizationParameters.Addresses[Index(0)].CurbsideLongitude := -83.2447433;
   OptimizationParameters.Addresses[Index(0)].SequenceNo := 0;
@@ -88,7 +88,7 @@ begin
   OptimizationParameters.Addresses[Index(0)].DistanceToNextDestination := 0.21;
 
   OptimizationParameters.Addresses[Index(1)].RouteDestinationId := 193721036;
-  OptimizationParameters.Addresses[Index(1)].MemberId := '1';
+  OptimizationParameters.Addresses[Index(1)].MemberId := 1;
   OptimizationParameters.Addresses[Index(1)].CurbsideLatitude := 33.1296959;
   OptimizationParameters.Addresses[Index(1)].CurbsideLongitude := -83.2457733;
   OptimizationParameters.Addresses[Index(1)].SequenceNo := 1;
@@ -100,7 +100,7 @@ begin
   OptimizationParameters.Addresses[Index(1)].CustomFields := TDictionaryStringIntermediateObject.Create;
 
   OptimizationParameters.Addresses[Index(2)].RouteDestinationId := 193721037;
-  OptimizationParameters.Addresses[Index(2)].MemberId := '1';
+  OptimizationParameters.Addresses[Index(2)].MemberId := 1;
   OptimizationParameters.Addresses[Index(2)].CurbsideLatitude := 33.143497;
   OptimizationParameters.Addresses[Index(2)].CurbsideLongitude := -83.224487;
   OptimizationParameters.Addresses[Index(2)].SequenceNo := 8;
@@ -112,7 +112,7 @@ begin
   OptimizationParameters.Addresses[Index(2)].CustomFields := TDictionaryStringIntermediateObject.Create;
 
   OptimizationParameters.Addresses[Index(3)].RouteDestinationId := 193721038;
-  OptimizationParameters.Addresses[Index(3)].MemberId := '1';
+  OptimizationParameters.Addresses[Index(3)].MemberId := 1;
   OptimizationParameters.Addresses[Index(3)].CurbsideLatitude := 33.1417847;
   OptimizationParameters.Addresses[Index(3)].CurbsideLongitude := -83.2375183;
   OptimizationParameters.Addresses[Index(3)].SequenceNo := 3;
@@ -124,7 +124,7 @@ begin
   OptimizationParameters.Addresses[Index(3)].CustomFields := TDictionaryStringIntermediateObject.Create;
 
   OptimizationParameters.Addresses[Index(4)].RouteDestinationId := 193721039;
-  OptimizationParameters.Addresses[Index(4)].MemberId := '1';
+  OptimizationParameters.Addresses[Index(4)].MemberId := 1;
   OptimizationParameters.Addresses[Index(4)].CurbsideLatitude := 33.1410866;
   OptimizationParameters.Addresses[Index(4)].CurbsideLongitude := -83.2382584;
   OptimizationParameters.Addresses[Index(4)].SequenceNo := 7;
@@ -136,7 +136,7 @@ begin
   OptimizationParameters.Addresses[Index(4)].CustomFields := TDictionaryStringIntermediateObject.Create;
 
   OptimizationParameters.Addresses[Index(5)].RouteDestinationId := 193721040;
-  OptimizationParameters.Addresses[Index(5)].MemberId := '1';
+  OptimizationParameters.Addresses[Index(5)].MemberId := 1;
   OptimizationParameters.Addresses[Index(5)].CurbsideLatitude := 33.1420364;
   OptimizationParameters.Addresses[Index(5)].CurbsideLongitude := -83.2388458;
   OptimizationParameters.Addresses[Index(5)].SequenceNo := 6;
@@ -148,7 +148,7 @@ begin
   OptimizationParameters.Addresses[Index(5)].CustomFields := TDictionaryStringIntermediateObject.Create;
 
   OptimizationParameters.Addresses[Index(6)].RouteDestinationId := 193721041;
-  OptimizationParameters.Addresses[Index(6)].MemberId := '1';
+  OptimizationParameters.Addresses[Index(6)].MemberId := 1;
   OptimizationParameters.Addresses[Index(6)].CurbsideLatitude := 33.14307;
   OptimizationParameters.Addresses[Index(6)].CurbsideLongitude := -83.239334;
   OptimizationParameters.Addresses[Index(6)].SequenceNo := 5;
@@ -160,7 +160,7 @@ begin
   OptimizationParameters.Addresses[Index(6)].CustomFields := TDictionaryStringIntermediateObject.Create;
 
   OptimizationParameters.Addresses[Index(7)].RouteDestinationId := 193721042;
-  OptimizationParameters.Addresses[Index(7)].MemberId := '1';
+  OptimizationParameters.Addresses[Index(7)].MemberId := 1;
   OptimizationParameters.Addresses[Index(7)].CurbsideLatitude := 33.1427345;
   OptimizationParameters.Addresses[Index(7)].CurbsideLongitude := -83.237442;
   OptimizationParameters.Addresses[Index(7)].SequenceNo := 2;
@@ -172,7 +172,7 @@ begin
   OptimizationParameters.Addresses[Index(7)].CustomFields := TDictionaryStringIntermediateObject.Create;
 
   OptimizationParameters.Addresses[Index(8)].RouteDestinationId := 193721043;
-  OptimizationParameters.Addresses[Index(8)].MemberId := '1';
+  OptimizationParameters.Addresses[Index(8)].MemberId := 1;
   OptimizationParameters.Addresses[Index(8)].CurbsideLatitude := 33.1438713;
   OptimizationParameters.Addresses[Index(8)].CurbsideLongitude := -83.2373428;
   OptimizationParameters.Addresses[Index(8)].SequenceNo := 4;
@@ -184,7 +184,7 @@ begin
   OptimizationParameters.Addresses[Index(8)].CustomFields := TDictionaryStringIntermediateObject.Create;
 
   OptimizationParameters.Addresses[Index(9)].RouteDestinationId := 193721044;
-  OptimizationParameters.Addresses[Index(9)].MemberId := '1';
+  OptimizationParameters.Addresses[Index(9)].MemberId := 1;
   OptimizationParameters.Addresses[Index(9)].CurbsideLatitude := 33.0814629;
   OptimizationParameters.Addresses[Index(9)].CurbsideLongitude := -83.2085114;
   OptimizationParameters.Addresses[Index(9)].SequenceNo := 9;

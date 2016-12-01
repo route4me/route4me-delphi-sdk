@@ -3,6 +3,26 @@ unit EnumsUnit;
 interface
 
 type
+  TActivityType = (
+    atUnknown,
+    atDeleteDestination,
+    atInsertDestination,
+    atMarkDestinationDeparted,
+    atMarkDestinationVisited,
+    atMemberCreated,
+    atMemberDeleted,
+    atMemberModified,
+    atMoveDestination,
+    atNoteInsert,
+    atRouteDelete,
+    atRouteOptimized,
+    atRouteOwnerChanged,
+    atUpdateDestinations,
+    atUserMessage,
+    atAreaAdded,
+    atAreaUpdated,
+    atAreaRemoved);
+
   TMemberType = (
     mtPrimaryAccount,
     mtSubAccountAdmin,
@@ -203,6 +223,13 @@ var
     'PRIMARY_ACCOUNT', 'SUB_ACCOUNT_ADMIN', 'SUB_ACCOUNT_REGIONAL_MANAGER',
     'SUB_ACCOUNT_DISPATCHER', 'SUB_ACCOUNT_PLANNER', 'SUB_ACCOUNT_DRIVER',
     'SUB_ACCOUNT_ANALYST', 'SUB_ACCOUNT_VENDOR', 'SUB_ACCOUNT_CUSTOMER_SERVICE', 'Unknown');
+  TActivityTypeDescription: array[TActivityType] of String = (
+    '','delete-destination', 'insert-destination', 'mark-destination-departed',
+    'mark-destination-visited', 'member-created', 'member-deleted', 'member-modified',
+    'move-destination', 'note-insert', 'route-delete', 'route-optimized',
+    'route-owner-changed', 'update-destinations', 'user_message', 'area-added',
+    'area-updated', 'area-removed');
+
 
 implementation
 

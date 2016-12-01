@@ -29,14 +29,14 @@ type
     /// <summary>
     ///  Searching all Orders with specified custom fields
     /// </summary>
-    function GetOrdersWithCustomFields(Fields: String; Offset, Limit: integer;
+    function GetOrdersWithCustomFields(Fields: String; Limit, Offset: integer;
       out Total: integer; out ErrorString: String): TIntegerArray;
 
     /// <summary>
     ///  Search for all order records which contain specified text in any field
     /// </summary>
-    function GetOrdersWithSpecifiedText(SpecifiedText: String; Offset, Limit: integer;
-      out Total: integer; out ErrorString: String): TOrderArray;
+    function GetOrdersWithSpecifiedText(SpecifiedText: String; Limit, Offset: integer;
+      out Total: integer; out ErrorString: String): TOrderList;
 
     function Add(Order: TOrder; out ErrorString: String): TOrder;
 
@@ -52,8 +52,8 @@ implementation
 { TOrderActions }
 
 uses
-  SettingsUnit, GetOrdersResponseUnit, RemoveOrdersRequestUnit,
-  StatusResponseUnit, GenericParametersUnit,
+  System.NetEncoding, SettingsUnit, GetOrdersResponseUnit,
+  RemoveOrdersRequestUnit, StatusResponseUnit, GenericParametersUnit,
   GetOrdersWithCustomFieldsResponseUnit;
 
 function TOrderActions.Add(Order: TOrder; out ErrorString: String): TOrder;
@@ -224,7 +224,7 @@ begin
 end;
 
 function TOrderActions.GetOrdersWithCustomFields(Fields: String;
-  Offset, Limit: integer; out Total: integer; out ErrorString: String): TIntegerArray;
+  Limit, Offset: integer; out Total: integer; out ErrorString: String): TIntegerArray;
 var
   Response: TGetOrdersWithCustomFieldsResponse;
   Request: TGenericParameters;
@@ -260,18 +260,19 @@ begin
   end;
 end;
 
-function TOrderActions.GetOrdersWithSpecifiedText(SpecifiedText: String; Offset,
-  Limit: integer; out Total: integer; out ErrorString: String): TOrderArray;
+function TOrderActions.GetOrdersWithSpecifiedText(SpecifiedText: String; Limit,
+  Offset: integer; out Total: integer; out ErrorString: String): TOrderList;
 var
   Response: TGetOrdersResponse;
   Request: TGenericParameters;
+  i: integer;
 begin
-  SetLength(Result, 0);
+  Result := TOrderList.Create;
   Total := 0;
 
   Request := TGenericParameters.Create;
   try
-    Request.AddParameter('query', SpecifiedText);
+    Request.AddParameter('query', TNetEncoding.URL.Encode(SpecifiedText));
     Request.AddParameter('offset', IntToStr(Offset));
     Request.AddParameter('limit', IntToStr(Limit));
 
@@ -280,7 +281,9 @@ begin
     try
       if (Response <> nil) then
       begin
-        Result := Response.Results;
+        for i := 0 to Length(Response.Results) - 1 do
+          Result.Add(Response.Results[i]);
+
         Total := Response.Total;
       end
       else

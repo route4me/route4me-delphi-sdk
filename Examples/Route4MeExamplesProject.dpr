@@ -36,7 +36,6 @@ uses
   AvoidanceZoneActionUnit in '..\Actions\AvoidanceZoneActionUnit.pas',
   OrderActionUnit in '..\Actions\OrderActionUnit.pas',
   TrackingActionsUnit in '..\Actions\TrackingActionsUnit.pas',
-  ActivityUnit in '..\DataTypes\ActivityUnit.pas',
   AddressNoteUnit in '..\DataTypes\AddressNoteUnit.pas',
   AvoidanceZoneUnit in '..\DataTypes\AvoidanceZoneUnit.pas',
   OrderUnit in '..\DataTypes\OrderUnit.pas',
@@ -191,7 +190,12 @@ uses
   RegisterWebinarRequestUnit in '..\QueryTypes\RegisterWebinarRequestUnit.pas',
   RegisterWebinarUnit in 'Examples\Members\RegisterWebinarUnit.pas',
   LogCustomActivityUnit in 'Examples\Activities\LogCustomActivityUnit.pas',
-  GetTeamActivitiesUnit in 'Examples\Activities\GetTeamActivitiesUnit.pas';
+  GetTeamActivitiesUnit in 'Examples\Activities\GetTeamActivitiesUnit.pas',
+  ActivityRequestUnit in '..\QueryTypes\ActivityRequestUnit.pas',
+  ActivityUnit in '..\DataTypes\ActivityUnit.pas',
+  ActivityAreaAddedUnit in 'Examples\Activities\ActivityAreaAddedUnit.pas',
+  ActivityAreaRemovedUnit in 'Examples\Activities\ActivityAreaRemovedUnit.pas',
+  ActivityAreaUpdatedUnit in 'Examples\Activities\ActivityAreaUpdatedUnit.pas';
 
 begin
   try

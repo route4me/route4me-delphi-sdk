@@ -19,9 +19,9 @@ type
     procedure ScheduleOrder;
     procedure GetOrdersByDate;
     procedure GetOrdersScheduledFor;
+    procedure GetOrdersWithSpecifiedText;
 
     procedure GetOrdersWithCustomFields;
-    procedure GetOrdersWithSpecifiedText;
     procedure AddOrderToRoute;
     procedure AddOrderToOptimization;
 
@@ -70,13 +70,11 @@ end;
 procedure TTestOrderSamples.AddOrderToOptimization;
 begin
 // todo: сделать
-
 end;
 
 procedure TTestOrderSamples.AddOrderToRoute;
 begin
 // todo: сделать
-
 end;
 
 procedure TTestOrderSamples.GetAllOrders;
@@ -254,20 +252,92 @@ end;
 procedure TTestOrderSamples.GetOrdersWithCustomFields;
 begin
 // todo: сделать
-//  FRoute4MeManager.Order.GetOrdersWithCustomFields()
 end;
 
 procedure TTestOrderSamples.GetOrdersWithSpecifiedText;
+var
+  ErrorString: String;
+  Text: String;
+  Orders: TOrderList;
+  i: integer;
+  IsFound: boolean;
+  Offset, Limit, Total: integer;
+  Order: TOrder;
 begin
-// todo: сделать
+  Text := 'Some Unique Text S34Ds2';
+  Limit := 5;
+  Offset := 0;
+  Orders := FRoute4MeManager.Order.GetOrdersWithSpecifiedText(
+    Text, Limit, Offset, Total, ErrorString);
+  try
+    CheckNotNull(Orders);
+    CheckEquals(0, Orders.Count);
+    CheckEquals(EmptyStr, ErrorString);
+    CheckEquals(0, Total);
+  finally
+    FreeAndNil(Orders);
+  end;
+
+  Order := FRoute4MeManager.Order.Get(FOrderId, ErrorString);
+  try
+    CheckEquals(EmptyStr, ErrorString);
+
+    // By full LastName
+    Text := Order.LastName;
+    Limit := 5;
+    Offset := 0;
+    Orders := FRoute4MeManager.Order.GetOrdersWithSpecifiedText(
+      Text, Limit, Offset, Total, ErrorString);
+    try
+      CheckNotNull(Orders);
+      CheckEquals(1, Orders.Count);
+      CheckEquals(EmptyStr, ErrorString);
+      CheckEquals(1, Total);
+    finally
+      FreeAndNil(Orders);
+    end;
+
+    // The part of FirstName
+    Text := Copy(Order.FirstName, 2, Length(Order.FirstName) - 2);
+    Limit := 5;
+    Offset := 0;
+    Orders := FRoute4MeManager.Order.GetOrdersWithSpecifiedText(
+      Text, Limit, Offset, Total, ErrorString);
+    try
+      CheckNotNull(Orders);
+      CheckEquals(1, Orders.Count);
+      CheckEquals(EmptyStr, ErrorString);
+      CheckEquals(1, Total);
+    finally
+      FreeAndNil(Orders);
+    end;
+
+    // Text with spaces
+    Text := Order.Address1;
+    Limit := 5;
+    Offset := 0;
+    Orders := FRoute4MeManager.Order.GetOrdersWithSpecifiedText(
+      Text, Limit, Offset, Total, ErrorString);
+    try
+      CheckNotNull(Orders);
+      CheckEquals(1, Orders.Count);
+      CheckEquals(EmptyStr, ErrorString);
+      CheckEquals(1, Total);
+    finally
+      FreeAndNil(Orders);
+    end;
+  finally
+    FreeAndNil(Order);
+  end;
 end;
 
 function TTestOrderSamples.GetTestOrder: TOrder;
 begin
   Result := TOrder.Create;
-  Result.Address1 := 'Test Address1';
+  Result.Address1 := 'Test Address2';
   Result.AddressAlias := 'Test AddressAlias';
-  Result.FirstName := 'John';
+  Result.FirstName := 'Jefferson';
+  Result.LastName := 'Cruse';
   Result.CachedLatitude := 37.773972;
   Result.CachedLongitude := -122.431297;
 end;

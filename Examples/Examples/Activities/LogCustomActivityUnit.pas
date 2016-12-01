@@ -12,8 +12,6 @@ type
 
 implementation
 
-uses ActivityUnit;
-
 function TLogCustomActivity.Execute(Message, RouteId: String): boolean;
 var
   ErrorString: String;

@@ -4,7 +4,7 @@ interface
 
 uses
   SysUtils, BaseActionUnit,
-  ActivityUnit, ActivityParametersUnit;
+  ActivityRequestUnit, ActivityParametersUnit, ActivityUnit;
 
 type
   TActivityActions = class(TBaseAction)
@@ -30,6 +30,10 @@ type
     /// <returns> True/False </returns>
     function LogCustomActivity(RouteId: String; Message: String;
       out ErrorString: String): boolean;
+
+    procedure AreaAdded(out ErrorString: String);
+    procedure AreaUpdated(out ErrorString: String);
+    procedure AreaRemoved(out ErrorString: String);
   end;
 
 implementation
@@ -37,7 +41,74 @@ implementation
 { TActivityActions }
 
 uses
-  SettingsUnit, GetActivitiesResponseUnit, StatusResponseUnit;
+  SettingsUnit, GetActivitiesResponseUnit, StatusResponseUnit,
+  GenericParametersUnit, EnumsUnit;
+
+procedure TActivityActions.AreaAdded(out ErrorString: String);
+var
+  Response: TGetActivitiesResponse;
+  Request: TGenericParameters;
+begin
+  Request := TGenericParameters.Create;
+  try
+    Request.AddParameter('activity_type', TActivityTypeDescription[TActivityType.atAreaAdded]);
+
+    Response := FConnection.Get(TSettings.GetActivitiesHost, Request,
+      TGetActivitiesResponse, ErrorString) as TGetActivitiesResponse;
+    try
+      if (Response = nil) and (ErrorString = EmptyStr) then
+        ErrorString := 'Area Added fault';
+    finally
+      FreeAndNil(Response);
+    end;
+  finally
+    FreeAndNil(Request);
+  end;
+end;
+
+procedure TActivityActions.AreaRemoved(out ErrorString: String);
+var
+  Response: TGetActivitiesResponse;
+  Request: TGenericParameters;
+begin
+  Request := TGenericParameters.Create;
+  try
+    Request.AddParameter('activity_type', TActivityTypeDescription[TActivityType.atAreaRemoved]);
+
+    Response := FConnection.Get(TSettings.GetActivitiesHost, Request,
+      TGetActivitiesResponse, ErrorString) as TGetActivitiesResponse;
+    try
+      if (Response = nil) and (ErrorString = EmptyStr) then
+        ErrorString := 'Area Removed fault';
+    finally
+      FreeAndNil(Response);
+    end;
+  finally
+    FreeAndNil(Request);
+  end;
+end;
+
+procedure TActivityActions.AreaUpdated(out ErrorString: String);
+var
+  Response: TGetActivitiesResponse;
+  Request: TGenericParameters;
+begin
+  Request := TGenericParameters.Create;
+  try
+    Request.AddParameter('activity_type', TActivityTypeDescription[TActivityType.atAreaUpdated]);
+
+    Response := FConnection.Get(TSettings.GetActivitiesHost, Request,
+      TGetActivitiesResponse, ErrorString) as TGetActivitiesResponse;
+    try
+      if (Response = nil) and (ErrorString = EmptyStr) then
+        ErrorString := 'Area Updated fault';
+    finally
+      FreeAndNil(Response);
+    end;
+  finally
+    FreeAndNil(Request);
+  end;
+end;
 
 function TActivityActions.GetAllActivities(Limit, Offset: integer;
   out Total: integer; out ErrorString: String): TActivityList;
@@ -68,8 +139,8 @@ begin
   end;
 end;
 
-function TActivityActions.GetTeamActivities(RouteId: String;
-  Limit, Offset: integer; out Total: integer; out ErrorString: String): TActivityList;
+function TActivityActions.GetTeamActivities(RouteId: String; Limit, Offset: integer;
+  out Total: integer; out ErrorString: String): TActivityList;
 var
   Response: TGetActivitiesResponse;
   Request: TActivityParameters;
@@ -110,7 +181,7 @@ begin
   try
     Activity.RouteId := RouteId;
     Activity.ActivityMessage := Message;
-    Activity.ActivityType := 'user_message';
+    Activity.ActivityType := TActivityType.atUserMessage;
 
     Response := FConnection.Post(TSettings.ActivityFeedHost, Activity,
       TStatusResponse, ErrorString) as TStatusResponse;

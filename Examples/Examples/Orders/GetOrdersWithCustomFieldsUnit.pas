@@ -22,10 +22,10 @@ procedure TGetOrdersWithCustomFields.Execute(Fields: String);
   Offset, Limit: integer;
   Total: integer;
 begin
-  Offset := 0;
   Limit := 10;
+  Offset := 0;
   Orders := Route4MeManager.Order.GetOrdersWithCustomFields(
-    Fields, Offset, Limit, Total, ErrorString);
+    Fields, Limit, Offset, Total, ErrorString);
   try
     WriteLn('');
 

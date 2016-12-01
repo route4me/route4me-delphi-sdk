@@ -283,6 +283,10 @@ begin
           FreeAndNil(Routes);
         end;
 
+        Examples.ActivityAreaAdded;
+        Examples.ActivityAreaUpdated;
+        Examples.ActivityAreaRemoved;
+
         if (RouteId_SingleDriverRoute10Stops.IsNotNull) then
           Examples.LogCustomActivity('Test User Activity ' + DateTimeToStr(Now), RouteId_SingleDriverRoute10Stops)
         else

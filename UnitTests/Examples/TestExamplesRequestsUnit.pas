@@ -60,6 +60,9 @@ type
     procedure LogCustomActivity;
     procedure GetAllActivities;
     procedure GetTeamActivities;
+    procedure ActivityAreaAdded;
+    procedure ActivityAreaUpdated;
+    procedure ActivityAreaRemoved;
     procedure GetAddress;
     procedure MarkAddressAsDetectedAsVisited;
     procedure MarkAddressAsDetectedAsDeparted;
@@ -405,6 +408,36 @@ begin
   CheckEquals('https://www.route4me.com/api.v4/route.php?api_key=11111111111111111111111111111111&route_id=5BCEACC31C444BCF9D8AB604DA4DFCA7', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmPUT = FConnection.Method);
     CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.ActivityAreaAdded;
+begin
+  FExamples.ActivityAreaAdded();
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&activity_type=area-added', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.ActivityAreaRemoved;
+begin
+  FExamples.ActivityAreaRemoved();
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&activity_type=area-removed', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.ActivityAreaUpdated;
+begin
+  FExamples.ActivityAreaUpdated();
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&activity_type=area-updated', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
 procedure TTestExamplesRequests.Authentication;
