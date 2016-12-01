@@ -34,6 +34,13 @@ type
     procedure AreaAdded(out ErrorString: String);
     procedure AreaUpdated(out ErrorString: String);
     procedure AreaRemoved(out ErrorString: String);
+    procedure DestinationDeleted(out ErrorString: String);
+    procedure DestinationOutOfSequence(out ErrorString: String);
+    procedure DriverArrivedEarly(out ErrorString: String);
+    procedure DriverArrivedLate(out ErrorString: String);
+    procedure DriverArrivedOnTime(out ErrorString: String);
+    procedure GeofenceEntered(out ErrorString: String);
+    procedure GeofenceLeft(out ErrorString: String);
   end;
 
 implementation
@@ -102,6 +109,160 @@ begin
     try
       if (Response = nil) and (ErrorString = EmptyStr) then
         ErrorString := 'Area Updated fault';
+    finally
+      FreeAndNil(Response);
+    end;
+  finally
+    FreeAndNil(Request);
+  end;
+end;
+
+procedure TActivityActions.DestinationDeleted(out ErrorString: String);
+var
+  Response: TGetActivitiesResponse;
+  Request: TGenericParameters;
+begin
+  Request := TGenericParameters.Create;
+  try
+    Request.AddParameter('activity_type', TActivityTypeDescription[TActivityType.atDeleteDestination]);
+
+    Response := FConnection.Get(TSettings.GetActivitiesHost, Request,
+      TGetActivitiesResponse, ErrorString) as TGetActivitiesResponse;
+    try
+      if (Response = nil) and (ErrorString = EmptyStr) then
+        ErrorString := 'Destination Deleted fault';
+    finally
+      FreeAndNil(Response);
+    end;
+  finally
+    FreeAndNil(Request);
+  end;
+end;
+
+procedure TActivityActions.DestinationOutOfSequence(out ErrorString: String);
+var
+  Response: TGetActivitiesResponse;
+  Request: TGenericParameters;
+begin
+  Request := TGenericParameters.Create;
+  try
+    Request.AddParameter('activity_type', TActivityTypeDescription[TActivityType.atDestinationOutSequence]);
+
+    Response := FConnection.Get(TSettings.GetActivitiesHost, Request,
+      TGetActivitiesResponse, ErrorString) as TGetActivitiesResponse;
+    try
+      if (Response = nil) and (ErrorString = EmptyStr) then
+        ErrorString := 'Destination Out Of Sequence fault';
+    finally
+      FreeAndNil(Response);
+    end;
+  finally
+    FreeAndNil(Request);
+  end;
+end;
+
+procedure TActivityActions.DriverArrivedEarly(out ErrorString: String);
+var
+  Response: TGetActivitiesResponse;
+  Request: TGenericParameters;
+begin
+  Request := TGenericParameters.Create;
+  try
+    Request.AddParameter('activity_type', TActivityTypeDescription[TActivityType.atDriverArrivedEarly]);
+
+    Response := FConnection.Get(TSettings.GetActivitiesHost, Request,
+      TGetActivitiesResponse, ErrorString) as TGetActivitiesResponse;
+    try
+      if (Response = nil) and (ErrorString = EmptyStr) then
+        ErrorString := 'Driver Arrived Early fault';
+    finally
+      FreeAndNil(Response);
+    end;
+  finally
+    FreeAndNil(Request);
+  end;
+end;
+
+procedure TActivityActions.DriverArrivedLate(out ErrorString: String);
+var
+  Response: TGetActivitiesResponse;
+  Request: TGenericParameters;
+begin
+  Request := TGenericParameters.Create;
+  try
+    Request.AddParameter('activity_type', TActivityTypeDescription[TActivityType.atDriverArrivedLate]);
+
+    Response := FConnection.Get(TSettings.GetActivitiesHost, Request,
+      TGetActivitiesResponse, ErrorString) as TGetActivitiesResponse;
+    try
+      if (Response = nil) and (ErrorString = EmptyStr) then
+        ErrorString := 'Driver Arrived Late fault';
+    finally
+      FreeAndNil(Response);
+    end;
+  finally
+    FreeAndNil(Request);
+  end;
+end;
+
+procedure TActivityActions.DriverArrivedOnTime(out ErrorString: String);
+var
+  Response: TGetActivitiesResponse;
+  Request: TGenericParameters;
+begin
+  Request := TGenericParameters.Create;
+  try
+    Request.AddParameter('activity_type', TActivityTypeDescription[TActivityType.atDriverArrivedOnTime]);
+
+    Response := FConnection.Get(TSettings.GetActivitiesHost, Request,
+      TGetActivitiesResponse, ErrorString) as TGetActivitiesResponse;
+    try
+      if (Response = nil) and (ErrorString = EmptyStr) then
+        ErrorString := 'Driver Arrived On Time fault';
+    finally
+      FreeAndNil(Response);
+    end;
+  finally
+    FreeAndNil(Request);
+  end;
+end;
+
+procedure TActivityActions.GeofenceEntered(out ErrorString: String);
+var
+  Response: TGetActivitiesResponse;
+  Request: TGenericParameters;
+begin
+  Request := TGenericParameters.Create;
+  try
+    Request.AddParameter('activity_type', TActivityTypeDescription[TActivityType.atGeofenceEntered]);
+
+    Response := FConnection.Get(TSettings.GetActivitiesHost, Request,
+      TGetActivitiesResponse, ErrorString) as TGetActivitiesResponse;
+    try
+      if (Response = nil) and (ErrorString = EmptyStr) then
+        ErrorString := 'Geofence Entered fault';
+    finally
+      FreeAndNil(Response);
+    end;
+  finally
+    FreeAndNil(Request);
+  end;
+end;
+
+procedure TActivityActions.GeofenceLeft(out ErrorString: String);
+var
+  Response: TGetActivitiesResponse;
+  Request: TGenericParameters;
+begin
+  Request := TGenericParameters.Create;
+  try
+    Request.AddParameter('activity_type', TActivityTypeDescription[TActivityType.atGeofenceLeft]);
+
+    Response := FConnection.Get(TSettings.GetActivitiesHost, Request,
+      TGetActivitiesResponse, ErrorString) as TGetActivitiesResponse;
+    try
+      if (Response = nil) and (ErrorString = EmptyStr) then
+        ErrorString := 'Geofence Left fault';
     finally
       FreeAndNil(Response);
     end;

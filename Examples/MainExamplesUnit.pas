@@ -286,6 +286,13 @@ begin
         Examples.ActivityAreaAdded;
         Examples.ActivityAreaUpdated;
         Examples.ActivityAreaRemoved;
+        Examples.DestinationDeleted;
+        Examples.DestinationOutOfSequence;
+        Examples.DriverArrivedEarly;
+        Examples.DriverArrivedLate;
+        Examples.DriverArrivedOnTime;
+        Examples.GeofenceEntered;
+        Examples.GeofenceLeft;
 
         if (RouteId_SingleDriverRoute10Stops.IsNotNull) then
           Examples.LogCustomActivity('Test User Activity ' + DateTimeToStr(Now), RouteId_SingleDriverRoute10Stops)

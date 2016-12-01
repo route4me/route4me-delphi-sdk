@@ -63,6 +63,13 @@ type
     procedure ActivityAreaAdded;
     procedure ActivityAreaUpdated;
     procedure ActivityAreaRemoved;
+    procedure DestinationDeleted;
+    procedure DestinationOutOfSequence;
+    procedure DriverArrivedEarly;
+    procedure DriverArrivedLate;
+    procedure DriverArrivedOnTime;
+    procedure GeofenceLeft;
+    procedure GeofenceEntered;
     procedure GetAddress;
     procedure MarkAddressAsDetectedAsVisited;
     procedure MarkAddressAsDetectedAsDeparted;
@@ -676,6 +683,26 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
+procedure TTestExamplesRequests.DestinationDeleted;
+begin
+  FExamples.DestinationDeleted();
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&activity_type=delete-destination', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.DestinationOutOfSequence;
+begin
+  FExamples.DestinationOutOfSequence();
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&activity_type=destination-out-sequence', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
 procedure TTestExamplesRequests.DeviceLicense;
 var
   DeviceId: String;
@@ -688,6 +715,36 @@ begin
   CheckEqualsBody('DeviceLicense', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api/device/verify_device_license.php?api_key=11111111111111111111111111111111', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.DriverArrivedEarly;
+begin
+  FExamples.DriverArrivedEarly();
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&activity_type=driver-arrived-early', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.DriverArrivedLate;
+begin
+  FExamples.DriverArrivedLate();
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&activity_type=driver-arrived-late', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.DriverArrivedOnTime;
+begin
+  FExamples.DriverArrivedOnTime();
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&activity_type=driver-arrived-on-time', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
@@ -720,6 +777,26 @@ begin
 
   CheckEquals(EmptyStr, FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/route.php?api_key=11111111111111111111111111111111&limit=10&offset=5', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.GeofenceEntered;
+begin
+  FExamples.GeofenceEntered();
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&activity_type=geofence-entered', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.GeofenceLeft;
+begin
+  FExamples.GeofenceLeft();
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&activity_type=geofence-left', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
@@ -909,7 +986,7 @@ begin
 
   CheckEquals(EmptyStr, FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/order.php?api_key=11111111111111111111111111111111&' +
-    'query=Test%2520Fields&offset=0&limit=10', FConnection.Url);
+    'query=Test+Fields&offset=0&limit=10', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;

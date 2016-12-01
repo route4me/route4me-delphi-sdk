@@ -224,7 +224,14 @@ uses
   ActivityAreaAddedUnit in '..\Examples\Examples\Activities\ActivityAreaAddedUnit.pas',
   ActivityAreaUpdatedUnit in '..\Examples\Examples\Activities\ActivityAreaUpdatedUnit.pas',
   ActivityAreaRemovedUnit in '..\Examples\Examples\Activities\ActivityAreaRemovedUnit.pas',
-  TestAddressesSamplesUnit in 'Examples\Online\TestAddressesSamplesUnit.pas';
+  TestAddressesSamplesUnit in 'Examples\Online\TestAddressesSamplesUnit.pas',
+  DestinationDeletedUnit in '..\Examples\Examples\Activities\DestinationDeletedUnit.pas',
+  DestinationOutOfSequenceUnit in '..\Examples\Examples\Activities\DestinationOutOfSequenceUnit.pas',
+  DriverArrivedEarlyUnit in '..\Examples\Examples\Activities\DriverArrivedEarlyUnit.pas',
+  DriverArrivedLateUnit in '..\Examples\Examples\Activities\DriverArrivedLateUnit.pas',
+  DriverArrivedOnTimeUnit in '..\Examples\Examples\Activities\DriverArrivedOnTimeUnit.pas',
+  GeofenceEnteredUnit in '..\Examples\Examples\Activities\GeofenceEnteredUnit.pas',
+  GeofenceLeftUnit in '..\Examples\Examples\Activities\GeofenceLeftUnit.pas';
 
 {R *.RES}
 

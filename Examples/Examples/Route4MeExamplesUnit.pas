@@ -71,6 +71,13 @@ type
     procedure ActivityAreaAdded;
     procedure ActivityAreaUpdated;
     procedure ActivityAreaRemoved;
+    procedure DestinationDeleted;
+    procedure DestinationOutOfSequence;
+    procedure DriverArrivedEarly;
+    procedure DriverArrivedLate;
+    procedure DriverArrivedOnTime;
+    procedure GeofenceEntered;
+    procedure GeofenceLeft;
     procedure GetAddress(RouteId: String; RouteDestinationId: integer);
     procedure MarkAddressAsDetectedAsVisited(RouteId: String; RouteDestinationId: integer;
       IsVisited: boolean);
@@ -147,7 +154,9 @@ uses
   UpdateUserUnit, RemoveAddressBookContactsRequestUnit, RemoveUserUnit,
   AuthenticationUnit, DeviceLicenseUnit, UserLicenseUnit, RegisterWebinarUnit,
   GetTeamActivitiesUnit, ActivityAreaAddedUnit, ActivityAreaRemovedUnit,
-  ActivityAreaUpdatedUnit;
+  ActivityAreaUpdatedUnit, DestinationDeletedUnit, DestinationOutOfSequenceUnit,
+  DriverArrivedEarlyUnit, DriverArrivedLateUnit, DriverArrivedOnTimeUnit,
+  GeofenceLeftUnit, GeofenceEnteredUnit;
 
 procedure TRoute4MeExamples.ActivityAreaAdded;
 var
@@ -353,6 +362,30 @@ begin
   end;
 end;
 
+procedure TRoute4MeExamples.DestinationDeleted;
+var
+  Example: TDestinationDeleted;
+begin
+  Example := MakeExample(TDestinationDeleted) as TDestinationDeleted;
+  try
+    Example.Execute;
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.DestinationOutOfSequence;
+var
+  Example: TDestinationOutOfSequence;
+begin
+  Example := MakeExample(TDestinationOutOfSequence) as TDestinationOutOfSequence;
+  try
+    Example.Execute;
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
 destructor TRoute4MeExamples.Destroy;
 begin
   FOutput := nil;
@@ -368,6 +401,42 @@ begin
   Example := MakeExample(TDeviceLicense) as TDeviceLicense;
   try
     Example.Execute(DeviceId, DeviceType);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.DriverArrivedEarly;
+var
+  Example: TDriverArrivedEarly;
+begin
+  Example := MakeExample(TDriverArrivedEarly) as TDriverArrivedEarly;
+  try
+    Example.Execute;
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.DriverArrivedLate;
+var
+  Example: TDriverArrivedLate;
+begin
+  Example := MakeExample(TDriverArrivedLate) as TDriverArrivedLate;
+  try
+    Example.Execute;
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.DriverArrivedOnTime;
+var
+  Example: TDriverArrivedOnTime;
+begin
+  Example := MakeExample(TDriverArrivedOnTime) as TDriverArrivedOnTime;
+  try
+    Example.Execute;
   finally
     FreeAndNil(Example);
   end;
@@ -416,6 +485,30 @@ begin
   Example := MakeExample(TGenericExampleShortcut) as TGenericExampleShortcut;
   try
     Example.Execute(Connection);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.GeofenceEntered;
+var
+  Example: TGeofenceEntered;
+begin
+  Example := MakeExample(TGeofenceEntered) as TGeofenceEntered;
+  try
+    Example.Execute;
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.GeofenceLeft;
+var
+  Example: TGeofenceLeft;
+begin
+  Example := MakeExample(TGeofenceLeft) as TGeofenceLeft;
+  try
+    Example.Execute;
   finally
     FreeAndNil(Example);
   end;

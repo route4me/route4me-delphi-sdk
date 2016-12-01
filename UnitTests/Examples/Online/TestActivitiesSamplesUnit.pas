@@ -17,6 +17,13 @@ type
     procedure ActivityAreaAdded;
     procedure ActivityAreaUpdated;
     procedure ActivityAreaRemoved;
+    procedure DestinationDeleted;
+    procedure DestinationOutOfSequence;
+    procedure DriverArrivedEarly;
+    procedure DriverArrivedLate;
+    procedure DriverArrivedOnTime;
+    procedure GeofenceLeft;
+    procedure GeofenceEntered;
   end;
 
 implementation
@@ -45,6 +52,62 @@ var
   ErrorString: String;
 begin
   FRoute4MeManager.ActivityFeed.AreaUpdated(ErrorString);
+  CheckEquals(EmptyStr, ErrorString);
+end;
+
+procedure TTestActivitiesSamples.DestinationDeleted;
+var
+  ErrorString: String;
+begin
+  FRoute4MeManager.ActivityFeed.DestinationDeleted(ErrorString);
+  CheckEquals(EmptyStr, ErrorString);
+end;
+
+procedure TTestActivitiesSamples.DestinationOutOfSequence;
+var
+  ErrorString: String;
+begin
+  FRoute4MeManager.ActivityFeed.DestinationOutOfSequence(ErrorString);
+  CheckEquals(EmptyStr, ErrorString);
+end;
+
+procedure TTestActivitiesSamples.DriverArrivedEarly;
+var
+  ErrorString: String;
+begin
+  FRoute4MeManager.ActivityFeed.DriverArrivedEarly(ErrorString);
+  CheckEquals(EmptyStr, ErrorString);
+end;
+
+procedure TTestActivitiesSamples.DriverArrivedLate;
+var
+  ErrorString: String;
+begin
+  FRoute4MeManager.ActivityFeed.DriverArrivedLate(ErrorString);
+  CheckEquals(EmptyStr, ErrorString);
+end;
+
+procedure TTestActivitiesSamples.DriverArrivedOnTime;
+var
+  ErrorString: String;
+begin
+  FRoute4MeManager.ActivityFeed.DriverArrivedOnTime(ErrorString);
+  CheckEquals(EmptyStr, ErrorString);
+end;
+
+procedure TTestActivitiesSamples.GeofenceEntered;
+var
+  ErrorString: String;
+begin
+  FRoute4MeManager.ActivityFeed.GeofenceEntered(ErrorString);
+  CheckEquals(EmptyStr, ErrorString);
+end;
+
+procedure TTestActivitiesSamples.GeofenceLeft;
+var
+  ErrorString: String;
+begin
+  FRoute4MeManager.ActivityFeed.GeofenceLeft(ErrorString);
   CheckEquals(EmptyStr, ErrorString);
 end;
 

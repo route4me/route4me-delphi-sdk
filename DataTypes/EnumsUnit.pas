@@ -21,7 +21,13 @@ type
     atUserMessage,
     atAreaAdded,
     atAreaUpdated,
-    atAreaRemoved);
+    atAreaRemoved,
+    atDestinationOutSequence,
+    atDriverArrivedEarly,
+    atDriverArrivedLate,
+    atDriverArrivedOnTime,
+    atGeofenceLeft,
+    atGeofenceEntered);
 
   TMemberType = (
     mtPrimaryAccount,
@@ -228,8 +234,8 @@ var
     'mark-destination-visited', 'member-created', 'member-deleted', 'member-modified',
     'move-destination', 'note-insert', 'route-delete', 'route-optimized',
     'route-owner-changed', 'update-destinations', 'user_message', 'area-added',
-    'area-updated', 'area-removed');
-
+    'area-updated', 'area-removed', 'destination-out-sequence', 'driver-arrived-early',
+    'driver-arrived-late', 'driver-arrived-on-time', 'geofence-left', 'geofence-entered');
 
 implementation
 
