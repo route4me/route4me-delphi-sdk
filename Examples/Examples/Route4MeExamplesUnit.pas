@@ -154,9 +154,10 @@ uses
   UpdateUserUnit, RemoveAddressBookContactsRequestUnit, RemoveUserUnit,
   AuthenticationUnit, DeviceLicenseUnit, UserLicenseUnit, RegisterWebinarUnit,
   GetTeamActivitiesUnit, ActivityAreaAddedUnit, ActivityAreaRemovedUnit,
-  ActivityAreaUpdatedUnit, DestinationDeletedUnit, DestinationOutOfSequenceUnit,
-  DriverArrivedEarlyUnit, DriverArrivedLateUnit, DriverArrivedOnTimeUnit,
-  GeofenceLeftUnit, GeofenceEnteredUnit;
+  ActivityAreaUpdatedUnit, ActivityDestinationDeletedUnit,
+  ActivityDestinationOutOfSequenceUnit, ActivityDriverArrivedEarlyUnit,
+  ActivityDriverArrivedLateUnit, ActivityDriverArrivedOnTimeUnit,
+  ActivityGeofenceLeftUnit, ActivityGeofenceEnteredUnit;
 
 procedure TRoute4MeExamples.ActivityAreaAdded;
 var

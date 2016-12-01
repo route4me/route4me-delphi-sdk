@@ -225,13 +225,13 @@ uses
   ActivityAreaUpdatedUnit in '..\Examples\Examples\Activities\ActivityAreaUpdatedUnit.pas',
   ActivityAreaRemovedUnit in '..\Examples\Examples\Activities\ActivityAreaRemovedUnit.pas',
   TestAddressesSamplesUnit in 'Examples\Online\TestAddressesSamplesUnit.pas',
-  DestinationDeletedUnit in '..\Examples\Examples\Activities\DestinationDeletedUnit.pas',
-  DestinationOutOfSequenceUnit in '..\Examples\Examples\Activities\DestinationOutOfSequenceUnit.pas',
-  DriverArrivedEarlyUnit in '..\Examples\Examples\Activities\DriverArrivedEarlyUnit.pas',
-  DriverArrivedLateUnit in '..\Examples\Examples\Activities\DriverArrivedLateUnit.pas',
-  DriverArrivedOnTimeUnit in '..\Examples\Examples\Activities\DriverArrivedOnTimeUnit.pas',
-  GeofenceEnteredUnit in '..\Examples\Examples\Activities\GeofenceEnteredUnit.pas',
-  GeofenceLeftUnit in '..\Examples\Examples\Activities\GeofenceLeftUnit.pas';
+  ActivityDestinationDeletedUnit in '..\Examples\Examples\Activities\ActivityDestinationDeletedUnit.pas',
+  ActivityDestinationOutOfSequenceUnit in '..\Examples\Examples\Activities\ActivityDestinationOutOfSequenceUnit.pas',
+  ActivityDriverArrivedEarlyUnit in '..\Examples\Examples\Activities\ActivityDriverArrivedEarlyUnit.pas',
+  ActivityDriverArrivedLateUnit in '..\Examples\Examples\Activities\ActivityDriverArrivedLateUnit.pas',
+  ActivityDriverArrivedOnTimeUnit in '..\Examples\Examples\Activities\ActivityDriverArrivedOnTimeUnit.pas',
+  ActivityGeofenceEnteredUnit in '..\Examples\Examples\Activities\ActivityGeofenceEnteredUnit.pas',
+  ActivityGeofenceLeftUnit in '..\Examples\Examples\Activities\ActivityGeofenceLeftUnit.pas';
 
 {R *.RES}
 

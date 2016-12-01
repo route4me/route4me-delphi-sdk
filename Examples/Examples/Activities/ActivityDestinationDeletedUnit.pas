@@ -1,4 +1,4 @@
-unit DestinationDeletedUnit;
+unit ActivityDestinationDeletedUnit;
 
 interface
 

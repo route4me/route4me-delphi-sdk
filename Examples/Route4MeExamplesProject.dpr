@@ -196,13 +196,13 @@ uses
   ActivityAreaAddedUnit in 'Examples\Activities\ActivityAreaAddedUnit.pas',
   ActivityAreaRemovedUnit in 'Examples\Activities\ActivityAreaRemovedUnit.pas',
   ActivityAreaUpdatedUnit in 'Examples\Activities\ActivityAreaUpdatedUnit.pas',
-  DestinationDeletedUnit in 'Examples\Activities\DestinationDeletedUnit.pas',
-  DestinationOutOfSequenceUnit in 'Examples\Activities\DestinationOutOfSequenceUnit.pas',
-  DriverArrivedEarlyUnit in 'Examples\Activities\DriverArrivedEarlyUnit.pas',
-  DriverArrivedLateUnit in 'Examples\Activities\DriverArrivedLateUnit.pas',
-  DriverArrivedOnTimeUnit in 'Examples\Activities\DriverArrivedOnTimeUnit.pas',
-  GeofenceEnteredUnit in 'Examples\Activities\GeofenceEnteredUnit.pas',
-  GeofenceLeftUnit in 'Examples\Activities\GeofenceLeftUnit.pas';
+  ActivityDestinationDeletedUnit in 'Examples\Activities\ActivityDestinationDeletedUnit.pas',
+  ActivityDestinationOutOfSequenceUnit in 'Examples\Activities\ActivityDestinationOutOfSequenceUnit.pas',
+  ActivityDriverArrivedEarlyUnit in 'Examples\Activities\ActivityDriverArrivedEarlyUnit.pas',
+  ActivityDriverArrivedLateUnit in 'Examples\Activities\ActivityDriverArrivedLateUnit.pas',
+  ActivityDriverArrivedOnTimeUnit in 'Examples\Activities\ActivityDriverArrivedOnTimeUnit.pas',
+  ActivityGeofenceEnteredUnit in 'Examples\Activities\ActivityGeofenceEnteredUnit.pas',
+  ActivityGeofenceLeftUnit in 'Examples\Activities\ActivityGeofenceLeftUnit.pas';
 
 begin
   try

@@ -266,13 +266,13 @@
         <DCCReference Include="Examples\Activities\ActivityAreaAddedUnit.pas"/>
         <DCCReference Include="Examples\Activities\ActivityAreaRemovedUnit.pas"/>
         <DCCReference Include="Examples\Activities\ActivityAreaUpdatedUnit.pas"/>
-        <DCCReference Include="Examples\Activities\DestinationDeletedUnit.pas"/>
-        <DCCReference Include="Examples\Activities\DestinationOutOfSequenceUnit.pas"/>
-        <DCCReference Include="Examples\Activities\DriverArrivedEarlyUnit.pas"/>
-        <DCCReference Include="Examples\Activities\DriverArrivedLateUnit.pas"/>
-        <DCCReference Include="Examples\Activities\DriverArrivedOnTimeUnit.pas"/>
-        <DCCReference Include="Examples\Activities\GeofenceEnteredUnit.pas"/>
-        <DCCReference Include="Examples\Activities\GeofenceLeftUnit.pas"/>
+        <DCCReference Include="Examples\Activities\ActivityDestinationDeletedUnit.pas"/>
+        <DCCReference Include="Examples\Activities\ActivityDestinationOutOfSequenceUnit.pas"/>
+        <DCCReference Include="Examples\Activities\ActivityDriverArrivedEarlyUnit.pas"/>
+        <DCCReference Include="Examples\Activities\ActivityDriverArrivedLateUnit.pas"/>
+        <DCCReference Include="Examples\Activities\ActivityDriverArrivedOnTimeUnit.pas"/>
+        <DCCReference Include="Examples\Activities\ActivityGeofenceEnteredUnit.pas"/>
+        <DCCReference Include="Examples\Activities\ActivityGeofenceLeftUnit.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

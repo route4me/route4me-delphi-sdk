@@ -1,4 +1,4 @@
-unit GeofenceEnteredUnit;
+unit ActivityGeofenceEnteredUnit;
 
 interface
 
