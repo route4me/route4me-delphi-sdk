@@ -16,39 +16,33 @@ uses RouteParametersQueryUnit, DataObjectUnit;
 
 procedure TGetOptimizations.Execute;
 var
-  Parameters: TRouteParametersQuery;
-  DataObjects: TArray<TDataObject>;
+  DataObjects: TDataObjectList;
   DataObject: TDataObject;
   ErrorString: String;
   i: integer;
+  Limit, Offset: integer;
 begin
-  Parameters := TRouteParametersQuery.Create;
+  Limit := 10;
+  Offset := 5;
+
+  DataObjects := Route4MeManager.Optimization.Get(Limit, Offset, ErrorString);
   try
-    Parameters.Limit := 10;
-    Parameters.Offset := 5;
+    WriteLn('');
 
-    DataObjects := Route4MeManager.Optimization.Get(Parameters, ErrorString);
-    try
-      WriteLn('');
+    if (DataObjects.Count > 0) then
+    begin
+        WriteLn(Format(
+          'GetOptimizations executed successfully, %d optimizations returned',
+          [DataObjects.Count]));
+        WriteLn('');
 
-      if Length(DataObjects) > 0 then
-      begin
-          WriteLn(Format(
-            'GetOptimizations executed successfully, %d optimizations returned',
-            [Length(DataObjects)]));
-          WriteLn('');
-
-          for DataObject in DataObjects do
-            WriteLn(Format('Optimization Problem ID: %s', [DataObject.OptimizationProblemId]));
-      end
-      else
-        WriteLn(Format('GetOptimizations error: "%s"', [ErrorString]));
-    finally
-      for i := Length(DataObjects) - 1 downto 0 do
-        FreeAndNil(DataObjects[i]);
-    end;
+        for DataObject in DataObjects do
+          WriteLn(Format('Optimization Problem ID: %s', [DataObject.OptimizationProblemId]));
+    end
+    else
+      WriteLn(Format('GetOptimizations error: "%s"', [ErrorString]));
   finally
-    FreeAndNil(Parameters);
+    FreeAndNil(DataObjects);
   end;
 end;
 

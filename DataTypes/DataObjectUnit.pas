@@ -108,6 +108,7 @@ type
     /// </summary>
     property TrackingHistories: TTrackingHistoryArray read FTrackingHistories write FTrackingHistories;
   end;
+  TDataObjectList = TObjectList<TDataObject>;
 
   TDataObjectRoute = class(TDataObject)
   strict private

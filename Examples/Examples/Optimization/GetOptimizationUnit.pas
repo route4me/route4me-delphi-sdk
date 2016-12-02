@@ -17,33 +17,25 @@ uses
 
 procedure TGetOptimization.Execute(OptimizationProblemId: String);
 var
-  Parameters: TOptimizationParameters;
   DataObject: TDataObject;
   ErrorString: String;
 begin
-  Parameters := TOptimizationParameters.Create;
+  DataObject := Route4MeManager.Optimization.Get(OptimizationProblemId, ErrorString);
   try
-    Parameters.OptimizationProblemID := OptimizationProblemId;
+    WriteLn('');
 
-    DataObject := Route4MeManager.Optimization.Get(Parameters, ErrorString);
-    try
-      WriteLn('');
-
-      if (DataObject <> nil) then
-      begin
-          WriteLn('GetOptimization executed successfully');
-          WriteLn(Format('Optimization Problem ID: %s',
-            [DataObject.OptimizationProblemId]));
-          WriteLn(Format('State: %s',
-            [TOptimizationDescription[TOptimizationState(DataObject.State)]]));
-      end
-      else
-        WriteLn(Format('GetOptimization error: "%s"', [ErrorString]));
-    finally
-      FreeAndNil(DataObject);
-    end;
+    if (DataObject <> nil) then
+    begin
+        WriteLn('GetOptimization executed successfully');
+        WriteLn(Format('Optimization Problem ID: %s',
+          [DataObject.OptimizationProblemId]));
+        WriteLn(Format('State: %s',
+          [TOptimizationDescription[TOptimizationState(DataObject.State)]]));
+    end
+    else
+      WriteLn(Format('GetOptimization error: "%s"', [ErrorString]));
   finally
-    FreeAndNil(Parameters);
+    FreeAndNil(DataObject);
   end;
 end;
 

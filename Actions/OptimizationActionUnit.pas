@@ -13,14 +13,11 @@ type
     function Run(OptimizationParameters: TOptimizationParameters;
       out ErrorString: String): TDataObject;
 
-    function Get(OptimizationParameters: TOptimizationParameters;
-      out ErrorString: String): TDataObject; overload;
-
     function Get(OptimizationProblemId: String;
       out ErrorString: String): TDataObject; overload;
 
-    function Get(QueryParameters: TRouteParametersQuery;
-      out ErrorString: String): TArray<TDataObject>; overload;
+    function Get(Limit, Offset: integer;
+      out ErrorString: String): TDataObjectList; overload;
 
     function Update(OptimizationParameters: TOptimizationParameters;
       out ErrorString: String): TDataObject;
@@ -46,14 +43,6 @@ uses
   RemoveDestinationFromOptimizationResponseUnit, GenericParametersUnit,
   CommonTypesUnit, RemoveOptimizationResponseUnit;
 
-function TOptimizationActions.Get(
-  OptimizationParameters: TOptimizationParameters;
-  out ErrorString: String): TDataObject;
-begin
-  Result := FConnection.Get(TSettings.ApiHost, OptimizationParameters,
-    TDataObject, ErrorString) as TDataObject;
-end;
-
 function TOptimizationActions.AddOrder(
   Parameters: TAddOrderToOptimizationRequest;
   out ErrorString: String): TDataObjectRoute;
@@ -65,21 +54,32 @@ begin
     ErrorString := 'Order to an optimization not added';
 end;
 
-function TOptimizationActions.Get(QueryParameters: TRouteParametersQuery;
-  out ErrorString: String): TArray<TDataObject>;
+function TOptimizationActions.Get(Limit, Offset: integer;
+  out ErrorString: String): TDataObjectList;
 var
   Response: TDataObjectOptimizationsResponse;
+  Request: TRouteParametersQuery;
+  i: integer;
 begin
-  SetLength(Result, 0);
+  Result := TDataObjectList.Create;
 
-  Response := FConnection.Get(TSettings.ApiHost, QueryParameters,
-    TDataObjectOptimizationsResponse, ErrorString) as TDataObjectOptimizationsResponse;
-
+  Request := TRouteParametersQuery.Create;
   try
-    if (Response <> nil) then
-      Result := Response.Optimizations;
+    Request.Limit := Limit;
+    Request.Offset := Offset;
+
+    Response := FConnection.Get(TSettings.ApiHost, Request,
+      TDataObjectOptimizationsResponse, ErrorString) as TDataObjectOptimizationsResponse;
+
+    try
+      if (Response <> nil) then
+        for i := 0 to Length(Response.Optimizations) - 1 do
+          Result.Add(Response.Optimizations[i]);
+    finally
+      FreeAndNil(Response);
+    end;
   finally
-    FreeAndNil(Response);
+    FreeAndNil(Request)
   end;
 end;
 
@@ -91,7 +91,11 @@ begin
   OptimizationParameters := TOptimizationParameters.Create;
   try
     OptimizationParameters.OptimizationProblemID := OptimizationProblemId;
-    Result := Get(OptimizationParameters, ErrorString);
+
+    Result := FConnection.Get(TSettings.ApiHost, OptimizationParameters,
+      TDataObject, ErrorString) as TDataObject;
+
+//    Result := Get(OptimizationParameters, ErrorString);
   finally
     FreeAndNil(OptimizationParameters);
   end;
