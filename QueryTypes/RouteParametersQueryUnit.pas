@@ -4,7 +4,7 @@ interface
 
 uses
   REST.Json.Types, HttpQueryMemberAttributeUnit, JSONNullableAttributeUnit,
-  GenericParametersUnit, NullableBasicTypesUnit, RouteParametersUnit;
+  GenericParametersUnit, NullableBasicTypesUnit, RouteParametersUnit, EnumsUnit;
 
 type
   /// <summary>
@@ -70,6 +70,9 @@ type
     [JSONName('parameters')]
     [NullableObject(TRouteParameters)]
     FParameters: NullableObject;
+
+    function GetRoutePathOutput: TRoutePathOutput;
+    procedure SetRoutePathOutput(const Value: TRoutePathOutput);
   public
     /// <remarks>
     ///  Constructor with 0-arguments must be and be public.
@@ -91,7 +94,7 @@ type
     /// <summary>
     /// "None" - no path output. "Points" - points path output
     /// </summary>
-    property RoutePathOutput: NullableString read FRoutePathOutput write FRoutePathOutput;
+    property RoutePathOutput: TRoutePathOutput read GetRoutePathOutput write SetRoutePathOutput;
 
     /// <summary>
     /// Output route tracking data in response
@@ -174,6 +177,23 @@ begin
   FParameters.Free;
 
   inherited;
+end;
+
+function TRouteParametersQuery.GetRoutePathOutput: TRoutePathOutput;
+var
+  RoutePathOutput: TRoutePathOutput;
+begin
+  Result := TRoutePathOutput.rpoUndefined;
+  if FRoutePathOutput.IsNotNull then
+    for RoutePathOutput := Low(TRoutePathOutput) to High(TRoutePathOutput) do
+      if (FRoutePathOutput = TRoutePathOutputDescription[RoutePathOutput]) then
+        Exit(RoutePathOutput);
+end;
+
+procedure TRouteParametersQuery.SetRoutePathOutput(
+  const Value: TRoutePathOutput);
+begin
+  FRoutePathOutput := TRoutePathOutputDescription[Value];
 end;
 
 end.

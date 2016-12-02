@@ -29,7 +29,7 @@ begin
       Parameters.Directions := True;
 
     if (GetRoutePathPoints) then
-      Parameters.RoutePathOutput := TRoutePathOutputDescription[TRoutePathOutput.rpoPoints];
+      Parameters.RoutePathOutput := TRoutePathOutput.rpoPoints;
 
     Route := Route4MeManager.Route.Get(Parameters, ErrorString);
 

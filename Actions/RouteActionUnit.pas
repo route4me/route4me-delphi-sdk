@@ -44,7 +44,10 @@ type
       RouteDestinationId, AfterDestinationId: integer; out ErrorString: String): boolean;
 
     function Get(RouteParameters: TRouteParametersQuery;
-      out ErrorString: String): TDataObjectRoute;
+      out ErrorString: String): TDataObjectRoute; overload;
+
+    function Get(RouteId: String; RoutePathOutput: TRoutePathOutput;
+      out ErrorString: String): TDataObjectRoute; overload;
 
     function GetList(Limit, Offset: integer;
       out ErrorString: String): TDataObjectRouteList;
@@ -192,6 +195,22 @@ function TRouteActions.Get(RouteParameters: TRouteParametersQuery;
 begin
   Result := FConnection.Get(TSettings.RouteHost,
     RouteParameters, TDataObjectRoute, ErrorString) as TDataObjectRoute;
+end;
+
+function TRouteActions.Get(RouteId: String; RoutePathOutput: TRoutePathOutput;
+  out ErrorString: String): TDataObjectRoute;
+var
+  RouteParameters: TRouteParametersQuery;
+begin
+  RouteParameters := TRouteParametersQuery.Create;
+  try
+    RouteParameters.RouteId := RouteId;
+    RouteParameters.RoutePathOutput := RoutePathOutput;
+
+    Result := Get(RouteParameters, ErrorString);
+  finally
+    FreeAndNil(RouteParameters);
+  end;
 end;
 
 function TRouteActions.GetList(Limit, Offset: integer;

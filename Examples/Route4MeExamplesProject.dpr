@@ -202,12 +202,23 @@ uses
   ActivityDriverArrivedLateUnit in 'Examples\Activities\ActivityDriverArrivedLateUnit.pas',
   ActivityDriverArrivedOnTimeUnit in 'Examples\Activities\ActivityDriverArrivedOnTimeUnit.pas',
   ActivityGeofenceEnteredUnit in 'Examples\Activities\ActivityGeofenceEnteredUnit.pas',
-  ActivityGeofenceLeftUnit in 'Examples\Activities\ActivityGeofenceLeftUnit.pas';
+  ActivityGeofenceLeftUnit in 'Examples\Activities\ActivityGeofenceLeftUnit.pas',
+  CustomerQuestionAbout10StopsUnit in 'CustomerQuestions\CustomerQuestionAbout10StopsUnit.pas';
 
+
+var
+  CustomerQuestionAbout10Stops: TCustomerQuestionAbout10Stops;
 begin
   try
-//    ReportMemoryLeaksOnShutdown := True;
     TExamples.Run();
+
+{
+    CustomerQuestionAbout10Stops := TCustomerQuestionAbout10Stops.Create;
+    try
+      CustomerQuestionAbout10Stops.Execute();
+    finally
+      FreeAndNil(CustomerQuestionAbout10Stops);
+    end;}
   except
     on E: Exception do
     begin

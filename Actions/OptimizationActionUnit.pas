@@ -16,6 +16,9 @@ type
     function Get(OptimizationParameters: TOptimizationParameters;
       out ErrorString: String): TDataObject; overload;
 
+    function Get(OptimizationProblemId: String;
+      out ErrorString: String): TDataObject; overload;
+
     function Get(QueryParameters: TRouteParametersQuery;
       out ErrorString: String): TArray<TDataObject>; overload;
 
@@ -77,6 +80,20 @@ begin
       Result := Response.Optimizations;
   finally
     FreeAndNil(Response);
+  end;
+end;
+
+function TOptimizationActions.Get(OptimizationProblemId: String;
+  out ErrorString: String): TDataObject;
+var
+  OptimizationParameters: TOptimizationParameters;
+begin
+  OptimizationParameters := TOptimizationParameters.Create;
+  try
+    OptimizationParameters.OptimizationProblemID := OptimizationProblemId;
+    Result := Get(OptimizationParameters, ErrorString);
+  finally
+    FreeAndNil(OptimizationParameters);
   end;
 end;
 
