@@ -8,12 +8,13 @@ uses
 
 const
   //your api key
-  c_ApiKey = '11111111111111111111111111111111';
+  Default_ApiKey = '11111111111111111111111111111111';
 
 type
   TCustomerQuestionAbout10Stops = class
   private
     FOutput: IOutput;
+    FApiKey: String;
 
     function MakeAddress(Name: String; Latitude, Longitude: double): TAddress;
     procedure PrintIfHasError(ErrorString: String);
@@ -32,8 +33,24 @@ uses
   EnumsUnit;
 
 constructor TCustomerQuestionAbout10Stops.Create;
+const
+  ApikeyFilename = '..\..\..\..\apikey.txt';
+var
+  st: TStringList;
 begin
   FOutput := TOutputConsole.Create;
+  if FileExists(ApikeyFilename) then
+  begin
+    st := TStringList.Create;
+    try
+      st.LoadFromFile(ApikeyFilename);
+      FApiKey := st[0];
+    finally
+      FreeAndNil(st);
+    end;
+  end
+  else
+    FApiKey := Default_ApiKey;
 end;
 
 destructor TCustomerQuestionAbout10Stops.Destroy;
@@ -55,8 +72,9 @@ var
   Route: TDataObjectRoute;
   DetailedRoute: TDataObjectRoute;
 begin
-  Route4MeManager := TRoute4MeManager.Create(TConnection.Create(c_ApiKey));
   try
+    Route4MeManager := TRoute4MeManager.Create(TConnection.Create(FApiKey));
+
     // Prepared input data with parameters
     RouteParameters := TRouteParameters.Create;
     RouteParameters.AlgorithmType := TAlgorithmType.TSP;
@@ -86,11 +104,14 @@ begin
         OptimizationProblemDetails := Route4MeManager.Optimization.Get(
           DataObject.OptimizationProblemId, ErrorString);
         PrintIfHasError(ErrorString);
-
-        for Route in OptimizationProblemDetails.Routes do
-        begin
-          DetailedRoute := Route4MeManager.Route.Get(Route.RouteId, TRoutePathOutput.rpoPoints, ErrorString);
-          PrintIfHasError(ErrorString);
+        try
+          for Route in OptimizationProblemDetails.Routes do
+          begin
+            DetailedRoute := Route4MeManager.Route.Get(Route.RouteId, TRoutePathOutput.rpoPoints, ErrorString);
+            PrintIfHasError(ErrorString);
+          end;
+        finally
+          FreeAndNil(OptimizationProblemDetails);
         end;
       finally
         FreeAndNil(DataObject);
@@ -99,7 +120,10 @@ begin
       FreeAndNil(Parameters);
     end;
   finally
-    FreeAndNil(Route4MeManager);
+    WriteLn('');
+    WriteLn('Press any key');
+
+    ReadLn;
   end;
 end;
 

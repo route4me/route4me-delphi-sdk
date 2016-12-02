@@ -210,15 +210,14 @@ var
   CustomerQuestionAbout10Stops: TCustomerQuestionAbout10Stops;
 begin
   try
-    TExamples.Run();
+//    TExamples.Run();
 
-{
     CustomerQuestionAbout10Stops := TCustomerQuestionAbout10Stops.Create;
     try
       CustomerQuestionAbout10Stops.Execute();
     finally
       FreeAndNil(CustomerQuestionAbout10Stops);
-    end;}
+    end;
   except
     on E: Exception do
     begin
