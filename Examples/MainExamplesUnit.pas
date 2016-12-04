@@ -282,29 +282,43 @@ begin
           FreeAndNil(Routes);
         end;
 
-        Examples.ActivityAreaAdded;
-        Examples.ActivityAreaUpdated;
-        Examples.ActivityAreaRemoved;
-        Examples.DestinationDeleted;
-        Examples.DestinationOutOfSequence;
-        Examples.DriverArrivedEarly;
-        Examples.DriverArrivedLate;
-        Examples.DriverArrivedOnTime;
-        Examples.GeofenceEntered;
-        Examples.GeofenceLeft;
-
-        if (RouteId_SingleDriverRoute10Stops.IsNotNull) then
-          Examples.LogCustomActivity('Test User Activity ' + DateTimeToStr(Now), RouteId_SingleDriverRoute10Stops)
-        else
-          WriteLn('LogCustomActivity not called. routeId_SingleDriverRoute10Stops is null.');
+        Examples.GetAreaAddedActivities;
+        Examples.GetAreaUpdatedActivities;
+        Examples.GetAreaRemovedActivities;
+        Examples.GetDestinationDeletedActivities;
+        Examples.GetDestinationOutOfSequenceActivities;
+        Examples.GetDriverArrivedEarlyActivities;
+        Examples.GetDriverArrivedLateActivities;
+        Examples.GetDriverArrivedOnTimeActivities;
+        Examples.GetGeofenceEnteredActivities;
+        Examples.GetGeofenceLeftActivities;
+        Examples.GetAllDestinationInsertedActivities;
+        Examples.GetAllDestinationMarkedAsDepartedActivities;
+        Examples.GetAllDestinationMarkedAsVisitedActivities;
+        Examples.GetMemberCreatedActivities;
+        Examples.GetMemberDeletedActivities;
+        Examples.GetMemberModifiedActivities;
+        Examples.GetDestinationMovedActivities;
+        Examples.GetAllNoteInsertedActivities;
+        Examples.GetRouteDeletedActivities;
+        Examples.GetRouteOptimizedActivities;
+        Examples.GetRouteOwnerChangedActivities;
+        Examples.GetDestinationUpdatedActivities;
 
         Limit := 5;
         Offset := 0;
         Examples.GetAllActivities(Limit, Offset);
+
         if (RouteId_SingleDriverRoute10Stops.IsNotNull) then
-          Examples.GetTeamActivities(RouteId_SingleDriverRoute10Stops, Limit, Offset)
+        begin
+          Examples.LogCustomActivity('Test User Activity ' + DateTimeToStr(Now), RouteId_SingleDriverRoute10Stops);
+          Examples.GetTeamActivities(RouteId_SingleDriverRoute10Stops, Limit, Offset);
+          Examples.GetDestinationInsertedActivities(RouteId_SingleDriverRoute10Stops);
+          Examples.GetDestinationMarkedAsDepartedActivities(RouteId_SingleDriverRoute10Stops);
+          Examples.GetNoteInsertedActivities(RouteId_SingleDriverRoute10Stops);
+        end
         else
-          WriteLn('GetActivities not called. routeId_SingleDriverRoute10Stops is null.');
+          WriteLn('LogCustomActivity not called. routeId_SingleDriverRoute10Stops is null.');
 
         Randomize;
 

@@ -68,16 +68,31 @@ type
     function LogCustomActivity(Message: String; RouteId: String): boolean;
     procedure GetAllActivities(Limit, Offset: integer);
     procedure GetTeamActivities(RouteId: String; Limit, Offset: integer);
-    procedure ActivityAreaAdded;
-    procedure ActivityAreaUpdated;
-    procedure ActivityAreaRemoved;
-    procedure DestinationDeleted;
-    procedure DestinationOutOfSequence;
-    procedure DriverArrivedEarly;
-    procedure DriverArrivedLate;
-    procedure DriverArrivedOnTime;
-    procedure GeofenceEntered;
-    procedure GeofenceLeft;
+    procedure GetAreaAddedActivities;
+    procedure GetAreaUpdatedActivities;
+    procedure GetAreaRemovedActivities;
+    procedure GetDestinationDeletedActivities;
+    procedure GetDestinationOutOfSequenceActivities;
+    procedure GetDriverArrivedEarlyActivities;
+    procedure GetDriverArrivedLateActivities;
+    procedure GetDriverArrivedOnTimeActivities;
+    procedure GetGeofenceEnteredActivities;
+    procedure GetGeofenceLeftActivities;
+    procedure GetDestinationInsertedActivities(RouteId: String);
+    procedure GetAllDestinationInsertedActivities;
+    procedure GetDestinationMarkedAsDepartedActivities(RouteId: String);
+    procedure GetAllDestinationMarkedAsDepartedActivities;
+    procedure GetAllDestinationMarkedAsVisitedActivities;
+    procedure GetMemberCreatedActivities;
+    procedure GetMemberDeletedActivities;
+    procedure GetMemberModifiedActivities;
+    procedure GetDestinationMovedActivities;
+    procedure GetNoteInsertedActivities(RouteId: String);
+    procedure GetAllNoteInsertedActivities;
+    procedure GetRouteDeletedActivities;
+    procedure GetRouteOptimizedActivities;
+    procedure GetRouteOwnerChangedActivities;
+    procedure GetDestinationUpdatedActivities;
     procedure GetAddress(RouteId: String; RouteDestinationId: integer);
     procedure MarkAddressAsDetectedAsVisited(RouteId: String; RouteDestinationId: integer;
       IsVisited: boolean);
@@ -153,17 +168,25 @@ uses
   ValidateSessionUnit, RegisterAccountUnit, GetUserDetailsUnit, AddNewUserUnit,
   UpdateUserUnit, RemoveAddressBookContactsRequestUnit, RemoveUserUnit,
   AuthenticationUnit, DeviceLicenseUnit, UserLicenseUnit, RegisterWebinarUnit,
-  GetTeamActivitiesUnit, ActivityAreaAddedUnit, ActivityAreaRemovedUnit,
-  ActivityAreaUpdatedUnit, ActivityDestinationDeletedUnit,
-  ActivityDestinationOutOfSequenceUnit, ActivityDriverArrivedEarlyUnit,
-  ActivityDriverArrivedLateUnit, ActivityDriverArrivedOnTimeUnit,
-  ActivityGeofenceLeftUnit, ActivityGeofenceEnteredUnit;
+  GetTeamActivitiesUnit, GetAllDestinationMarkedAsDepartedActivitiesUnit,
+  GetAreaRemovedActivitiesUnit, GetAreaUpdatedActivitiesUnit,
+  GetDestinationDeletedActivitiesUnit, GetDestinationOutOfSequenceActivitiesUnit,
+  GetDriverArrivedEarlyActivitiesUnit, GetDriverArrivedLateActivitiesUnit,
+  GetDriverArrivedOnTimeActivitiesUnit, GetDestinationMarkedAsDepartedActivitiesUnit,
+  GetGeofenceEnteredActivitiesUnit, GetAllDestinationInsertedActivitiesUnit,
+  GetDestinationInsertedActivitiesUnit, GetGeofenceLeftActivitiesUnit,
+  GetAllDestinationMarkedAsVisitedActivitiesUnit, GetAreaAddedActivitiesUnit,
+  GetMemberCreatedActivitiesUnit, GetMemberDeletedActivitiesUnit,
+  GetMemberModifiedActivitiesUnit, GetDestinationMovedActivitiesUnit,
+  GetNoteInsertedActivitiesUnit, GetAllNoteInsertedActivitiesUnit,
+  GetRouteDeletedActivitiesUnit, GetRouteOwnerChangedActivitiesUnit,
+  GetDestinationUpdatedActivitiesUnit, GetRouteOptimizedActivitiesUnit;
 
-procedure TRoute4MeExamples.ActivityAreaAdded;
+procedure TRoute4MeExamples.GetAreaAddedActivities;
 var
-  Example: TActivityAreaAdded;
+  Example: TGetAreaAddedActivities;
 begin
-  Example := MakeExample(TActivityAreaAdded) as TActivityAreaAdded;
+  Example := MakeExample(TGetAreaAddedActivities) as TGetAreaAddedActivities;
   try
     Example.Execute;
   finally
@@ -171,11 +194,11 @@ begin
   end;
 end;
 
-procedure TRoute4MeExamples.ActivityAreaRemoved;
+procedure TRoute4MeExamples.GetAreaRemovedActivities;
 var
-  Example: TActivityAreaRemoved;
+  Example: TGetAreaRemovedActivities;
 begin
-  Example := MakeExample(TActivityAreaRemoved) as TActivityAreaRemoved;
+  Example := MakeExample(TGetAreaRemovedActivities) as TGetAreaRemovedActivities;
   try
     Example.Execute;
   finally
@@ -183,11 +206,11 @@ begin
   end;
 end;
 
-procedure TRoute4MeExamples.ActivityAreaUpdated;
+procedure TRoute4MeExamples.GetAreaUpdatedActivities;
 var
-  Example: TActivityAreaUpdated;
+  Example: TGetAreaUpdatedActivities;
 begin
-  Example := MakeExample(TActivityAreaUpdated) as TActivityAreaUpdated;
+  Example := MakeExample(TGetAreaUpdatedActivities) as TGetAreaUpdatedActivities;
   try
     Example.Execute;
   finally
@@ -363,11 +386,11 @@ begin
   end;
 end;
 
-procedure TRoute4MeExamples.DestinationDeleted;
+procedure TRoute4MeExamples.GetDestinationDeletedActivities;
 var
-  Example: TDestinationDeleted;
+  Example: TGetDestinationDeletedActivities;
 begin
-  Example := MakeExample(TDestinationDeleted) as TDestinationDeleted;
+  Example := MakeExample(TGetDestinationDeletedActivities) as TGetDestinationDeletedActivities;
   try
     Example.Execute;
   finally
@@ -375,13 +398,109 @@ begin
   end;
 end;
 
-procedure TRoute4MeExamples.DestinationOutOfSequence;
+procedure TRoute4MeExamples.GetDestinationInsertedActivities(RouteId: String);
 var
-  Example: TDestinationOutOfSequence;
+  Example: TGetDestinationInsertedActivities;
 begin
-  Example := MakeExample(TDestinationOutOfSequence) as TDestinationOutOfSequence;
+  Example := MakeExample(TGetDestinationInsertedActivities) as TGetDestinationInsertedActivities;
+  try
+    Example.Execute(RouteId);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.GetAllDestinationInsertedActivities;
+var
+  Example: TGetAllDestinationInsertedActivities;
+begin
+  Example := MakeExample(TGetAllDestinationInsertedActivities) as TGetAllDestinationInsertedActivities;
   try
     Example.Execute;
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.GetDestinationMarkedAsDepartedActivities(RouteId: String);
+var
+  Example: TGetDestinationMarkedAsDepartedActivities;
+begin
+  Example := MakeExample(TGetDestinationMarkedAsDepartedActivities) as TGetDestinationMarkedAsDepartedActivities;
+  try
+    Example.Execute(RouteId);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.GetAllDestinationMarkedAsDepartedActivities;
+var
+  Example: TGetAllDestinationMarkedAsDepartedActivities;
+begin
+  Example := MakeExample(TGetAllDestinationMarkedAsDepartedActivities) as TGetAllDestinationMarkedAsDepartedActivities;
+  try
+    Example.Execute;
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.GetAllDestinationMarkedAsVisitedActivities;
+var
+  Example: TGetAllDestinationMarkedAsVisitedActivities;
+begin
+  Example := MakeExample(TGetAllDestinationMarkedAsVisitedActivities) as TGetAllDestinationMarkedAsVisitedActivities;
+  try
+    Example.Execute;
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.GetAllNoteInsertedActivities;
+var
+  Example: TGetAllNoteInsertedActivities;
+begin
+  Example := MakeExample(TGetAllNoteInsertedActivities) as TGetAllNoteInsertedActivities;
+  try
+    Example.Execute();
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.GetDestinationMovedActivities;
+var
+  Example: TGetDestinationMovedActivities;
+begin
+  Example := MakeExample(TGetDestinationMovedActivities) as TGetDestinationMovedActivities;
+  try
+    Example.Execute;
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.GetDestinationOutOfSequenceActivities;
+var
+  Example: TGetDestinationOutOfSequenceActivities;
+begin
+  Example := MakeExample(TGetDestinationOutOfSequenceActivities) as TGetDestinationOutOfSequenceActivities;
+  try
+    Example.Execute;
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.GetDestinationUpdatedActivities;
+var
+  Example: TGetDestinationUpdatedActivities;
+begin
+  Example := MakeExample(TGetDestinationUpdatedActivities) as TGetDestinationUpdatedActivities;
+  try
+    Example.Execute();
   finally
     FreeAndNil(Example);
   end;
@@ -407,11 +526,11 @@ begin
   end;
 end;
 
-procedure TRoute4MeExamples.DriverArrivedEarly;
+procedure TRoute4MeExamples.GetDriverArrivedEarlyActivities;
 var
-  Example: TDriverArrivedEarly;
+  Example: TGetDriverArrivedEarlyActivities;
 begin
-  Example := MakeExample(TDriverArrivedEarly) as TDriverArrivedEarly;
+  Example := MakeExample(TGetDriverArrivedEarlyActivities) as TGetDriverArrivedEarlyActivities;
   try
     Example.Execute;
   finally
@@ -419,11 +538,11 @@ begin
   end;
 end;
 
-procedure TRoute4MeExamples.DriverArrivedLate;
+procedure TRoute4MeExamples.GetDriverArrivedLateActivities;
 var
-  Example: TDriverArrivedLate;
+  Example: TGetDriverArrivedLateActivities;
 begin
-  Example := MakeExample(TDriverArrivedLate) as TDriverArrivedLate;
+  Example := MakeExample(TGetDriverArrivedLateActivities) as TGetDriverArrivedLateActivities;
   try
     Example.Execute;
   finally
@@ -431,11 +550,11 @@ begin
   end;
 end;
 
-procedure TRoute4MeExamples.DriverArrivedOnTime;
+procedure TRoute4MeExamples.GetDriverArrivedOnTimeActivities;
 var
-  Example: TDriverArrivedOnTime;
+  Example: TGetDriverArrivedOnTimeActivities;
 begin
-  Example := MakeExample(TDriverArrivedOnTime) as TDriverArrivedOnTime;
+  Example := MakeExample(TGetDriverArrivedOnTimeActivities) as TGetDriverArrivedOnTimeActivities;
   try
     Example.Execute;
   finally
@@ -491,11 +610,11 @@ begin
   end;
 end;
 
-procedure TRoute4MeExamples.GeofenceEntered;
+procedure TRoute4MeExamples.GetGeofenceEnteredActivities;
 var
-  Example: TGeofenceEntered;
+  Example: TGetGeofenceEnteredActivities;
 begin
-  Example := MakeExample(TGeofenceEntered) as TGeofenceEntered;
+  Example := MakeExample(TGetGeofenceEnteredActivities) as TGetGeofenceEnteredActivities;
   try
     Example.Execute;
   finally
@@ -503,13 +622,61 @@ begin
   end;
 end;
 
-procedure TRoute4MeExamples.GeofenceLeft;
+procedure TRoute4MeExamples.GetGeofenceLeftActivities;
 var
-  Example: TGeofenceLeft;
+  Example: TGetGeofenceLeftActivities;
 begin
-  Example := MakeExample(TGeofenceLeft) as TGeofenceLeft;
+  Example := MakeExample(TGetGeofenceLeftActivities) as TGetGeofenceLeftActivities;
   try
     Example.Execute;
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.GetMemberCreatedActivities;
+var
+  Example: TGetMemberCreatedActivities;
+begin
+  Example := MakeExample(TGetMemberCreatedActivities) as TGetMemberCreatedActivities;
+  try
+    Example.Execute;
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.GetMemberDeletedActivities;
+var
+  Example: TGetMemberDeletedActivities;
+begin
+  Example := MakeExample(TGetMemberDeletedActivities) as TGetMemberDeletedActivities;
+  try
+    Example.Execute;
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.GetMemberModifiedActivities;
+var
+  Example: TGetMemberModifiedActivities;
+begin
+  Example := MakeExample(TGetMemberModifiedActivities) as TGetMemberModifiedActivities;
+  try
+    Example.Execute;
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.GetNoteInsertedActivities(RouteId: String);
+var
+  Example: TGetNoteInsertedActivities;
+begin
+  Example := MakeExample(TGetNoteInsertedActivities) as TGetNoteInsertedActivities;
+  try
+    Example.Execute(RouteId);
   finally
     FreeAndNil(Example);
   end;
@@ -705,6 +872,42 @@ begin
   Example := MakeExample(TGetRoute) as TGetRoute;
   try
     Example.Execute(RouteId, GetRouteDirections, GetRoutePathPoints);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.GetRouteDeletedActivities;
+var
+  Example: TGetRouteDeletedActivities;
+begin
+  Example := MakeExample(TGetRouteDeletedActivities) as TGetRouteDeletedActivities;
+  try
+    Example.Execute();
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.GetRouteOptimizedActivities;
+var
+  Example: TGetRouteOptimizedActivities;
+begin
+  Example := MakeExample(TGetRouteOptimizedActivities) as TGetRouteOptimizedActivities;
+  try
+    Example.Execute();
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.GetRouteOwnerChangedActivities;
+var
+  Example: TGetRouteOwnerChangedActivities;
+begin
+  Example := MakeExample(TGetRouteOwnerChangedActivities) as TGetRouteOwnerChangedActivities;
+  try
+    Example.Execute();
   finally
     FreeAndNil(Example);
   end;

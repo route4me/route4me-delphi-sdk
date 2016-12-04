@@ -4,111 +4,329 @@ interface
 
 uses
   TestFramework, Classes, SysUtils, DateUtils,
-  BaseTestOnlineExamplesUnit;
+  BaseTestOnlineExamplesUnit, EnumsUnit;
 
 type
   TTestActivitiesSamples = class(TTestOnlineExamples)
   private
     function GetRouteId: String;
+
+    procedure CheckActivitiesWithInvalidRouteId(ActivityType: TActivityType);
+    procedure CheckActivitiesWithRouteId(ActivityType: TActivityType; RouteId: String);
+    function CheckActivitiesWithoutRouteId(ActivityType: TActivityType;
+      IsNullNow: boolean = False): String;
   published
+    procedure LogCustomActivity;
     procedure GetAllActivities;
     procedure GetTeamActivities;
-    procedure LogCustomActivity;
-    procedure ActivityAreaAdded;
-    procedure ActivityAreaUpdated;
-    procedure ActivityAreaRemoved;
-    procedure DestinationDeleted;
-    procedure DestinationOutOfSequence;
-    procedure DriverArrivedEarly;
-    procedure DriverArrivedLate;
-    procedure DriverArrivedOnTime;
-    procedure GeofenceLeft;
-    procedure GeofenceEntered;
+    procedure GetAreaAddedActivities;
+    procedure GetAreaUpdatedActivities;
+    procedure GetAreaRemovedActivities;
+    procedure GetDestinationDeletedActivities;
+    procedure GetDestinationOutOfSequenceActivities;
+    procedure GetDriverArrivedEarlyActivities;
+    procedure GetDriverArrivedLateActivities;
+    procedure GetDriverArrivedOnTimeActivities;
+    procedure GetGeofenceLeftActivities;
+    procedure GetGeofenceEnteredActivities;
+    procedure GetDestinationInsertedActivities;
+    procedure GetDestinationMarkedAsDepartedActivities;
+    procedure GetDestinationMarkedAsVisitedActivities;
+    procedure GetMemberCreatedActivities;
+    procedure GetMemberDeletedActivities;
+    procedure GetMemberModifiedActivities;
+    procedure GetDestinationMovedActivities;
+    procedure GetNoteInsertedActivities;
+    procedure GetRouteDeletedActivities;
+    procedure GetRouteOptimizedActivities;
+    procedure GetRouteOwnerChangedActivities;
+    procedure GetDestinationUpdatedActivities;
   end;
 
 implementation
 
 
-uses EnumsUnit, ActivityUnit, CommonTypesUnit, DataObjectUnit;
+uses ActivityUnit, CommonTypesUnit, DataObjectUnit;
 
-procedure TTestActivitiesSamples.ActivityAreaAdded;
+procedure TTestActivitiesSamples.GetAreaAddedActivities;
 var
-  ErrorString: String;
+  RouteId: String;
+  ActivityType: TActivityType;
 begin
-  FRoute4MeManager.ActivityFeed.AreaAdded(ErrorString);
-  CheckEquals(EmptyStr, ErrorString);
+  ActivityType := TActivityType.atAreaAdded;
+
+  CheckActivitiesWithInvalidRouteId(ActivityType);
+  RouteId := CheckActivitiesWithoutRouteId(ActivityType);
+  if (RouteId <> EmptyStr) then
+    CheckActivitiesWithRouteId(ActivityType, RouteId);
 end;
 
-procedure TTestActivitiesSamples.ActivityAreaRemoved;
+procedure TTestActivitiesSamples.GetAreaRemovedActivities;
 var
-  ErrorString: String;
+  RouteId: String;
+  ActivityType: TActivityType;
 begin
-  FRoute4MeManager.ActivityFeed.AreaRemoved(ErrorString);
-  CheckEquals(EmptyStr, ErrorString);
+  ActivityType := TActivityType.atAreaRemoved;
+
+  CheckActivitiesWithInvalidRouteId(ActivityType);
+  RouteId := CheckActivitiesWithoutRouteId(ActivityType);
+  if (RouteId <> EmptyStr) then
+    CheckActivitiesWithRouteId(ActivityType, RouteId);
 end;
 
-procedure TTestActivitiesSamples.ActivityAreaUpdated;
+procedure TTestActivitiesSamples.GetAreaUpdatedActivities;
 var
-  ErrorString: String;
+  RouteId: String;
+  ActivityType: TActivityType;
 begin
-  FRoute4MeManager.ActivityFeed.AreaUpdated(ErrorString);
-  CheckEquals(EmptyStr, ErrorString);
+  ActivityType := TActivityType.atAreaUpdated;
+
+  CheckActivitiesWithInvalidRouteId(ActivityType);
+  RouteId := CheckActivitiesWithoutRouteId(ActivityType);
+  if (RouteId <> EmptyStr) then
+    CheckActivitiesWithRouteId(ActivityType, RouteId);
 end;
 
-procedure TTestActivitiesSamples.DestinationDeleted;
+procedure TTestActivitiesSamples.CheckActivitiesWithInvalidRouteId(
+  ActivityType: TActivityType);
 var
+  RouteId: String;
+  Activities: TActivityList;
+  Limit, Offset, Total: integer;
   ErrorString: String;
 begin
-  FRoute4MeManager.ActivityFeed.DestinationDeleted(ErrorString);
-  CheckEquals(EmptyStr, ErrorString);
+  RouteId := 'qwe';
+  Limit := 2;
+  Offset := 0;
+
+  Activities := FRoute4MeManager.ActivityFeed.GetActivities(RouteId,
+    ActivityType, Limit, Offset, Total, ErrorString);
+  try
+    CheckEquals(EmptyStr, ErrorString);
+    CheckEquals(0, Total);
+    CheckEquals(0, Activities.Count);
+  finally
+    FreeAndNil(Activities);
+  end;
 end;
 
-procedure TTestActivitiesSamples.DestinationOutOfSequence;
+function TTestActivitiesSamples.CheckActivitiesWithoutRouteId(
+  ActivityType: TActivityType; IsNullNow: boolean = False): String;
 var
+  Activities: TActivityList;
   ErrorString: String;
+  Total: integer;
+  Limit, Offset: integer;
+  i: integer;
 begin
-  FRoute4MeManager.ActivityFeed.DestinationOutOfSequence(ErrorString);
-  CheckEquals(EmptyStr, ErrorString);
+  Result := EmptyStr;
+
+  Limit := 2;
+  Offset := 0;
+  Activities := FRoute4MeManager.ActivityFeed.GetActivities(
+    ActivityType, Limit, Offset, Total, ErrorString);
+  try
+    if (Activities.Count > 0) then
+      for i := 0 to Activities.Count - 1 do
+        if Activities[0].RouteId.IsNotNull then
+        begin
+          Result := Activities[0].RouteId;
+          Break;
+        end;
+
+    CheckEquals(EmptyStr, ErrorString);
+
+    if (IsNullNow) then
+    begin
+      CheckEquals(0, Total);
+      CheckEquals(0, Activities.Count);
+    end
+    else
+    begin
+      CheckTrue(Total > 0);
+      CheckTrue((Activities.Count > 0) and (Activities.Count <= Limit));
+    end;
+  finally
+    FreeAndNil(Activities);
+  end;
 end;
 
-procedure TTestActivitiesSamples.DriverArrivedEarly;
+procedure TTestActivitiesSamples.CheckActivitiesWithRouteId(
+  ActivityType: TActivityType; RouteId: String);
 var
+  Activities: TActivityList;
   ErrorString: String;
+  Total: integer;
+  Limit, Offset: integer;
 begin
-  FRoute4MeManager.ActivityFeed.DriverArrivedEarly(ErrorString);
-  CheckEquals(EmptyStr, ErrorString);
+  Limit := 2;
+  Offset := 0;
+
+  Activities := FRoute4MeManager.ActivityFeed.GetActivities(
+    RouteId, ActivityType, Limit, Offset, Total, ErrorString);
+  try
+    CheckEquals(EmptyStr, ErrorString);
+    CheckTrue(Total > 0);
+    CheckTrue((Activities.Count > 0) and (Activities.Count <= Limit));
+  finally
+    FreeAndNil(Activities);
+  end;
 end;
 
-procedure TTestActivitiesSamples.DriverArrivedLate;
+procedure TTestActivitiesSamples.GetDestinationDeletedActivities;
 var
-  ErrorString: String;
+  RouteId: String;
+  ActivityType: TActivityType;
 begin
-  FRoute4MeManager.ActivityFeed.DriverArrivedLate(ErrorString);
-  CheckEquals(EmptyStr, ErrorString);
+  ActivityType := TActivityType.atDeleteDestination;
+
+  CheckActivitiesWithInvalidRouteId(ActivityType);
+  RouteId := CheckActivitiesWithoutRouteId(ActivityType);
+  if (RouteId <> EmptyStr) then
+    CheckActivitiesWithRouteId(ActivityType, RouteId);
 end;
 
-procedure TTestActivitiesSamples.DriverArrivedOnTime;
+procedure TTestActivitiesSamples.GetDestinationInsertedActivities;
 var
-  ErrorString: String;
+  RouteId: String;
+  ActivityType: TActivityType;
 begin
-  FRoute4MeManager.ActivityFeed.DriverArrivedOnTime(ErrorString);
-  CheckEquals(EmptyStr, ErrorString);
+  ActivityType := TActivityType.atInsertDestination;
+
+  CheckActivitiesWithInvalidRouteId(ActivityType);
+  RouteId := CheckActivitiesWithoutRouteId(ActivityType);
+  if (RouteId <> EmptyStr) then
+    CheckActivitiesWithRouteId(ActivityType, RouteId);
 end;
 
-procedure TTestActivitiesSamples.GeofenceEntered;
+procedure TTestActivitiesSamples.GetDestinationMarkedAsDepartedActivities;
 var
-  ErrorString: String;
+  RouteId: String;
+  ActivityType: TActivityType;
 begin
-  FRoute4MeManager.ActivityFeed.GeofenceEntered(ErrorString);
-  CheckEquals(EmptyStr, ErrorString);
+  ActivityType := TActivityType.atMarkDestinationDeparted;
+
+  CheckActivitiesWithInvalidRouteId(ActivityType);
+  RouteId := CheckActivitiesWithoutRouteId(ActivityType);
+  if (RouteId <> EmptyStr) then
+    CheckActivitiesWithRouteId(ActivityType, RouteId);
 end;
 
-procedure TTestActivitiesSamples.GeofenceLeft;
+procedure TTestActivitiesSamples.GetDestinationMarkedAsVisitedActivities;
 var
-  ErrorString: String;
+  RouteId: String;
+  ActivityType: TActivityType;
 begin
-  FRoute4MeManager.ActivityFeed.GeofenceLeft(ErrorString);
-  CheckEquals(EmptyStr, ErrorString);
+  ActivityType := TActivityType.atMarkDestinationVisited;
+
+  CheckActivitiesWithInvalidRouteId(ActivityType);
+  RouteId := CheckActivitiesWithoutRouteId(ActivityType);
+  if (RouteId <> EmptyStr) then
+    CheckActivitiesWithRouteId(ActivityType, RouteId);
+end;
+
+procedure TTestActivitiesSamples.GetDestinationMovedActivities;
+var
+  RouteId: String;
+  ActivityType: TActivityType;
+begin
+  ActivityType := TActivityType.atMoveDestination;
+
+  CheckActivitiesWithInvalidRouteId(ActivityType);
+  RouteId := CheckActivitiesWithoutRouteId(ActivityType);
+  if (RouteId <> EmptyStr) then
+    CheckActivitiesWithRouteId(ActivityType, RouteId);
+end;
+
+procedure TTestActivitiesSamples.GetDestinationOutOfSequenceActivities;
+var
+  RouteId: String;
+  ActivityType: TActivityType;
+begin
+  ActivityType := TActivityType.atDestinationOutSequence;
+
+  CheckActivitiesWithInvalidRouteId(ActivityType);
+  RouteId := CheckActivitiesWithoutRouteId(ActivityType, True);
+  if (RouteId <> EmptyStr) then
+    CheckActivitiesWithRouteId(ActivityType, RouteId);
+end;
+
+procedure TTestActivitiesSamples.GetDestinationUpdatedActivities;
+var
+  RouteId: String;
+  ActivityType: TActivityType;
+begin
+  ActivityType := TActivityType.atUpdateDestinations;
+
+  CheckActivitiesWithInvalidRouteId(ActivityType);
+  RouteId := CheckActivitiesWithoutRouteId(ActivityType);
+  if (RouteId <> EmptyStr) then
+    CheckActivitiesWithRouteId(ActivityType, RouteId);
+end;
+
+procedure TTestActivitiesSamples.GetDriverArrivedEarlyActivities;
+var
+  RouteId: String;
+  ActivityType: TActivityType;
+begin
+  ActivityType := TActivityType.atDriverArrivedEarly;
+
+  CheckActivitiesWithInvalidRouteId(ActivityType);
+  RouteId := CheckActivitiesWithoutRouteId(ActivityType, True);
+  if (RouteId <> EmptyStr) then
+    CheckActivitiesWithRouteId(ActivityType, RouteId);
+end;
+
+procedure TTestActivitiesSamples.GetDriverArrivedLateActivities;
+var
+  RouteId: String;
+  ActivityType: TActivityType;
+begin
+  ActivityType := TActivityType.atDriverArrivedLate;
+
+  CheckActivitiesWithInvalidRouteId(ActivityType);
+  RouteId := CheckActivitiesWithoutRouteId(ActivityType);
+  if (RouteId <> EmptyStr) then
+    CheckActivitiesWithRouteId(ActivityType, RouteId);
+end;
+
+procedure TTestActivitiesSamples.GetDriverArrivedOnTimeActivities;
+var
+  RouteId: String;
+  ActivityType: TActivityType;
+begin
+  ActivityType := TActivityType.atDriverArrivedOnTime;
+
+  CheckActivitiesWithInvalidRouteId(ActivityType);
+  RouteId := CheckActivitiesWithoutRouteId(ActivityType, True);
+  if (RouteId <> EmptyStr) then
+    CheckActivitiesWithRouteId(ActivityType, RouteId);
+end;
+
+procedure TTestActivitiesSamples.GetGeofenceEnteredActivities;
+var
+  RouteId: String;
+  ActivityType: TActivityType;
+begin
+  ActivityType := TActivityType.atGeofenceEntered;
+
+  CheckActivitiesWithInvalidRouteId(ActivityType);
+  RouteId := CheckActivitiesWithoutRouteId(ActivityType, True);
+  if (RouteId <> EmptyStr) then
+    CheckActivitiesWithRouteId(ActivityType, RouteId);
+end;
+
+procedure TTestActivitiesSamples.GetGeofenceLeftActivities;
+var
+  RouteId: String;
+  ActivityType: TActivityType;
+begin
+  ActivityType := TActivityType.atGeofenceLeft;
+
+  CheckActivitiesWithInvalidRouteId(ActivityType);
+  RouteId := CheckActivitiesWithoutRouteId(ActivityType, True);
+  if (RouteId <> EmptyStr) then
+    CheckActivitiesWithRouteId(ActivityType, RouteId);
 end;
 
 procedure TTestActivitiesSamples.GetAllActivities;
@@ -186,6 +404,9 @@ function TTestActivitiesSamples.GetRouteId: String;
   Routes: TDataObjectRouteList;
   ErrorString: String;}
 begin
+  // по этому Id 13 activities есть в базе
+  Result := 'B15C0ED469425DBD5FC3B04DAFF2A54D';
+
 {  Routes := FRoute4MeManager.Route.GetList(1, 1, ErrorString);
   try
     CheckTrue(Routes.Count > 0);
@@ -193,9 +414,6 @@ begin
   finally
     FreeAndNil(Routes);
   end;}
-
-  // по этому Id 13 activities есть в базе
-  Result := 'B15C0ED469425DBD5FC3B04DAFF2A54D';
 end;
 
 procedure TTestActivitiesSamples.GetTeamActivities;
@@ -314,6 +532,97 @@ begin
   CheckTrue(
     FRoute4MeManager.ActivityFeed.LogCustomActivity(RouteId, Message, ErrorString));
   CheckEquals(EmptyStr, ErrorString);
+end;
+
+procedure TTestActivitiesSamples.GetMemberCreatedActivities;
+var
+  RouteId: String;
+  ActivityType: TActivityType;
+begin
+  ActivityType := TActivityType.atMemberCreated;
+
+  CheckActivitiesWithInvalidRouteId(ActivityType);
+  RouteId := CheckActivitiesWithoutRouteId(ActivityType);
+  if (RouteId <> EmptyStr) then
+    CheckActivitiesWithRouteId(ActivityType, RouteId);
+end;
+
+procedure TTestActivitiesSamples.GetMemberDeletedActivities;
+var
+  RouteId: String;
+  ActivityType: TActivityType;
+begin
+  ActivityType := TActivityType.atMemberDeleted;
+
+  CheckActivitiesWithInvalidRouteId(ActivityType);
+  RouteId := CheckActivitiesWithoutRouteId(ActivityType);
+  if (RouteId <> EmptyStr) then
+    CheckActivitiesWithRouteId(ActivityType, RouteId);
+end;
+
+procedure TTestActivitiesSamples.GetMemberModifiedActivities;
+var
+  RouteId: String;
+  ActivityType: TActivityType;
+begin
+  ActivityType := TActivityType.atMemberModified;
+
+  CheckActivitiesWithInvalidRouteId(ActivityType);
+  RouteId := CheckActivitiesWithoutRouteId(ActivityType);
+  if (RouteId <> EmptyStr) then
+    CheckActivitiesWithRouteId(ActivityType, RouteId);
+end;
+
+procedure TTestActivitiesSamples.GetNoteInsertedActivities;
+var
+  RouteId: String;
+  ActivityType: TActivityType;
+begin
+  ActivityType := TActivityType.atNoteInsert;
+
+  CheckActivitiesWithInvalidRouteId(ActivityType);
+  RouteId := CheckActivitiesWithoutRouteId(ActivityType);
+  if (RouteId <> EmptyStr) then
+    CheckActivitiesWithRouteId(ActivityType, RouteId);
+end;
+
+procedure TTestActivitiesSamples.GetRouteDeletedActivities;
+var
+  RouteId: String;
+  ActivityType: TActivityType;
+begin
+  ActivityType := TActivityType.atRouteDelete;
+
+  CheckActivitiesWithInvalidRouteId(ActivityType);
+  RouteId := CheckActivitiesWithoutRouteId(ActivityType);
+  if (RouteId <> EmptyStr) then
+    CheckActivitiesWithRouteId(ActivityType, RouteId);
+end;
+
+procedure TTestActivitiesSamples.GetRouteOptimizedActivities;
+var
+  RouteId: String;
+  ActivityType: TActivityType;
+begin
+  ActivityType := TActivityType.atRouteOptimized;
+
+  CheckActivitiesWithInvalidRouteId(ActivityType);
+  RouteId := CheckActivitiesWithoutRouteId(ActivityType);
+  if (RouteId <> EmptyStr) then
+    CheckActivitiesWithRouteId(ActivityType, RouteId);
+end;
+
+procedure TTestActivitiesSamples.GetRouteOwnerChangedActivities;
+var
+  RouteId: String;
+  ActivityType: TActivityType;
+begin
+  ActivityType := TActivityType.atRouteOwnerChanged;
+
+  CheckActivitiesWithInvalidRouteId(ActivityType);
+  RouteId := CheckActivitiesWithoutRouteId(ActivityType);
+  if (RouteId <> EmptyStr) then
+    CheckActivitiesWithRouteId(ActivityType, RouteId);
 end;
 
 initialization

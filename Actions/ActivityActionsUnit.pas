@@ -4,11 +4,18 @@ interface
 
 uses
   SysUtils, BaseActionUnit,
-  ActivityRequestUnit, ActivityParametersUnit, ActivityUnit;
+  ActivityRequestUnit, ActivityParametersUnit, ActivityUnit, EnumsUnit;
 
 type
   TActivityActions = class(TBaseAction)
   public
+    /// <summary>
+    /// Create User Activity. Send custom message to Activity Stream.
+    /// </summary>
+    /// <returns> True/False </returns>
+    function LogCustomActivity(RouteId: String; Message: String;
+      out ErrorString: String): boolean;
+
     /// <summary>
     /// Get Activity Feed
     /// </summary>
@@ -24,47 +31,43 @@ type
     function GetTeamActivities(RouteId: String; Limit, Offset: integer;
       out Total: integer; out ErrorString: String): TActivityList;
 
-    /// <summary>
-    /// Create User Activity. Send custom message to Activity Stream.
-    /// </summary>
-    /// <returns> True/False </returns>
-    function LogCustomActivity(RouteId: String; Message: String;
-      out ErrorString: String): boolean;
-
-    procedure AreaAdded(out ErrorString: String);
-    procedure AreaUpdated(out ErrorString: String);
-    procedure AreaRemoved(out ErrorString: String);
-    procedure DestinationDeleted(out ErrorString: String);
-    procedure DestinationOutOfSequence(out ErrorString: String);
-    procedure DriverArrivedEarly(out ErrorString: String);
-    procedure DriverArrivedLate(out ErrorString: String);
-    procedure DriverArrivedOnTime(out ErrorString: String);
-    procedure GeofenceEntered(out ErrorString: String);
-    procedure GeofenceLeft(out ErrorString: String);
+    function GetActivities(ActivityType: TActivityType;
+      Limit, Offset: integer; out Total: integer;
+      out ErrorString: String): TActivityList; overload;
+    function GetActivities(RouteId: String; ActivityType: TActivityType;
+      Limit, Offset: integer; out Total: integer;
+      out ErrorString: String): TActivityList; overload;
   end;
 
 implementation
 
-{ TActivityActions }
-
 uses
   SettingsUnit, GetActivitiesResponseUnit, StatusResponseUnit,
-  GenericParametersUnit, EnumsUnit;
+  GenericParametersUnit, GetActivitiesQueryUnit;
 
-procedure TActivityActions.AreaAdded(out ErrorString: String);
+function TActivityActions.GetActivities(RouteId: String; ActivityType: TActivityType;
+  Limit, Offset: integer; out Total: integer; out ErrorString: String): TActivityList;
 var
   Response: TGetActivitiesResponse;
-  Request: TGenericParameters;
+  Request: TGetActivitiesQuery;
+  i: integer;
 begin
-  Request := TGenericParameters.Create;
-  try
-    Request.AddParameter('activity_type', TActivityTypeDescription[TActivityType.atAreaAdded]);
+  Result := TActivityList.Create();
 
+  Request := TGetActivitiesQuery.Create(ActivityType, RouteId, Limit, Offset);
+  try
     Response := FConnection.Get(TSettings.GetActivitiesHost, Request,
       TGetActivitiesResponse, ErrorString) as TGetActivitiesResponse;
     try
+      if (Response <> nil) then
+      begin
+        for i := 0 to Length(Response.Results) - 1 do
+          Result.Add(Response.Results[i]);
+        Total := Response.Total;
+      end;
+
       if (Response = nil) and (ErrorString = EmptyStr) then
-        ErrorString := 'Area Added fault';
+        ErrorString := TActivityTypeDescription[ActivityType] +  ' fault';
     finally
       FreeAndNil(Response);
     end;
@@ -73,196 +76,29 @@ begin
   end;
 end;
 
-procedure TActivityActions.AreaRemoved(out ErrorString: String);
+function TActivityActions.GetActivities(ActivityType: TActivityType; Limit,
+  Offset: integer; out Total: integer; out ErrorString: String): TActivityList;
 var
   Response: TGetActivitiesResponse;
-  Request: TGenericParameters;
+  Request: TGetActivitiesQuery;
+  i: integer;
 begin
-  Request := TGenericParameters.Create;
-  try
-    Request.AddParameter('activity_type', TActivityTypeDescription[TActivityType.atAreaRemoved]);
+  Result := TActivityList.Create();
 
+  Request := TGetActivitiesQuery.Create(ActivityType, Limit, Offset);
+  try
     Response := FConnection.Get(TSettings.GetActivitiesHost, Request,
       TGetActivitiesResponse, ErrorString) as TGetActivitiesResponse;
     try
+      if (Response <> nil) then
+      begin
+        for i := 0 to Length(Response.Results) - 1 do
+          Result.Add(Response.Results[i]);
+        Total := Response.Total;
+      end;
+
       if (Response = nil) and (ErrorString = EmptyStr) then
-        ErrorString := 'Area Removed fault';
-    finally
-      FreeAndNil(Response);
-    end;
-  finally
-    FreeAndNil(Request);
-  end;
-end;
-
-procedure TActivityActions.AreaUpdated(out ErrorString: String);
-var
-  Response: TGetActivitiesResponse;
-  Request: TGenericParameters;
-begin
-  Request := TGenericParameters.Create;
-  try
-    Request.AddParameter('activity_type', TActivityTypeDescription[TActivityType.atAreaUpdated]);
-
-    Response := FConnection.Get(TSettings.GetActivitiesHost, Request,
-      TGetActivitiesResponse, ErrorString) as TGetActivitiesResponse;
-    try
-      if (Response = nil) and (ErrorString = EmptyStr) then
-        ErrorString := 'Area Updated fault';
-    finally
-      FreeAndNil(Response);
-    end;
-  finally
-    FreeAndNil(Request);
-  end;
-end;
-
-procedure TActivityActions.DestinationDeleted(out ErrorString: String);
-var
-  Response: TGetActivitiesResponse;
-  Request: TGenericParameters;
-begin
-  Request := TGenericParameters.Create;
-  try
-    Request.AddParameter('activity_type', TActivityTypeDescription[TActivityType.atDeleteDestination]);
-
-    Response := FConnection.Get(TSettings.GetActivitiesHost, Request,
-      TGetActivitiesResponse, ErrorString) as TGetActivitiesResponse;
-    try
-      if (Response = nil) and (ErrorString = EmptyStr) then
-        ErrorString := 'Destination Deleted fault';
-    finally
-      FreeAndNil(Response);
-    end;
-  finally
-    FreeAndNil(Request);
-  end;
-end;
-
-procedure TActivityActions.DestinationOutOfSequence(out ErrorString: String);
-var
-  Response: TGetActivitiesResponse;
-  Request: TGenericParameters;
-begin
-  Request := TGenericParameters.Create;
-  try
-    Request.AddParameter('activity_type', TActivityTypeDescription[TActivityType.atDestinationOutSequence]);
-
-    Response := FConnection.Get(TSettings.GetActivitiesHost, Request,
-      TGetActivitiesResponse, ErrorString) as TGetActivitiesResponse;
-    try
-      if (Response = nil) and (ErrorString = EmptyStr) then
-        ErrorString := 'Destination Out Of Sequence fault';
-    finally
-      FreeAndNil(Response);
-    end;
-  finally
-    FreeAndNil(Request);
-  end;
-end;
-
-procedure TActivityActions.DriverArrivedEarly(out ErrorString: String);
-var
-  Response: TGetActivitiesResponse;
-  Request: TGenericParameters;
-begin
-  Request := TGenericParameters.Create;
-  try
-    Request.AddParameter('activity_type', TActivityTypeDescription[TActivityType.atDriverArrivedEarly]);
-
-    Response := FConnection.Get(TSettings.GetActivitiesHost, Request,
-      TGetActivitiesResponse, ErrorString) as TGetActivitiesResponse;
-    try
-      if (Response = nil) and (ErrorString = EmptyStr) then
-        ErrorString := 'Driver Arrived Early fault';
-    finally
-      FreeAndNil(Response);
-    end;
-  finally
-    FreeAndNil(Request);
-  end;
-end;
-
-procedure TActivityActions.DriverArrivedLate(out ErrorString: String);
-var
-  Response: TGetActivitiesResponse;
-  Request: TGenericParameters;
-begin
-  Request := TGenericParameters.Create;
-  try
-    Request.AddParameter('activity_type', TActivityTypeDescription[TActivityType.atDriverArrivedLate]);
-
-    Response := FConnection.Get(TSettings.GetActivitiesHost, Request,
-      TGetActivitiesResponse, ErrorString) as TGetActivitiesResponse;
-    try
-      if (Response = nil) and (ErrorString = EmptyStr) then
-        ErrorString := 'Driver Arrived Late fault';
-    finally
-      FreeAndNil(Response);
-    end;
-  finally
-    FreeAndNil(Request);
-  end;
-end;
-
-procedure TActivityActions.DriverArrivedOnTime(out ErrorString: String);
-var
-  Response: TGetActivitiesResponse;
-  Request: TGenericParameters;
-begin
-  Request := TGenericParameters.Create;
-  try
-    Request.AddParameter('activity_type', TActivityTypeDescription[TActivityType.atDriverArrivedOnTime]);
-
-    Response := FConnection.Get(TSettings.GetActivitiesHost, Request,
-      TGetActivitiesResponse, ErrorString) as TGetActivitiesResponse;
-    try
-      if (Response = nil) and (ErrorString = EmptyStr) then
-        ErrorString := 'Driver Arrived On Time fault';
-    finally
-      FreeAndNil(Response);
-    end;
-  finally
-    FreeAndNil(Request);
-  end;
-end;
-
-procedure TActivityActions.GeofenceEntered(out ErrorString: String);
-var
-  Response: TGetActivitiesResponse;
-  Request: TGenericParameters;
-begin
-  Request := TGenericParameters.Create;
-  try
-    Request.AddParameter('activity_type', TActivityTypeDescription[TActivityType.atGeofenceEntered]);
-
-    Response := FConnection.Get(TSettings.GetActivitiesHost, Request,
-      TGetActivitiesResponse, ErrorString) as TGetActivitiesResponse;
-    try
-      if (Response = nil) and (ErrorString = EmptyStr) then
-        ErrorString := 'Geofence Entered fault';
-    finally
-      FreeAndNil(Response);
-    end;
-  finally
-    FreeAndNil(Request);
-  end;
-end;
-
-procedure TActivityActions.GeofenceLeft(out ErrorString: String);
-var
-  Response: TGetActivitiesResponse;
-  Request: TGenericParameters;
-begin
-  Request := TGenericParameters.Create;
-  try
-    Request.AddParameter('activity_type', TActivityTypeDescription[TActivityType.atGeofenceLeft]);
-
-    Response := FConnection.Get(TSettings.GetActivitiesHost, Request,
-      TGetActivitiesResponse, ErrorString) as TGetActivitiesResponse;
-    try
-      if (Response = nil) and (ErrorString = EmptyStr) then
-        ErrorString := 'Geofence Left fault';
+        ErrorString := TActivityTypeDescription[ActivityType] +  ' fault';
     finally
       FreeAndNil(Response);
     end;
@@ -309,7 +145,6 @@ var
 begin
   Result := TActivityList.Create;
 
-  // todo: проверить limit и offset применимы ли
   Request := TActivityParameters.Create(Limit, Offset);
   try
     Request.AddParameter('route_id', RouteId);

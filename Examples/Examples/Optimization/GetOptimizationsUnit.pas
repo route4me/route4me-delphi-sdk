@@ -19,7 +19,6 @@ var
   DataObjects: TDataObjectList;
   DataObject: TDataObject;
   ErrorString: String;
-  i: integer;
   Limit, Offset: integer;
 begin
   Limit := 10;

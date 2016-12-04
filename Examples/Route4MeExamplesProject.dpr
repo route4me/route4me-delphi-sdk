@@ -193,31 +193,36 @@ uses
   GetTeamActivitiesUnit in 'Examples\Activities\GetTeamActivitiesUnit.pas',
   ActivityRequestUnit in '..\QueryTypes\ActivityRequestUnit.pas',
   ActivityUnit in '..\DataTypes\ActivityUnit.pas',
-  ActivityAreaAddedUnit in 'Examples\Activities\ActivityAreaAddedUnit.pas',
-  ActivityAreaRemovedUnit in 'Examples\Activities\ActivityAreaRemovedUnit.pas',
-  ActivityAreaUpdatedUnit in 'Examples\Activities\ActivityAreaUpdatedUnit.pas',
-  ActivityDestinationDeletedUnit in 'Examples\Activities\ActivityDestinationDeletedUnit.pas',
-  ActivityDestinationOutOfSequenceUnit in 'Examples\Activities\ActivityDestinationOutOfSequenceUnit.pas',
-  ActivityDriverArrivedEarlyUnit in 'Examples\Activities\ActivityDriverArrivedEarlyUnit.pas',
-  ActivityDriverArrivedLateUnit in 'Examples\Activities\ActivityDriverArrivedLateUnit.pas',
-  ActivityDriverArrivedOnTimeUnit in 'Examples\Activities\ActivityDriverArrivedOnTimeUnit.pas',
-  ActivityGeofenceEnteredUnit in 'Examples\Activities\ActivityGeofenceEnteredUnit.pas',
-  ActivityGeofenceLeftUnit in 'Examples\Activities\ActivityGeofenceLeftUnit.pas',
-  CustomerQuestionAbout10StopsUnit in 'CustomerQuestions\CustomerQuestionAbout10StopsUnit.pas';
+  GetActivitiesQueryUnit in '..\QueryTypes\GetActivitiesQueryUnit.pas',
+  GetAllDestinationInsertedActivitiesUnit in 'Examples\Activities\GetAllDestinationInsertedActivitiesUnit.pas',
+  GetAllDestinationMarkedAsDepartedActivitiesUnit in 'Examples\Activities\GetAllDestinationMarkedAsDepartedActivitiesUnit.pas',
+  GetAllDestinationMarkedAsVisitedActivitiesUnit in 'Examples\Activities\GetAllDestinationMarkedAsVisitedActivitiesUnit.pas',
+  GetAllNoteInsertedActivitiesUnit in 'Examples\Activities\GetAllNoteInsertedActivitiesUnit.pas',
+  GetAreaAddedActivitiesUnit in 'Examples\Activities\GetAreaAddedActivitiesUnit.pas',
+  GetAreaRemovedActivitiesUnit in 'Examples\Activities\GetAreaRemovedActivitiesUnit.pas',
+  GetAreaUpdatedActivitiesUnit in 'Examples\Activities\GetAreaUpdatedActivitiesUnit.pas',
+  GetDestinationDeletedActivitiesUnit in 'Examples\Activities\GetDestinationDeletedActivitiesUnit.pas',
+  GetDestinationInsertedActivitiesUnit in 'Examples\Activities\GetDestinationInsertedActivitiesUnit.pas',
+  GetDestinationMarkedAsDepartedActivitiesUnit in 'Examples\Activities\GetDestinationMarkedAsDepartedActivitiesUnit.pas',
+  GetDestinationMovedActivitiesUnit in 'Examples\Activities\GetDestinationMovedActivitiesUnit.pas',
+  GetDestinationOutOfSequenceActivitiesUnit in 'Examples\Activities\GetDestinationOutOfSequenceActivitiesUnit.pas',
+  GetDestinationUpdatedActivitiesUnit in 'Examples\Activities\GetDestinationUpdatedActivitiesUnit.pas',
+  GetDriverArrivedEarlyActivitiesUnit in 'Examples\Activities\GetDriverArrivedEarlyActivitiesUnit.pas',
+  GetDriverArrivedLateActivitiesUnit in 'Examples\Activities\GetDriverArrivedLateActivitiesUnit.pas',
+  GetDriverArrivedOnTimeActivitiesUnit in 'Examples\Activities\GetDriverArrivedOnTimeActivitiesUnit.pas',
+  GetGeofenceEnteredActivitiesUnit in 'Examples\Activities\GetGeofenceEnteredActivitiesUnit.pas',
+  GetGeofenceLeftActivitiesUnit in 'Examples\Activities\GetGeofenceLeftActivitiesUnit.pas',
+  GetMemberCreatedActivitiesUnit in 'Examples\Activities\GetMemberCreatedActivitiesUnit.pas',
+  GetMemberDeletedActivitiesUnit in 'Examples\Activities\GetMemberDeletedActivitiesUnit.pas',
+  GetMemberModifiedActivitiesUnit in 'Examples\Activities\GetMemberModifiedActivitiesUnit.pas',
+  GetNoteInsertedActivitiesUnit in 'Examples\Activities\GetNoteInsertedActivitiesUnit.pas',
+  GetRouteDeletedActivitiesUnit in 'Examples\Activities\GetRouteDeletedActivitiesUnit.pas',
+  GetRouteOptimizedActivitiesUnit in 'Examples\Activities\GetRouteOptimizedActivitiesUnit.pas',
+  GetRouteOwnerChangedActivitiesUnit in 'Examples\Activities\GetRouteOwnerChangedActivitiesUnit.pas';
 
-
-var
-  CustomerQuestionAbout10Stops: TCustomerQuestionAbout10Stops;
 begin
   try
-//    TExamples.Run();
-
-    CustomerQuestionAbout10Stops := TCustomerQuestionAbout10Stops.Create;
-    try
-      CustomerQuestionAbout10Stops.Execute();
-    finally
-      FreeAndNil(CustomerQuestionAbout10Stops);
-    end;
+    TExamples.Run();
   except
     on E: Exception do
     begin

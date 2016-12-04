@@ -17,7 +17,6 @@ uses Route4MeManagerUnit, DataObjectUnit, RouteParametersQueryUnit;
 procedure TGenericExampleShortcut.Execute(Connection: IConnection);
 var
   ErrorMessage: String;
-  Parameters: TRouteParametersQuery;
   Routes: TDataObjectRouteList;
   Route: TDataObjectRoute;
   Route4Me: TRoute4MeManager;

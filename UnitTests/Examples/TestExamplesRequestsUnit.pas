@@ -57,19 +57,36 @@ type
     procedure DeviceLicense;
     procedure UserLicense;
     procedure RegisterWebinar;
+
     procedure LogCustomActivity;
     procedure GetAllActivities;
     procedure GetTeamActivities;
-    procedure ActivityAreaAdded;
-    procedure ActivityAreaUpdated;
-    procedure ActivityAreaRemoved;
-    procedure DestinationDeleted;
-    procedure DestinationOutOfSequence;
-    procedure DriverArrivedEarly;
-    procedure DriverArrivedLate;
-    procedure DriverArrivedOnTime;
-    procedure GeofenceLeft;
-    procedure GeofenceEntered;
+    procedure GetAreaAddedActivities;
+    procedure GetAreaUpdatedActivities;
+    procedure GetAreaRemovedActivities;
+    procedure GetDestinationDeletedActivities;
+    procedure GetDestinationOutOfSequenceActivities;
+    procedure GetDriverArrivedEarlyActivities;
+    procedure GetDriverArrivedLateActivities;
+    procedure GetDriverArrivedOnTimeActivities;
+    procedure GetGeofenceLeftActivities;
+    procedure GetGeofenceEnteredActivities;
+    procedure GetDestinationInsertedActivities;
+    procedure GetAllDestinationInsertedActivities;
+    procedure GetDestinationMarkedAsDepartedActivities;
+    procedure GetAllDestinationMarkedAsDepartedActivities;
+    procedure GetAllDestinationMarkedAsVisitedActivities;
+    procedure GetMemberCreatedActivities;
+    procedure GetMemberDeletedActivities;
+    procedure GetMemberModifiedActivities;
+    procedure GetDestinationMovedActivities;
+    procedure GetNoteInsertedActivities;
+    procedure GetAllNoteInsertedActivities;
+    procedure GetRouteDeletedActivities;
+    procedure GetRouteOwnerChangedActivities;
+    procedure GetRouteOptimizedActivities;
+    procedure GetDestinationUpdatedActivities;
+
     procedure GetAddress;
     procedure MarkAddressAsDetectedAsVisited;
     procedure MarkAddressAsDetectedAsDeparted;
@@ -417,32 +434,35 @@ begin
     CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestExamplesRequests.ActivityAreaAdded;
+procedure TTestExamplesRequests.GetAreaAddedActivities;
 begin
-  FExamples.ActivityAreaAdded();
+  FExamples.GetAreaAddedActivities();
 
   CheckEquals(EmptyStr, FConnection.RequestBody);
-  CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&activity_type=area-added', FConnection.Url);
+  CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&' +
+    'limit=10&offset=0&activity_type=area-added', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestExamplesRequests.ActivityAreaRemoved;
+procedure TTestExamplesRequests.GetAreaRemovedActivities;
 begin
-  FExamples.ActivityAreaRemoved();
+  FExamples.GetAreaRemovedActivities();
 
   CheckEquals(EmptyStr, FConnection.RequestBody);
-  CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&activity_type=area-removed', FConnection.Url);
+  CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&' +
+    'limit=10&offset=0&activity_type=area-removed', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestExamplesRequests.ActivityAreaUpdated;
+procedure TTestExamplesRequests.GetAreaUpdatedActivities;
 begin
-  FExamples.ActivityAreaUpdated();
+  FExamples.GetAreaUpdatedActivities();
 
   CheckEquals(EmptyStr, FConnection.RequestBody);
-  CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&activity_type=area-updated', FConnection.Url);
+  CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&' +
+    'limit=10&offset=0&activity_type=area-updated', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
@@ -683,22 +703,118 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestExamplesRequests.DestinationDeleted;
+procedure TTestExamplesRequests.GetDestinationDeletedActivities;
 begin
-  FExamples.DestinationDeleted();
+  FExamples.GetDestinationDeletedActivities();
 
   CheckEquals(EmptyStr, FConnection.RequestBody);
-  CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&activity_type=delete-destination', FConnection.Url);
+  CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&' +
+    'limit=10&offset=0&activity_type=delete-destination', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestExamplesRequests.DestinationOutOfSequence;
+procedure TTestExamplesRequests.GetDestinationInsertedActivities;
+var
+  RouteId: String;
 begin
-  FExamples.DestinationOutOfSequence();
+  RouteId := '68621A20B99EBA14F1A4F2FDAC907B42';
+  FExamples.GetDestinationInsertedActivities(RouteId);
 
   CheckEquals(EmptyStr, FConnection.RequestBody);
-  CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&activity_type=destination-out-sequence', FConnection.Url);
+  CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&' +
+    'route_id=68621A20B99EBA14F1A4F2FDAC907B42&limit=10&offset=0&activity_type=insert-destination', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.GetAllDestinationInsertedActivities;
+begin
+  FExamples.GetAllDestinationInsertedActivities();
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&' +
+    'limit=10&offset=0&activity_type=insert-destination', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.GetDestinationMarkedAsDepartedActivities;
+var
+  RouteId: String;
+begin
+  RouteId := '68621A20B99EBA14F1A4F2FDAC907B42';
+  FExamples.GetDestinationMarkedAsDepartedActivities(RouteId);
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&' +
+    'route_id=68621A20B99EBA14F1A4F2FDAC907B42&limit=10&offset=0&activity_type=mark-destination-departed', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.GetDestinationMovedActivities;
+begin
+  FExamples.GetDestinationMovedActivities();
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&' +
+    'limit=10&offset=0&activity_type=move-destination', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.GetAllDestinationMarkedAsDepartedActivities;
+begin
+  FExamples.GetAllDestinationMarkedAsDepartedActivities();
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&' +
+    'limit=10&offset=0&activity_type=mark-destination-departed', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.GetAllDestinationMarkedAsVisitedActivities;
+begin
+  FExamples.GetAllDestinationMarkedAsVisitedActivities();
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&' +
+    'limit=10&offset=0&activity_type=mark-destination-visited', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.GetAllNoteInsertedActivities;
+begin
+  FExamples.GetAllNoteInsertedActivities();
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&' +
+    'limit=10&offset=0&activity_type=note-insert', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.GetDestinationOutOfSequenceActivities;
+begin
+  FExamples.GetDestinationOutOfSequenceActivities();
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&' +
+    'limit=10&offset=0&activity_type=destination-out-sequence', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.GetDestinationUpdatedActivities;
+begin
+  FExamples.GetDestinationUpdatedActivities();
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&' +
+    'limit=10&offset=0&activity_type=update-destinations', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
@@ -718,32 +834,35 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestExamplesRequests.DriverArrivedEarly;
+procedure TTestExamplesRequests.GetDriverArrivedEarlyActivities;
 begin
-  FExamples.DriverArrivedEarly();
+  FExamples.GetDriverArrivedEarlyActivities();
 
   CheckEquals(EmptyStr, FConnection.RequestBody);
-  CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&activity_type=driver-arrived-early', FConnection.Url);
+  CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&' +
+    'limit=10&offset=0&activity_type=driver-arrived-early', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestExamplesRequests.DriverArrivedLate;
+procedure TTestExamplesRequests.GetDriverArrivedLateActivities;
 begin
-  FExamples.DriverArrivedLate();
+  FExamples.GetDriverArrivedLateActivities();
 
   CheckEquals(EmptyStr, FConnection.RequestBody);
-  CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&activity_type=driver-arrived-late', FConnection.Url);
+  CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&' +
+    'limit=10&offset=0&activity_type=driver-arrived-late', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestExamplesRequests.DriverArrivedOnTime;
+procedure TTestExamplesRequests.GetDriverArrivedOnTimeActivities;
 begin
-  FExamples.DriverArrivedOnTime();
+  FExamples.GetDriverArrivedOnTimeActivities();
 
   CheckEquals(EmptyStr, FConnection.RequestBody);
-  CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&activity_type=driver-arrived-on-time', FConnection.Url);
+  CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&' +
+    'limit=10&offset=0&activity_type=driver-arrived-on-time', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
@@ -781,22 +900,71 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestExamplesRequests.GeofenceEntered;
+procedure TTestExamplesRequests.GetGeofenceEnteredActivities;
 begin
-  FExamples.GeofenceEntered();
+  FExamples.GetGeofenceEnteredActivities();
 
   CheckEquals(EmptyStr, FConnection.RequestBody);
-  CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&activity_type=geofence-entered', FConnection.Url);
+  CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&' +
+    'limit=10&offset=0&activity_type=geofence-entered', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestExamplesRequests.GeofenceLeft;
+procedure TTestExamplesRequests.GetGeofenceLeftActivities;
 begin
-  FExamples.GeofenceLeft();
+  FExamples.GetGeofenceLeftActivities();
 
   CheckEquals(EmptyStr, FConnection.RequestBody);
-  CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&activity_type=geofence-left', FConnection.Url);
+  CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&' +
+    'limit=10&offset=0&activity_type=geofence-left', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.GetMemberCreatedActivities;
+begin
+  FExamples.GetMemberCreatedActivities();
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&' +
+    'limit=10&offset=0&activity_type=member-created', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.GetMemberDeletedActivities;
+begin
+  FExamples.GetMemberDeletedActivities();
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&' +
+    'limit=10&offset=0&activity_type=member-deleted', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.GetMemberModifiedActivities;
+begin
+  FExamples.GetMemberModifiedActivities();
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&' +
+    'limit=10&offset=0&activity_type=member-modified', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.GetNoteInsertedActivities;
+var
+  RouteId: String;
+begin
+  RouteId := '68621A20B99EBA14F1A4F2FDAC907B42';
+  FExamples.GetNoteInsertedActivities(RouteId);
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&' +
+    'route_id=68621A20B99EBA14F1A4F2FDAC907B42&limit=10&offset=0&activity_type=note-insert', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
@@ -1014,6 +1182,39 @@ begin
 
   CheckEquals(EmptyStr, FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/route.php?api_key=11111111111111111111111111111111&route_id=68621A20B99EBA14F1A4F2FDAC907B42&directions=1&route_path_output=Points', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.GetRouteDeletedActivities;
+begin
+  FExamples.GetRouteDeletedActivities();
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&' +
+    'limit=10&offset=0&activity_type=route-delete', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.GetRouteOptimizedActivities;
+begin
+  FExamples.GetRouteOptimizedActivities();
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&' +
+    'limit=10&offset=0&activity_type=route-optimized', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.GetRouteOwnerChangedActivities;
+begin
+  FExamples.GetRouteOwnerChangedActivities();
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&' +
+    'limit=10&offset=0&activity_type=route-owner-changed', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
