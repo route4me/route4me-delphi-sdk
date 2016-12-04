@@ -9,8 +9,6 @@ uses
 type
   TTestOrderSamples = class(TTestOnlineExamples)
   private
-    function Rnd: String;
-
     function GetTestOrder: TOrder;
   published
     procedure AddNewOrder;
@@ -39,7 +37,6 @@ uses UserParametersUnit, UserParameterProviderUnit, UserUnit, EnumsUnit,
 
 var
   FOrderId: NullableInteger;
-  FAddress: String;
 
 { TTestOrderSamples }
 
@@ -260,8 +257,6 @@ var
   ErrorString: String;
   Text: String;
   Orders: TOrderList;
-  i: integer;
-  IsFound: boolean;
   Offset, Limit, Total: integer;
   Order: TOrder;
 begin
@@ -354,11 +349,6 @@ begin
   // Deleting unexisting order. Must be success.
   CheckTrue(FRoute4MeManager.Order.Remove([-1], ErrorString));
   CheckEquals(EmptyStr, ErrorString);
-end;
-
-function TTestOrderSamples.Rnd: String;
-begin
-
 end;
 
 procedure TTestOrderSamples.ScheduleOrder;

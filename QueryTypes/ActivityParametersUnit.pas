@@ -38,7 +38,7 @@ type
     FEnd: NullableInteger;
   public
     constructor Create; overload; override;
-    constructor Create(Limit, Offset: integer); overload;
+    constructor Create(Limit, Offset: integer); reintroduce; overload;
 
     property RouteId: NullableString read FRouteId write FRouteId;
     property DeviceID: NullableString read FDeviceID write FDeviceID;
