@@ -58,7 +58,7 @@ type
     procedure UserLicense;
     procedure RegisterWebinar;
 
-    procedure LogCustomActivity;
+    procedure LogSpecificMessage;
     procedure GetAllActivities;
     procedure GetTeamActivities;
     procedure GetAreaAddedActivities;
@@ -1262,14 +1262,14 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestExamplesRequests.LogCustomActivity;
+procedure TTestExamplesRequests.LogSpecificMessage;
 var
   Message: String;
   RouteId: String;
 begin
   RouteId := '68621A20B99EBA14F1A4F2FDAC907B42';
   Message := 'Test User Activity 27.10.2016 19:21:19';
-  FExamples.LogCustomActivity(Message, RouteId);
+  FExamples.LogSpecificMessage(Message, RouteId);
 
   CheckEqualsBody('LogCustomActivity', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/activity_feed.php?api_key=11111111111111111111111111111111', FConnection.Url);

@@ -16,7 +16,7 @@ type
     function CheckActivitiesWithoutRouteId(ActivityType: TActivityType;
       IsNullNow: boolean = False): String;
   published
-    procedure LogCustomActivity;
+    procedure LogSpecificMessage;
     procedure GetAllActivities;
     procedure GetTeamActivities;
     procedure GetAreaAddedActivities;
@@ -504,7 +504,7 @@ begin
 
 end;
 
-procedure TTestActivitiesSamples.LogCustomActivity;
+procedure TTestActivitiesSamples.LogSpecificMessage;
 var
   RouteId: String;
   Message: String;
@@ -513,24 +513,24 @@ begin
   RouteId := 'qwe';
   Message := EmptyStr;
   CheckFalse(
-    FRoute4MeManager.ActivityFeed.LogCustomActivity(RouteId, Message, ErrorString));
+    FRoute4MeManager.ActivityFeed.LogSpecificMessage(RouteId, Message, ErrorString));
   CheckNotEquals(EmptyStr, ErrorString);
 
   RouteId := GetRouteId();
   CheckFalse(
-    FRoute4MeManager.ActivityFeed.LogCustomActivity(RouteId, Message, ErrorString));
+    FRoute4MeManager.ActivityFeed.LogSpecificMessage(RouteId, Message, ErrorString));
   CheckNotEquals(EmptyStr, ErrorString);
 
   RouteId := 'qwe';
   Message := 'Test';
   // todo: при несуществующем RouteId все равно сервер возвращает True. Спросил у Олега
   CheckTrue(
-    FRoute4MeManager.ActivityFeed.LogCustomActivity(RouteId, Message, ErrorString));
+    FRoute4MeManager.ActivityFeed.LogSpecificMessage(RouteId, Message, ErrorString));
   CheckEquals(EmptyStr, ErrorString);
 
   RouteId := GetRouteId();
   CheckTrue(
-    FRoute4MeManager.ActivityFeed.LogCustomActivity(RouteId, Message, ErrorString));
+    FRoute4MeManager.ActivityFeed.LogSpecificMessage(RouteId, Message, ErrorString));
   CheckEquals(EmptyStr, ErrorString);
 end;
 

@@ -311,7 +311,7 @@ begin
 
         if (RouteId_SingleDriverRoute10Stops.IsNotNull) then
         begin
-          Examples.LogCustomActivity('Test User Activity ' + DateTimeToStr(Now), RouteId_SingleDriverRoute10Stops);
+          Examples.LogSpecificMessage('Test User Activity ' + DateTimeToStr(Now), RouteId_SingleDriverRoute10Stops);
           Examples.GetTeamActivities(RouteId_SingleDriverRoute10Stops, Limit, Offset);
           Examples.GetDestinationInsertedActivities(RouteId_SingleDriverRoute10Stops);
           Examples.GetDestinationMarkedAsDepartedActivities(RouteId_SingleDriverRoute10Stops);

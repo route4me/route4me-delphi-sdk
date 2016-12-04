@@ -189,7 +189,7 @@ uses
   UserLicenseUnit in 'Examples\Members\UserLicenseUnit.pas',
   RegisterWebinarRequestUnit in '..\QueryTypes\RegisterWebinarRequestUnit.pas',
   RegisterWebinarUnit in 'Examples\Members\RegisterWebinarUnit.pas',
-  LogCustomActivityUnit in 'Examples\Activities\LogCustomActivityUnit.pas',
+  LogSpecificMessageUnit in 'Examples\Activities\LogSpecificMessageUnit.pas',
   GetTeamActivitiesUnit in 'Examples\Activities\GetTeamActivitiesUnit.pas',
   ActivityRequestUnit in '..\QueryTypes\ActivityRequestUnit.pas',
   ActivityUnit in '..\DataTypes\ActivityUnit.pas',

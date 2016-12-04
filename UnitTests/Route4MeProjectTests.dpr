@@ -216,7 +216,7 @@ uses
   RegisterWebinarRequestUnit in '..\QueryTypes\RegisterWebinarRequestUnit.pas',
   RegisterWebinarUnit in '..\Examples\Examples\Members\RegisterWebinarUnit.pas',
   TestOrderSamplesUnit in 'Examples\Online\TestOrderSamplesUnit.pas',
-  LogCustomActivityUnit in '..\Examples\Examples\Activities\LogCustomActivityUnit.pas',
+  LogSpecificMessageUnit in '..\Examples\Examples\Activities\LogSpecificMessageUnit.pas',
   GetTeamActivitiesUnit in '..\Examples\Examples\Activities\GetTeamActivitiesUnit.pas',
   TestActivitiesSamplesUnit in 'Examples\Online\TestActivitiesSamplesUnit.pas',
   ActivityUnit in '..\DataTypes\ActivityUnit.pas',

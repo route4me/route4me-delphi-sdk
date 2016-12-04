@@ -65,7 +65,7 @@ type
       DeviceType: TDeviceType; Subscription, Token, Payload: String);
     procedure RegisterWebinar(EMail, FirstName, LastName, Phone, Company: String;
       MemberId: integer; Date: TDateTime);
-    function LogCustomActivity(Message: String; RouteId: String): boolean;
+    function LogSpecificMessage(Message: String; RouteId: String): boolean;
     procedure GetAllActivities(Limit, Offset: integer);
     procedure GetTeamActivities(RouteId: String; Limit, Offset: integer);
     procedure GetAreaAddedActivities;
@@ -150,7 +150,7 @@ uses
   MoveDestinationToRouteUnit, GetOptimizationsUnit, GetOptimizationUnit,
   AddDestinationToOptimizationUnit, RemoveDestinationFromOptimizationUnit,
   ReoptimizeRouteUnit, ReOptimizationUnit, UpdateRouteUnit, GetRoutesUnit,
-  GetRouteUnit, GetUsersUnit, LogCustomActivityUnit, GetAllActivitiesUnit,
+  GetRouteUnit, GetUsersUnit, LogSpecificMessageUnit, GetAllActivitiesUnit,
   GetAddressUnit, GetAddressNotesUnit, AddAddressNoteUnit, DuplicateRouteUnit,
   ShareRouteUnit, AddAddressBookContactUnit, GetAddressBookContactsUnit,
   UpdateAddressBookContactUnit, RemoveAddressBookContactsUnit,
@@ -949,11 +949,11 @@ begin
   end;
 end;
 
-function TRoute4MeExamples.LogCustomActivity(Message, RouteId: String): boolean;
+function TRoute4MeExamples.LogSpecificMessage(Message, RouteId: String): boolean;
 var
-  Example: TLogCustomActivity;
+  Example: TLogSpecificMessage;
 begin
-  Example := MakeExample(TLogCustomActivity) as TLogCustomActivity;
+  Example := MakeExample(TLogSpecificMessage) as TLogSpecificMessage;
   try
     Result := Example.Execute(Message, RouteId);
   finally

@@ -259,7 +259,7 @@
         <DCCReference Include="Examples\Members\UserLicenseUnit.pas"/>
         <DCCReference Include="..\QueryTypes\RegisterWebinarRequestUnit.pas"/>
         <DCCReference Include="Examples\Members\RegisterWebinarUnit.pas"/>
-        <DCCReference Include="Examples\Activities\LogCustomActivityUnit.pas"/>
+        <DCCReference Include="Examples\Activities\LogSpecificMessageUnit.pas"/>
         <DCCReference Include="Examples\Activities\GetTeamActivitiesUnit.pas"/>
         <DCCReference Include="..\QueryTypes\ActivityRequestUnit.pas"/>
         <DCCReference Include="..\DataTypes\ActivityUnit.pas"/>

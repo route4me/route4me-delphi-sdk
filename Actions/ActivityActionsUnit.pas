@@ -13,7 +13,7 @@ type
     /// Create User Activity. Send custom message to Activity Stream.
     /// </summary>
     /// <returns> True/False </returns>
-    function LogCustomActivity(RouteId: String; Message: String;
+    function LogSpecificMessage(RouteId: String; Message: String;
       out ErrorString: String): boolean;
 
     /// <summary>
@@ -167,7 +167,7 @@ begin
   end;
 end;
 
-function TActivityActions.LogCustomActivity(RouteId: String; Message: String;
+function TActivityActions.LogSpecificMessage(RouteId: String; Message: String;
   out ErrorString: String): boolean;
 var
   Response: TStatusResponse;
