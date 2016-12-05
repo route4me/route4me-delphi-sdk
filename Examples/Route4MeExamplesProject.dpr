@@ -125,10 +125,10 @@ uses
   ShareRouteUnit in 'Examples\Routes\ShareRouteUnit.pas',
   DeleteRoutesUnit in 'Examples\Routes\DeleteRoutesUnit.pas',
   RemoveOptimizationUnit in 'Examples\Optimization\RemoveOptimizationUnit.pas',
-  AddAddressBookContactUnit in 'Examples\AddressBookContact\AddAddressBookContactUnit.pas',
-  GetAddressBookContactsUnit in 'Examples\AddressBookContact\GetAddressBookContactsUnit.pas',
-  UpdateAddressBookContactUnit in 'Examples\AddressBookContact\UpdateAddressBookContactUnit.pas',
-  RemoveAddressBookContactsUnit in 'Examples\AddressBookContact\RemoveAddressBookContactsUnit.pas',
+  CreateLocationUnit in 'Examples\AddressBookContact\CreateLocationUnit.pas',
+  GetLocationsUnit in 'Examples\AddressBookContact\GetLocationsUnit.pas',
+  UpdateLocationUnit in 'Examples\AddressBookContact\UpdateLocationUnit.pas',
+  RemoveLocationsUnit in 'Examples\AddressBookContact\RemoveLocationsUnit.pas',
   GetAvoidanceZoneUnit in 'Examples\AvoidanceZones\GetAvoidanceZoneUnit.pas',
   UpdateAvoidanceZoneUnit in 'Examples\AvoidanceZones\UpdateAvoidanceZoneUnit.pas',
   DeleteAvoidanceZoneUnit in 'Examples\AvoidanceZones\DeleteAvoidanceZoneUnit.pas',
@@ -218,7 +218,11 @@ uses
   GetNoteInsertedActivitiesUnit in 'Examples\Activities\GetNoteInsertedActivitiesUnit.pas',
   GetRouteDeletedActivitiesUnit in 'Examples\Activities\GetRouteDeletedActivitiesUnit.pas',
   GetRouteOptimizedActivitiesUnit in 'Examples\Activities\GetRouteOptimizedActivitiesUnit.pas',
-  GetRouteOwnerChangedActivitiesUnit in 'Examples\Activities\GetRouteOwnerChangedActivitiesUnit.pas';
+  GetRouteOwnerChangedActivitiesUnit in 'Examples\Activities\GetRouteOwnerChangedActivitiesUnit.pas',
+  GetLocationsByIdsUnit in 'Examples\AddressBookContact\GetLocationsByIdsUnit.pas',
+  GetLocationUnit in 'Examples\AddressBookContact\GetLocationUnit.pas',
+  DisplayRoutedUnit in 'Examples\AddressBookContact\DisplayRoutedUnit.pas',
+  LocationSearchUnit in 'Examples\AddressBookContact\LocationSearchUnit.pas';
 
 begin
   try

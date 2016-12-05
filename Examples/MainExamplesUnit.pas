@@ -323,19 +323,22 @@ begin
         Randomize;
 
         // Address Book
-        Contact1 := Examples.AddAddressBookContact('Test FirstName 1', 'Test Address 1');
-        Contact2 := Examples.AddAddressBookContact('Test FirstName 2', 'Test Address 2');
+        Contact1 := Examples.CreateLocation('Test FirstName 1', 'Test Address 1');
+        Contact2 := Examples.CreateLocation('Test FirstName 2', 'Test Address 2');
         try
-          Examples.GetAddressBookContacts();
+          Examples.GetLocations();
+          Examples.GetLocationsByIds([Contact1.Id, Contact2.Id]);
+          Examples.GetLocation('FirstName');
+          Examples.LocationSearch('FirstName', ['first_name', 'address_1']);
+          Examples.DisplayRouted();
           if (Contact1 <> nil) then
           begin
             AddressId := Contact1.Id;
             Contact1.LastName := 'Updated ' + IntToStr(Random(100));
-            Examples.UpdateAddressBookContact(Contact1);
+            Examples.UpdateLocation(Contact1);
           end
           else
             WriteLn('contact1 = null. UpdateAddressBookContact not called.');
-
 
           AddressIdsToRemove := TList<integer>.Create();
           try
@@ -343,7 +346,7 @@ begin
               AddressIdsToRemove.Add(Contact1.Id);
             if (Contact2 <> nil) then
               AddressIdsToRemove.Add(Contact2.Id);
-            Examples.RemoveAddressBookContacts(AddressIdsToRemove.ToArray());
+            Examples.RemoveLocations(AddressIdsToRemove.ToArray());
           finally
             FreeAndNil(AddressIdsToRemove);
           end;

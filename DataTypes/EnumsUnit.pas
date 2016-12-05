@@ -3,6 +3,11 @@ unit EnumsUnit;
 interface
 
 type
+  TDisplayLocations = (
+    dlAll,
+    dlRouted,
+    dlUnrouted);
+
   TActivityType = (
     atUnknown,
     atDeleteDestination,
@@ -236,6 +241,9 @@ var
     'route-owner-changed', 'update-destinations', 'user_message', 'area-added',
     'area-updated', 'area-removed', 'destination-out-sequence', 'driver-arrived-early',
     'driver-arrived-late', 'driver-arrived-on-time', 'geofence-left', 'geofence-entered');
+
+  TDisplayLocationsDescription: array[TDisplayLocations] of String = (
+    'all', 'routed', 'unrouted');
 
 implementation
 

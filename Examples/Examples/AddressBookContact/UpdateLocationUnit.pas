@@ -1,18 +1,18 @@
-unit UpdateAddressBookContactUnit;
+unit UpdateLocationUnit;
 
 interface
 
 uses SysUtils, BaseExampleUnit, AddressBookContactUnit;
 
 type
-  TUpdateAddressBookContact = class(TBaseExample)
+  TUpdateLocation = class(TBaseExample)
   public
     procedure Execute(Contact: TAddressBookContact);
   end;
 
 implementation
 
-procedure TUpdateAddressBookContact.Execute(Contact: TAddressBookContact);
+procedure TUpdateLocation.Execute(Contact: TAddressBookContact);
 var
   ErrorString: String;
   UpdatedContact: TAddressBookContact;
@@ -22,9 +22,9 @@ begin
     WriteLn('');
 
     if (UpdatedContact <> nil) then
-      WriteLn('UpdateAddressBookContact executed successfully')
+      WriteLn('UpdateLocation executed successfully')
     else
-      WriteLn(Format('UpdateAddressBookContact error: "%s"', [ErrorString]));
+      WriteLn(Format('UpdateLocation error: "%s"', [ErrorString]));
   finally
     FreeAndNil(UpdatedContact);
   end;

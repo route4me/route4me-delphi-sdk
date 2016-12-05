@@ -107,10 +107,14 @@ type
     function DuplicateRoute(RouteId: String): NullableString;
     procedure ShareRoute(RouteId: String; RecipientEmail: String);
     procedure DeleteRoutes(RouteIds: TStringArray);
-    function AddAddressBookContact(FirstName, Address: String): TAddressBookContact;
-    procedure GetAddressBookContacts;
-    procedure UpdateAddressBookContact(Contact: TAddressBookContact);
-    procedure RemoveAddressBookContacts(AddressIds: TArray<integer>);
+    function CreateLocation(FirstName, Address: String): TAddressBookContact;
+    procedure GetLocation(Query: String);
+    procedure DisplayRouted;
+    procedure LocationSearch(Query: String; Fields: TArray<String>);
+    procedure GetLocationsByIds(AddressesIds: TArray<integer>);
+    procedure GetLocations;
+    procedure UpdateLocation(Contact: TAddressBookContact);
+    procedure RemoveLocations(AddressIds: TArray<integer>);
     function AddAvoidanceZone: NullableString;
     procedure GetAvoidanceZones;
     procedure GetAvoidanceZone(TerritoryId: String);
@@ -144,7 +148,7 @@ uses
   SingleDepotMultipleDriverNoTimeWindowUnit,
   SingleDriverMultipleTimeWindowsUnit, SingleDriverRoundTripUnit,
   SingleDriverRoundTripGenericUnit,
-  MultipleDepotMultipleDriverWith24StopsTimeWindowUnit,
+  MultipleDepotMultipleDriverWith24StopsTimeWindowUnit, RemoveLocationsUnit,
   ResequenceRouteDestinationsUnit, AddRouteDestinationsUnit,
   AddRouteDestinationsOptimallyUnit, RemoveRouteDestinationUnit,
   MoveDestinationToRouteUnit, GetOptimizationsUnit, GetOptimizationUnit,
@@ -152,12 +156,10 @@ uses
   ReoptimizeRouteUnit, ReOptimizationUnit, UpdateRouteUnit, GetRoutesUnit,
   GetRouteUnit, GetUsersUnit, LogSpecificMessageUnit, GetAllActivitiesUnit,
   GetAddressUnit, GetAddressNotesUnit, AddAddressNoteUnit, DuplicateRouteUnit,
-  ShareRouteUnit, AddAddressBookContactUnit, GetAddressBookContactsUnit,
-  UpdateAddressBookContactUnit, RemoveAddressBookContactsUnit,
   AddAvoidanceZoneUnit, GetAvoidanceZoneUnit, GetAvoidanceZonesUnit,
   UpdateAvoidanceZoneUnit, DeleteAvoidanceZoneUnit, AddOrderUnit, GetOrdersUnit,
-  UpdateOrderUnit, RemoveOrdersUnit, SetGPSPositionUnit,
-  TrackDeviceLastLocationHistoryUnit, GenericExampleShortcutUnit,
+  UpdateOrderUnit, RemoveOrdersUnit, SetGPSPositionUnit, CreateLocationUnit,
+  TrackDeviceLastLocationHistoryUnit, GenericExampleShortcutUnit, ShareRouteUnit,
   GenericExampleUnit, MergeRoutesUnit, UpdateRoutesCustomFieldsUnit,
   DeleteRoutesUnit, RemoveOptimizationUnit, ResequenceAllRouteDestinationsUnit,
   AddOrderToRouteUnit, AddOrderToOptimizationUnit, GetOrderUnit,
@@ -180,7 +182,9 @@ uses
   GetMemberModifiedActivitiesUnit, GetDestinationMovedActivitiesUnit,
   GetNoteInsertedActivitiesUnit, GetAllNoteInsertedActivitiesUnit,
   GetRouteDeletedActivitiesUnit, GetRouteOwnerChangedActivitiesUnit,
-  GetDestinationUpdatedActivitiesUnit, GetRouteOptimizedActivitiesUnit;
+  GetDestinationUpdatedActivitiesUnit, GetRouteOptimizedActivitiesUnit,
+  GetLocationsByIdsUnit, GetLocationsUnit, UpdateLocationUnit, GetLocationUnit,
+  DisplayRoutedUnit, LocationSearchUnit;
 
 procedure TRoute4MeExamples.GetAreaAddedActivities;
 var
@@ -218,12 +222,11 @@ begin
   end;
 end;
 
-function TRoute4MeExamples.AddAddressBookContact(FirstName,
-  Address: String): TAddressBookContact;
+function TRoute4MeExamples.CreateLocation(FirstName, Address: String): TAddressBookContact;
 var
-  Example: TAddAddressBookContact;
+  Example: TCreateLocation;
 begin
-  Example := MakeExample(TAddAddressBookContact) as TAddAddressBookContact;
+  Example := MakeExample(TCreateLocation) as TCreateLocation;
   try
     Result := Example.Execute(FirstName, Address);
   finally
@@ -526,6 +529,18 @@ begin
   end;
 end;
 
+procedure TRoute4MeExamples.DisplayRouted;
+var
+  Example: TDisplayRouted;
+begin
+  Example := MakeExample(TDisplayRouted) as TDisplayRouted;
+  try
+    Example.Execute;
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
 procedure TRoute4MeExamples.GetDriverArrivedEarlyActivities;
 var
   Example: TGetDriverArrivedEarlyActivities;
@@ -634,6 +649,18 @@ begin
   end;
 end;
 
+procedure TRoute4MeExamples.GetLocationsByIds(AddressesIds: TArray<integer>);
+var
+  Example: TGetLocationsByIds;
+begin
+  Example := MakeExample(TGetLocationsByIds) as TGetLocationsByIds;
+  try
+    Example.Execute(AddressesIds);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
 procedure TRoute4MeExamples.GetMemberCreatedActivities;
 var
   Example: TGetMemberCreatedActivities;
@@ -707,11 +734,23 @@ begin
   end;
 end;
 
-procedure TRoute4MeExamples.GetAddressBookContacts;
+procedure TRoute4MeExamples.GetLocation(Query: String);
 var
-  Example: TGetAddressBookContacts;
+  Example: TGetLocation;
 begin
-  Example := MakeExample(TGetAddressBookContacts) as TGetAddressBookContacts;
+  Example := MakeExample(TGetLocation) as TGetLocation;
+  try
+    Example.Execute(Query);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.GetLocations;
+var
+  Example: TGetLocations;
+begin
+  Example := MakeExample(TGetLocations) as TGetLocations;
   try
     Example.Execute;
   finally
@@ -949,6 +988,18 @@ begin
   end;
 end;
 
+procedure TRoute4MeExamples.LocationSearch(Query: String; Fields: TArray<String>);
+var
+  Example: TLocationSearch;
+begin
+  Example := MakeExample(TLocationSearch) as TLocationSearch;
+  try
+    Example.Execute(Query, Fields);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
 function TRoute4MeExamples.LogSpecificMessage(Message, RouteId: String): boolean;
 var
   Example: TLogSpecificMessage;
@@ -1111,12 +1162,12 @@ begin
   end;
 end;
 
-procedure TRoute4MeExamples.RemoveAddressBookContacts(
+procedure TRoute4MeExamples.RemoveLocations(
   AddressIds: TArray<integer>);
 var
-  Example: TRemoveAddressBookContacts;
+  Example: TRemoveLocations;
 begin
-  Example := MakeExample(TRemoveAddressBookContacts) as TRemoveAddressBookContacts;
+  Example := MakeExample(TRemoveLocations) as TRemoveLocations;
   try
     Example.Execute(AddressIds);
   finally
@@ -1330,12 +1381,12 @@ begin
   end;
 end;
 
-procedure TRoute4MeExamples.UpdateAddressBookContact(
+procedure TRoute4MeExamples.UpdateLocation(
   Contact: TAddressBookContact);
 var
-  Example: TUpdateAddressBookContact;
+  Example: TUpdateLocation;
 begin
-  Example := MakeExample(TUpdateAddressBookContact) as TUpdateAddressBookContact;
+  Example := MakeExample(TUpdateLocation) as TUpdateLocation;
   try
     Example.Execute(Contact);
   finally

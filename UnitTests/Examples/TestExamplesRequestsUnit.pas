@@ -57,7 +57,6 @@ type
     procedure DeviceLicense;
     procedure UserLicense;
     procedure RegisterWebinar;
-
     procedure LogSpecificMessage;
     procedure GetAllActivities;
     procedure GetTeamActivities;
@@ -86,7 +85,6 @@ type
     procedure GetRouteOwnerChangedActivities;
     procedure GetRouteOptimizedActivities;
     procedure GetDestinationUpdatedActivities;
-
     procedure GetAddress;
     procedure MarkAddressAsDetectedAsVisited;
     procedure MarkAddressAsDetectedAsDeparted;
@@ -99,10 +97,14 @@ type
     procedure TrackDeviceLastLocationHistory;
     procedure DeleteRoutes;
     procedure RemoveOptimization;
-    procedure AddAddressBookContact;
-    procedure GetAddressBookContacts;
-    procedure UpdateAddressBookContact;
-    procedure RemoveAddressBookContacts;
+    procedure CreateLocation;
+    procedure RemoveLocations;
+    procedure GetLocation;
+    procedure GetLocationsByIds;
+    procedure GetLocations;
+    procedure LocationSearch;
+    procedure DisplayRouted;
+    procedure UpdateLocation;
     procedure AddAvoidanceZone;
     procedure GetAvoidanceZones;
     procedure GetAvoidanceZone;
@@ -253,13 +255,13 @@ begin
   inherited;
 end;
 
-procedure TTestExamplesRequests.AddAddressBookContact;
+procedure TTestExamplesRequests.CreateLocation;
 var
   FirstName, Address: String;
 begin
   FirstName := 'Test FirstName 37';
   Address := 'Test Address1 28';
-  FExamples.AddAddressBookContact(FirstName, Address);
+  FExamples.CreateLocation(FirstName, Address);
 
   CheckEqualsBody('AddAddressBookContact', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/address_book.php?api_key=11111111111111111111111111111111', FConnection.Url);
@@ -487,7 +489,7 @@ begin
   // todo: нет примеров в C#
 end;
 
-procedure TTestExamplesRequests.UpdateAddressBookContact;
+procedure TTestExamplesRequests.UpdateLocation;
 var
   Contact: TAddressBookContact;
 begin
@@ -500,7 +502,7 @@ begin
     Contact.Longitude := -77.338814;
     Contact.FirstName := 'Test FirstName 768611171';
     Contact.LastName := 'Updated 640291126';
-    FExamples.UpdateAddressBookContact(Contact);
+    FExamples.UpdateLocation(Contact);
 
     CheckEqualsBody('UpdateAddressBookContact', FConnection.RequestBody);
     CheckEquals('https://www.route4me.com/api.v4/address_book.php?api_key=11111111111111111111111111111111', FConnection.Url);
@@ -834,6 +836,17 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
+procedure TTestExamplesRequests.DisplayRouted;
+begin
+  FExamples.DisplayRouted;
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api.v4/address_book.php?api_key=11111111111111111111111111111111&' +
+    'limit=10&offset=0&display=routed', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
 procedure TTestExamplesRequests.GetDriverArrivedEarlyActivities;
 begin
   FExamples.GetDriverArrivedEarlyActivities();
@@ -922,6 +935,21 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
+procedure TTestExamplesRequests.GetLocationsByIds;
+var
+  Id1, Ids2: integer;
+begin
+  Id1 := 123;
+  Ids2 := 678;
+  FExamples.GetLocationsByIds([Id1, Ids2]);
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api.v4/address_book.php?api_key=11111111111111111111111111111111&' +
+    'address_id=123,678', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
 procedure TTestExamplesRequests.GetMemberCreatedActivities;
 begin
   FExamples.GetMemberCreatedActivities();
@@ -1001,9 +1029,23 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestExamplesRequests.GetAddressBookContacts;
+procedure TTestExamplesRequests.GetLocation;
+var
+  Query: String;
 begin
-  FExamples.GetAddressBookContacts;
+  Query := 'technology';
+  FExamples.GetLocation(Query);
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api.v4/address_book.php?api_key=11111111111111111111111111111111&' +
+    'limit=10&offset=0&query=technology', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.GetLocations;
+begin
+  FExamples.GetLocations;
 
   CheckEquals(EmptyStr, FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/address_book.php?api_key=11111111111111111111111111111111&limit=10&offset=0', FConnection.Url);
@@ -1262,6 +1304,22 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
+procedure TTestExamplesRequests.LocationSearch;
+var
+  Query: String;
+  Fields: TArray<String>;
+begin
+  Query := 'peter';
+  Fields := ['first_name', 'address_email'];
+  FExamples.LocationSearch(Query, Fields);
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api.v4/address_book.php?api_key=11111111111111111111111111111111&' +
+    'limit=10&offset=0&query=peter&fields=first_name,address_email', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
 procedure TTestExamplesRequests.LogSpecificMessage;
 var
   Message: String;
@@ -1483,14 +1541,14 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestExamplesRequests.RemoveAddressBookContacts;
+procedure TTestExamplesRequests.RemoveLocations;
 var
   AddressIds: TArray<integer>;
 begin
   SetLength(AddressIds, 2);
   AddressIds[0] := 10494328;
   AddressIds[1] := 10494329;
-  FExamples.RemoveAddressBookContacts(AddressIds);
+  FExamples.RemoveLocations(AddressIds);
 
   CheckEqualsBody('RemoveAddressBookContacts', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/address_book.php?api_key=11111111111111111111111111111111', FConnection.Url);

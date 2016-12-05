@@ -208,7 +208,7 @@ type
   end;
 
   TAddressBookContactArray = TArray<TAddressBookContact>;
-
+  TAddressBookContactList = TObjectList<TAddressBookContact>;
 
 implementation
 

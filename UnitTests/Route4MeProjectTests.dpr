@@ -128,10 +128,10 @@ uses
   SingleDriverRoute10StopsUnit in '..\Examples\Examples\Optimization\SingleDriverRoute10StopsUnit.pas',
   Route4MeExamplesUnit in '..\Examples\Examples\Route4MeExamplesUnit.pas',
   GetAllActivitiesUnit in '..\Examples\Examples\Activities\GetAllActivitiesUnit.pas',
-  AddAddressBookContactUnit in '..\Examples\Examples\AddressBookContact\AddAddressBookContactUnit.pas',
-  GetAddressBookContactsUnit in '..\Examples\Examples\AddressBookContact\GetAddressBookContactsUnit.pas',
-  RemoveAddressBookContactsUnit in '..\Examples\Examples\AddressBookContact\RemoveAddressBookContactsUnit.pas',
-  UpdateAddressBookContactUnit in '..\Examples\Examples\AddressBookContact\UpdateAddressBookContactUnit.pas',
+  CreateLocationUnit in '..\Examples\Examples\AddressBookContact\CreateLocationUnit.pas',
+  GetLocationsUnit in '..\Examples\Examples\AddressBookContact\GetLocationsUnit.pas',
+  RemoveLocationsUnit in '..\Examples\Examples\AddressBookContact\RemoveLocationsUnit.pas',
+  UpdateLocationUnit in '..\Examples\Examples\AddressBookContact\UpdateLocationUnit.pas',
   AddDestinationToOptimizationUnit in '..\Examples\Examples\Addresses\AddDestinationToOptimizationUnit.pas',
   AddRouteDestinationsOptimallyUnit in '..\Examples\Examples\Addresses\AddRouteDestinationsOptimallyUnit.pas',
   AddRouteDestinationsUnit in '..\Examples\Examples\Addresses\AddRouteDestinationsUnit.pas',
@@ -247,7 +247,12 @@ uses
   GetRouteDeletedActivitiesUnit in '..\Examples\Examples\Activities\GetRouteDeletedActivitiesUnit.pas',
   GetRouteOptimizedActivitiesUnit in '..\Examples\Examples\Activities\GetRouteOptimizedActivitiesUnit.pas',
   GetRouteOwnerChangedActivitiesUnit in '..\Examples\Examples\Activities\GetRouteOwnerChangedActivitiesUnit.pas',
-  GetDestinationUpdatedActivitiesUnit in '..\Examples\Examples\Activities\GetDestinationUpdatedActivitiesUnit.pas';
+  GetDestinationUpdatedActivitiesUnit in '..\Examples\Examples\Activities\GetDestinationUpdatedActivitiesUnit.pas',
+  GetLocationsByIdsUnit in '..\Examples\Examples\AddressBookContact\GetLocationsByIdsUnit.pas',
+  GetLocationUnit in '..\Examples\Examples\AddressBookContact\GetLocationUnit.pas',
+  DisplayRoutedUnit in '..\Examples\Examples\AddressBookContact\DisplayRoutedUnit.pas',
+  LocationSearchUnit in '..\Examples\Examples\AddressBookContact\LocationSearchUnit.pas',
+  TestAddressBookSamplesUnit in 'Examples\Online\TestAddressBookSamplesUnit.pas';
 
 {R *.RES}
 

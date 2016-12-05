@@ -1,19 +1,18 @@
-unit AddAddressBookContactUnit;
+unit CreateLocationUnit;
 
 interface
 
 uses SysUtils, BaseExampleUnit, AddressBookContactUnit;
 
 type
-  TAddAddressBookContact = class(TBaseExample)
+  TCreateLocation = class(TBaseExample)
   public
     function Execute(FirstName, Address: String): TAddressBookContact;
   end;
 
 implementation
 
-function TAddAddressBookContact.Execute(
-  FirstName, Address: String): TAddressBookContact;
+function TCreateLocation.Execute(FirstName, Address: String): TAddressBookContact;
 var
   ErrorString: String;
   Contact: TAddressBookContact;
@@ -31,11 +30,11 @@ begin
 
     if (Result <> nil) then
     begin
-      WriteLn('AddAddressBookContact executed successfully');
+      WriteLn('CreateLocation executed successfully');
       WriteLn(Format('AddressId: %d', [Result.Id.Value]));
     end
     else
-      WriteLn(Format('AddAddressBookContact error: "%s"', [ErrorString]));
+      WriteLn(Format('CreateLocation error: "%s"', [ErrorString]));
   finally
     FreeAndNil(Contact);
   end;
