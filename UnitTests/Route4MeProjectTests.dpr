@@ -8,6 +8,8 @@ program Route4MeProjectTests;
 //  FastMM4Messages in '..\FastMM\FastMM4Messages.pas',
 
 uses
+//  FastMM4 in '..\FastMM\FastMM4.pas',
+  FastMM4Messages in '..\FastMM\FastMM4Messages.pas',
   GUITestRunner,
   Route4MeManagerUnit in '..\Route4MeManagerUnit.pas',
   AddressUnit in '..\DataTypes\AddressUnit.pas',
@@ -252,7 +254,8 @@ uses
   GetLocationUnit in '..\Examples\Examples\AddressBookContact\GetLocationUnit.pas',
   DisplayRoutedUnit in '..\Examples\Examples\AddressBookContact\DisplayRoutedUnit.pas',
   LocationSearchUnit in '..\Examples\Examples\AddressBookContact\LocationSearchUnit.pas',
-  TestAddressBookSamplesUnit in 'Examples\Online\TestAddressBookSamplesUnit.pas';
+  TestAddressBookSamplesUnit in 'Examples\Online\TestAddressBookSamplesUnit.pas',
+  AddressBookContactFindResponseUnit in '..\QueryTypes\AddressBookContactFindResponseUnit.pas';
 
 {R *.RES}
 
@@ -261,3 +264,6 @@ begin
 end.
 
 // RSP-16172
+
+// сверху до UpdateRouteCustomFields есть утечки
+

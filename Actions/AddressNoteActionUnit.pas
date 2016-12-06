@@ -15,9 +15,11 @@ type
     ///  Route4MeManager it must be IRoute4MeManager
     /// <remarks>
     constructor Create(Connection: IConnection; Route4MeManager: IUnknown);
+    destructor Destroy; override;
 
     function Get(NoteParameters: TNoteParameters;
-      out ErrorString: String): TAddressNoteArray;
+      out ErrorString: String): TAddressNoteList;
+
     function Add(NoteParameters: TNoteParameters; NoteContents: String;
       out ErrorString: String): TAddressNote;
   end;
@@ -83,13 +85,21 @@ begin
   FRoute4MeManager := Route4MeManager;
 end;
 
+destructor TAddressNoteActions.Destroy;
+begin
+  FRoute4MeManager := nil;
+
+  inherited;
+end;
+
 function TAddressNoteActions.Get(NoteParameters: TNoteParameters;
-  out ErrorString: String): TAddressNoteArray;
+  out ErrorString: String): TAddressNoteList;
 var
   AddressParameters: TAddressParameters;
   Address: TAddress;
+  i: integer;
 begin
-  Result := nil;
+  Result := TAddressNoteList.Create;
 
   AddressParameters := TAddressParameters.Create();
   try
@@ -100,7 +110,11 @@ begin
     Address := (FRoute4MeManager as IRoute4MeManager).Address.Get(AddressParameters, ErrorString);
     try
       if (Address <> nil) then
-        Result := Address.Notes;
+      begin
+        Address.OwnsNotes := False;
+        for i := 0 to High(Address.Notes) do
+          Result.Add(Address.Notes[i]);
+      end;
     finally
       FreeAndNil(Address);
     end;

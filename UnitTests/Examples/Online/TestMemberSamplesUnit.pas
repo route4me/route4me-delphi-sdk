@@ -45,7 +45,8 @@ var
 begin
   Provider := TUserParameterProvider.Create;
 
-  FEMail := 'test' + Rnd + '@gmail.com';
+  // need real email
+  FEMail := 'marketing@kcswest.com';
   Parameters := Provider.GetParameters(FEMail);
   try
     // Correct adding new user. Must be success.

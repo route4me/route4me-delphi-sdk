@@ -17,7 +17,8 @@ type
   protected
     function RunRequest(URL: String; Method: TRESTRequestMethod;
       RequestBody: String; ContentType: TRESTContentType;
-      out ErrorString: String; out ResponseAsString: String): TJsonValue; override;
+      out ErrorString: String; out ResponseAsString: String;
+      out NeedFreeResult: boolean): TJsonValue; override;
   public
     constructor Create(); reintroduce;
 
@@ -38,7 +39,7 @@ end;
 
 function TConnectionStub.RunRequest(URL: String;
   Method: TRESTRequestMethod; RequestBody: String; ContentType: TRESTContentType;
-  out ErrorString: String; out ResponseAsString: String): TJsonValue;
+  out ErrorString: String; out ResponseAsString: String; out NeedFreeResult: boolean): TJsonValue;
 begin
   FUrl := URL;
   FMethod := Method;

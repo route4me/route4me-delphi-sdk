@@ -18,8 +18,7 @@ procedure TGetAddressNotes.Execute(RouteId: String; RouteDestinationId: integer)
 var
   ErrorString: String;
   Parameters: TNoteParameters;
-  Notes: TAddressNoteArray;
-  i: integer;
+  Notes: TAddressNoteList;
 begin
   Parameters := TNoteParameters.Create();
   try
@@ -32,14 +31,13 @@ begin
 
       if (Notes <> nil) then
         WriteLn(Format('GetAddressNotes executed successfully, %d notes returned',
-          [Length(Notes)]))
+          [Notes.Count]))
       else
         WriteLn(Format('GetAddressNotes error: "%s"', [ErrorString]));
 
       WriteLn('');
     finally
-      for i := Length(Notes) - 1 downto 0 do
-        FreeAndNil(Notes[i]);
+      FreeAndNil(Notes);
     end;
   finally
     FreeAndNil(Parameters);

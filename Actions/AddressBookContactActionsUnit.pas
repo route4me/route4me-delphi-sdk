@@ -53,7 +53,7 @@ type
     ///  GET specified fields from an address book by containing specified text in any field.
     /// </summary>
     function Find(Query: String; Fields: TArray<String>; Limit, Offset: integer;
-      out Total: integer; out ErrorString: String): TAddressBookContactList; overload;
+      out Total: integer; out ErrorString: String): T2DimensionalStringArray; overload;
 
     /// <summary>
     ///  Display locations included in the routes.
@@ -64,9 +64,7 @@ type
 
 implementation
 
-{ TAddressBookContact }
-
-uses RemoveAddressBookContactsRequestUnit,
+uses RemoveAddressBookContactsRequestUnit, AddressBookContactFindResponseUnit,
   StatusResponseUnit, GetAddressBookContactsResponseUnit, GenericParametersUnit;
 
 function TAddressBookContactActions.Remove(AddressId: integer;
@@ -115,15 +113,14 @@ end;
 
 function TAddressBookContactActions.Find(Query: String; Fields: TArray<String>;
   Limit, Offset: integer; out Total: integer;
-  out ErrorString: String): TAddressBookContactList;
+  out ErrorString: String): T2DimensionalStringArray;
 var
-  Response: TGetAddressBookContactsResponse;
+  Response: TAddressBookContactFindResponse;
   Request: TGenericParameters;
   i: integer;
   FieldsStr: String;
 begin
-{"results":[[6601883,"Some address3916589616287113937","John6129484611666145821"],[7681272,"100 Ogle St, Johnstown, PA 15905, USA",""]],"total":142,"fields":["address_id","first_name","address_1"]}
-  Result := TAddressBookContactList.Create;
+  SetLength(Result, 0);
 
   Request := TGenericParameters.Create;
   try
@@ -140,12 +137,11 @@ begin
     Request.AddParameter('fields', FieldsStr);
 
     Response := FConnection.Get(TSettings.AddressBook, Request,
-      TGetAddressBookContactsResponse, ErrorString) as TGetAddressBookContactsResponse;
+      TAddressBookContactFindResponse, ErrorString) as TAddressBookContactFindResponse;
     try
       if (Response <> nil) then
       begin
-        for i := 0 to Length(Response.Results) - 1 do
-          Result.Add(Response.Results[i]);
+        Result := Response.Results;
         Total := Response.Total;
       end;
     finally

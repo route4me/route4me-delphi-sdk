@@ -291,6 +291,9 @@ type
     [NullableArray(TAddressNote)]
     FNotes: TAddressNoteArray;
 
+    [JSONMarshalled(False)]
+    FOwnsNotes: boolean;
+
     function GetCustomFields: TDictionaryStringIntermediateObject;
     procedure SetCustomFields(const Value: TDictionaryStringIntermediateObject);
     function GetAddressStopType: TAddressStopType;
@@ -309,6 +312,8 @@ type
     constructor Create(AddressString: String; Latitude, Longitude: double; Time: NullableInteger;
       TimeWindowStart, TimeWindowEnd, TimeWindowStart2, TimeWindowEnd2: integer); overload;
     destructor Destroy; override;
+
+    property OwnsNotes: boolean read FOwnsNotes write FOwnsNotes;
 
     function Equals(Obj: TObject): Boolean; override;
 
@@ -714,6 +719,8 @@ end;
 
 constructor TAddress.Create;
 begin
+  FOwnsNotes := True;
+
   FAlias := EmptyStr;
 
   FCurbsideLatitude := NullableDouble.Null;
@@ -826,8 +833,9 @@ begin
   for i := Length(FGeocodings) - 1 downto 0 do
     FreeAndNil(FGeocodings[i]);
 
-  for i := Length(FNotes) - 1 downto 0 do
-    FreeAndNil(FNotes[i]);
+  if FOwnsNotes then
+    for i := Length(FNotes) - 1 downto 0 do
+      FreeAndNil(FNotes[i]);
 
   FManifest.Free;
   FCustomFields.Free;

@@ -222,7 +222,8 @@ uses
   GetLocationsByIdsUnit in 'Examples\AddressBookContact\GetLocationsByIdsUnit.pas',
   GetLocationUnit in 'Examples\AddressBookContact\GetLocationUnit.pas',
   DisplayRoutedUnit in 'Examples\AddressBookContact\DisplayRoutedUnit.pas',
-  LocationSearchUnit in 'Examples\AddressBookContact\LocationSearchUnit.pas';
+  LocationSearchUnit in 'Examples\AddressBookContact\LocationSearchUnit.pas',
+  AddressBookContactFindResponseUnit in '..\QueryTypes\AddressBookContactFindResponseUnit.pas';
 
 begin
   try

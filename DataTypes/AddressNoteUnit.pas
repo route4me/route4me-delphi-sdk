@@ -147,6 +147,7 @@ type
   end;
 
   TAddressNoteArray = TArray<TAddressNote>;
+  TAddressNoteList = TObjectList<TAddressNote>;
 
 function SortAddressNotes(AddressNotes: TAddressNoteArray): TAddressNoteArray;
 

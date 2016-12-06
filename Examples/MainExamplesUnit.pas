@@ -74,7 +74,7 @@ begin
         Randomize;
 
         AddNewUserParameterProvider := TUserParameterProvider.Create;
-        EMail := 'skrynkovskyy' + IntToStr(Random(10000)) + '@gmail.com';
+        EMail := 'marketing@kcswest.com';
         UserParameters := AddNewUserParameterProvider.GetParameters(EMail);
         try
           MemberId := Examples.AddNewUser(UserParameters);

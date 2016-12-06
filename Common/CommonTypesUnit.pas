@@ -8,6 +8,7 @@ uses
 type
   TIntegerArray = TArray<integer>;
   TStringArray = TArray<String>;
+  T2DimensionalStringArray = array of array of String;
   TStringPair = TPair<String,String>;
   TArrayStringPair = TArray<TStringPair>;
   TListStringPair = TList<TStringPair>;

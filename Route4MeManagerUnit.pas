@@ -31,6 +31,8 @@ type
     constructor Create(Connection: IConnection);
     destructor Destroy; override;
 
+    procedure Clear;
+
     procedure SetConnectionProxy(Host: String; Port: integer; Username, Password: String);
 
     function Optimization: TOptimizationActions;
@@ -68,6 +70,23 @@ begin
   Result := FAvoidanceZone;
 end;
 
+procedure TRoute4MeManager.Clear;
+begin
+  FreeAndNil(FTracking);
+  FreeAndNil(FActivity);
+  FreeAndNil(FOrder);
+  FreeAndNil(FAvoidanceZone);
+  FreeAndNil(FGeocoding);
+  FreeAndNil(FAddress);
+  FreeAndNil(FAddressNote);
+  FreeAndNil(FUser);
+  FreeAndNil(FRoute);
+  FreeAndNil(FAddressBookContact);
+  FreeAndNil(FOptimization);
+
+  FConnection := nil;
+end;
+
 function TRoute4MeManager.Connection: IConnection;
 begin
   Result := FConnection;
@@ -92,19 +111,8 @@ end;
 
 destructor TRoute4MeManager.Destroy;
 begin
-  FreeAndNil(FTracking);
-  FreeAndNil(FActivity);
-  FreeAndNil(FOrder);
-  FreeAndNil(FAvoidanceZone);
-  FreeAndNil(FGeocoding);
-  FreeAndNil(FAddress);
-  FreeAndNil(FAddressNote);
-  FreeAndNil(FUser);
-  FreeAndNil(FRoute);
-  FreeAndNil(FAddressBookContact);
-  FreeAndNil(FOptimization);
+  Clear;
 
-  FConnection := nil;
   inherited;
 end;
 

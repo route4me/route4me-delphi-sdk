@@ -27,6 +27,8 @@ type
 
     procedure SetConnectionProxy(Host: String; Port: integer; Username, Password: String);
     function Connection: IConnection;
+
+    procedure Clear;
   end;
 
 implementation

@@ -8,21 +8,20 @@ uses
 
 type
   TTestAddressBookSamples = class(TTestOnlineExamples)
-  private
-    procedure LocationSearch;
   published
     procedure CreateLocation;
     procedure GetLocations;
     procedure GetLocation;
     procedure GetLocationsByIds;
     procedure DisplayRouted;
+    procedure LocationSearch;
     procedure UpdateLocation;
     procedure RemoveLocations;
   end;
 
 implementation
 
-uses AddressBookContactUnit, EnumsUnit, NullableBasicTypesUnit;
+uses AddressBookContactUnit, EnumsUnit, NullableBasicTypesUnit, CommonTypesUnit;
 
 var
   FContact: TAddressBookContact;
@@ -174,11 +173,6 @@ begin
     CheckEquals(EmptyStr, ErrorString);
     CheckTrue(Total > 0);
     CheckTrue(Contacts.Count > 0);
-
-    FContact := Contacts[0];
-    Contacts.OwnsObjects := False;
-    Contacts.Remove(FContact);
-    Contacts.OwnsObjects := True;
   finally
     FreeAndNil(Contacts)
   end;
@@ -241,7 +235,7 @@ end;
 procedure TTestAddressBookSamples.LocationSearch;
 var
   ErrorString: String;
-  Contacts: TAddressBookContactList;
+  FindedResults: T2DimensionalStringArray;
   Limit, Offset, Total: integer;
   Query: String;
 begin
@@ -249,51 +243,36 @@ begin
   Offset := 0;
 
   Query := 'john';
-  Contacts := FRoute4MeManager.AddressBookContact.Find(
+  FindedResults := FRoute4MeManager.AddressBookContact.Find(
     Query, ['address_id','first_name', 'address_1'], Limit, Offset, Total, ErrorString);
   try
-    CheckNotNull(Contacts);
     CheckEquals(EmptyStr, ErrorString);
     CheckTrue(Total > 0);
-    CheckTrue(Contacts.Count > 0);
+    CheckTrue(Length(FindedResults) > 0);
   finally
-    FreeAndNil(Contacts)
+    Finalize(FindedResults);
   end;
 
   Query := 'Fairlawn';
-  Contacts := FRoute4MeManager.AddressBookContact.Find(
+  FindedResults := FRoute4MeManager.AddressBookContact.Find(
     Query, ['address_1'], Limit, Offset, Total, ErrorString);
   try
-    CheckNotNull(Contacts);
     CheckEquals(EmptyStr, ErrorString);
     CheckTrue(Total > 0);
-    CheckTrue(Contacts.Count > 0);
+    CheckTrue(Length(FindedResults) > 0);
   finally
-    FreeAndNil(Contacts)
-  end;
-
-  Query := 'Fairlawn';
-  Contacts := FRoute4MeManager.AddressBookContact.Find(
-    Query, ['first_name'], Limit, Offset, Total, ErrorString);
-  try
-    CheckNotNull(Contacts);
-    CheckEquals(EmptyStr, ErrorString);
-    CheckEquals(0, Total);
-    CheckEquals(0, Contacts.Count);
-  finally
-    FreeAndNil(Contacts)
+    Finalize(FindedResults);
   end;
 
   Query := 'uniqueText#$2';
-  Contacts := FRoute4MeManager.AddressBookContact.Find(
+  FindedResults := FRoute4MeManager.AddressBookContact.Find(
     Query, ['first_name', 'address_1'], Limit, Offset, Total, ErrorString);
   try
-    CheckNotNull(Contacts);
     CheckEquals(EmptyStr, ErrorString);
     CheckEquals(0, Total);
-    CheckEquals(0, Contacts.Count);
+    CheckEquals(0, Length(FindedResults));
   finally
-    FreeAndNil(Contacts)
+    Finalize(FindedResults);
   end;
 end;
 
@@ -315,6 +294,7 @@ procedure TTestAddressBookSamples.UpdateLocation;
 var
   ErrorString: String;
   Contact: TAddressBookContact;
+  Id: integer;
 begin
   FContact.FirstName := 'Mary';
 
@@ -328,14 +308,19 @@ begin
     FreeAndNil(Contact)
   end;
 
+  Id := FContact.Id;
   FContact.Id := NullableInteger.Null;
-  FContact.FirstName := 'Tom';
-  Contact := FRoute4MeManager.AddressBookContact.Update(FContact, ErrorString);
   try
-    CheckNull(Contact);
-    CheckNotEquals(EmptyStr, ErrorString);
+    FContact.FirstName := 'Tom';
+    Contact := FRoute4MeManager.AddressBookContact.Update(FContact, ErrorString);
+    try
+      CheckNull(Contact);
+      CheckNotEquals(EmptyStr, ErrorString);
+    finally
+      FreeAndNil(Contact)
+    end;
   finally
-    FreeAndNil(Contact)
+    FContact.Id := Id;
   end;
 end;
 

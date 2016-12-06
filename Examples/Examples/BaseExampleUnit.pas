@@ -3,7 +3,7 @@ unit BaseExampleUnit;
 interface
 
 uses
-  OutputUnit, IRoute4MeManagerUnit, IConnectionUnit;
+  SysUtils, OutputUnit, IRoute4MeManagerUnit, IConnectionUnit;
 
 type
   TBaseExample = class abstract
@@ -30,6 +30,7 @@ uses Route4MeManagerUnit;
 destructor TBaseExample.Destroy;
 begin
   FOutput := nil;
+  Route4MeManager.Clear;
   Route4MeManager := nil;
 
   inherited;

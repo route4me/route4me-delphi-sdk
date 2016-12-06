@@ -21,6 +21,7 @@ type
     ///  For JSON-deserialization.
     /// </remarks>
     constructor Create;
+    destructor Destroy; override;
 
     function Equals(Obj: TObject): Boolean; override;
 
@@ -39,6 +40,12 @@ begin
   Inherited;
 
   SetLength(FErrors, 0);
+end;
+
+destructor TErrorResponse.Destroy;
+begin
+  Finalize(FErrors);
+  inherited;
 end;
 
 function TErrorResponse.Equals(Obj: TObject): Boolean;

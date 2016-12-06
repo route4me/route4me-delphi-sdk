@@ -328,12 +328,17 @@ begin
 end;
 
 function TTestOrderSamples.GetTestOrder: TOrder;
+var
+  Rnd: String;
 begin
+  Randomize;
+  Rnd := IntToStr(Random(100000));
+
   Result := TOrder.Create;
-  Result.Address1 := 'Test Address2';
-  Result.AddressAlias := 'Test AddressAlias';
-  Result.FirstName := 'Jefferson';
-  Result.LastName := 'Cruse';
+  Result.Address1 := 'Test Address2' + Rnd;
+  Result.AddressAlias := 'Test AddressAlias' + Rnd;
+  Result.FirstName := 'Jefferson' + Rnd;
+  Result.LastName := 'Cruse' + Rnd;
   Result.CachedLatitude := 37.773972;
   Result.CachedLongitude := -122.431297;
 end;
