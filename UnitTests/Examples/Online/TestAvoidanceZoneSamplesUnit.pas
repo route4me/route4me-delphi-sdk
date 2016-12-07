@@ -61,10 +61,8 @@ begin
   try
     AvoidanceZone := FRoute4MeManager.AvoidanceZone.Add(Parameters, ErrorString);
     try
-      CheckNotNull(AvoidanceZone);
-      AddAvoidanceZoneId(AvoidanceZone.TerritoryId);
-      CheckTrue(AvoidanceZone.TerritoryId.IsNotNull);
-      CheckEquals(EmptyStr, ErrorString);
+      CheckNull(AvoidanceZone);
+      CheckNotEquals(EmptyStr, ErrorString);
     finally
       FreeAndNil(AvoidanceZone);
     end;
@@ -79,10 +77,8 @@ begin
   try
     AvoidanceZone := FRoute4MeManager.AvoidanceZone.Add(Parameters, ErrorString);
     try
-      CheckNotNull(AvoidanceZone);
-      AddAvoidanceZoneId(AvoidanceZone.TerritoryId);
-      CheckTrue(AvoidanceZone.TerritoryId.IsNotNull);
-      CheckEquals(EmptyStr, ErrorString);
+      CheckNull(AvoidanceZone);
+      CheckNotEquals(EmptyStr, ErrorString);
     finally
       FreeAndNil(AvoidanceZone);
     end;
@@ -163,10 +159,8 @@ begin
   try
     AvoidanceZone := FRoute4MeManager.AvoidanceZone.Add(Parameters, ErrorString);
     try
-      CheckNotNull(AvoidanceZone);
-      AddAvoidanceZoneId(AvoidanceZone.TerritoryId);
-      CheckTrue(AvoidanceZone.TerritoryId.IsNotNull);
-      CheckEquals(EmptyStr, ErrorString);
+      CheckNull(AvoidanceZone);
+      CheckNotEquals(EmptyStr, ErrorString);
     finally
       FreeAndNil(AvoidanceZone);
     end;
@@ -206,10 +200,8 @@ begin
   try
     AvoidanceZone := FRoute4MeManager.AvoidanceZone.Add(Parameters, ErrorString);
     try
-      CheckNotNull(AvoidanceZone);
-      AddAvoidanceZoneId(AvoidanceZone.TerritoryId);
-      CheckTrue(AvoidanceZone.TerritoryId.IsNotNull);
-      CheckEquals(EmptyStr, ErrorString);
+      CheckNull(AvoidanceZone);
+      CheckNotEquals(EmptyStr, ErrorString);
     finally
       FreeAndNil(AvoidanceZone);
     end;
@@ -226,13 +218,13 @@ begin
   AvoidanceZone := FRoute4MeManager.AvoidanceZone.Get('-123', ErrorString);
   try
     CheckNull(AvoidanceZone);
-    CheckEquals(EmptyStr, ErrorString);
+    CheckNotEquals(EmptyStr, ErrorString);
   finally
     FreeAndNil(AvoidanceZone);
   end;
 
   AvoidanceZone := FRoute4MeManager.AvoidanceZone.Get(
-    AvoidanceZone.TerritoryId, ErrorString);
+    FAvoidanceZone.TerritoryId, ErrorString);
   try
     CheckNotNull(AvoidanceZone);
     CheckEquals(EmptyStr, ErrorString);
@@ -246,7 +238,6 @@ var
   ErrorString: String;
   AvoidanceZones: TAvoidanceZoneList;
 begin
-  // todo: проверить применимы ли параметры Limit и Offset. ѕохоже, что нет
   AvoidanceZones := FRoute4MeManager.AvoidanceZone.GetList(ErrorString);
   try
     CheckNotNull(AvoidanceZones);
@@ -261,8 +252,8 @@ procedure TTestAvoidanceZoneSamples.RemoveAvoidanceZone;
 var
   ErrorString: String;
 begin
-  CheckFalse(FRoute4MeManager.AvoidanceZone.Remove('-123', ErrorString));
-  CheckNotEquals(EmptyStr, ErrorString);
+  CheckTrue(FRoute4MeManager.AvoidanceZone.Remove('-123', ErrorString));
+  CheckEquals(EmptyStr, ErrorString);
 
   CheckTrue(FRoute4MeManager.AvoidanceZone.Remove(FAvoidanceZone.TerritoryId, ErrorString));
   CheckEquals(EmptyStr, ErrorString);

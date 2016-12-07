@@ -79,10 +79,11 @@ begin
     RouteParameters := TRouteParameters.Create;
     RouteParameters.AlgorithmType := TAlgorithmType.TSP;
     RouteParameters.StoreRoute := True;
-    RouteParameters.RouteName := 'Single Driver Route (Delphi)';
+    RouteParameters.RouteName := 'Single Driver Route (Delphi, trucking)';
     RouteParameters.Optimize := TOptimize.Distance;
     RouteParameters.DistanceUnit := TDistanceUnit.MI;
     RouteParameters.DeviceType := TDeviceType.Web;
+    RouteParameters.TravelMode := TTravelMode.Trucking;
 
     Parameters := TOptimizationParameters.Create;
     try

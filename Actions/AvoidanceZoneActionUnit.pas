@@ -64,7 +64,7 @@ begin
     Query.AddParameter('territory_id', TerritoryId);
 
     FConnection.Delete(TSettings.Avoidance, Query, TAvoidanceZone, ErrorString);
-    Result := (ErrorString <> EmptyStr);
+    Result := (ErrorString = EmptyStr);
   finally
     FreeAndNil(Query);
   end;
@@ -122,7 +122,7 @@ begin
         ErrorString := ErrorString + '; ' + AErrorString;
     end;
 
-    Result := (ErrorString <> EmptyStr);
+    Result := (ErrorString = EmptyStr);
   finally
     FreeAndNil(Query);
   end;

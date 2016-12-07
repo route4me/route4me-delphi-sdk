@@ -231,13 +231,13 @@ var
   CustomerSample: TCustomerQuestionAbout7Stops;
 begin
   try
-    TExamples.Run();
-{    CustomerSample := TCustomerQuestionAbout7Stops.Create;
+//    TExamples.Run();
+    CustomerSample := TCustomerQuestionAbout7Stops.Create;
     try
       CustomerSample.Execute;
     finally
       FreeAndNil(CustomerSample);
-    end;}
+    end;
   except
     on E: Exception do
     begin
