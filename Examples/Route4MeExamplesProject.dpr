@@ -68,7 +68,6 @@ uses
   AddressesOrderInfoUnit in '..\QueryTypes\AddressesOrderInfoUnit.pas',
   AddressParametersUnit in '..\QueryTypes\AddressParametersUnit.pas',
   AddRouteDestinationRequestUnit in '..\QueryTypes\AddRouteDestinationRequestUnit.pas',
-  AvoidanceZoneRequestUnit in '..\QueryTypes\AvoidanceZoneRequestUnit.pas',
   AvoidanceZoneQueryUnit in '..\QueryTypes\AvoidanceZoneQueryUnit.pas',
   DataObjectOptimizationsResponseUnit in '..\QueryTypes\DataObjectOptimizationsResponseUnit.pas',
   DeleteRouteResponseUnit in '..\QueryTypes\DeleteRouteResponseUnit.pas',
@@ -225,11 +224,20 @@ uses
   LocationSearchUnit in 'Examples\AddressBookContact\LocationSearchUnit.pas',
   AddressBookContactFindResponseUnit in '..\QueryTypes\AddressBookContactFindResponseUnit.pas',
   AddPolygonAvoidanceZoneUnit in 'Examples\AvoidanceZones\AddPolygonAvoidanceZoneUnit.pas',
-  AddRectangularAvoidanceZoneUnit in 'Examples\AvoidanceZones\AddRectangularAvoidanceZoneUnit.pas';
+  AddRectangularAvoidanceZoneUnit in 'Examples\AvoidanceZones\AddRectangularAvoidanceZoneUnit.pas',
+  CustomerQuestionAbout7StopsUnit in 'CustomerQuestions\CustomerQuestionAbout7StopsUnit.pas';
 
+var
+  CustomerSample: TCustomerQuestionAbout7Stops;
 begin
   try
     TExamples.Run();
+{    CustomerSample := TCustomerQuestionAbout7Stops.Create;
+    try
+      CustomerSample.Execute;
+    finally
+      FreeAndNil(CustomerSample);
+    end;}
   except
     on E: Exception do
     begin
