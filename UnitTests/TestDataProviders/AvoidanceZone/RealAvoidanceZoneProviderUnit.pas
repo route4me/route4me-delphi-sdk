@@ -31,14 +31,13 @@ begin
   AvoidanceZone.TerritoryName := 'Johny4037200794235010051';
   AvoidanceZone.TerritoryColor := 'ff0000';
   AvoidanceZone.MemberId := '1';
-  AvoidanceZone.Territory := TTerritory.Create;
-  AvoidanceZone.Territory.TerritoryType := ttPoly;
-  AvoidanceZone.Territory.AddDataItem('56.127184156131065,56.93115234375');
-  AvoidanceZone.Territory.AddDataItem('58.41322259056806,59.501953125');
-  AvoidanceZone.Territory.AddDataItem('61.53840616716746,59.315185546875');
-  AvoidanceZone.Territory.AddDataItem('61.047650586031104,51.998291015625');
-  AvoidanceZone.Territory.AddDataItem('59.254649544483726,53.63525390625');
-  AvoidanceZone.Territory.AddDataItem('56.47462805805596,54.42626953125');
+  AvoidanceZone.Territory := TPolygonTerritory.Create;
+  TPolygonTerritory(AvoidanceZone.Territory).AddPoint(56.127184156131065,56.93115234375);
+  TPolygonTerritory(AvoidanceZone.Territory).AddPoint(58.41322259056806, 59.501953125);
+  TPolygonTerritory(AvoidanceZone.Territory).AddPoint(61.53840616716746, 59.315185546875);
+  TPolygonTerritory(AvoidanceZone.Territory).AddPoint(61.047650586031104,51.998291015625);
+  TPolygonTerritory(AvoidanceZone.Territory).AddPoint(59.254649544483726,53.63525390625);
+  TPolygonTerritory(AvoidanceZone.Territory).AddPoint(56.47462805805596, 54.42626953125);
   Result.Add(AvoidanceZone);
 
   AvoidanceZone := TAvoidanceZone.Create;
@@ -46,10 +45,8 @@ begin
   AvoidanceZone.TerritoryName := 'John5577006791947779410';
   AvoidanceZone.TerritoryColor := 'beeeee';
   AvoidanceZone.MemberId := '1';
-  AvoidanceZone.Territory := TTerritory.Create;
-  AvoidanceZone.Territory.TerritoryType := ttCircle;
-  AvoidanceZone.Territory.AddDataItem('37.569752822786455,-77.47833251953125');
-  AvoidanceZone.Territory.AddDataItem('5000');
+  AvoidanceZone.Territory := TCircleTerritory.Create(
+    37.569752822786455,-77.47833251953125, 5000);
   Result.Add(AvoidanceZone);
 
   AvoidanceZone := TAvoidanceZone.Create;
@@ -57,10 +54,8 @@ begin
   AvoidanceZone.TerritoryName := 'Rect Territory';
   AvoidanceZone.TerritoryColor := 'ff0000';
   AvoidanceZone.MemberId := '1';
-  AvoidanceZone.Territory := TTerritory.Create;
-  AvoidanceZone.Territory.TerritoryType := ttRect;
-  AvoidanceZone.Territory.AddDataItem('43.51668853502909,-109.3798828125');
-  AvoidanceZone.Territory.AddDataItem('46.98025235521883,-101.865234375');
+  AvoidanceZone.Territory := TRectangularTerritory.Create(
+    43.51668853502909, -109.3798828125, 46.98025235521883, -101.865234375);
   Result.Add(AvoidanceZone);
 end;
 

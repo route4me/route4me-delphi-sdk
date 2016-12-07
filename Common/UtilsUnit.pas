@@ -3,7 +3,8 @@ unit UtilsUnit;
 interface
 
 uses
-  System.Generics.Collections;
+  Windows, SysUtils, System.Generics.Collections;
+
 type
   TUtils = class
   public
@@ -11,7 +12,11 @@ type
     /// Convert DateTime to Unix epoch time
     /// </summary>
     class function ConvertToUnixTimestamp(Date: TDateTime): int64;
+    class function FloatToStrDot(Value: Extended): String;
   end;
+
+var
+  DottedFormat: TFormatSettings;
 
 implementation
 
@@ -25,4 +30,12 @@ begin
   Result := DateTimeToUnix(Date, False);
 end;
 
+class function TUtils.FloatToStrDot(Value: Extended): String;
+begin
+  Result := FloatToStr(Value, DottedFormat);
+end;
+
+initialization
+  GetLocaleFormatSettings(LOCALE_SYSTEM_DEFAULT, DottedFormat);
+  DottedFormat.DecimalSeparator := '.';
 end.

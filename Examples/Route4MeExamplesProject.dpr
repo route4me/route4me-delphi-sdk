@@ -68,7 +68,7 @@ uses
   AddressesOrderInfoUnit in '..\QueryTypes\AddressesOrderInfoUnit.pas',
   AddressParametersUnit in '..\QueryTypes\AddressParametersUnit.pas',
   AddRouteDestinationRequestUnit in '..\QueryTypes\AddRouteDestinationRequestUnit.pas',
-  AvoidanceZoneParametersUnit in '..\QueryTypes\AvoidanceZoneParametersUnit.pas',
+  AvoidanceZoneRequestUnit in '..\QueryTypes\AvoidanceZoneRequestUnit.pas',
   AvoidanceZoneQueryUnit in '..\QueryTypes\AvoidanceZoneQueryUnit.pas',
   DataObjectOptimizationsResponseUnit in '..\QueryTypes\DataObjectOptimizationsResponseUnit.pas',
   DeleteRouteResponseUnit in '..\QueryTypes\DeleteRouteResponseUnit.pas',
@@ -134,7 +134,7 @@ uses
   DeleteAvoidanceZoneUnit in 'Examples\AvoidanceZones\DeleteAvoidanceZoneUnit.pas',
   GetAvoidanceZonesUnit in 'Examples\AvoidanceZones\GetAvoidanceZonesUnit.pas',
   GetAllActivitiesUnit in 'Examples\Activities\GetAllActivitiesUnit.pas',
-  AddAvoidanceZoneUnit in 'Examples\AvoidanceZones\AddAvoidanceZoneUnit.pas',
+  AddCircleAvoidanceZoneUnit in 'Examples\AvoidanceZones\AddCircleAvoidanceZoneUnit.pas',
   AddOrderUnit in 'Examples\Orders\AddOrderUnit.pas',
   GetOrdersUnit in 'Examples\Orders\GetOrdersUnit.pas',
   UpdateOrderUnit in 'Examples\Orders\UpdateOrderUnit.pas',
@@ -223,7 +223,9 @@ uses
   GetLocationUnit in 'Examples\AddressBookContact\GetLocationUnit.pas',
   DisplayRoutedUnit in 'Examples\AddressBookContact\DisplayRoutedUnit.pas',
   LocationSearchUnit in 'Examples\AddressBookContact\LocationSearchUnit.pas',
-  AddressBookContactFindResponseUnit in '..\QueryTypes\AddressBookContactFindResponseUnit.pas';
+  AddressBookContactFindResponseUnit in '..\QueryTypes\AddressBookContactFindResponseUnit.pas',
+  AddPolygonAvoidanceZoneUnit in 'Examples\AvoidanceZones\AddPolygonAvoidanceZoneUnit.pas',
+  AddRectangularAvoidanceZoneUnit in 'Examples\AvoidanceZones\AddRectangularAvoidanceZoneUnit.pas';
 
 begin
   try

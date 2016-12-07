@@ -8,7 +8,6 @@ program Route4MeProjectTests;
 //  FastMM4Messages in '..\FastMM\FastMM4Messages.pas',
 
 uses
-//  FastMM4 in '..\FastMM\FastMM4.pas',
   FastMM4Messages in '..\FastMM\FastMM4Messages.pas',
   GUITestRunner,
   Route4MeManagerUnit in '..\Route4MeManagerUnit.pas',
@@ -66,7 +65,6 @@ uses
   AddressParametersUnit in '..\QueryTypes\AddressParametersUnit.pas',
   AddAddressNoteResponseUnit in '..\QueryTypes\AddAddressNoteResponseUnit.pas',
   AddressActionUnit in '..\Actions\AddressActionUnit.pas',
-  AvoidanceZoneParametersUnit in '..\QueryTypes\AvoidanceZoneParametersUnit.pas',
   TerritoryUnit in '..\DataTypes\TerritoryUnit.pas',
   AvoidanceZoneUnit in '..\DataTypes\AvoidanceZoneUnit.pas',
   AvoidanceZoneActionUnit in '..\Actions\AvoidanceZoneActionUnit.pas',
@@ -140,7 +138,7 @@ uses
   GetAddressUnit in '..\Examples\Examples\Addresses\GetAddressUnit.pas',
   MoveDestinationToRouteUnit in '..\Examples\Examples\Addresses\MoveDestinationToRouteUnit.pas',
   RemoveRouteDestinationUnit in '..\Examples\Examples\Addresses\RemoveRouteDestinationUnit.pas',
-  AddAvoidanceZoneUnit in '..\Examples\Examples\AvoidanceZones\AddAvoidanceZoneUnit.pas',
+  AddCircleAvoidanceZoneUnit in '..\Examples\Examples\AvoidanceZones\AddCircleAvoidanceZoneUnit.pas',
   DeleteAvoidanceZoneUnit in '..\Examples\Examples\AvoidanceZones\DeleteAvoidanceZoneUnit.pas',
   GetAvoidanceZonesUnit in '..\Examples\Examples\AvoidanceZones\GetAvoidanceZonesUnit.pas',
   GetAvoidanceZoneUnit in '..\Examples\Examples\AvoidanceZones\GetAvoidanceZoneUnit.pas',
@@ -255,7 +253,10 @@ uses
   DisplayRoutedUnit in '..\Examples\Examples\AddressBookContact\DisplayRoutedUnit.pas',
   LocationSearchUnit in '..\Examples\Examples\AddressBookContact\LocationSearchUnit.pas',
   TestAddressBookSamplesUnit in 'Examples\Online\TestAddressBookSamplesUnit.pas',
-  AddressBookContactFindResponseUnit in '..\QueryTypes\AddressBookContactFindResponseUnit.pas';
+  AddressBookContactFindResponseUnit in '..\QueryTypes\AddressBookContactFindResponseUnit.pas',
+  AddPolygonAvoidanceZoneUnit in '..\Examples\Examples\AvoidanceZones\AddPolygonAvoidanceZoneUnit.pas',
+  AddRectangularAvoidanceZoneUnit in '..\Examples\Examples\AvoidanceZones\AddRectangularAvoidanceZoneUnit.pas',
+  TestAvoidanceZoneSamplesUnit in 'Examples\Online\TestAvoidanceZoneSamplesUnit.pas';
 
 {R *.RES}
 

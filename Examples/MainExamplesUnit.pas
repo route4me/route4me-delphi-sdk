@@ -430,7 +430,10 @@ begin
 
 
         // Avoidance Zones
-        TerritoryId := Examples.AddAvoidanceZone();
+        TerritoryId := Examples.AddCircleAvoidanceZone();
+        TerritoryId := Examples.AddRectangularAvoidanceZone();
+        TerritoryId := Examples.AddPolygonAvoidanceZone();
+
         Examples.GetAvoidanceZones();
         if (TerritoryId.IsNotNull) then
           Examples.GetAvoidanceZone(TerritoryId)

@@ -16,7 +16,7 @@ procedure TDeleteAvoidanceZone.Execute(TerritoryId: String);
 var
   ErrorString: String;
 begin
-  Route4MeManager.AvoidanceZone.Delete(TerritoryId, ErrorString);
+  Route4MeManager.AvoidanceZone.Remove(TerritoryId, ErrorString);
 
   WriteLn('');
 

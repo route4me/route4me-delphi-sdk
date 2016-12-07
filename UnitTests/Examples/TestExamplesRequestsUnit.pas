@@ -105,7 +105,9 @@ type
     procedure LocationSearch;
     procedure DisplayRouted;
     procedure UpdateLocation;
-    procedure AddAvoidanceZone;
+    procedure AddCircleAvoidanceZone;
+    procedure AddPolygonAvoidanceZone;
+    procedure AddRectangularAvoidanceZone;
     procedure GetAvoidanceZones;
     procedure GetAvoidanceZone;
     procedure UpdateAvoidanceZone;
@@ -292,11 +294,11 @@ begin
   CheckTrue(TRESTContentType.ctAPPLICATION_X_WWW_FORM_URLENCODED = FConnection.ContentType);
 end;
 
-procedure TTestExamplesRequests.AddAvoidanceZone;
+procedure TTestExamplesRequests.AddCircleAvoidanceZone;
 begin
-  FExamples.AddAvoidanceZone;
+  FExamples.AddCircleAvoidanceZone;
 
-  CheckEqualsBody('AddAvoidanceZone', FConnection.RequestBody);
+  CheckEqualsBody('AddCircleAvoidanceZone', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/avoidance.php?api_key=11111111111111111111111111111111', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
@@ -407,6 +409,26 @@ begin
     for i := Length(OrderedAddresses) - 1 downto 0 do
       FreeAndNil(OrderedAddresses[i]);
   end;
+end;
+
+procedure TTestExamplesRequests.AddPolygonAvoidanceZone;
+begin
+  FExamples.AddPolygonAvoidanceZone;
+
+  CheckEqualsBody('AddPolygonAvoidanceZone', FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api.v4/avoidance.php?api_key=11111111111111111111111111111111', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.AddRectangularAvoidanceZone;
+begin
+  FExamples.AddRectangularAvoidanceZone;
+
+  CheckEqualsBody('AddRectangularAvoidanceZone', FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api.v4/avoidance.php?api_key=11111111111111111111111111111111', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
 procedure TTestExamplesRequests.AddRouteDestinations;

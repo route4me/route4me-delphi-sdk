@@ -13,7 +13,7 @@ type
   /// <remarks>
   ///  https://github.com/route4me/json-schemas/blob/master/Avoidance_zone.dtd
   /// </remarks>
-  TTerritory = class
+  TTerritory = class abstract
   private
     [JSONName('type')]
     [Nullable]
@@ -24,15 +24,7 @@ type
 
     function GetType: TTerritoryType;
     procedure SetType(const Value: TTerritoryType);
-  public
-    /// <remarks>
-    ///  Constructor with 0-arguments must be and be public.
-    ///  For JSON-deserialization.
-    /// </remarks>
-    constructor Create;
-
-    function Equals(Obj: TObject): Boolean; override;
-
+  protected
     /// <summary>
     /// Territory type (circle, rectangle, polygon)
     /// </summary>
@@ -43,11 +35,34 @@ type
     /// </summary>
     property Data: TStringArray read FData;
     procedure AddDataItem(Item: String);
+  public
+    constructor Create; virtual;
+
+    function Equals(Obj: TObject): Boolean; override;
+  end;
+
+  TCircleTerritory = class(TTerritory)
+  public
+    constructor Create(Latitude, Longitude, Radius: double);
+  end;
+
+  TPolygonTerritory = class(TTerritory)
+  public
+    constructor Create(); override;
+
+    procedure AddPoint(Latitude, Longitude: double);
+  end;
+
+  TRectangularTerritory = class(TTerritory)
+  public
+    constructor Create(Latitude1, Longitude1, Latitude2, Longitude2: double);
   end;
 
 implementation
 
 { TTerritory }
+
+uses UtilsUnit;
 
 procedure TTerritory.AddDataItem(Item: String);
 begin
@@ -110,6 +125,44 @@ end;
 procedure TTerritory.SetType(const Value: TTerritoryType);
 begin
   FType := TTerritoryTypeDescription[Value];
+end;
+
+{ TCircleTerritory }
+
+constructor TCircleTerritory.Create(Latitude, Longitude, Radius: double);
+begin
+  Inherited Create;
+
+  TerritoryType := TTerritoryType.ttCircle;
+  AddDataItem(TUtils.FloatToStrDot(Latitude) + ',' + TUtils.FloatToStrDot(Longitude));
+  AddDataItem(TUtils.FloatToStrDot(Radius));
+end;
+
+{ TPolygonTerritory }
+
+procedure TPolygonTerritory.AddPoint(Latitude, Longitude: double);
+begin
+  AddDataItem(TUtils.FloatToStrDot(Latitude) + ',' + TUtils.FloatToStrDot(Longitude));
+end;
+
+constructor TPolygonTerritory.Create;
+begin
+  inherited Create;
+
+  TerritoryType := TTerritoryType.ttPoly;
+end;
+
+{ TRectangularTerritory }
+
+constructor TRectangularTerritory.Create(
+  Latitude1, Longitude1, Latitude2, Longitude2: double);
+begin
+  inherited Create;
+
+  TerritoryType := TTerritoryType.ttRect;
+
+  AddDataItem(TUtils.FloatToStrDot(Latitude1) + ',' + TUtils.FloatToStrDot(Longitude1));
+  AddDataItem(TUtils.FloatToStrDot(Latitude2) + ',' + TUtils.FloatToStrDot(Longitude2));
 end;
 
 end.

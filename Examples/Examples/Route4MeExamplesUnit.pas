@@ -115,7 +115,9 @@ type
     procedure GetLocations;
     procedure UpdateLocation(Contact: TAddressBookContact);
     procedure RemoveLocations(AddressIds: TArray<integer>);
-    function AddAvoidanceZone: NullableString;
+    function AddCircleAvoidanceZone: NullableString;
+    function AddPolygonAvoidanceZone: NullableString;
+    function AddRectangularAvoidanceZone: NullableString;
     procedure GetAvoidanceZones;
     procedure GetAvoidanceZone(TerritoryId: String);
     procedure UpdateAvoidanceZone(TerritoryId: String);
@@ -156,7 +158,7 @@ uses
   ReoptimizeRouteUnit, ReOptimizationUnit, UpdateRouteUnit, GetRoutesUnit,
   GetRouteUnit, GetUsersUnit, LogSpecificMessageUnit, GetAllActivitiesUnit,
   GetAddressUnit, GetAddressNotesUnit, AddAddressNoteUnit, DuplicateRouteUnit,
-  AddAvoidanceZoneUnit, GetAvoidanceZoneUnit, GetAvoidanceZonesUnit,
+  AddCircleAvoidanceZoneUnit, GetAvoidanceZoneUnit, GetAvoidanceZonesUnit,
   UpdateAvoidanceZoneUnit, DeleteAvoidanceZoneUnit, AddOrderUnit, GetOrdersUnit,
   UpdateOrderUnit, RemoveOrdersUnit, SetGPSPositionUnit, CreateLocationUnit,
   TrackDeviceLastLocationHistoryUnit, GenericExampleShortcutUnit, ShareRouteUnit,
@@ -184,7 +186,8 @@ uses
   GetRouteDeletedActivitiesUnit, GetRouteOwnerChangedActivitiesUnit,
   GetDestinationUpdatedActivitiesUnit, GetRouteOptimizedActivitiesUnit,
   GetLocationsByIdsUnit, GetLocationsUnit, UpdateLocationUnit, GetLocationUnit,
-  DisplayRoutedUnit, LocationSearchUnit;
+  DisplayRoutedUnit, LocationSearchUnit, AddPolygonAvoidanceZoneUnit,
+  AddRectangularAvoidanceZoneUnit;
 
 procedure TRoute4MeExamples.GetAreaAddedActivities;
 var
@@ -246,11 +249,11 @@ begin
   end;
 end;
 
-function TRoute4MeExamples.AddAvoidanceZone: NullableString;
+function TRoute4MeExamples.AddCircleAvoidanceZone: NullableString;
 var
-  Example: TAddAvoidanceZone;
+  Example: TAddCircleAvoidanceZone;
 begin
-  Example := MakeExample(TAddAvoidanceZone) as TAddAvoidanceZone;
+  Example := MakeExample(TAddCircleAvoidanceZone) as TAddCircleAvoidanceZone;
   try
     Result := Example.Execute;
   finally
@@ -316,6 +319,30 @@ begin
   Example := MakeExample(TAddOrderToRoute) as TAddOrderToRoute;
   try
     Example.Execute(RouteId, Parameters, OrderedAddresses);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+function TRoute4MeExamples.AddPolygonAvoidanceZone: NullableString;
+var
+  Example: TAddPolygonAvoidanceZone;
+begin
+  Example := MakeExample(TAddPolygonAvoidanceZone) as TAddPolygonAvoidanceZone;
+  try
+    Result := Example.Execute;
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+function TRoute4MeExamples.AddRectangularAvoidanceZone: NullableString;
+var
+  Example: TAddRectangularAvoidanceZone;
+begin
+  Example := MakeExample(TAddRectangularAvoidanceZone) as TAddRectangularAvoidanceZone;
+  try
+    Result := Example.Execute;
   finally
     FreeAndNil(Example);
   end;

@@ -39,7 +39,8 @@ type
     function GetTerritory: TTerritory;
     procedure SetTerritory(const Value: TTerritory);
   public
-    constructor Create; override;
+    constructor Create; overload; override;
+    constructor Create(TerritoryName, TerritoryColor: String; Territory: TTerritory); reintroduce; overload;
     destructor Destroy; override;
 
     function Equals(Obj: TObject): Boolean; override;
@@ -71,7 +72,7 @@ type
   end;
 
   TAvoidanceZoneArray = TArray<TAvoidanceZone>;
-  TAvoidanceZoneList = TList<TAvoidanceZone>;
+  TAvoidanceZoneList = TObjectList<TAvoidanceZone>;
 
   function SortAvoidanceZones(AvoidanceZones: TAvoidanceZoneArray): TAvoidanceZoneArray;
 
@@ -91,8 +92,6 @@ begin
     end));
 end;
 
-{ TAvoidanceZoneParameters }
-
 constructor TAvoidanceZone.Create;
 begin
   Inherited Create;
@@ -102,6 +101,16 @@ begin
   FTerritoryColor := NullableString.Null;
   FMemberId := NullableString.Null;
   FTerritory := NullableObject.Null;
+end;
+
+constructor TAvoidanceZone.Create(TerritoryName, TerritoryColor: String;
+  Territory: TTerritory);
+begin
+  Create;
+
+  FTerritoryName := TerritoryName;
+  FTerritoryColor := TerritoryColor;
+  FTerritory := Territory;
 end;
 
 destructor TAvoidanceZone.Destroy;

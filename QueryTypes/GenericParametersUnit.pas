@@ -74,8 +74,16 @@ begin
 end;
 
 procedure TGenericParameters.ReplaceParameter(Key, Value: String);
+var
+  i: integer;
 begin
-  FParametersCollection.Add(TStringPair.Create(Key, Value));
+  for i := 0 to FParametersCollection.Count - 1 do
+    if (FParametersCollection[i].Key = Key) then
+    begin
+      FParametersCollection.Remove(FParametersCollection[i]);
+      Break;
+    end;
+  AddParameter(Key, Value);
 end;
 
 function TGenericParameters.Serialize(ApiKey: String): TListStringPair;

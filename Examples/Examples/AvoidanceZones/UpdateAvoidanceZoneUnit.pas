@@ -12,42 +12,39 @@ type
 
 implementation
 
-uses AvoidanceZoneUnit, TerritoryUnit, AvoidanceZoneParametersUnit, EnumsUnit;
+uses AvoidanceZoneUnit, TerritoryUnit;
 
 procedure TUpdateAvoidanceZone.Execute(TerritoryId: String);
 var
   ErrorString: String;
-  Parameters: TAvoidanceZoneParameters;
-  Territory: TTerritory;
   AvoidanceZone: TAvoidanceZone;
+  Territory: TTerritory;
+  NewAvoidanceZone: TAvoidanceZone;
+  TerritoryName, TerritoryColor: String;
 begin
-  Parameters := TAvoidanceZoneParameters.Create();
+  TerritoryName := 'Test Territory Updated';
+  TerritoryColor := 'ff00ff';
+  Territory := TCircleTerritory.Create(38.4132225905681, -78.501953234, 3000);
+  AvoidanceZone := TAvoidanceZone.Create(TerritoryName, TerritoryColor, Territory);
   try
-    Parameters.TerritoryId := TerritoryId;
-    Parameters.TerritoryName := 'Test Territory Updated';
-    Parameters.TerritoryColor := 'ff00ff';
-    Territory := TTerritory.Create();
-    Territory.TerritoryType := TTerritoryType.ttCircle;
-    Territory.AddDataItem('38.41322259056806,-78.501953234');
-    Territory.AddDataItem('3000');
-    Parameters.Territory := Territory;
+    AvoidanceZone.TerritoryId := TerritoryId;
 
-    AvoidanceZone := Route4MeManager.AvoidanceZone.Update(Parameters, ErrorString);
+    NewAvoidanceZone := Route4MeManager.AvoidanceZone.Update(AvoidanceZone, ErrorString);
     try
       WriteLn('');
 
-      if (AvoidanceZone <> nil) then
+      if (NewAvoidanceZone <> nil) then
       begin
         WriteLn('UpdateAvoidanceZone executed successfully');
-        WriteLn(Format('Territory ID: %s', [AvoidanceZone.TerritoryId.Value]));
+        WriteLn(Format('Territory ID: %s', [NewAvoidanceZone.TerritoryId.Value]));
       end
       else
         WriteLn(Format('UpdateAvoidanceZone error: "%s"', [ErrorString]));
     finally
-      FreeAndNil(AvoidanceZone);
+      FreeAndNil(NewAvoidanceZone);
     end;
   finally
-    FreeAndNil(Parameters);
+    FreeAndNil(AvoidanceZone);
   end;
 end;
 
