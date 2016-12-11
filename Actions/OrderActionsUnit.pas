@@ -1,4 +1,4 @@
-unit OrderActionUnit;
+unit OrderActionsUnit;
 
 interface
 
@@ -58,7 +58,7 @@ uses
 
 function TOrderActions.Add(Order: TOrder; out ErrorString: String): TOrder;
 begin
-  Result := FConnection.Post(TSettings.Order, Order,
+  Result := FConnection.Post(TSettings.EndPoints.Order, Order,
     TOrder, ErrorString) as TOrder;
 end;
 
@@ -71,7 +71,7 @@ begin
   Result := TOrderList.Create;
 
   Total := 0;
-  Response := FConnection.Get(TSettings.Order, OrderQuery,
+  Response := FConnection.Get(TSettings.EndPoints.Order, OrderQuery,
     TGetOrdersResponse, ErrorString) as TGetOrdersResponse;
   try
     if (Response <> nil) then
@@ -93,7 +93,7 @@ begin
   try
     Request.AddParameter('order_id', IntToStr(OrderId));
 
-    Result := FConnection.Get(TSettings.Order, Request, TOrder, ErrorString) as TOrder;
+    Result := FConnection.Get(TSettings.EndPoints.Order, Request, TOrder, ErrorString) as TOrder;
 
     if (Result = nil) and (ErrorString = EmptyStr) then
       ErrorString := 'Order details not got';
@@ -112,7 +112,7 @@ begin
   try
     Request.OrderIds := OrderIds;
 
-    Response := FConnection.Delete(TSettings.Order, Request,
+    Response := FConnection.Delete(TSettings.EndPoints.Order, Request,
       TStatusResponse, ErrorString) as TStatusResponse;
     try
       Result := (Response <> nil) and (Response.Status);
@@ -150,7 +150,7 @@ end;
 
 function TOrderActions.Update(Order: TOrder; out ErrorString: String): TOrder;
 begin
-  Result := FConnection.Put(TSettings.Order, Order, TOrder, ErrorString) as TOrder;
+  Result := FConnection.Put(TSettings.EndPoints.Order, Order, TOrder, ErrorString) as TOrder;
 end;
 
 function TOrderActions.Get(AddedDate: TDate; out ErrorString: String): TOrderList;
@@ -165,7 +165,7 @@ begin
   try
     Request.AddParameter('day_added_YYMMDD', GetDateStr(AddedDate));
 
-    Response := FConnection.Get(TSettings.Order, Request,
+    Response := FConnection.Get(TSettings.EndPoints.Order, Request,
       TGetOrdersResponse, ErrorString) as TGetOrdersResponse;
     try
       if (Response <> nil) then
@@ -206,7 +206,7 @@ begin
   try
     Request.AddParameter('scheduled_for_YYMMDD', GetDateStr(ScheduledDate));
 
-    Response := FConnection.Get(TSettings.Order, Request,
+    Response := FConnection.Get(TSettings.EndPoints.Order, Request,
       TGetOrdersResponse, ErrorString) as TGetOrdersResponse;
     try
       if (Response <> nil) then
@@ -239,7 +239,7 @@ begin
     Request.AddParameter('offset', IntToStr(Offset));
     Request.AddParameter('limit', IntToStr(Limit));
 
-    Response := FConnection.Get(TSettings.Order, Request,
+    Response := FConnection.Get(TSettings.EndPoints.Order, Request,
       TGetOrdersWithCustomFieldsResponse, ErrorString) as TGetOrdersWithCustomFieldsResponse;
     try
       if (Response <> nil) then
@@ -276,7 +276,7 @@ begin
     Request.AddParameter('offset', IntToStr(Offset));
     Request.AddParameter('limit', IntToStr(Limit));
 
-    Response := FConnection.Get(TSettings.Order, Request,
+    Response := FConnection.Get(TSettings.EndPoints.Order, Request,
       TGetOrdersResponse, ErrorString) as TGetOrdersResponse;
     try
       if (Response <> nil) then

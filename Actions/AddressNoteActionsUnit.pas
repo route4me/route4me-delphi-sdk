@@ -1,4 +1,4 @@
-unit AddressNoteActionUnit;
+unit AddressNoteActionsUnit;
 
 interface
 
@@ -61,7 +61,7 @@ begin
       FreeAndNil(NoteParameterPairs);
     end;
 
-    Response := FConnection.Post(TSettings.AddRouteNotesHost, Parameters,
+    Response := FConnection.Post(TSettings.EndPoints.AddRouteNotes, Parameters,
       TAddAddressNoteResponse, ErrorString) as TAddAddressNoteResponse;
     try
       if (Response <> nil) then

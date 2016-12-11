@@ -12,13 +12,13 @@ type
 
 implementation
 
-uses AvoidanceZoneUnit, TerritoryUnit;
+uses AvoidanceZoneUnit, TerritoryContourUnit;
 
 procedure TUpdateAvoidanceZone.Execute(TerritoryId: String);
 var
   ErrorString: String;
   AvoidanceZone: TAvoidanceZone;
-  Territory: TTerritory;
+  Territory: TCircleTerritory;
   NewAvoidanceZone: TAvoidanceZone;
   TerritoryName, TerritoryColor: String;
 begin

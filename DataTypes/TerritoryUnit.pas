@@ -3,85 +3,138 @@ unit TerritoryUnit;
 interface
 
 uses
-  REST.Json.Types, SysUtils,
-  JSONNullableAttributeUnit, NullableBasicTypesUnit, CommonTypesUnit, EnumsUnit;
+  REST.Json.Types, System.Generics.Collections, Generics.Defaults,
+  JSONNullableAttributeUnit, NullableBasicTypesUnit,
+  GenericParametersUnit, TerritoryContourUnit, CommonTypesUnit;
 
 type
   /// <summary>
-  /// Territory parameters
+  ///  Json schema for an Territory class, which is used for defining different type avoidance zones.
   /// </summary>
   /// <remarks>
-  ///  https://github.com/route4me/json-schemas/blob/master/Avoidance_zone.dtd
+  ///  https://github.com/route4me/json-schemas/blob/master/Territory.dtd
   /// </remarks>
-  TTerritory = class abstract
+  TTerritory = class(TGenericParameters)
   private
-    [JSONName('type')]
+    [JSONNameAttribute('territory_id')]
     [Nullable]
-    FType: NullableString;
+    FTerritoryId: NullableString;
 
-    [JSONName('data')]
-    FData: TStringArray;
+    [JSONNameAttribute('territory_name')]
+    [Nullable]
+    FTerritoryName: NullableString;
 
-    function GetType: TTerritoryType;
-    procedure SetType(const Value: TTerritoryType);
-  protected
-    /// <summary>
-    /// Territory type (circle, rectangle, polygon)
-    /// </summary>
-    property TerritoryType: TTerritoryType read GetType write SetType;
+    [JSONNameAttribute('territory_color')]
+    [Nullable]
+    FTerritoryColor: NullableString;
 
-    /// <summary>
-    ///
-    /// </summary>
-    property Data: TStringArray read FData;
-    procedure AddDataItem(Item: String);
+    [JSONNameAttribute('member_id')]
+    [Nullable]
+    FMemberId: NullableString;
+
+    [JSONNameAttribute('addresses')]
+    FAddresses: TArray<integer>;
+
+    [JSONNameAttribute('territory')]
+    [NullableObject(TTerritoryContour)]
+    FTerritory: NullableObject;
+
+    function GetTerritory: TTerritoryContour;
+    procedure SetTerritory(const Value: TTerritoryContour);
   public
-    constructor Create; virtual;
+    constructor Create; overload; override;
+    constructor Create(TerritoryName, TerritoryColor: String; Territory: TTerritoryContour); reintroduce; overload;
+    destructor Destroy; override;
 
     function Equals(Obj: TObject): Boolean; override;
+
+    /// <summary>
+    ///  32 character unique identifier
+    /// </summary>
+    property TerritoryId: NullableString read FTerritoryId write FTerritoryId;
+
+    /// <summary>
+    ///  Territory name
+    /// </summary>
+    property TerritoryName: NullableString read FTerritoryName write FTerritoryName;
+
+    /// <summary>
+    ///  Territory color
+    /// </summary>
+    property TerritoryColor: NullableString read FTerritoryColor write FTerritoryColor;
+
+    /// <summary>
+    ///  Member ID
+    /// </summary>
+    property MemberId: NullableString read FMemberId write FMemberId;
+
+    /// <summary>
+    ///  Territory
+    /// </summary>
+    property Territory: TTerritoryContour read GetTerritory write SetTerritory;
+
+    /// <summary>
+    ///  Territory
+    /// </summary>
+    property Addresses: TArray<integer> read FAddresses;
   end;
 
-  TCircleTerritory = class(TTerritory)
-  public
-    constructor Create(Latitude, Longitude, Radius: double);
-  end;
+  TTerritoryArray = TArray<TTerritory>;
+  TTerritoryList = TObjectList<TTerritory>;
 
-  TPolygonTerritory = class(TTerritory)
-  public
-    constructor Create(); override;
-
-    procedure AddPoint(Latitude, Longitude: double);
-  end;
-
-  TRectangularTerritory = class(TTerritory)
-  public
-    constructor Create(Latitude1, Longitude1, Latitude2, Longitude2: double);
-  end;
+  function SortTerritorys(Territorys: TTerritoryArray): TTerritoryArray;
 
 implementation
 
-{ TTerritory }
-
 uses UtilsUnit;
 
-procedure TTerritory.AddDataItem(Item: String);
+function SortTerritorys(Territorys: TTerritoryArray): TTerritoryArray;
 begin
-  SetLength(FData, Length(FData) + 1);
-  FData[High(FData)] := Item;
+  SetLength(Result, Length(Territorys));
+  if Length(Territorys) = 0 then
+    Exit;
+
+  TArray.Copy<TTerritory>(Territorys, Result, Length(Territorys));
+  TArray.Sort<TTerritory>(Result, TComparer<TTerritory>.Construct(
+    function (const Territory1, Territory2: TTerritory): Integer
+    begin
+      Result := Territory1.FTerritoryId.Compare(Territory2.FTerritoryId);
+    end));
 end;
 
 constructor TTerritory.Create;
 begin
-  Inherited;
+  Inherited Create;
 
-  FType := NullableString.Null;
-  SetLength(FData, 0);
+  FTerritoryId := NullableString.Null;
+  FTerritoryName := NullableString.Null;
+  FTerritoryColor := NullableString.Null;
+  FMemberId := NullableString.Null;
+  FTerritory := NullableObject.Null;
+  SetLength(FAddresses, 0);
+end;
+
+constructor TTerritory.Create(TerritoryName, TerritoryColor: String;
+  Territory: TTerritoryContour);
+begin
+  Create;
+
+  FTerritoryName := TerritoryName;
+  FTerritoryColor := TerritoryColor;
+  FTerritory := Territory;
+end;
+
+destructor TTerritory.Destroy;
+begin
+  FTerritory.Free;
+
+  inherited;
 end;
 
 function TTerritory.Equals(Obj: TObject): Boolean;
 var
   Other: TTerritory;
-  SortedData1,  SortedData2: TStringArray;
+  SortedData1, SortedData2: TArray<integer>;
   i: integer;
 begin
   Result := False;
@@ -92,77 +145,38 @@ begin
   Other := TTerritory(Obj);
 
   Result :=
-    (FType = Other.FType);
+    (FTerritoryId = Other.FTerritoryId) and
+    (FTerritoryName = Other.FTerritoryName) and
+    (FTerritoryColor = Other.FTerritoryColor) and
+    (FMemberId = Other.FMemberId) and
+    (FTerritory = Other.FTerritory) and
+    (Length(FAddresses) = Length(Other.FAddresses));
 
-  if (not Result) then
+  if not Result then
     Exit;
 
   Result := False;
 
-  if (Length(Data) <> Length(Other.Data)) then
-    Exit;
-
-  SortedData1 := SortStringArray(Data);
-  SortedData2 := SortStringArray(Other.Data);
+  SortedData1 := TUtils.SortIntegerArray(FAddresses);
+  SortedData2 := TUtils.SortIntegerArray(Other.FAddresses);
   for i := 0 to Length(SortedData1) - 1 do
-    if not SortedData1[i].Equals(SortedData2[i]) then
+    if (SortedData1[i] <> SortedData2[i]) then
       Exit;
 
   Result := True;
 end;
 
-function TTerritory.GetType: TTerritoryType;
-var
-  TerritoryType: TTerritoryType;
+function TTerritory.GetTerritory: TTerritoryContour;
 begin
-  Result := TTerritoryType.ttUndefined;
-  if FType.IsNotNull then
-    for TerritoryType := Low(TTerritoryType) to High(TTerritoryType) do
-      if (FType = TTerritoryTypeDescription[TerritoryType]) then
-        Exit(TerritoryType);
+  if (FTerritory.IsNull) then
+    Result := nil
+  else
+    Result := FTerritory.Value as TTerritoryContour;
 end;
 
-procedure TTerritory.SetType(const Value: TTerritoryType);
+procedure TTerritory.SetTerritory(const Value: TTerritoryContour);
 begin
-  FType := TTerritoryTypeDescription[Value];
-end;
-
-{ TCircleTerritory }
-
-constructor TCircleTerritory.Create(Latitude, Longitude, Radius: double);
-begin
-  Inherited Create;
-
-  TerritoryType := TTerritoryType.ttCircle;
-  AddDataItem(TUtils.FloatToStrDot(Latitude) + ',' + TUtils.FloatToStrDot(Longitude));
-  AddDataItem(TUtils.FloatToStrDot(Radius));
-end;
-
-{ TPolygonTerritory }
-
-procedure TPolygonTerritory.AddPoint(Latitude, Longitude: double);
-begin
-  AddDataItem(TUtils.FloatToStrDot(Latitude) + ',' + TUtils.FloatToStrDot(Longitude));
-end;
-
-constructor TPolygonTerritory.Create;
-begin
-  inherited Create;
-
-  TerritoryType := TTerritoryType.ttPoly;
-end;
-
-{ TRectangularTerritory }
-
-constructor TRectangularTerritory.Create(
-  Latitude1, Longitude1, Latitude2, Longitude2: double);
-begin
-  inherited Create;
-
-  TerritoryType := TTerritoryType.ttRect;
-
-  AddDataItem(TUtils.FloatToStrDot(Latitude1) + ',' + TUtils.FloatToStrDot(Longitude1));
-  AddDataItem(TUtils.FloatToStrDot(Latitude2) + ',' + TUtils.FloatToStrDot(Longitude2));
+  FTerritory := Value;
 end;
 
 end.

@@ -44,7 +44,7 @@ implementation
 
 uses
   Math,
-  MarshalUnMarshalUnit;
+  MarshalUnMarshalUnit, UtilsUnit;
 
 procedure TGenericParameters.AddBodyParameter(Key, Value: String);
 begin
@@ -53,7 +53,7 @@ end;
 
 procedure TGenericParameters.AddParameter(Key, Value: String);
 begin
-  FParametersCollection.Add(TStringPair.Create(Key, EncodeURL(Value)));
+  FParametersCollection.Add(TStringPair.Create(Key, TUtils.EncodeURL(Value)));
 end;
 
 constructor TGenericParameters.Create;

@@ -76,7 +76,7 @@ end;
 function TAddressBookContactActions.Add(Contact: TAddressBookContact;
   out ErrorString: String): TAddressBookContact;
 begin
-  Result := FConnection.Post(TSettings.AddressBook, Contact,
+  Result := FConnection.Post(TSettings.EndPoints.AddressBook, Contact,
     TAddressBookContact, ErrorString) as TAddressBookContact;
 end;
 
@@ -94,7 +94,7 @@ begin
     Request.AddParameter('limit', IntToStr(Limit));
     Request.AddParameter('offset', IntToStr(Offset));
 
-    Response := FConnection.Get(TSettings.AddressBook, Request,
+    Response := FConnection.Get(TSettings.EndPoints.AddressBook, Request,
       TGetAddressBookContactsResponse, ErrorString) as TGetAddressBookContactsResponse;
     try
       if (Response <> nil) then
@@ -136,7 +136,7 @@ begin
     end;
     Request.AddParameter('fields', FieldsStr);
 
-    Response := FConnection.Get(TSettings.AddressBook, Request,
+    Response := FConnection.Get(TSettings.EndPoints.AddressBook, Request,
       TAddressBookContactFindResponse, ErrorString) as TAddressBookContactFindResponse;
     try
       if (Response <> nil) then
@@ -168,7 +168,7 @@ begin
     Request.AddParameter('offset', IntToStr(Offset));
     Request.AddParameter('display', TDisplayLocationsDescription[DisplayLocations]);
 
-    Response := FConnection.Get(TSettings.AddressBook, Request,
+    Response := FConnection.Get(TSettings.EndPoints.AddressBook, Request,
       TGetAddressBookContactsResponse, ErrorString) as TGetAddressBookContactsResponse;
     try
       if (Response <> nil) then
@@ -209,7 +209,7 @@ begin
       end;
     Request.AddParameter('address_id', Ids);
 
-    Response := FConnection.Get(TSettings.AddressBook, Request,
+    Response := FConnection.Get(TSettings.EndPoints.AddressBook, Request,
       TGetAddressBookContactsResponse, ErrorString) as TGetAddressBookContactsResponse;
     try
       if (Response <> nil) then
@@ -233,7 +233,7 @@ begin
   try
     Request.AddressIds := AddressIds;
 
-    Response := FConnection.Delete(TSettings.AddressBook, Request,
+    Response := FConnection.Delete(TSettings.EndPoints.AddressBook, Request,
       TStatusResponse, ErrorString) as TStatusResponse;
     try
       Result := (Response <> nil) and (Response.Status);
@@ -248,7 +248,7 @@ end;
 function TAddressBookContactActions.Update(
   Contact: TAddressBookContact; out ErrorString: String): TAddressBookContact;
 begin
-  Result := FConnection.Put(TSettings.AddressBook, Contact,
+  Result := FConnection.Put(TSettings.EndPoints.AddressBook, Contact,
     TAddressBookContact, ErrorString) as TAddressBookContact;
 end;
 
@@ -267,7 +267,7 @@ begin
     Request.AddParameter('offset', IntToStr(Offset));
     Request.AddParameter('query', Query);
 
-    Response := FConnection.Get(TSettings.AddressBook, Request,
+    Response := FConnection.Get(TSettings.EndPoints.AddressBook, Request,
       TGetAddressBookContactsResponse, ErrorString) as TGetAddressBookContactsResponse;
     try
       if (Response <> nil) then

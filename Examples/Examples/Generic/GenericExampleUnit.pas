@@ -32,7 +32,7 @@ begin
       // the page offset starting at zero
       Parameters.AddParameter('Offset', '5');
 
-      Uri := TSettings.MainHost + '/api.v4/route.php';
+      Uri := TSettings.EndPoints.Main + '/api.v4/route.php';
       DataObjects := Route4Me.Connection.Get(
         Uri, Parameters, TDataObjectRouteList, ErrorMessage) as TDataObjectRouteList;
       try

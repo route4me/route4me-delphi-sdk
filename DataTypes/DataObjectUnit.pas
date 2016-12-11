@@ -210,6 +210,8 @@ type
 
 implementation
 
+uses UtilsUnit;
+
 function SortRoutes(Routes: TDataObjectRouteArray): TDataObjectRouteArray;
 begin
   SetLength(Result, Length(Routes));
@@ -295,8 +297,8 @@ begin
     (Length(TrackingHistories) <> Length(Other.TrackingHistories)) then
     Exit;
 
-  SortedUserErrors1 := SortStringArray(UserErrors);
-  SortedUserErrors2 := SortStringArray(Other.UserErrors);
+  SortedUserErrors1 := TUtils.SortStringArray(UserErrors);
+  SortedUserErrors2 := TUtils.SortStringArray(Other.UserErrors);
   for i := 0 to Length(SortedUserErrors1) - 1 do
     if not SortedUserErrors1[i].Equals(SortedUserErrors2[i]) then
       Exit;

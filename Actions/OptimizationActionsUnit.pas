@@ -1,4 +1,4 @@
-unit OptimizationActionUnit;
+unit OptimizationActionsUnit;
 
 interface
 
@@ -47,7 +47,7 @@ function TOptimizationActions.AddOrder(
   Parameters: TAddOrderToOptimizationRequest;
   out ErrorString: String): TDataObjectRoute;
 begin
-  Result := FConnection.Put(TSettings.ApiHost,
+  Result := FConnection.Put(TSettings.EndPoints.Optimization,
     Parameters, TDataObjectRoute, ErrorString) as TDataObjectRoute;
 
   if (Result = nil) and (ErrorString = EmptyStr) then
@@ -68,7 +68,7 @@ begin
     Request.Limit := Limit;
     Request.Offset := Offset;
 
-    Response := FConnection.Get(TSettings.ApiHost, Request,
+    Response := FConnection.Get(TSettings.EndPoints.Optimization, Request,
       TDataObjectOptimizationsResponse, ErrorString) as TDataObjectOptimizationsResponse;
 
     try
@@ -92,7 +92,7 @@ begin
   try
     OptimizationParameters.OptimizationProblemID := OptimizationProblemId;
 
-    Result := FConnection.Get(TSettings.ApiHost, OptimizationParameters,
+    Result := FConnection.Get(TSettings.EndPoints.Optimization, OptimizationParameters,
       TDataObject, ErrorString) as TDataObject;
 
 //    Result := Get(OptimizationParameters, ErrorString);
@@ -110,7 +110,7 @@ begin
   GenericParameters := TGenericParameters.Create();
   try
     GenericParameters.AddParameter('optimization_problem_id', OptimizationId);
-    Response := FConnection.Delete(TSettings.ApiHost, GenericParameters,
+    Response := FConnection.Delete(TSettings.EndPoints.Optimization, GenericParameters,
       TRemoveOptimizationResponse, ErrorString) as TRemoveOptimizationResponse;
     try
       Result := (Response <> nil) and (Response.Status) and (Response.Removed);
@@ -135,7 +135,7 @@ begin
     GenericParameters.AddParameter('optimization_problem_id', OptimizationId);
     GenericParameters.AddParameter('route_destination_id', IntToStr(DestinationId));
 
-    Response := FConnection.Delete(TSettings.GetAddress, GenericParameters,
+    Response := FConnection.Delete(TSettings.EndPoints.GetAddress, GenericParameters,
       TRemoveDestinationFromOptimizationResponse, ErrorString) as TRemoveDestinationFromOptimizationResponse;
     try
       Result := (Response <> nil) and (Response.Deleted);
@@ -151,7 +151,7 @@ function TOptimizationActions.Run(
   OptimizationParameters: TOptimizationParameters;
   out ErrorString: String): TDataObject;
 begin
-  Result := FConnection.Post(TSettings.ApiHost, OptimizationParameters,
+  Result := FConnection.Post(TSettings.EndPoints.Optimization, OptimizationParameters,
     TDataObject, ErrorString) as TDataObject;
 end;
 
@@ -159,7 +159,7 @@ function TOptimizationActions.Update(
   OptimizationParameters: TOptimizationParameters;
   out ErrorString: String): TDataObject;
 begin
-  Result := FConnection.Put(TSettings.ApiHost, OptimizationParameters,
+  Result := FConnection.Put(TSettings.EndPoints.Optimization, OptimizationParameters,
     TDataObject, ErrorString) as TDataObject;
 end;
 

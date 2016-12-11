@@ -5,11 +5,11 @@ interface
 uses
   REST.Json.Types, System.Generics.Collections, Generics.Defaults,
   JSONNullableAttributeUnit, NullableBasicTypesUnit,
-  GenericParametersUnit, TerritoryUnit;
+  GenericParametersUnit, TerritoryContourUnit;
 
 type
   /// <summary>
-  ///  Json schema for an Avoidance Zone clas, which is used for defining different type avoidance zones.
+  ///  Json schema for an Avoidance Zone class, which is used for defining different type avoidance zones.
   /// </summary>
   /// <remarks>
   ///  https://github.com/route4me/json-schemas/blob/master/Avoidance_zone.dtd
@@ -33,14 +33,14 @@ type
     FMemberId: NullableString;
 
     [JSONNameAttribute('territory')]
-    [NullableObject(TTerritory)]
+    [NullableObject(TTerritoryContour)]
     FTerritory: NullableObject;
 
-    function GetTerritory: TTerritory;
-    procedure SetTerritory(const Value: TTerritory);
+    function GetTerritory: TTerritoryContour;
+    procedure SetTerritory(const Value: TTerritoryContour);
   public
     constructor Create; overload; override;
-    constructor Create(TerritoryName, TerritoryColor: String; Territory: TTerritory); reintroduce; overload;
+    constructor Create(TerritoryName, TerritoryColor: String; Territory: TTerritoryContour); reintroduce; overload;
     destructor Destroy; override;
 
     function Equals(Obj: TObject): Boolean; override;
@@ -68,7 +68,7 @@ type
     /// <summary>
     ///  Territory
     /// </summary>
-    property Territory: TTerritory read GetTerritory write SetTerritory;
+    property Territory: TTerritoryContour read GetTerritory write SetTerritory;
   end;
 
   TAvoidanceZoneArray = TArray<TAvoidanceZone>;
@@ -104,7 +104,7 @@ begin
 end;
 
 constructor TAvoidanceZone.Create(TerritoryName, TerritoryColor: String;
-  Territory: TTerritory);
+  Territory: TTerritoryContour);
 begin
   Create;
 
@@ -139,15 +139,15 @@ begin
     (FTerritory = Other.FTerritory);
 end;
 
-function TAvoidanceZone.GetTerritory: TTerritory;
+function TAvoidanceZone.GetTerritory: TTerritoryContour;
 begin
   if (FTerritory.IsNull) then
     Result := nil
   else
-    Result := FTerritory.Value as TTerritory;
+    Result := FTerritory.Value as TTerritoryContour;
 end;
 
-procedure TAvoidanceZone.SetTerritory(const Value: TTerritory);
+procedure TAvoidanceZone.SetTerritory(const Value: TTerritoryContour);
 begin
   FTerritory := Value;
 end;

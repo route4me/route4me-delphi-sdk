@@ -1,4 +1,4 @@
-unit AddressActionUnit;
+unit AddressActionsUnit;
 
 interface
 
@@ -37,7 +37,7 @@ uses
 function TAddressActions.Get(AddressParameters: TAddressParameters;
   out ErrorString: String): TAddress;
 begin
-  Result := FConnection.Get(TSettings.GetAddress, AddressParameters,
+  Result := FConnection.Get(TSettings.EndPoints.GetAddress, AddressParameters,
     TAddress, ErrorString) as TAddress;
 end;
 
@@ -57,7 +57,7 @@ begin
     else
       Request.AddParameter('is_departed', '0');
 
-    Response := FConnection.Get(TSettings.MarkAddressAsDeparted, Request,
+    Response := FConnection.Get(TSettings.EndPoints.MarkAddressAsDeparted, Request,
       TStatusResponse, ErrorString) as TStatusResponse;
     try
       if (Response <> nil) and (Response.Status = False) and (ErrorString = EmptyStr) then
@@ -79,7 +79,7 @@ begin
   Request := TMarkAddressAsDetectedAsDepartedRequest.Create(
     RouteId, RouteDestinationId, IsDeparted);
   try
-    Address := FConnection.Put(TSettings.Address, Request,
+    Address := FConnection.Put(TSettings.EndPoints.Address, Request,
       TAddress, ErrorString) as TAddress;
     try
       if (Address = nil) and (ErrorString = EmptyStr) then
@@ -101,7 +101,7 @@ begin
   Request := TMarkAddressAsDetectedAsVisitedRequest.Create(
     RouteId, RouteDestinationId, IsVisited);
   try
-    Address := FConnection.Put(TSettings.Address, Request,
+    Address := FConnection.Put(TSettings.EndPoints.Address, Request,
       TAddress, ErrorString) as TAddress;
     try
       if (Address = nil) and (ErrorString = EmptyStr) then
@@ -130,7 +130,7 @@ begin
     else
       Request.AddParameter('is_visited', '0');
 
-    Response := FConnection.Get(TSettings.MarkAddressAsVisited, Request,
+    Response := FConnection.Get(TSettings.EndPoints.MarkAddressAsVisited, Request,
       TStatusResponse, ErrorString) as TStatusResponse;
     try
       if (Response <> nil) and (Response.Status = False) and (ErrorString = EmptyStr) then

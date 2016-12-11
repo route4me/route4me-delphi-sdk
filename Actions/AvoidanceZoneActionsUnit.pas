@@ -1,4 +1,4 @@
-unit AvoidanceZoneActionUnit;
+unit AvoidanceZoneActionsUnit;
 
 interface
 
@@ -50,7 +50,7 @@ uses
 function TAvoidanceZoneActions.Add(
   AvoidanceZone: TAvoidanceZone; out ErrorString: String): TAvoidanceZone;
 begin
-  Result := FConnection.Post(TSettings.Avoidance, AvoidanceZone,
+  Result := FConnection.Post(TSettings.EndPoints.Avoidance, AvoidanceZone,
     TAvoidanceZone, ErrorString) as TAvoidanceZone;
 end;
 
@@ -63,7 +63,7 @@ begin
   try
     Query.AddParameter('territory_id', TerritoryId);
 
-    FConnection.Delete(TSettings.Avoidance, Query, TAvoidanceZone, ErrorString);
+    FConnection.Delete(TSettings.EndPoints.Avoidance, Query, TAvoidanceZone, ErrorString);
     Result := (ErrorString = EmptyStr);
   finally
     FreeAndNil(Query);
@@ -79,7 +79,7 @@ begin
   try
     Query.AddParameter('territory_id', TerritoryId);
 
-    Result := FConnection.Get(TSettings.Avoidance, Query,
+    Result := FConnection.Get(TSettings.EndPoints.Avoidance, Query,
       TAvoidanceZone, ErrorString) as TAvoidanceZone;
   finally
     FreeAndNil(Query);
@@ -92,7 +92,7 @@ var
 begin
   Query := TGenericParameters.Create;
   try
-    Result := FConnection.Get(TSettings.Avoidance, Query,
+    Result := FConnection.Get(TSettings.EndPoints.Avoidance, Query,
       TAvoidanceZoneList, ErrorString) as TAvoidanceZoneList;
     if (Result = nil) then
       Result := TAvoidanceZoneList.Create;
@@ -117,7 +117,7 @@ begin
     begin
       Query.ReplaceParameter('territory_id', TerritoryIds[i]);
 
-      FConnection.Delete(TSettings.Avoidance, Query, TAvoidanceZone, AErrorString);
+      FConnection.Delete(TSettings.EndPoints.Avoidance, Query, TAvoidanceZone, AErrorString);
       if (AErrorString <> EmptyStr) then
         ErrorString := ErrorString + '; ' + AErrorString;
     end;
@@ -131,7 +131,7 @@ end;
 function TAvoidanceZoneActions.Update(AvoidanceZone: TAvoidanceZone;
   out ErrorString: String): TAvoidanceZone;
 begin
-  Result := FConnection.Put(TSettings.Avoidance, AvoidanceZone,
+  Result := FConnection.Put(TSettings.EndPoints.Avoidance, AvoidanceZone,
     TAvoidanceZone, ErrorString) as TAvoidanceZone;
 end;
 

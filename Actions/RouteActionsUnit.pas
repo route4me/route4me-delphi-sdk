@@ -1,4 +1,4 @@
-unit RouteActionUnit;
+unit RouteActionsUnit;
 
 interface
 
@@ -101,7 +101,7 @@ begin
     Request.Addresses := Addresses;
     Request.OptimalPosition := OptimalPosition;
 
-    Response := FConnection.Put(TSettings.RouteHost,
+    Response := FConnection.Put(TSettings.EndPoints.Route,
       Request, TDataObject, ErrorString) as TDataObject;
 
     if (Response = nil) then
@@ -132,7 +132,7 @@ end;
 function TRouteActions.AddOrder(Parameters: TAddOrderToRouteRequest;
   out ErrorString: String): TDataObjectRoute;
 begin
-  Result := FConnection.Put(TSettings.RouteHost,
+  Result := FConnection.Put(TSettings.EndPoints.Route,
     Parameters, TDataObjectRoute, ErrorString) as TDataObjectRoute;
 
   if (Result = nil) and (ErrorString = EmptyStr) then
@@ -160,7 +160,7 @@ begin
   Parameters := TGenericParameters.Create;
   try
       Parameters.AddParameter('route_id', RouteIdsAsString);
-      Response := FConnection.Delete(TSettings.RouteHost,
+      Response := FConnection.Delete(TSettings.EndPoints.Route,
         Parameters, TDeleteRouteResponse, ErrorString) as TDeleteRouteResponse;
 
       if (Response <> nil) then
@@ -180,7 +180,7 @@ begin
   QueryParameters.ReplaceParameter('to', 'none');
   // Redirect to page or return json for none
 
-  Response := FConnection.Get(TSettings.DuplicateRoute,
+  Response := FConnection.Get(TSettings.EndPoints.DuplicateRoute,
     QueryParameters, TDuplicateRouteResponse, ErrorString) as TDuplicateRouteResponse;
   try
       if (Response <> nil) and (Response.Success) then
@@ -193,7 +193,7 @@ end;
 function TRouteActions.Get(RouteParameters: TRouteParametersQuery;
   out ErrorString: String): TDataObjectRoute;
 begin
-  Result := FConnection.Get(TSettings.RouteHost,
+  Result := FConnection.Get(TSettings.EndPoints.Route,
     RouteParameters, TDataObjectRoute, ErrorString) as TDataObjectRoute;
 end;
 
@@ -223,7 +223,7 @@ begin
     RouteParameters.Limit := Limit;
     RouteParameters.Offset := Offset;
 
-    Result := FConnection.Get(TSettings.RouteHost,
+    Result := FConnection.Get(TSettings.EndPoints.Route,
       RouteParameters, TDataObjectRouteList, ErrorString) as TDataObjectRouteList;
   finally
     FreeAndNil(RouteParameters);
@@ -245,7 +245,7 @@ begin
   try
     GenericParameters.AddParameter('optimization_problem_id', OptimizationProblemId);
     GenericParameters.AddParameter('wait_for_final_state', '1');
-    Response := FConnection.Get(TSettings.ApiHost,
+    Response := FConnection.Get(TSettings.EndPoints.Optimization,
       GenericParameters, TDataObject, ErrorString) as TDataObject;
     try
       if (Response <> nil) and (Length(Response.Routes) > 0) then
@@ -267,7 +267,7 @@ begin
   try
     Request.RouteIds := RouteIds;
 
-    Response := FConnection.Post(TSettings.MergeRouteHost,
+    Response := FConnection.Post(TSettings.EndPoints.MergeRouteEndPoint,
       Request, TStatusResponse, ErrorString) as TStatusResponse;
     try
       if (Response <> nil) and (Response.Status = False) and (ErrorString = EmptyStr) then
@@ -293,7 +293,7 @@ begin
     Request.AddBodyParameter('route_destination_id', IntToStr(RouteDestinationId));
     Request.AddBodyParameter('after_destination_id', IntToStr(AfterDestinationId));
 
-    Response := FConnection.Post(TSettings.MoveRouteDestination,
+    Response := FConnection.Post(TSettings.EndPoints.MoveRouteDestination,
         Request, TMoveDestinationToRouteResponse, ErrorString) as TMoveDestinationToRouteResponse;
     try
       if (Response <> nil) then
@@ -323,7 +323,7 @@ begin
     Request.RouteId := RouteId;
     Request.RouteDestinationId := destinationId;
 
-    Response := FConnection.Delete(TSettings.GetAddress,
+    Response := FConnection.Delete(TSettings.EndPoints.GetAddress,
       Request, TRemoveRouteDestinationResponse, ErrorString) as TRemoveRouteDestinationResponse;
     try
       Result := (Response <> nil) and (Response.Deleted);
@@ -338,7 +338,7 @@ end;
 function TRouteActions.Resequence(AddressesOrderInfo: TAddressesOrderInfo;
   out ErrorString: String): TDataObjectRoute;
 begin
-  Result := FConnection.Put(TSettings.RouteHost,
+  Result := FConnection.Put(TSettings.EndPoints.Route,
     AddressesOrderInfo, TDataObjectRoute, ErrorString) as TDataObjectRoute;
 
   if (Result = nil) and (ErrorString = EmptyStr) then
@@ -354,7 +354,7 @@ var
 begin
   Request := TResequenceAllRoutesRequest.Create(RouteId, DisableOptimization, WhatOptimize);
   try
-    Response := FConnection.Get(TSettings.ResequenceRouteHost,
+    Response := FConnection.Get(TSettings.EndPoints.ResequenceRoute,
       Request, TStatusResponse, ErrorString) as TStatusResponse;
     try
       if (Response <> nil) and (Response.Status = False) and (ErrorString = EmptyStr) then
@@ -379,7 +379,7 @@ begin
     Request.AddParameter('response_format', TOptimizationParametersFormatDescription[opJson]);
     Request.AddBodyParameter('recipient_email', RecipientEmail);
 
-    Response := FConnection.Post(TSettings.ShareRouteHost,
+    Response := FConnection.Post(TSettings.EndPoints.ShareRoute,
       Request, TStatusResponse, ErrorString) as TStatusResponse;
     try
       if (Response <> nil) and (Response.Status = False) and (ErrorString = EmptyStr) then
@@ -406,7 +406,7 @@ begin
     for Pair in CustomFields do
       Request.AddCustomField(Pair.Key, Pair.Value);
 
-    Address := FConnection.Put(TSettings.GetAddress, Request,
+    Address := FConnection.Put(TSettings.EndPoints.GetAddress, Request,
       TAddress, ErrorString) as TAddress;
     try
       if (Address = nil) and (ErrorString = EmptyStr) then
@@ -422,7 +422,7 @@ end;
 function TRouteActions.Update(RouteParameters: TRouteParametersQuery;
   out ErrorString: String): TDataObjectRoute;
 begin
-  Result := FConnection.Put(TSettings.RouteHost,
+  Result := FConnection.Put(TSettings.EndPoints.Route,
     RouteParameters, TDataObjectRoute, errorString) as TDataObjectRoute;
 
   if (Result = nil) and (ErrorString = EmptyStr) then

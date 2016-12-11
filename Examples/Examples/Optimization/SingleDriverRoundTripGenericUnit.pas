@@ -38,7 +38,7 @@ begin
       Request.Parameters := Parameters.Parameters.Value as TRouteParameters;
       Request.Addresses := Parameters.Addresses;
 
-      Response := Route4MeManager.Connection.Post(TSettings.ApiHost, Request,
+      Response := Route4MeManager.Connection.Post(TSettings.EndPoints.Optimization, Request,
         TSingleDriverRoundTripGenericResponse, ErrorString) as TSingleDriverRoundTripGenericResponse;
       try
         WriteLn('');

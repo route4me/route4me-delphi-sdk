@@ -3,7 +3,7 @@ unit ConnectionUnit;
 interface
 
 uses
-  Classes, SysUtils, System.JSON, IdURI,
+  Classes, SysUtils, System.JSON, IdURI, System.Generics.Collections,
   REST.Client, REST.Types, IPPeerCommon, IPPeerClient,
   System.Net.HttpClient, System.NetConsts, System.Net.URLClient, System.Net.HttpClient.Win,
   IConnectionUnit, GenericParametersUnit, DataObjectUnit, CommonTypesUnit;
@@ -16,6 +16,8 @@ type
     FClient: TRESTClient;
     FRESTRequest: TRESTRequest;
     FRESTResponse: TRESTResponse;
+
+    FCollectionForDeleting: TObjectList<TJsonValue>;
 
     procedure RESTRequest(URL: String; Method: TRESTRequestMethod;
       Body: String; ContentType: TRESTContentType;
@@ -31,7 +33,7 @@ type
 
     function ExecuteRequest(URL: String; Method: TRESTRequestMethod;
       Body: String; ContentType: TRESTContentType; out ErrorString: String;
-      out ResponseAsString: String; out NeedFreeResult: boolean): TJsonValue;
+      out ResponseAsString: String{; out NeedFreeResult: boolean}): TJsonValue;
 
     procedure SetProxy(Host: String; Port: integer; Username, Password: String);
   end;
@@ -49,7 +51,7 @@ type
   protected
     function RunRequest(URL: String; Method: TRESTRequestMethod;
       Body: String; ContentType: TRESTContentType; out ErrorString: String;
-      out ResponseAsString: String; out NeedFreeResult: boolean): TJsonValue; virtual;
+      out ResponseAsString: String{; out NeedFreeResult: boolean}): TJsonValue; virtual;
   public
     constructor Create(ApiKey: String);
     destructor Destroy; override;
@@ -72,7 +74,7 @@ implementation
 
 { TConnection }
 
-uses SettingsUnit, MarshalUnMarshalUnit, ErrorResponseUnit;
+uses SettingsUnit, MarshalUnMarshalUnit, ErrorResponseUnit, UtilsUnit;
 
 function TConnection.Post(Url: String; Data: TGenericParameters;
   ResultClassType: TClass; out ErrorString: String): TObject;
@@ -130,7 +132,7 @@ var
   IsError: boolean;
   ResponseAsString: String;
   JsonValue: TJsonValue;
-  NeedFreeResult: boolean;
+//  NeedFreeResult: boolean;
 begin
   Result := nil;
 
@@ -162,8 +164,8 @@ begin
 
     Response := RunRequest(
       Url + UrlParameters(Parameters),
-      Method, Body, ContentType, ErrorString, ResponseAsString, NeedFreeResult);
-    try
+      Method, Body, ContentType, ErrorString, ResponseAsString{, NeedFreeResult});
+//    try
       for ResultClassType in PossibleResultClassType do
       begin
         if (ResultClassType = TSimpleString) then
@@ -182,10 +184,10 @@ begin
         if not IsError then
           Break;
       end;
-    finally
+{    finally
       if (NeedFreeResult) then
         FreeAndNil(Response);
-    end;
+    end;}
   finally
     FreeAndNil(Parameters);
   end;
@@ -193,10 +195,10 @@ end;
 
 function TConnection.RunRequest(URL: String; Method: TRESTRequestMethod;
   Body: String; ContentType: TRESTContentType; out ErrorString: String;
-  out ResponseAsString: String; out NeedFreeResult: boolean): TJsonValue;
+  out ResponseAsString: String{; out NeedFreeResult: boolean}): TJsonValue;
 begin
   Result := FConnection.ExecuteRequest(URL, Method, Body, ContentType,
-    ErrorString, ResponseAsString, NeedFreeResult);
+    ErrorString, ResponseAsString{, NeedFreeResult});
 end;
 
 procedure TConnection.SetProxy(Host: String; Port: integer; Username, Password: String);
@@ -211,7 +213,7 @@ begin
   Result := EmptyStr;
 
   for Pair in Parameters do
-    Result := Result + Pair.Key + '=' + EncodeURL(Pair.Value) + '&';
+    Result := Result + Pair.Key + '=' + TUtils.EncodeURL(Pair.Value) + '&';
 
   if (Result <> EmptyStr) then
   begin
@@ -235,10 +237,13 @@ begin
 
   FClient2 := THttpClient.Create;
   FClient2.HandleRedirects := False;
+
+  FCollectionForDeleting := TObjectList<TJsonValue>.Create;
 end;
 
 destructor TConnectionFacade.Destroy;
 begin
+  FreeAndNil(FCollectionForDeleting);
   FreeAndNil(FRESTRequest);
   FreeAndNil(FClient);
   FreeAndNil(FRESTResponse);
@@ -289,7 +294,7 @@ end;
 
 function TConnectionFacade.ExecuteRequest(URL: String;
   Method: TRESTRequestMethod; Body: String; ContentType: TRESTContentType;
-  out ErrorString: String; out ResponseAsString: String; out NeedFreeResult: boolean): TJsonValue;
+  out ErrorString: String; out ResponseAsString: String{; out NeedFreeResult: boolean}): TJsonValue;
   function GetHeaderValue(Name: String): String;
   var
     s: String;
@@ -321,15 +326,16 @@ begin
   begin
     DeleteRequest(URL, Body, ContentType,
       Success, StatusCode, JSONValue, ResponseAsString);
-    NeedFreeResult := True;
+    FCollectionForDeleting.Add(JSONValue);
+{    NeedFreeResult := True;
     if (not Success) then
-      FreeAndNil(JSONValue);
+      FreeAndNil(JSONValue);}
   end
   else
   begin
     RESTRequest(URL, Method, Body, ContentType,
       Success, StatusCode, JSONValue, ResponseAsString);
-    NeedFreeResult := False;
+//    NeedFreeResult := False;
   end;
 
   if (Success) then
@@ -339,7 +345,7 @@ begin
     if (StatusCode = 303) then
       Result := ExecuteRequest(
         GetHeaderValue('Location'), TRESTRequestMethod.rmGET, EmptyStr,
-          ContentType, ErrorString, ResponseAsString, NeedFreeResult)
+          ContentType, ErrorString, ResponseAsString{, NeedFreeResult})
     else
     begin
       ErrorString := EmptyStr;

@@ -12,7 +12,7 @@ type
 
 implementation
 
-uses TerritoryUnit, AvoidanceZoneUnit;
+uses TerritoryContourUnit, AvoidanceZoneUnit;
 
 function TAddCircleAvoidanceZone.Execute: NullableString;
 var

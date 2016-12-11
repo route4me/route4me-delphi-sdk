@@ -18,7 +18,7 @@ implementation
 uses
   DateUtils,
   EnumsUnit, UtilsUnit, JSONDictionaryIntermediateObjectUnit,
-  RouteParametersUnit, LinksUnit, AddressUnit, TerritoryUnit;
+  RouteParametersUnit, LinksUnit, AddressUnit, TerritoryContourUnit;
 
 function TRealAvoidanceZoneProvider.AvoidanceZones: TAvoidanceZoneList;
 var

@@ -1,4 +1,4 @@
-unit UserActionUnit;
+unit UserActionsUnit;
 
 interface
 
@@ -106,7 +106,7 @@ begin
     Parameters.AddBodyParameter('strPassword_1', Password);
     Parameters.AddBodyParameter('strPassword_2', PasswordConfirmation);
 
-    Response := FConnection.Post(TSettings.RegisterAccount, Parameters,
+    Response := FConnection.Post(TSettings.EndPoints.RegisterAccount, Parameters,
       TRegisterAccountResponse, ErrorString) as TRegisterAccountResponse;
     try
       if (Response <> nil) then
@@ -137,7 +137,7 @@ begin
   Request := TRegisterWebinarRequest.Create(Email, FirstName, LastName, Phone,
     Company, MemberId, StartDate);
   try
-    Response := FConnection.Post(TSettings.RegisterWebinarHost,
+    Response := FConnection.Post(TSettings.EndPoints.RegisterWebinar,
       Request, TSimpleString, ErrorString) as TSimpleString;
     try
       if (Response = nil) and (ErrorString = EmptyStr) then
@@ -157,7 +157,7 @@ var
 begin
   Request := TRemoveUserRequest.Create(MemberId);
   try
-    Response := FConnection.Delete(TSettings.UsersHost,
+    Response := FConnection.Delete(TSettings.EndPoints.Users,
       Request, TStatusResponse, ErrorString) as TStatusResponse;
     try
       Result := (Response <> nil) and (Response.Status);
@@ -178,7 +178,7 @@ procedure TUserActions.Update(Parameters: TUserParameters;
 var
   Response: TAddNewUserResponse;
 begin
-  Response := FConnection.Put(TSettings.UsersHost,
+  Response := FConnection.Put(TSettings.EndPoints.Users,
     Parameters, TAddNewUserResponse, ErrorString) as TAddNewUserResponse;
   try
     if (Response = nil) and (ErrorString = EmptyStr) then
@@ -200,7 +200,7 @@ begin
   Request := TUserLicenseRequest.Create(MemberId, SessionId, DeviceId,
     DeviceType, Subscription, Token, Payload);
   try
-    Response := FConnection.Post(TSettings.UserLicenseHost,
+    Response := FConnection.Post(TSettings.EndPoints.UserLicense,
       Request, TSimpleString, ErrorString) as TSimpleString;
     try
       if (Response <> nil) and (ErrorString = EmptyStr) then
@@ -230,7 +230,7 @@ begin
     Parameters.Email := EMail;
   end;
 
-  Response := FConnection.Post(TSettings.UsersHost,
+  Response := FConnection.Post(TSettings.EndPoints.Users,
     Parameters, TAddNewUserResponse, ErrorString) as TAddNewUserResponse;
   try
     if (Response <> nil) then
@@ -262,7 +262,7 @@ begin
     PossibleResponses[0] := TGoodAuthenticationResponse;
     PossibleResponses[1] := TBadAuthenticationResponse;
 
-    Response := FConnection.Post(TSettings.Authenticate,
+    Response := FConnection.Post(TSettings.EndPoints.Authenticate,
       Parameters, PossibleResponses, ErrorString);
 
     if (Response <> nil) then
@@ -296,7 +296,7 @@ begin
   Request := TDeviceLicenseRequest.Create(DeviceId, DeviceType, 'json');
   try
     // todo: возвращает просто строку: "Missing or Invalid Device ID"
-    Response := FConnection.Post(TSettings.VerifyDeviceLicenseHost,
+    Response := FConnection.Post(TSettings.EndPoints.VerifyDeviceLicense,
       Request, TSimpleString, ErrorString) as TSimpleString;
     try
       if (Response <> nil) and (ErrorString = EmptyStr) then
@@ -320,7 +320,7 @@ begin
   try
     Parameters.AddParameter('member_id', IntToStr(MemberId));
 
-    Result := FConnection.Get(TSettings.UsersHost,
+    Result := FConnection.Get(TSettings.EndPoints.Users,
       Parameters, TUser, ErrorString) as TUser;
 
     if (Result = nil) and (ErrorString = EmptyStr) then
@@ -336,7 +336,7 @@ var
 begin
   Parameters := TGenericParameters.Create;
   try
-    Result := FConnection.Get(TSettings.GetUsersHost,
+    Result := FConnection.Get(TSettings.EndPoints.GetUsers,
       Parameters, TUserList, ErrorString) as TUserList;
     if (Result = nil) then
       Result := TUserList.Create;
@@ -360,7 +360,7 @@ begin
     Parameters.AddParameter('member_id', IntToStr(MemberId));
     Parameters.AddParameter('format', 'json');
 
-    Response := FConnection.Get(TSettings.ValidateSessionHost, Parameters,
+    Response := FConnection.Get(TSettings.EndPoints.ValidateSession, Parameters,
       TValidateSessionResponse, ErrorString) as TValidateSessionResponse;
     try
       if (Response <> nil) then

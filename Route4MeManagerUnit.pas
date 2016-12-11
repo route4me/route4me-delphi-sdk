@@ -6,10 +6,10 @@ uses
   Classes, SysUtils,
   OptimizationParametersUnit, DataObjectUnit, IRoute4MeManagerUnit,
   AddressBookContactUnit, AddressBookContactActionsUnit,
-  OptimizationActionUnit, RouteActionUnit, IConnectionUnit, UserActionUnit,
-  AddressNoteActionUnit, AddressActionUnit, AvoidanceZoneUnit,
-  AvoidanceZoneActionUnit, OrderActionUnit, ActivityActionsUnit,
-  TrackingActionsUnit, GeocodingActionsUnit;
+  OptimizationActionsUnit, RouteActionsUnit, IConnectionUnit, UserActionsUnit,
+  AddressNoteActionsUnit, AddressActionsUnit, AvoidanceZoneUnit,
+  AvoidanceZoneActionsUnit, OrderActionsUnit, ActivityActionsUnit,
+  TrackingActionsUnit, GeocodingActionsUnit, TerritoryActionsUnit;
 
 type
   TRoute4MeManager = class(TInterfacedObject, IRoute4MeManager)
@@ -27,6 +27,7 @@ type
     FOrder: TOrderActions;
     FActivity: TActivityActions;
     FTracking: TTrackingActions;
+    FTerritory: TTerritoryActions;
   public
     constructor Create(Connection: IConnection);
     destructor Destroy; override;
@@ -46,6 +47,7 @@ type
     function Order: TOrderActions;
     function ActivityFeed: TActivityActions;
     function Tracking: TTrackingActions;
+    function Territory: TTerritoryActions;
 
     function Connection: IConnection;
   end;
@@ -72,6 +74,7 @@ end;
 
 procedure TRoute4MeManager.Clear;
 begin
+  FreeAndNil(FTerritory);
   FreeAndNil(FTracking);
   FreeAndNil(FActivity);
   FreeAndNil(FOrder);
@@ -107,6 +110,7 @@ begin
   FOrder := nil;
   FActivity := nil;
   FTracking := nil;
+  FTerritory := nil;
 end;
 
 destructor TRoute4MeManager.Destroy;
@@ -147,6 +151,13 @@ end;
 procedure TRoute4MeManager.SetConnectionProxy(Host: String; Port: integer; Username, Password: String);
 begin
   FConnection.SetProxy(Host, Port, Username, Password);
+end;
+
+function TRoute4MeManager.Territory: TTerritoryActions;
+begin
+  if (FTerritory = nil) then
+    FTerritory := TTerritoryActions.Create(FConnection);
+  Result := FTerritory;
 end;
 
 function TRoute4MeManager.Tracking: TTrackingActions;

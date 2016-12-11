@@ -20,7 +20,7 @@ type
 
 implementation
 
-uses NullableBasicTypesUnit, TerritoryUnit, AvoidanceZoneUnit;
+uses NullableBasicTypesUnit, TerritoryContourUnit, AvoidanceZoneUnit;
 
 var
   FAvoidanceZone: TAvoidanceZone;

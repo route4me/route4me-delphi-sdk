@@ -7,7 +7,8 @@ uses
   Route4MeManagerUnit, OutputUnit, NullableBasicTypesUnit,
   CommonTypesUnit, IConnectionUnit,
   DataObjectUnit, AddressBookContactUnit, OrderUnit, RouteParametersUnit,
-  AddOrderToRouteRequestUnit, AddressUnit, EnumsUnit, UserParametersUnit;
+  AddOrderToRouteRequestUnit, AddressUnit, EnumsUnit, UserParametersUnit,
+  TerritoryUnit;
 
 type
   TRoute4MeExamples = class
@@ -139,6 +140,8 @@ type
     procedure TrackDeviceLastLocationHistory(RouteId: String);
     procedure GenericExample(Connection: IConnection);
     procedure GenericExampleShortcut(Connection: IConnection);
+    function AddCircleTerritory: NullableString;
+    procedure RemoveTerritory(TerritoryId: String);
   end;
 
 implementation
@@ -187,7 +190,7 @@ uses
   GetDestinationUpdatedActivitiesUnit, GetRouteOptimizedActivitiesUnit,
   GetLocationsByIdsUnit, GetLocationsUnit, UpdateLocationUnit, GetLocationUnit,
   DisplayRoutedUnit, LocationSearchUnit, AddPolygonAvoidanceZoneUnit,
-  AddRectangularAvoidanceZoneUnit;
+  AddRectangularAvoidanceZoneUnit, AddCircleTerritoryUnit, RemoveTerritoryUnit;
 
 procedure TRoute4MeExamples.GetAreaAddedActivities;
 var
@@ -368,6 +371,18 @@ begin
   Example := MakeExample(TAddRouteDestinationsOptimally) as TAddRouteDestinationsOptimally;
   try
     Result := Example.Execute(RouteId);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+function TRoute4MeExamples.AddCircleTerritory: NullableString;
+var
+  Example: TAddCircleTerritory;
+begin
+  Example := MakeExample(TAddCircleTerritory) as TAddCircleTerritory;
+  try
+    Result := Example.Execute;
   finally
     FreeAndNil(Example);
   end;
@@ -1247,6 +1262,18 @@ begin
   Example := MakeExample(TRemoveRouteDestination) as TRemoveRouteDestination;
   try
     Example.Execute(RouteId, DestinationId);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.RemoveTerritory(TerritoryId: String);
+var
+  Example: TRemoveTerritory;
+begin
+  Example := MakeExample(TRemoveTerritory) as TRemoveTerritory;
+  try
+    Example.Execute(TerritoryId);
   finally
     FreeAndNil(Example);
   end;

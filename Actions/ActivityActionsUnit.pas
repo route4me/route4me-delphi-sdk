@@ -56,7 +56,7 @@ begin
 
   Request := TGetActivitiesQuery.Create(ActivityType, RouteId, Limit, Offset);
   try
-    Response := FConnection.Get(TSettings.GetActivitiesHost, Request,
+    Response := FConnection.Get(TSettings.EndPoints.GetActivities, Request,
       TGetActivitiesResponse, ErrorString) as TGetActivitiesResponse;
     try
       if (Response <> nil) then
@@ -87,7 +87,7 @@ begin
 
   Request := TGetActivitiesQuery.Create(ActivityType, Limit, Offset);
   try
-    Response := FConnection.Get(TSettings.GetActivitiesHost, Request,
+    Response := FConnection.Get(TSettings.EndPoints.GetActivities, Request,
       TGetActivitiesResponse, ErrorString) as TGetActivitiesResponse;
     try
       if (Response <> nil) then
@@ -119,7 +119,7 @@ begin
 
   Parameters := TActivityParameters.Create(Limit, Offset);
   try
-    Response := FConnection.Get(TSettings.ActivityFeedHost, Parameters,
+    Response := FConnection.Get(TSettings.EndPoints.ActivityFeed, Parameters,
       TGetActivitiesResponse, ErrorString) as TGetActivitiesResponse;
     try
       if (Response <> nil) then
@@ -150,7 +150,7 @@ begin
     Request.AddParameter('route_id', RouteId);
     Request.AddParameter('team', 'true');
 
-    Response := FConnection.Get(TSettings.ActivityFeedHost, Request,
+    Response := FConnection.Get(TSettings.EndPoints.ActivityFeed, Request,
       TGetActivitiesResponse, ErrorString) as TGetActivitiesResponse;
     try
       if (Response <> nil) then
@@ -179,7 +179,7 @@ begin
     Activity.ActivityMessage := Message;
     Activity.ActivityType := TActivityType.atUserMessage;
 
-    Response := FConnection.Post(TSettings.ActivityFeedHost, Activity,
+    Response := FConnection.Post(TSettings.EndPoints.ActivityFeed, Activity,
       TStatusResponse, ErrorString) as TStatusResponse;
     try
       Result := (Response <> nil) and (Response.Status);

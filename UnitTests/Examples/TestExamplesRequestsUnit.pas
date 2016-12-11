@@ -125,6 +125,8 @@ type
     procedure AddOrderToOptimization;
     procedure GenericExample;
     procedure GenericExampleShortcut;
+    procedure AddCircleTerritory;
+    procedure RemoveTerritory;
   end;
 
 implementation
@@ -457,6 +459,16 @@ begin
   CheckEquals('https://www.route4me.com/api.v4/route.php?api_key=11111111111111111111111111111111&route_id=5BCEACC31C444BCF9D8AB604DA4DFCA7', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmPUT = FConnection.Method);
     CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.AddCircleTerritory;
+begin
+  FExamples.AddCircleTerritory;
+
+  CheckEqualsBody('AddCircleTerritory', FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api.v4/territory.php?api_key=11111111111111111111111111111111', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
 procedure TTestExamplesRequests.GetAreaAddedActivities;
@@ -1637,6 +1649,19 @@ begin
 
   CheckEqualsBody('RemoveRouteDestination', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/address.php?api_key=11111111111111111111111111111111&route_id=5BCEACC31C444BCF9D8AB604DA4DFCA7&route_destination_id=194450192', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmDELETE = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.RemoveTerritory;
+var
+  TerritoryId: String;
+begin
+  TerritoryId := '503F8B59E9719FE310836C830F7E82A0';
+  FExamples.RemoveTerritory(TerritoryId);
+
+  CheckEquals('{}', FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api.v4/territory.php?api_key=11111111111111111111111111111111&territory_id=503F8B59E9719FE310836C830F7E82A0', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmDELETE = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;

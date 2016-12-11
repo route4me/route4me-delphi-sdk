@@ -29,7 +29,7 @@ uses
 function TTrackingActions.GetLastLocation(Parameters: TGenericParameters;
   out ErrorString: String): TDataObject;
 begin
-  Result := FConnection.Get(TSettings.RouteHost, Parameters,
+  Result := FConnection.Get(TSettings.EndPoints.Route, Parameters,
     TDataObject, ErrorString) as TDataObject;
 end;
 

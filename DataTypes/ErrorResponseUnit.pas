@@ -35,6 +35,8 @@ implementation
 
 { TErrorResponse }
 
+uses UtilsUnit;
+
 constructor TErrorResponse.Create;
 begin
   Inherited;
@@ -63,8 +65,8 @@ begin
 
   if (Length(FErrors) = Length(Other.FErrors)) then
   begin
-    SortedErrors1 := SortStringArray(FErrors);
-    SortedErrors2 := SortStringArray(Other.FErrors);
+    SortedErrors1 := TUtils.SortStringArray(FErrors);
+    SortedErrors2 := TUtils.SortStringArray(Other.FErrors);
     for i := 0 to Length(SortedErrors1) - 1 do
       if not SortedErrors1[i].Equals(SortedErrors2[i]) then
         Exit;

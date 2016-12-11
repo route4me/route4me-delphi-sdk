@@ -3,12 +3,11 @@ unit IRoute4MeManagerUnit;
 interface
 
 uses
-  OptimizationParametersUnit, DataObjectUnit,
-  AddressBookContactActionsUnit,
-  OptimizationActionUnit, RouteActionUnit, IConnectionUnit, UserActionUnit,
-  AddressNoteActionUnit, AddressActionUnit, AvoidanceZoneActionUnit,
-  OrderActionUnit, ActivityActionsUnit, TrackingActionsUnit,
-  GeocodingActionsUnit;
+  IConnectionUnit,
+  AddressBookContactActionsUnit, OptimizationActionsUnit, RouteActionsUnit,
+  UserActionsUnit, AddressNoteActionsUnit, AddressActionsUnit,
+  AvoidanceZoneActionsUnit, OrderActionsUnit, ActivityActionsUnit,
+  TrackingActionsUnit, GeocodingActionsUnit, TerritoryActionsUnit;
 
 type
   IRoute4MeManager = interface
@@ -24,6 +23,7 @@ type
     function Order: TOrderActions;
     function ActivityFeed: TActivityActions;
     function Tracking: TTrackingActions;
+    function Territory: TTerritoryActions;
 
     procedure SetConnectionProxy(Host: String; Port: integer; Username, Password: String);
     function Connection: IConnection;
