@@ -261,7 +261,8 @@ uses
   TerritoryUnit in '..\DataTypes\TerritoryUnit.pas',
   AddCircleTerritoryUnit in '..\Examples\Examples\Territories\AddCircleTerritoryUnit.pas',
   RemoveTerritoryUnit in '..\Examples\Examples\Territories\RemoveTerritoryUnit.pas',
-  AddressActionsUnit in '..\Actions\AddressActionsUnit.pas';
+  AddressActionsUnit in '..\Actions\AddressActionsUnit.pas',
+  TestTerritoriesSamplesUnit in 'Examples\Online\TestTerritoriesSamplesUnit.pas';
 
 {R *.RES}
 

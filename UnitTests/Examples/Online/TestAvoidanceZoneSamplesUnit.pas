@@ -154,19 +154,6 @@ begin
   finally
     FreeAndNil(Parameters);
   end;
-
-  Parameters := TAvoidanceZone.Create(TerritoryName, TerritoryColor, nil);
-  try
-    AvoidanceZone := FRoute4MeManager.AvoidanceZone.Add(Parameters, ErrorString);
-    try
-      CheckNull(AvoidanceZone);
-      CheckNotEquals(EmptyStr, ErrorString);
-    finally
-      FreeAndNil(AvoidanceZone);
-    end;
-  finally
-    FreeAndNil(Parameters);
-  end;
 end;
 
 procedure TTestAvoidanceZoneSamples.AddRectangularAvoidanceZone;
@@ -189,19 +176,6 @@ begin
       AddAvoidanceZoneId(AvoidanceZone.TerritoryId);
       CheckTrue(AvoidanceZone.TerritoryId.IsNotNull);
       CheckEquals(EmptyStr, ErrorString);
-    finally
-      FreeAndNil(AvoidanceZone);
-    end;
-  finally
-    FreeAndNil(Parameters);
-  end;
-
-  Parameters := TAvoidanceZone.Create(TerritoryName, TerritoryColor, nil);
-  try
-    AvoidanceZone := FRoute4MeManager.AvoidanceZone.Add(Parameters, ErrorString);
-    try
-      CheckNull(AvoidanceZone);
-      CheckNotEquals(EmptyStr, ErrorString);
     finally
       FreeAndNil(AvoidanceZone);
     end;
