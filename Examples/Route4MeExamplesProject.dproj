@@ -300,7 +300,13 @@
         <DCCReference Include="..\DataTypes\TerritoryUnit.pas"/>
         <DCCReference Include="..\QueryTypes\GetTerritoriesResponseUnit.pas"/>
         <DCCReference Include="Examples\Territories\AddCircleTerritoryUnit.pas"/>
+        <DCCReference Include="Examples\Territories\AddPolygonTerritoryUnit.pas"/>
+        <DCCReference Include="Examples\Territories\AddRectangularTerritoryUnit.pas"/>
+        <DCCReference Include="Examples\Territories\GetTerritoriesUnit.pas"/>
+        <DCCReference Include="Examples\Territories\GetTerritoryUnit.pas"/>
         <DCCReference Include="Examples\Territories\RemoveTerritoryUnit.pas"/>
+        <DCCReference Include="Examples\Territories\UpdateTerritoryUnit.pas"/>
+        <DCCReference Include="..\QueryTypes\UpdateTerritoryRequestUnit.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

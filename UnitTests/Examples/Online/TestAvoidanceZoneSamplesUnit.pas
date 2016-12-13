@@ -274,5 +274,4 @@ end;
 initialization
   RegisterTest('Examples\Online\AvoidanceZone\', TTestAvoidanceZoneSamples.Suite);
   SetLength(FAvoidanceZoneIds, 0);
-
 end.

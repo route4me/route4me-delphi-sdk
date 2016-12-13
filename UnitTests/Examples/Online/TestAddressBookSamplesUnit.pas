@@ -78,7 +78,6 @@ begin
   Limit := 2;
   Offset := 0;
 
-  // todo: посмотреть что это за параметра такой
   Contacts := FRoute4MeManager.AddressBookContact.Find(
     TDisplayLocations.dlAll, Limit, Offset, Total, ErrorString);
   try
@@ -90,7 +89,6 @@ begin
     FreeAndNil(Contacts)
   end;
 
-  // todo: посмотреть что это за параметра такой
   Contacts := FRoute4MeManager.AddressBookContact.Find(
     TDisplayLocations.dlRouted, Limit, Offset, Total, ErrorString);
   try
@@ -102,7 +100,6 @@ begin
     FreeAndNil(Contacts)
   end;
 
-  // todo: посмотреть что это за параметра такой
   Contacts := FRoute4MeManager.AddressBookContact.Find(
     TDisplayLocations.dlUnrouted, Limit, Offset, Total, ErrorString);
   try

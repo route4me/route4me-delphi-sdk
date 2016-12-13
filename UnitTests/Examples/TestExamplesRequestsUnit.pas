@@ -126,7 +126,12 @@ type
     procedure GenericExample;
     procedure GenericExampleShortcut;
     procedure AddCircleTerritory;
+    procedure AddPolygonTerritory;
+    procedure AddRectangularTerritory;
     procedure RemoveTerritory;
+    procedure UpdateTerritory;
+    procedure GetTerritories;
+    procedure GetTerritory;
   end;
 
 implementation
@@ -423,12 +428,32 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
+procedure TTestExamplesRequests.AddPolygonTerritory;
+begin
+  FExamples.AddPolygonTerritory;
+
+  CheckEqualsBody('AddPolygonTerritory', FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api.v4/territory.php?api_key=11111111111111111111111111111111', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
 procedure TTestExamplesRequests.AddRectangularAvoidanceZone;
 begin
   FExamples.AddRectangularAvoidanceZone;
 
   CheckEqualsBody('AddRectangularAvoidanceZone', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/avoidance.php?api_key=11111111111111111111111111111111', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.AddRectangularTerritory;
+begin
+  FExamples.AddRectangularTerritory;
+
+  CheckEqualsBody('AddRectangularTerritory', FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api.v4/territory.php?api_key=11111111111111111111111111111111', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
@@ -616,6 +641,19 @@ begin
 
   CheckEqualsBody('UpdateRouteCustomFields', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/address.php?api_key=11111111111111111111111111111111&route_id=5BCEACC31C444BCF9D8AB604DA4DFCA7&route_destination_id=194622711', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmPUT = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.UpdateTerritory;
+var
+  TerritoryId: String;
+begin
+  TerritoryId := '503F8B59E9719FE310836C830F7E82A0';
+  FExamples.UpdateTerritory(TerritoryId);
+
+  CheckEqualsBody('UpdateTerritory', FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api.v4/territory.php?api_key=11111111111111111111111111111111&territory_id=503F8B59E9719FE310836C830F7E82A0', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmPUT = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
@@ -1046,6 +1084,29 @@ begin
   CheckEquals(EmptyStr, FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/activity_feed.php?api_key=11111111111111111111111111111111&' +
     'route_id=68621A20B99EBA14F1A4F2FDAC907B42&team=true&limit=10&offset=0', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.GetTerritories;
+begin
+  FExamples.GetTerritories;
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api.v4/territory.php?api_key=11111111111111111111111111111111', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.GetTerritory;
+var
+  TerritoryId: String;
+begin
+  TerritoryId := '503F8B59E9719FE310836C830F7E82A0';
+  FExamples.GetTerritory(TerritoryId);
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api.v4/territory.php?api_key=11111111111111111111111111111111&territory_id=503F8B59E9719FE310836C830F7E82A0', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;

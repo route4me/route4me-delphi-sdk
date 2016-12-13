@@ -332,6 +332,13 @@
         <DCCReference Include="..\Examples\Examples\Territories\RemoveTerritoryUnit.pas"/>
         <DCCReference Include="..\Actions\AddressActionsUnit.pas"/>
         <DCCReference Include="Examples\Online\TestTerritoriesSamplesUnit.pas"/>
+        <DCCReference Include="..\Examples\Examples\Territories\AddPolygonTerritoryUnit.pas"/>
+        <DCCReference Include="..\Examples\Examples\Territories\AddRectangularTerritoryUnit.pas"/>
+        <DCCReference Include="..\Examples\Examples\Territories\UpdateTerritoryUnit.pas"/>
+        <DCCReference Include="..\Examples\Examples\Territories\GetTerritoryUnit.pas"/>
+        <DCCReference Include="..\Examples\Examples\Territories\GetTerritoriesUnit.pas"/>
+        <DCCReference Include="Examples\Online\TestAddressNotesSamplesUnit.pas"/>
+        <DCCReference Include="..\QueryTypes\UpdateTerritoryRequestUnit.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

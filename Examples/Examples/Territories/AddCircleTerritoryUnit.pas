@@ -34,7 +34,6 @@ begin
   begin
     WriteLn('AddCircleTerritory executed successfully');
     WriteLn(Format('Territory ID: %s', [TerritoryId.Value]));
-
   end
   else
     WriteLn(Format('AddCircleTerritory error: "%s"', [ErrorString]));

@@ -262,7 +262,14 @@ uses
   AddCircleTerritoryUnit in '..\Examples\Examples\Territories\AddCircleTerritoryUnit.pas',
   RemoveTerritoryUnit in '..\Examples\Examples\Territories\RemoveTerritoryUnit.pas',
   AddressActionsUnit in '..\Actions\AddressActionsUnit.pas',
-  TestTerritoriesSamplesUnit in 'Examples\Online\TestTerritoriesSamplesUnit.pas';
+  TestTerritoriesSamplesUnit in 'Examples\Online\TestTerritoriesSamplesUnit.pas',
+  AddPolygonTerritoryUnit in '..\Examples\Examples\Territories\AddPolygonTerritoryUnit.pas',
+  AddRectangularTerritoryUnit in '..\Examples\Examples\Territories\AddRectangularTerritoryUnit.pas',
+  UpdateTerritoryUnit in '..\Examples\Examples\Territories\UpdateTerritoryUnit.pas',
+  GetTerritoryUnit in '..\Examples\Examples\Territories\GetTerritoryUnit.pas',
+  GetTerritoriesUnit in '..\Examples\Examples\Territories\GetTerritoriesUnit.pas',
+  TestAddressNotesSamplesUnit in 'Examples\Online\TestAddressNotesSamplesUnit.pas',
+  UpdateTerritoryRequestUnit in '..\QueryTypes\UpdateTerritoryRequestUnit.pas';
 
 {R *.RES}
 

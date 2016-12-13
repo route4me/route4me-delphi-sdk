@@ -4,8 +4,8 @@ interface
 
 uses
   REST.Json.Types, System.Generics.Collections, Generics.Defaults,
-  JSONNullableAttributeUnit, NullableBasicTypesUnit,
-  GenericParametersUnit, TerritoryContourUnit, CommonTypesUnit;
+  HttpQueryMemberAttributeUnit, JSONNullableAttributeUnit, NullableBasicTypesUnit,
+  GenericParametersUnit, TerritoryContourUnit, CommonTypesUnit, AddressUnit;
 
 type
   /// <summary>
@@ -16,6 +16,8 @@ type
   /// </remarks>
   TTerritory = class(TGenericParameters)
   private
+//    [JSONMarshalled(False)]
+//    [HttpQueryMember('territory_id')]
     [JSONNameAttribute('territory_id')]
     [Nullable]
     FTerritoryId: NullableString;
@@ -33,7 +35,7 @@ type
     FMemberId: NullableString;
 
     [JSONNameAttribute('addresses')]
-    FAddresses: TArray<integer>;
+    FAddressIds: TArray<integer>;
 
     [JSONNameAttribute('territory')]
     [NullableObject(TTerritoryContour)]
@@ -51,17 +53,17 @@ type
     /// <summary>
     ///  32 character unique identifier
     /// </summary>
-    property TerritoryId: NullableString read FTerritoryId write FTerritoryId;
+    property Id: NullableString read FTerritoryId write FTerritoryId;
 
     /// <summary>
     ///  Territory name
     /// </summary>
-    property TerritoryName: NullableString read FTerritoryName write FTerritoryName;
+    property Name: NullableString read FTerritoryName write FTerritoryName;
 
     /// <summary>
     ///  Territory color
     /// </summary>
-    property TerritoryColor: NullableString read FTerritoryColor write FTerritoryColor;
+    property Color: NullableString read FTerritoryColor write FTerritoryColor;
 
     /// <summary>
     ///  Member ID
@@ -76,7 +78,8 @@ type
     /// <summary>
     ///  Territory
     /// </summary>
-    property Addresses: TArray<integer> read FAddresses;
+    property AddressIds: TArray<integer> read FAddressIds;
+    procedure AddAddressId(AddressId: integer);
   end;
 
   TTerritoryArray = TArray<TTerritory>;
@@ -111,7 +114,13 @@ begin
   FTerritoryColor := NullableString.Null;
   FMemberId := NullableString.Null;
   FTerritory := NullableObject.Null;
-  SetLength(FAddresses, 0);
+  SetLength(FAddressIds, 0);
+end;
+
+procedure TTerritory.AddAddressId(AddressId: integer);
+begin
+  SetLength(FAddressIds, Length(FAddressIds) + 1);
+  FAddressIds[High(FAddressIds)] := AddressId;
 end;
 
 constructor TTerritory.Create(TerritoryName, TerritoryColor: String;
@@ -150,15 +159,15 @@ begin
     (FTerritoryColor = Other.FTerritoryColor) and
     (FMemberId = Other.FMemberId) and
     (FTerritory = Other.FTerritory) and
-    (Length(FAddresses) = Length(Other.FAddresses));
+    (Length(FAddressIds) = Length(Other.FAddressIds));
 
   if not Result then
     Exit;
 
   Result := False;
 
-  SortedData1 := TUtils.SortIntegerArray(FAddresses);
-  SortedData2 := TUtils.SortIntegerArray(Other.FAddresses);
+  SortedData1 := TUtils.SortIntegerArray(FAddressIds);
+  SortedData2 := TUtils.SortIntegerArray(Other.FAddressIds);
   for i := 0 to Length(SortedData1) - 1 do
     if (SortedData1[i] <> SortedData2[i]) then
       Exit;

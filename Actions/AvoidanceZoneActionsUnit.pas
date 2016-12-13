@@ -56,18 +56,8 @@ end;
 
 function TAvoidanceZoneActions.Remove(TerritoryId: String;
   out ErrorString: String): boolean;
-var
-  Query: TGenericParameters;
 begin
-  Query := TGenericParameters.Create;
-  try
-    Query.AddParameter('territory_id', TerritoryId);
-
-    FConnection.Delete(TSettings.EndPoints.Avoidance, Query, TAvoidanceZone, ErrorString);
-    Result := (ErrorString = EmptyStr);
-  finally
-    FreeAndNil(Query);
-  end;
+  Result := Remove([TerritoryId], ErrorString);
 end;
 
 function TAvoidanceZoneActions.Get(TerritoryId: String;

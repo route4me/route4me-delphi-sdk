@@ -8,8 +8,6 @@ uses
 
 type
   TTestMemberSamples = class(TTestOnlineExamples)
-  private
-    function Rnd: String;
   published
     procedure AddNewUser;
     procedure GetUserDetails;
@@ -175,11 +173,6 @@ begin
   // Removing unexisting user. Must be error.
   CheckFalse(FRoute4MeManager.User.Remove(FMemberId, ErrorString));
   CheckNotEquals(EmptyStr, ErrorString);
-end;
-
-function TTestMemberSamples.Rnd: String;
-begin
-  Result := IntToStr(Random(1000000));
 end;
 
 procedure TTestMemberSamples.UpdateUser;

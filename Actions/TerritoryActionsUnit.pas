@@ -4,17 +4,31 @@ interface
 
 uses
   SysUtils, BaseActionUnit,
-  TerritoryUnit, EnumsUnit, NullableBasicTypesUnit, TerritoryContourUnit;
+  TerritoryUnit, NullableBasicTypesUnit, TerritoryContourUnit;
 
 type
   TTerritoryActions = class(TBaseAction)
   public
+    /// <summary>
+    ///  Create a new territory
+    /// </summary>
     function Add(Name: String; Color: String; Contour: TTerritoryContour;
-      out ErrorString: String): NullableString;
+      out ErrorString: String): NullableString; overload;
 
-    function Update(Territory: TTerritory; out ErrorString: String): boolean;
+{    function Add(Name: String; Color: String; Contour: TTerritoryContour;
+      AddressIds: TArray<integer>; out ErrorString: String): NullableString; overload;}
 
-    function Remove(TerritoryId: String; out ErrorString: String): boolean;
+    /// <summary>
+    ///  UPDATE a specified Territory
+    /// </summary>
+    function Update(Territory: TTerritory; out ErrorString: String): TTerritory;
+
+    /// <summary>
+    ///  DELETE a specified Territory.
+    /// </summary>
+    function Remove(TerritoryId: String; out ErrorString: String): boolean; overload;
+
+    function Remove(TerritoryIds: TArray<String>; out ErrorString: String): boolean; overload;
 
     /// <summary>
     ///  GET all of the Territories defined by a user.
@@ -22,8 +36,7 @@ type
     function GetList(out ErrorString: String): TTerritoryList;
 
     /// <summary>
-    /// Get all recorded activities associated not only with a specific Route4Me account,
-    /// but also with other users of a memberТs team.
+    ///  Get a specified Territory by ID.
     /// </summary>
     function Get(TerritoryId: String; GetEnclosedAddresses: boolean;
       out ErrorString: String): TTerritory;
@@ -32,8 +45,8 @@ type
 implementation
 
 uses
-  SettingsUnit, GetActivitiesResponseUnit, StatusResponseUnit,
-  GenericParametersUnit, GetActivitiesQueryUnit, GetTerritoriesResponseUnit;
+  SettingsUnit, StatusResponseUnit, GenericParametersUnit, GetTerritoriesResponseUnit,
+  UpdateTerritoryRequestUnit;
 
 function TTerritoryActions.Add(Name: String; Color: String;
   Contour: TTerritoryContour; out ErrorString: String): NullableString;
@@ -50,7 +63,7 @@ begin
       TTerritory, ErrorString) as TTerritory;
     try
       if (Response <> nil) then
-        Result := Response.TerritoryId
+        Result := Response.Id
       else
         ErrorString := 'Territory not added';
     finally
@@ -61,10 +74,39 @@ begin
   end;
 end;
 
+{ todo: если даже отправл€ть список адресов на сервер, то в ответе он обнул€етс€
+function TTerritoryActions.Add(Name, Color: String; Contour: TTerritoryContour;
+  AddressIds: TArray<integer>; out ErrorString: String): NullableString;
+var
+  Response: TTerritory;
+  Parameters: TTerritory;
+  i: integer;
+begin
+  Result := NullableString.Null;
+
+  Parameters := TTerritory.Create(Name, Color, Contour);
+  try
+    for i := 0 to High(AddressIds) do
+      Parameters.AddAddressId(AddressIds[i]);
+
+    Response := FConnection.Post(TSettings.EndPoints.Territory, Parameters,
+      TTerritory, ErrorString) as TTerritory;
+    try
+      if (Response <> nil) then
+        Result := Response.TerritoryId
+      else
+        ErrorString := 'Territory not added';
+    finally
+      FreeAndNil(Response);
+    end;
+  finally
+    FreeAndNil(Parameters);
+  end;
+end;   }
+
 function TTerritoryActions.Get(TerritoryId: String; GetEnclosedAddresses: boolean;
   out ErrorString: String): TTerritory;
 var
-  Response: TGetActivitiesResponse;
   Request: TGenericParameters;
 begin
   Request := TGenericParameters.Create();
@@ -75,12 +117,9 @@ begin
 
     Result := FConnection.Get(TSettings.EndPoints.Territory, Request,
       TTerritory, ErrorString) as TTerritory;
-    try
-      if (Response = nil) and (ErrorString = EmptyStr) then
-        ErrorString := 'Get Territory fault';
-    finally
-      FreeAndNil(Response);
-    end;
+
+    if (Result = nil) and (ErrorString = EmptyStr) then
+      ErrorString := 'Get Territory fault';
   finally
     FreeAndNil(Request);
   end;
@@ -112,32 +151,57 @@ begin
   end;
 end;
 
-function TTerritoryActions.Remove(TerritoryId: String;
+function TTerritoryActions.Remove(TerritoryIds: TArray<String>;
   out ErrorString: String): boolean;
 var
-  Request: TGenericParameters;
+  Query: TGenericParameters;
+  i: integer;
+  AErrorString: String;
   Response: TStatusResponse;
 begin
-  Request := TGenericParameters.Create();
-  try
-    Request.AddParameter('territory_id', TerritoryId);
+  Result := True;
+  ErrorString := EmptyStr;
 
-    Response := FConnection.Delete(TSettings.EndPoints.Territory, Request,
-      TStatusResponse, ErrorString) as TStatusResponse;
-    try
-      Result := (Response <> nil) and (Response.Status);
-    finally
-      FreeAndNil(Response);
+  Query := TGenericParameters.Create;
+  try
+    for i := 0 to High(TerritoryIds) do
+    begin
+      Query.ReplaceParameter('territory_id', TerritoryIds[i]);
+
+      Response := FConnection.Delete(TSettings.EndPoints.Territory, Query,
+        TStatusResponse, AErrorString) as TStatusResponse;
+      try
+        Result := Result and (Response <> nil) and (Response.Status);
+
+        if (AErrorString <> EmptyStr) then
+          ErrorString := ErrorString + '; ' + AErrorString;
+      finally
+        FreeAndNil(Response);
+      end;
     end;
   finally
-    FreeAndNil(Request);
+    FreeAndNil(Query);
   end;
 end;
 
-function TTerritoryActions.Update(Territory: TTerritory;
+function TTerritoryActions.Remove(TerritoryId: String;
   out ErrorString: String): boolean;
 begin
+  Result := Remove([TerritoryId], ErrorString);
+end;
 
+function TTerritoryActions.Update(Territory: TTerritory;
+  out ErrorString: String): TTerritory;
+var
+  Request: TUpdateTerritoryRequest;
+begin
+  Request := TUpdateTerritoryRequest.Create(Territory);
+  try
+    Result := FConnection.Put(TSettings.EndPoints.Territory, Request,
+      TTerritory, ErrorString) as TTerritory;
+  finally
+    FreeAndNil(Request);
+  end;
 end;
 
 end.

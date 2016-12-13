@@ -141,7 +141,12 @@ type
     procedure GenericExample(Connection: IConnection);
     procedure GenericExampleShortcut(Connection: IConnection);
     function AddCircleTerritory: NullableString;
+    function AddPolygonTerritory: NullableString;
+    function AddRectangularTerritory: NullableString;
     procedure RemoveTerritory(TerritoryId: String);
+    procedure GetTerritories;
+    procedure GetTerritory(TerritoryId: String);
+    procedure UpdateTerritory(TerritoryId: String);
   end;
 
 implementation
@@ -190,7 +195,9 @@ uses
   GetDestinationUpdatedActivitiesUnit, GetRouteOptimizedActivitiesUnit,
   GetLocationsByIdsUnit, GetLocationsUnit, UpdateLocationUnit, GetLocationUnit,
   DisplayRoutedUnit, LocationSearchUnit, AddPolygonAvoidanceZoneUnit,
-  AddRectangularAvoidanceZoneUnit, AddCircleTerritoryUnit, RemoveTerritoryUnit;
+  AddRectangularAvoidanceZoneUnit, AddCircleTerritoryUnit, RemoveTerritoryUnit,
+  AddPolygonTerritoryUnit, AddRectangularTerritoryUnit, GetTerritoriesUnit,
+  GetTerritoryUnit, UpdateTerritoryUnit;
 
 procedure TRoute4MeExamples.GetAreaAddedActivities;
 var
@@ -339,11 +346,35 @@ begin
   end;
 end;
 
+function TRoute4MeExamples.AddPolygonTerritory: NullableString;
+var
+  Example: TAddPolygonTerritory;
+begin
+  Example := MakeExample(TAddPolygonTerritory) as TAddPolygonTerritory;
+  try
+    Result := Example.Execute;
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
 function TRoute4MeExamples.AddRectangularAvoidanceZone: NullableString;
 var
   Example: TAddRectangularAvoidanceZone;
 begin
   Example := MakeExample(TAddRectangularAvoidanceZone) as TAddRectangularAvoidanceZone;
+  try
+    Result := Example.Execute;
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+function TRoute4MeExamples.AddRectangularTerritory: NullableString;
+var
+  Example: TAddRectangularTerritory;
+begin
+  Example := MakeExample(TAddRectangularTerritory) as TAddRectangularTerritory;
   try
     Result := Example.Execute;
   finally
@@ -758,6 +789,30 @@ begin
   Example := MakeExample(TGetTeamActivities) as TGetTeamActivities;
   try
     Example.Execute(RouteId, Limit, Offset);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.GetTerritories;
+var
+  Example: TGetTerritories;
+begin
+  Example := MakeExample(TGetTerritories) as TGetTerritories;
+  try
+    Example.Execute;
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.GetTerritory(TerritoryId: String);
+var
+  Example: TGetTerritory;
+begin
+  Example := MakeExample(TGetTerritory) as TGetTerritory;
+  try
+    Example.Execute(TerritoryId);
   finally
     FreeAndNil(Example);
   end;
@@ -1468,6 +1523,18 @@ begin
   Example := MakeExample(TUpdateRoutesCustomFields) as TUpdateRoutesCustomFields;
   try
     Example.Execute(RouteId, RouteDestinationId);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.UpdateTerritory(TerritoryId: String);
+var
+  Example: TUpdateTerritory;
+begin
+  Example := MakeExample(TUpdateTerritory) as TUpdateTerritory;
+  try
+    Example.Execute(TerritoryId);
   finally
     FreeAndNil(Example);
   end;

@@ -450,6 +450,27 @@ begin
         else
           WriteLn('DeleteAvoidanceZone not called. territoryId is null.');
 
+        // Territories
+        TerritoryId := Examples.AddCircleTerritory();
+        TerritoryId := Examples.AddRectangularTerritory();
+        TerritoryId := Examples.AddPolygonTerritory();
+
+        Examples.GetTerritories();
+        if (TerritoryId.IsNotNull) then
+          Examples.GetTerritory(TerritoryId)
+        else
+          WriteLn('GetTerritory not called. territoryId is null.');
+
+        if (TerritoryId.IsNotNull) then
+          Examples.UpdateTerritory(TerritoryId)
+        else
+          WriteLn('GetTerritory not called. territoryId is null.');
+
+        if (TerritoryId.IsNotNull) then
+          Examples.RemoveTerritory(TerritoryId)
+        else
+          WriteLn('RemoveTerritory not called. territoryId is null.');
+
         // Orders
         Order1 := Examples.AddOrder();
         Order2 := Examples.AddOrder();

@@ -230,7 +230,13 @@ uses
   TerritoryUnit in '..\DataTypes\TerritoryUnit.pas',
   GetTerritoriesResponseUnit in '..\QueryTypes\GetTerritoriesResponseUnit.pas',
   AddCircleTerritoryUnit in 'Examples\Territories\AddCircleTerritoryUnit.pas',
-  RemoveTerritoryUnit in 'Examples\Territories\RemoveTerritoryUnit.pas';
+  AddPolygonTerritoryUnit in 'Examples\Territories\AddPolygonTerritoryUnit.pas',
+  AddRectangularTerritoryUnit in 'Examples\Territories\AddRectangularTerritoryUnit.pas',
+  GetTerritoriesUnit in 'Examples\Territories\GetTerritoriesUnit.pas',
+  GetTerritoryUnit in 'Examples\Territories\GetTerritoryUnit.pas',
+  RemoveTerritoryUnit in 'Examples\Territories\RemoveTerritoryUnit.pas',
+  UpdateTerritoryUnit in 'Examples\Territories\UpdateTerritoryUnit.pas',
+  UpdateTerritoryRequestUnit in '..\QueryTypes\UpdateTerritoryRequestUnit.pas';
 
 {var
   CustomerSample: TCustomerQuestionAbout7Stops;}
