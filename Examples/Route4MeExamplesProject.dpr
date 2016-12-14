@@ -236,7 +236,8 @@ uses
   GetTerritoryUnit in 'Examples\Territories\GetTerritoryUnit.pas',
   RemoveTerritoryUnit in 'Examples\Territories\RemoveTerritoryUnit.pas',
   UpdateTerritoryUnit in 'Examples\Territories\UpdateTerritoryUnit.pas',
-  UpdateTerritoryRequestUnit in '..\QueryTypes\UpdateTerritoryRequestUnit.pas';
+  UpdateTerritoryRequestUnit in '..\QueryTypes\UpdateTerritoryRequestUnit.pas',
+  PositionUnit in '..\DataTypes\PositionUnit.pas';
 
 {var
   CustomerSample: TCustomerQuestionAbout7Stops;}
