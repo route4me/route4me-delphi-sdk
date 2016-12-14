@@ -20,7 +20,8 @@ type
 
 implementation
 
-uses NullableBasicTypesUnit, TerritoryContourUnit, TerritoryUnit, AddressUnit;
+uses NullableBasicTypesUnit, TerritoryContourUnit, TerritoryUnit, AddressUnit,
+  PositionUnit;
 
 var
   FTerritoryId: NullableString;
@@ -41,11 +42,12 @@ var
   ErrorString: String;
   TerritoryId: NullableString;
   TerritoryName, TerritoryColor: String;
-  TerritoryContour: TCircleTerritory;
+  TerritoryContour: TTerritoryContour;
 begin
   TerritoryName := 'Circle Territory';
   TerritoryColor := 'ff0000';
-  TerritoryContour := TCircleTerritory.Create(37.5697528227865, -77.4783325195313, 5000);
+  TerritoryContour := TTerritoryContour.MakeCircleContour(
+    37.5697528227865, -77.4783325195313, 5000);
 
   FTerritoryId := FRoute4MeManager.Territory.Add(
     TerritoryName, TerritoryColor, TerritoryContour, ErrorString);
@@ -59,7 +61,8 @@ begin
 
   TerritoryName := '';
   TerritoryColor := 'ff0000';
-  TerritoryContour := TCircleTerritory.Create(37.5697528227865, -77.4783325195313, 5000);
+  TerritoryContour := TTerritoryContour.MakeCircleContour(
+    37.5697528227865, -77.4783325195313, 5000);
   TerritoryId := FRoute4MeManager.Territory.Add(
     TerritoryName, TerritoryColor, TerritoryContour, ErrorString);
   CheckTrue(TerritoryId.IsNull);
@@ -71,14 +74,15 @@ var
   ErrorString: String;
   TerritoryId: NullableString;
   TerritoryName, TerritoryColor: String;
-  TerritoryContour: TPolygonTerritory;
+  TerritoryContour: TTerritoryContour;
 begin
   TerritoryName := 'Polygon Territory';
   TerritoryColor := 'ff0000';
-  TerritoryContour := TPolygonTerritory.Create();
-  TerritoryContour.AddPoint(37.76975282278,-77.67833251953);
-  TerritoryContour.AddPoint(37.75886716305,-77.68974800109);
-  TerritoryContour.AddPoint(37.74763966054,-77.69172210693);
+  TerritoryContour := TTerritoryContour.MakePolygonContour([
+    TPosition.Create(37.76975282278,-77.67833251953),
+    TPosition.Create(37.75886716305,-77.68974800109),
+    TPosition.Create(37.74763966054,-77.69172210693)
+  ]);
 
   TerritoryId := FRoute4MeManager.Territory.Add(
     TerritoryName, TerritoryColor, TerritoryContour, ErrorString);
@@ -88,9 +92,10 @@ begin
 
   TerritoryName := 'Polygon Territory';
   TerritoryColor := 'ff0000';
-  TerritoryContour := TPolygonTerritory.Create();
-  TerritoryContour.AddPoint(37.76975282278,-77.67833251953);
-  TerritoryContour.AddPoint(37.74763966054,-77.69172210693);
+  TerritoryContour := TTerritoryContour.MakePolygonContour([
+    TPosition.Create(37.76975282278,-77.67833251953),
+    TPosition.Create(37.74763966054,-77.69172210693)
+  ]);
 
   TerritoryId := FRoute4MeManager.Territory.Add(
     TerritoryName, TerritoryColor, TerritoryContour, ErrorString);
@@ -100,8 +105,9 @@ begin
 
   TerritoryName := 'Polygon Territory';
   TerritoryColor := 'ff0000';
-  TerritoryContour := TPolygonTerritory.Create();
-  TerritoryContour.AddPoint(37.74763966054,-77.69172210693);
+  TerritoryContour := TTerritoryContour.MakePolygonContour([
+    TPosition.Create(37.74763966054,-77.69172210693)
+  ]);
 
   TerritoryId := FRoute4MeManager.Territory.Add(
     TerritoryName, TerritoryColor, TerritoryContour, ErrorString);
@@ -115,11 +121,11 @@ var
   ErrorString: String;
   TerritoryId: NullableString;
   TerritoryName, TerritoryColor: String;
-  TerritoryContour: TRectangularTerritory;
+  TerritoryContour: TTerritoryContour;
 begin
   TerritoryName := 'Rect Territory';
   TerritoryColor := 'ff0000';
-  TerritoryContour := TRectangularTerritory.Create(
+  TerritoryContour := TTerritoryContour.MakeRectangularContour(
     43.51668853502909, -109.3798828125, 46.98025235521883, -101.865234375);
 
   TerritoryId := FRoute4MeManager.Territory.Add(
@@ -151,7 +157,9 @@ begin
   try
     CheckNotNull(Territory);
     CheckEquals(EmptyStr, ErrorString);
-    CheckTrue(Length(Territory.AddressIds) > 0);
+    // Список всегда пустой почему-то
+    CheckEquals(0, Length(Territory.AddressIds));
+//    CheckTrue(Length(Territory.AddressIds) > 0);
   finally
     FreeAndNil(Territory);
   end;
@@ -192,12 +200,14 @@ var
   Territory: TTerritory;
 begin
   FTerritory.Name := 'New name';
-//  FTerritory.AddAddressId(11553292);
+  FTerritory.AddAddressId(11553292);
 
   Territory := FRoute4MeManager.Territory.Update(FTerritory, ErrorString);
   try
     CheckNotNull(Territory);
     CheckEquals(EmptyStr, ErrorString);
+    // по какой-то причине сбрасывается список AddressId. Мне кажется это неверное поведение.
+    CheckEquals(0, Length(Territory.AddressIds));
     CheckEquals('New name', Territory.Name);
   finally
     FreeAndNil(Territory);

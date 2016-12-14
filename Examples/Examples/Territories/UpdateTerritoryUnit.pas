@@ -18,13 +18,14 @@ procedure TUpdateTerritory.Execute(TerritoryId: String);
 var
   ErrorString: String;
   Territory: TTerritory;
-  TerritoryContour: TCircleTerritory;
+  TerritoryContour: TTerritoryContour;
   NewTerritory: TTerritory;
   TerritoryName, TerritoryColor: String;
 begin
   TerritoryName := 'Test Territory Updated';
   TerritoryColor := 'ff00ff';
-  TerritoryContour := TCircleTerritory.Create(38.4132225905681, -78.501953234, 3000);
+  TerritoryContour := TerritoryContour.MakeCircleContour(
+    38.4132225905681, -78.501953234, 3000);
   Territory := TTerritory.Create(TerritoryName, TerritoryColor, TerritoryContour);
   try
     Territory.Id := TerritoryId;

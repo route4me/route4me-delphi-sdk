@@ -269,7 +269,8 @@ uses
   GetTerritoryUnit in '..\Examples\Examples\Territories\GetTerritoryUnit.pas',
   GetTerritoriesUnit in '..\Examples\Examples\Territories\GetTerritoriesUnit.pas',
   TestAddressNotesSamplesUnit in 'Examples\Online\TestAddressNotesSamplesUnit.pas',
-  UpdateTerritoryRequestUnit in '..\QueryTypes\UpdateTerritoryRequestUnit.pas';
+  UpdateTerritoryRequestUnit in '..\QueryTypes\UpdateTerritoryRequestUnit.pas',
+  PositionUnit in '..\DataTypes\PositionUnit.pas';
 
 {R *.RES}
 
@@ -280,4 +281,8 @@ end.
 // RSP-16172
 
 // сверху до UpdateRouteCustomFields есть утечки
+
+{"addresses":[],"territory_name":"Test Territory Updated","territory_color":"ff00ff","territory":{"data":["38.4132225905681,-78.501953234","3000"],"type":"circle"}}
+
+{"addresses":null,"territory_name":"Test Territory Updated","territory_color":"ff00ff","territory":{"data":["38.4132225905681,-78.501953234","3000"],"type":"circle"}}
 

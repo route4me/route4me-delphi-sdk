@@ -12,12 +12,12 @@ type
 
 implementation
 
-uses TerritoryContourUnit, TerritoryUnit;
+uses TerritoryContourUnit, TerritoryUnit, PositionUnit;
 
 function TAddPolygonTerritory.Execute: NullableString;
 var
   ErrorString: String;
-  TerritoryContour: TPolygonTerritory;
+  TerritoryContour: TTerritoryContour;
   TerritoryName, TerritoryColor: String;
   TerritoryId: NullableString;
 begin
@@ -25,16 +25,17 @@ begin
 
   TerritoryName := 'Polygon Territory';
   TerritoryColor := 'ff0000';
-  TerritoryContour := TPolygonTerritory.Create();
-  TerritoryContour.AddPoint(37.7697528227865, -77.6783325195313);
-  TerritoryContour.AddPoint(37.7588671630534, -77.6897480010986);
-  TerritoryContour.AddPoint(37.7476396605445, -77.6917221069336);
-  TerritoryContour.AddPoint(37.7465508430681, -77.6886322021484);
-  TerritoryContour.AddPoint(37.7502255383101, -77.6812507629394);
-  TerritoryContour.AddPoint(37.7479799127443, -77.6749851226806);
-  TerritoryContour.AddPoint(37.7332796020606, -77.6411678314209);
-  TerritoryContour.AddPoint(37.7443051067953, -77.6317264556884);
-  TerritoryContour.AddPoint(37.7664192584704, -77.6684619903564);
+  TerritoryContour := TTerritoryContour.MakePolygonContour([
+    TPosition.Create(37.7697528227865, -77.6783325195313),
+    TPosition.Create(37.7588671630534, -77.6897480010986),
+    TPosition.Create(37.7476396605445, -77.6917221069336),
+    TPosition.Create(37.7465508430681, -77.6886322021484),
+    TPosition.Create(37.7502255383101, -77.6812507629394),
+    TPosition.Create(37.7479799127443, -77.6749851226806),
+    TPosition.Create(37.7332796020606, -77.6411678314209),
+    TPosition.Create(37.7443051067953, -77.6317264556884),
+    TPosition.Create(37.7664192584704, -77.6684619903564)
+  ]);
 
   TerritoryId := Route4MeManager.Territory.Add(
     TerritoryName, TerritoryColor, TerritoryContour, ErrorString);

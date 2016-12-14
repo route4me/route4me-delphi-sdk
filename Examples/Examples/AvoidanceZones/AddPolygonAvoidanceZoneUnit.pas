@@ -12,13 +12,13 @@ type
 
 implementation
 
-uses TerritoryContourUnit, AvoidanceZoneUnit;
+uses TerritoryContourUnit, AvoidanceZoneUnit, PositionUnit;
 
 function TAddPolygonAvoidanceZone.Execute: NullableString;
 var
   ErrorString: String;
   AvoidanceZone: TAvoidanceZone;
-  Territory: TPolygonTerritory;
+  Territory: TTerritoryContour;
   NewAvoidanceZone: TAvoidanceZone;
   TerritoryName, TerritoryColor: String;
 begin
@@ -26,16 +26,19 @@ begin
 
   TerritoryName := 'Polygon Territory';
   TerritoryColor := 'ff0000';
-  Territory := TPolygonTerritory.Create();
-  Territory.AddPoint(37.7697528227865, -77.6783325195313);
-  Territory.AddPoint(37.7588671630534, -77.6897480010986);
-  Territory.AddPoint(37.7476396605445, -77.6917221069336);
-  Territory.AddPoint(37.7465508430681, -77.6886322021484);
-  Territory.AddPoint(37.7502255383101, -77.6812507629394);
-  Territory.AddPoint(37.7479799127443, -77.6749851226806);
-  Territory.AddPoint(37.7332796020606, -77.6411678314209);
-  Territory.AddPoint(37.7443051067953, -77.6317264556884);
-  Territory.AddPoint(37.7664192584704, -77.6684619903564);
+  Territory := TTerritoryContour.MakePolygonContour([
+    TPosition.Create(37.7697528227865, -77.6783325195313),
+    TPosition.Create(37.7588671630534, -77.6897480010986),
+    TPosition.Create(37.7697528227865, -77.6783325195313),
+    TPosition.Create(37.7588671630534, -77.6897480010986),
+    TPosition.Create(37.7476396605445, -77.6917221069336),
+    TPosition.Create(37.7465508430681, -77.6886322021484),
+    TPosition.Create(37.7502255383101, -77.6812507629394),
+    TPosition.Create(37.7479799127443, -77.6749851226806),
+    TPosition.Create(37.7332796020606, -77.6411678314209),
+    TPosition.Create(37.7443051067953, -77.6317264556884),
+    TPosition.Create(37.7664192584704, -77.6684619903564)
+    ]);
 
   AvoidanceZone := TAvoidanceZone.Create(TerritoryName, TerritoryColor, Territory);
   try

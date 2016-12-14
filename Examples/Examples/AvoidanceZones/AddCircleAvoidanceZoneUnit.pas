@@ -18,7 +18,7 @@ function TAddCircleAvoidanceZone.Execute: NullableString;
 var
   ErrorString: String;
   AvoidanceZone: TAvoidanceZone;
-  Territory: TCircleTerritory;
+  Territory: TTerritoryContour;
   NewAvoidanceZone: TAvoidanceZone;
   TerritoryName, TerritoryColor: String;
 begin
@@ -26,7 +26,8 @@ begin
 
   TerritoryName := 'Circle Territory';
   TerritoryColor := 'ff0000';
-  Territory := TCircleTerritory.Create(37.5697528227865, -77.4783325195313, 5000);
+  Territory := TTerritoryContour.MakeCircleContour(
+    37.5697528227865, -77.4783325195313, 5000);
   AvoidanceZone := TAvoidanceZone.Create(TerritoryName, TerritoryColor, Territory);
   try
     NewAvoidanceZone := Route4MeManager.AvoidanceZone.Add(AvoidanceZone, ErrorString);

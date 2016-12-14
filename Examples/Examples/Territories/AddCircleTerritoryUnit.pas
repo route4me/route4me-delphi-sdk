@@ -18,12 +18,13 @@ function TAddCircleTerritory.Execute: NullableString;
 var
   ErrorString: String;
   TerritoryName, TerritoryColor: String;
-  TerritoryContour: TCircleTerritory;
+  TerritoryContour: TTerritoryContour;
   TerritoryId: NullableString;
 begin
   TerritoryName := 'Circle Territory';
   TerritoryColor := 'ff0000';
-  TerritoryContour := TCircleTerritory.Create(37.5697528227865, -77.4783325195313, 5000);
+  TerritoryContour := TTerritoryContour.MakeCircleContour(
+    37.5697528227865, -77.4783325195313, 5000);
 
   TerritoryId := Route4MeManager.Territory.Add(
     TerritoryName, TerritoryColor, TerritoryContour, ErrorString);

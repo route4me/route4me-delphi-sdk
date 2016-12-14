@@ -4,7 +4,8 @@ interface
 
 uses
   REST.Json.Types, SysUtils, System.Generics.Collections,
-  JSONNullableAttributeUnit, NullableBasicTypesUnit, CommonTypesUnit, EnumsUnit;
+  JSONNullableAttributeUnit, NullableBasicTypesUnit, CommonTypesUnit, EnumsUnit,
+  PositionUnit;
 
 type
   /// <summary>
@@ -24,7 +25,17 @@ type
 
     function GetType: TTerritoryType;
     procedure SetType(const Value: TTerritoryType);
-  protected
+  public
+    constructor Create; virtual;
+
+    function Equals(Obj: TObject): Boolean; override;
+
+    class function MakeCircleContour(
+      Latitude, Longitude, Radius: double): TTerritoryContour; static;
+    class function MakePolygonContour(Points: TArray<TPosition>): TTerritoryContour; static;
+    class function MakeRectangularContour(
+      Latitude1, Longitude1, Latitude2, Longitude2: double): TTerritoryContour; static;
+
     /// <summary>
     /// Territory type (circle, rectangle, polygon)
     /// </summary>
@@ -35,51 +46,8 @@ type
     /// </summary>
     property Data: TStringArray read FData;
     procedure AddDataItem(Item: String);
-  public
-    constructor Create; virtual;
 
-    function Equals(Obj: TObject): Boolean; override;
-
-{    procedure MakeCircleContour(Latitude, Longitude, Radius: double);
-    procedure MakePolygonContour(Points: TArray<>);
-    procedure MakeRectangularContour(Latitude1, Longitude1, Latitude2, Longitude2: double);}
-
-    function Clone: TTerritoryContour; virtual; abstract;
-  end;
-
-  TCircleTerritory = class(TTerritoryContour)
-  private
-    FLatitude: double;
-    FLongitude: double;
-    FRadius: double;
-  public
-    constructor Create(Latitude, Longitude, Radius: double); reintroduce;
-
-    function Clone: TTerritoryContour; override;
-  end;
-
-  TPolygonTerritory = class(TTerritoryContour)
-  var
-    FLatitudes: TArray<double>;
-    FLongitudes: TArray<double>;
-  public
-    constructor Create(); override;
-
-    procedure AddPoint(Latitude, Longitude: double);
-
-    function Clone: TTerritoryContour; override;
-  end;
-
-  TRectangularTerritory = class(TTerritoryContour)
-  private
-    FLatitude1: double;
-    FLongitude1: double;
-    FLatitude2: double;
-    FLongitude2: double;
-  public
-    constructor Create(Latitude1, Longitude1, Latitude2, Longitude2: double); reintroduce;
-
-    function Clone: TTerritoryContour; override;
+    function Clone: TTerritoryContour;
   end;
 
 implementation
@@ -92,6 +60,17 @@ procedure TTerritoryContour.AddDataItem(Item: String);
 begin
   SetLength(FData, Length(FData) + 1);
   FData[High(FData)] := Item;
+end;
+
+function TTerritoryContour.Clone: TTerritoryContour;
+var
+  i: integer;
+begin
+  Result := TTerritoryContour.Create;
+  Result.TerritoryType := TerritoryType;
+
+  for i := 0 to High(Data) do
+    Result.AddDataItem(Data[i]);
 end;
 
 constructor TTerritoryContour.Create;
@@ -146,98 +125,45 @@ begin
         Exit(TerritoryType);
 end;
 
-procedure TTerritoryContour.SetType(const Value: TTerritoryType);
+class function TTerritoryContour.MakeCircleContour(Latitude, Longitude,
+  Radius: double): TTerritoryContour;
 begin
-  FType := TTerritoryTypeDescription[Value];
+  Result := TTerritoryContour.Create;
+
+  Result.TerritoryType := TTerritoryType.ttCircle;
+  Result.AddDataItem(TUtils.FloatToStrDot(Latitude) + ',' + TUtils.FloatToStrDot(Longitude));
+  Result.AddDataItem(TUtils.FloatToStrDot(Radius));
 end;
 
-{ TCircleTerritory }
-
-function TCircleTerritory.Clone: TTerritoryContour;
-begin
-  Result := TCircleTerritory.Create(FLatitude, FLongitude, FRadius);
-end;
-
-constructor TCircleTerritory.Create(Latitude, Longitude, Radius: double);
-begin
-  Inherited Create;
-
-  FLatitude := Latitude;
-  FLongitude := Longitude;
-  FRadius := FRadius;
-
-  TerritoryType := TTerritoryType.ttCircle;
-  AddDataItem(TUtils.FloatToStrDot(Latitude) + ',' + TUtils.FloatToStrDot(Longitude));
-  AddDataItem(TUtils.FloatToStrDot(Radius));
-end;
-
-{ TCircleTerritory }
-
-{function TCircleTerritory.Clone: TTerritoryContour;
-begin
-
-end;
-
- constructor TCircleTerritory.Create(Latitude, Longitude, Radius: double);
-begin
-
-end;
-
-TPolygonTerritory }
-
-procedure TPolygonTerritory.AddPoint(Latitude, Longitude: double);
-begin
-  SetLength(FLatitudes, Length(FLatitudes) + 1);
-  FLatitudes[High(FLatitudes)] := Latitude;
-
-  SetLength(FLongitudes, Length(FLongitudes) + 1);
-  FLongitudes[High(FLongitudes)] := Longitude;
-
-  AddDataItem(TUtils.FloatToStrDot(Latitude) + ',' + TUtils.FloatToStrDot(Longitude));
-end;
-
-function TPolygonTerritory.Clone: TTerritoryContour;
+class function TTerritoryContour.MakePolygonContour(
+  Points: TArray<TPosition>): TTerritoryContour;
 var
   i: integer;
 begin
-  Result := TPolygonTerritory.Create;
+  Result := TTerritoryContour.Create;
 
-  for i := 0 to High(FLatitudes) do
-    TPolygonTerritory(Result).AddPoint(FLatitudes[i], FLongitudes[i]);
+  Result.TerritoryType := TTerritoryType.ttPoly;
+
+  for i := 0 to High(Points) do
+    Result.AddDataItem(
+      TUtils.FloatToStrDot(Points[i].Latitude) + ',' +
+      TUtils.FloatToStrDot(Points[i].Longitude));
 end;
 
-constructor TPolygonTerritory.Create;
+class function TTerritoryContour.MakeRectangularContour(Latitude1, Longitude1,
+  Latitude2, Longitude2: double): TTerritoryContour;
 begin
-  inherited Create;
+  Result := TTerritoryContour.Create;
 
-  TerritoryType := TTerritoryType.ttPoly;
+  Result.TerritoryType := TTerritoryType.ttRect;
 
-  SetLength(FLatitudes, 0);
-  SetLength(FLongitudes,0);
+  Result.AddDataItem(TUtils.FloatToStrDot(Latitude1) + ',' + TUtils.FloatToStrDot(Longitude1));
+  Result.AddDataItem(TUtils.FloatToStrDot(Latitude2) + ',' + TUtils.FloatToStrDot(Longitude2));
 end;
 
-{ TRectangularTerritory }
-
-function TRectangularTerritory.Clone: TTerritoryContour;
+procedure TTerritoryContour.SetType(const Value: TTerritoryType);
 begin
-  Result := TRectangularTerritory.Create(
-    FLatitude1, FLongitude1, FLatitude2, FLongitude2);
-end;
-
-constructor TRectangularTerritory.Create(
-  Latitude1, Longitude1, Latitude2, Longitude2: double);
-begin
-  inherited Create;
-
-  FLatitude1 := Latitude1;
-  FLongitude1 := Longitude1;
-  FLatitude2 := Latitude2;
-  FLongitude2 := Longitude2;
-
-  TerritoryType := TTerritoryType.ttRect;
-
-  AddDataItem(TUtils.FloatToStrDot(Latitude1) + ',' + TUtils.FloatToStrDot(Longitude1));
-  AddDataItem(TUtils.FloatToStrDot(Latitude2) + ',' + TUtils.FloatToStrDot(Longitude2));
+  FType := TTerritoryTypeDescription[Value];
 end;
 
 end.

@@ -18,7 +18,8 @@ implementation
 uses
   DateUtils,
   EnumsUnit, UtilsUnit, JSONDictionaryIntermediateObjectUnit,
-  RouteParametersUnit, LinksUnit, AddressUnit, TerritoryContourUnit;
+  RouteParametersUnit, LinksUnit, AddressUnit, TerritoryContourUnit,
+  PositionUnit;
 
 function TRealAvoidanceZoneProvider.AvoidanceZones: TAvoidanceZoneList;
 var
@@ -31,13 +32,14 @@ begin
   AvoidanceZone.TerritoryName := 'Johny4037200794235010051';
   AvoidanceZone.TerritoryColor := 'ff0000';
   AvoidanceZone.MemberId := '1';
-  AvoidanceZone.Territory := TPolygonTerritory.Create;
-  TPolygonTerritory(AvoidanceZone.Territory).AddPoint(56.127184156131065,56.93115234375);
-  TPolygonTerritory(AvoidanceZone.Territory).AddPoint(58.41322259056806, 59.501953125);
-  TPolygonTerritory(AvoidanceZone.Territory).AddPoint(61.53840616716746, 59.315185546875);
-  TPolygonTerritory(AvoidanceZone.Territory).AddPoint(61.047650586031104,51.998291015625);
-  TPolygonTerritory(AvoidanceZone.Territory).AddPoint(59.254649544483726,53.63525390625);
-  TPolygonTerritory(AvoidanceZone.Territory).AddPoint(56.47462805805596, 54.42626953125);
+  AvoidanceZone.Territory := TTerritoryContour.MakePolygonContour([
+    TPosition.Create(56.127184156131065,56.93115234375),
+    TPosition.Create(58.41322259056806, 59.501953125),
+    TPosition.Create(61.53840616716746, 59.315185546875),
+    TPosition.Create(61.047650586031104,51.998291015625),
+    TPosition.Create(59.254649544483726,53.63525390625),
+    TPosition.Create(56.47462805805596, 54.42626953125)
+  ]);
   Result.Add(AvoidanceZone);
 
   AvoidanceZone := TAvoidanceZone.Create;
@@ -45,7 +47,7 @@ begin
   AvoidanceZone.TerritoryName := 'John5577006791947779410';
   AvoidanceZone.TerritoryColor := 'beeeee';
   AvoidanceZone.MemberId := '1';
-  AvoidanceZone.Territory := TCircleTerritory.Create(
+  AvoidanceZone.Territory := TTerritoryContour.MakeCircleContour(
     37.569752822786455,-77.47833251953125, 5000);
   Result.Add(AvoidanceZone);
 
@@ -54,7 +56,7 @@ begin
   AvoidanceZone.TerritoryName := 'Rect Territory';
   AvoidanceZone.TerritoryColor := 'ff0000';
   AvoidanceZone.MemberId := '1';
-  AvoidanceZone.Territory := TRectangularTerritory.Create(
+  AvoidanceZone.Territory := TTerritoryContour.MakeRectangularContour(
     43.51668853502909, -109.3798828125, 46.98025235521883, -101.865234375);
   Result.Add(AvoidanceZone);
 end;

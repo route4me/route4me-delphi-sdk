@@ -18,13 +18,14 @@ procedure TUpdateAvoidanceZone.Execute(TerritoryId: String);
 var
   ErrorString: String;
   AvoidanceZone: TAvoidanceZone;
-  Territory: TCircleTerritory;
+  Territory: TTerritoryContour;
   NewAvoidanceZone: TAvoidanceZone;
   TerritoryName, TerritoryColor: String;
 begin
   TerritoryName := 'Test Territory Updated';
   TerritoryColor := 'ff00ff';
-  Territory := TCircleTerritory.Create(38.4132225905681, -78.501953234, 3000);
+  Territory := TTerritoryContour.MakeCircleContour(
+    38.4132225905681, -78.501953234, 3000);
   AvoidanceZone := TAvoidanceZone.Create(TerritoryName, TerritoryColor, Territory);
   try
     AvoidanceZone.TerritoryId := TerritoryId;

@@ -18,7 +18,7 @@ function TAddRectangularAvoidanceZone.Execute: NullableString;
 var
   ErrorString: String;
   AvoidanceZone: TAvoidanceZone;
-  Territory: TRectangularTerritory;
+  Territory: TTerritoryContour;
   NewAvoidanceZone: TAvoidanceZone;
   TerritoryName, TerritoryColor: String;
 begin
@@ -26,7 +26,7 @@ begin
 
   TerritoryName := 'Rect Territory';
   TerritoryColor := 'ff0000';
-  Territory := TRectangularTerritory.Create(
+  Territory := TTerritoryContour.MakeRectangularContour(
     43.5166885350291, -109.3798828125, 46.9802523552188, -101.865234375);
   AvoidanceZone := TAvoidanceZone.Create(TerritoryName, TerritoryColor, Territory);
   try

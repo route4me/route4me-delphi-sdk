@@ -20,7 +20,8 @@ type
 
 implementation
 
-uses NullableBasicTypesUnit, TerritoryContourUnit, AvoidanceZoneUnit;
+uses NullableBasicTypesUnit, TerritoryContourUnit, AvoidanceZoneUnit,
+  PositionUnit;
 
 var
   FAvoidanceZone: TAvoidanceZone;
@@ -41,11 +42,12 @@ var
   AvoidanceZone: TAvoidanceZone;
   Parameters: TAvoidanceZone;
   TerritoryName, TerritoryColor: String;
-  Territory: TCircleTerritory;
+  Territory: TTerritoryContour;
 begin
   TerritoryName := 'Circle Territory';
   TerritoryColor := 'ff0000';
-  Territory := TCircleTerritory.Create(37.5697528227865, -77.4783325195313, 5000);
+  Territory := TTerritoryContour.MakeCircleContour(
+    37.5697528227865, -77.4783325195313, 5000);
   Parameters := TAvoidanceZone.Create(TerritoryName, TerritoryColor, Territory);
   try
     FAvoidanceZone := FRoute4MeManager.AvoidanceZone.Add(Parameters, ErrorString);
@@ -72,7 +74,8 @@ begin
 
   TerritoryName := '';
   TerritoryColor := 'ff0000';
-  Territory := TCircleTerritory.Create(37.5697528227865, -77.4783325195313, 5000);
+  Territory := TTerritoryContour.MakeCircleContour(
+    37.5697528227865, -77.4783325195313, 5000);
   Parameters := TAvoidanceZone.Create(TerritoryName, TerritoryColor, Territory);
   try
     AvoidanceZone := FRoute4MeManager.AvoidanceZone.Add(Parameters, ErrorString);
@@ -93,14 +96,15 @@ var
   AvoidanceZone: TAvoidanceZone;
   Parameters: TAvoidanceZone;
   TerritoryName, TerritoryColor: String;
-  Territory: TPolygonTerritory;
+  Territory: TTerritoryContour;
 begin
   TerritoryName := 'Polygon Territory';
   TerritoryColor := 'ff0000';
-  Territory := TPolygonTerritory.Create();
-  Territory.AddPoint(37.76975282278,-77.67833251953);
-  Territory.AddPoint(37.75886716305,-77.68974800109);
-  Territory.AddPoint(37.74763966054,-77.69172210693);
+  Territory := TTerritoryContour.MakePolygonContour([
+    TPosition.Create(37.76975282278,-77.67833251953),
+    TPosition.Create(37.75886716305,-77.68974800109),
+    TPosition.Create(37.74763966054,-77.69172210693)
+  ]);
   Parameters := TAvoidanceZone.Create(TerritoryName, TerritoryColor, Territory);
   try
     AvoidanceZone := FRoute4MeManager.AvoidanceZone.Add(Parameters, ErrorString);
@@ -118,9 +122,10 @@ begin
 
   TerritoryName := 'Polygon Territory';
   TerritoryColor := 'ff0000';
-  Territory := TPolygonTerritory.Create();
-  Territory.AddPoint(37.76975282278,-77.67833251953);
-  Territory.AddPoint(37.74763966054,-77.69172210693);
+  Territory := TTerritoryContour.MakePolygonContour([
+    TPosition.Create(37.76975282278,-77.67833251953),
+    TPosition.Create(37.75886716305,-77.68974800109)
+  ]);
   Parameters := TAvoidanceZone.Create(TerritoryName, TerritoryColor, Territory);
   try
     AvoidanceZone := FRoute4MeManager.AvoidanceZone.Add(Parameters, ErrorString);
@@ -138,8 +143,9 @@ begin
 
   TerritoryName := 'Polygon Territory';
   TerritoryColor := 'ff0000';
-  Territory := TPolygonTerritory.Create();
-  Territory.AddPoint(37.74763966054,-77.69172210693);
+  Territory := TTerritoryContour.MakePolygonContour([
+    TPosition.Create(37.76975282278,-77.67833251953)
+  ]);
   Parameters := TAvoidanceZone.Create(TerritoryName, TerritoryColor, Territory);
   try
     AvoidanceZone := FRoute4MeManager.AvoidanceZone.Add(Parameters, ErrorString);
@@ -162,11 +168,11 @@ var
   AvoidanceZone: TAvoidanceZone;
   Parameters: TAvoidanceZone;
   TerritoryName, TerritoryColor: String;
-  Territory: TRectangularTerritory;
+  Territory: TTerritoryContour;
 begin
   TerritoryName := 'Rect Territory';
   TerritoryColor := 'ff0000';
-  Territory := TRectangularTerritory.Create(
+  Territory := TTerritoryContour.MakeRectangularContour(
     43.51668853502909, -109.3798828125, 46.98025235521883, -101.865234375);
   Parameters := TAvoidanceZone.Create(TerritoryName, TerritoryColor, Territory);
   try

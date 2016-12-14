@@ -17,7 +17,7 @@ uses TerritoryContourUnit, TerritoryUnit;
 function TAddRectangularTerritory.Execute: NullableString;
 var
   ErrorString: String;
-  TerritoryContour: TRectangularTerritory;
+  TerritoryContour: TTerritoryContour;
   TerritoryName, TerritoryColor: String;
   TerritoryId: NullableString;
 begin
@@ -25,7 +25,7 @@ begin
 
   TerritoryName := 'Rect Territory';
   TerritoryColor := 'ff0000';
-  TerritoryContour := TRectangularTerritory.Create(
+  TerritoryContour := TTerritoryContour.MakeRectangularContour(
     43.5166885350291, -109.3798828125, 46.9802523552188, -101.865234375);
 
   TerritoryId := Route4MeManager.Territory.Add(
