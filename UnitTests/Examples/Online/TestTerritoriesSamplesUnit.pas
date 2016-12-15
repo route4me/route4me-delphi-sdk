@@ -153,13 +153,11 @@ begin
 
   GetEnclosedAddresses := True;
   Territory := FRoute4MeManager.Territory.Get(
-    FTerritoryId, GetEnclosedAddresses, ErrorString);
+    '596A2A44FE9FB19EEB9C3C072BF2D0BE', GetEnclosedAddresses, ErrorString);
   try
     CheckNotNull(Territory);
     CheckEquals(EmptyStr, ErrorString);
-    // Список всегда пустой почему-то
-    CheckEquals(0, Length(Territory.AddressIds));
-//    CheckTrue(Length(Territory.AddressIds) > 0);
+    CheckTrue(Length(Territory.AddressIds) > 0);
   finally
     FreeAndNil(Territory);
   end;
