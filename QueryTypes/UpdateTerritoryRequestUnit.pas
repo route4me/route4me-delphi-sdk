@@ -29,7 +29,8 @@ type
     FMemberId: NullableString;
 
     [JSONNameAttribute('addresses')]
-    FAddressIds: TArray<integer>;
+    [NullableArray(TSimpleInteger)]
+    FAddressIds: TArray<TSimpleInteger>;
 
     [JSONNameAttribute('territory')]
     [NullableObject(TTerritoryContour)]
@@ -71,7 +72,7 @@ type
     /// <summary>
     ///  Territory
     /// </summary>
-    property AddressIds: TArray<integer> read FAddressIds;
+    property AddressIds: TArray<TSimpleInteger> read FAddressIds;
     procedure AddAddressId(AddressId: integer);
   end;
 
@@ -94,7 +95,7 @@ end;
 procedure TUpdateTerritoryRequest.AddAddressId(AddressId: integer);
 begin
   SetLength(FAddressIds, Length(FAddressIds) + 1);
-  FAddressIds[High(FAddressIds)] := AddressId;
+  FAddressIds[High(FAddressIds)] := TSimpleInteger.Create(AddressId);
 end;
 
 constructor TUpdateTerritoryRequest.Create(TerritoryName, TerritoryColor: String;
@@ -140,7 +141,8 @@ begin
   FTerritory := Territory.Territory.Clone;
 
   for i := 0 to High(Territory.AddressIds) do
-    AddAddressId(Territory.AddressIds[i]);
+//    AddAddressId(Territory.AddressIds[i]);
+    AddAddressId(Territory.AddressIds[i].Value);
 end;
 
 end.

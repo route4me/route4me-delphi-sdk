@@ -9,12 +9,13 @@ uses
 type
   TGetTerritoriesResponse = class(TGenericParameters)
   private
-    FTerritories: TArray<TTerritory>;
+    // Array of objects must named "FItems" for correct unmarshaling.
+    FItems: TArray<TTerritory>;
   public
     constructor Create; override;
     destructor Destroy; override;
 
-    property Territories: TArray<TTerritory> read FTerritories;
+    property Territories: TArray<TTerritory> read FItems;
   end;
 
 implementation
@@ -23,12 +24,12 @@ constructor TGetTerritoriesResponse.Create;
 begin
   inherited;
 
-  SetLength(FTerritories, 0);
+  SetLength(FItems, 0);
 end;
 
 destructor TGetTerritoriesResponse.Destroy;
 begin
-  Finalize(FTerritories);
+  Finalize(FItems);
 
   inherited;
 end;

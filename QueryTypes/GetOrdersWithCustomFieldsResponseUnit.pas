@@ -7,32 +7,28 @@ uses
   GenericParametersUnit, OrderUnit, CommonTypesUnit;
 
 type
-  TOrderPair = class(TGenericParameters)
-  private
-    FValues: TIntegerArray;
-
-    function GetId: integer;
-  public
-    property Id: integer read GetId;
-  end;
-  TOrderPairArray = TArray<TOrderPair>;
-
   TGetOrdersWithCustomFieldsResponse = class(TGenericParameters)
   private
     [JSONName('results')]
-    FResults: TOrderPairArray;
+    FResults: TArray<TArray<integer>>;
 
     [JSONName('total')]
     FTotal: integer;
 
     [JSONName('fields')]
     FFields: TStringArray;
+
+    function GetMemberId(index: integer): integer;
+    function GetOrderId(index: integer): integer;
+    function GetOrdersCount: integer;
   public
     constructor Create; override;
 
-    property Results: TOrderPairArray read FResults write FResults;
     property Total: integer read FTotal write FTotal;
     property Fields: TStringArray read FFields write FFields;
+    property OrdersCount: integer read GetOrdersCount;
+    property OrderId[index: integer]: integer read GetOrderId;
+    property MemberId[index: integer]: integer read GetMemberId;
   end;
 
 implementation
@@ -47,11 +43,19 @@ begin
   SetLength(FFields, 0);
 end;
 
-{ TOrderPair }
-
-function TOrderPair.GetId: integer;
+function TGetOrdersWithCustomFieldsResponse.GetMemberId(index: integer): integer;
 begin
-  Result := FValues[0];
+  Result := FResults[index][1];
+end;
+
+function TGetOrdersWithCustomFieldsResponse.GetOrderId(index: integer): integer;
+begin
+  Result := FResults[index][0];
+end;
+
+function TGetOrdersWithCustomFieldsResponse.GetOrdersCount: integer;
+begin
+  Result := Length(FResults);
 end;
 
 end.

@@ -15,8 +15,9 @@ type
     function Add(Name: String; Color: String; Contour: TTerritoryContour;
       out ErrorString: String): NullableString; overload;
 
-{    function Add(Name: String; Color: String; Contour: TTerritoryContour;
-      AddressIds: TArray<integer>; out ErrorString: String): NullableString; overload;}
+    // todo: если даже отправлять список адресов на сервер, то в ответе он обнуляется
+    function Add(Name: String; Color: String; Contour: TTerritoryContour;
+      AddressIds: TArray<integer>; out ErrorString: String): NullableString; overload;
 
     /// <summary>
     ///  UPDATE a specified Territory
@@ -74,7 +75,6 @@ begin
   end;
 end;
 
-{ todo: если даже отправлять список адресов на сервер, то в ответе он обнуляется
 function TTerritoryActions.Add(Name, Color: String; Contour: TTerritoryContour;
   AddressIds: TArray<integer>; out ErrorString: String): NullableString;
 var
@@ -93,7 +93,7 @@ begin
       TTerritory, ErrorString) as TTerritory;
     try
       if (Response <> nil) then
-        Result := Response.TerritoryId
+        Result := Response.Id
       else
         ErrorString := 'Territory not added';
     finally
@@ -102,8 +102,8 @@ begin
   finally
     FreeAndNil(Parameters);
   end;
-end;   }
-
+end;
+// {"territory_name":"Circle Territory","territory_color":"ff0000","addresses":[{"value":123},{"value":789}],"territory":{"data":["37.5697528227865,-77.4783325195313","5000"],"type":"circle"}}>
 function TTerritoryActions.Get(TerritoryId: String; GetEnclosedAddresses: boolean;
   out ErrorString: String): TTerritory;
 var

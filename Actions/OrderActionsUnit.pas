@@ -244,9 +244,9 @@ begin
     try
       if (Response <> nil) then
       begin
-        SetLength(Result, Length(Response.Results));
-        for i := 0 to Length(Response.Results) - 1 do
-          Result[i] := Response.Results[i].Id;
+        SetLength(Result, Response.OrdersCount);
+        for i := 0 to Response.OrdersCount - 1 do
+          Result[i] := Response.OrderId[i];
         Total := Response.Total;
       end
       else

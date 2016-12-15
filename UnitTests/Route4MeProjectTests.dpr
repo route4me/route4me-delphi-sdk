@@ -270,7 +270,8 @@ uses
   GetTerritoriesUnit in '..\Examples\Examples\Territories\GetTerritoriesUnit.pas',
   TestAddressNotesSamplesUnit in 'Examples\Online\TestAddressNotesSamplesUnit.pas',
   UpdateTerritoryRequestUnit in '..\QueryTypes\UpdateTerritoryRequestUnit.pas',
-  PositionUnit in '..\DataTypes\PositionUnit.pas';
+  PositionUnit in '..\DataTypes\PositionUnit.pas',
+  TestUnmarshalTerritoryListUnit in 'Json\Unmarshal\TestUnmarshalTerritoryListUnit.pas';
 
 {R *.RES}
 

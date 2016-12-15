@@ -25,11 +25,10 @@ begin
 end;
 
 procedure TTestUnmarshalMultipleArray.TestUnmarshal;
-{var
+var
   Actual: TGetOrdersWithCustomFieldsResponse;
-  JsonValue: TJSONValue;}
+  JsonValue: TJSONValue;
 begin
-{todo: сделать юнит тест, а то не работает TGetOrdersWithCustomFields
   JsonValue := TJSONObject.ParseJSONValue(Etalon);
   try
     Actual := TMarshalUnMarshal.FromJson(
@@ -39,14 +38,14 @@ begin
     CheckEquals(2, Length(Actual.Fields));
     CheckEquals('order_id', Actual.Fields[0]);
     CheckEquals('member_id', Actual.Fields[1]);
-    CheckEquals(4, Length(Actual.Results));
-    CheckEquals(7205711, Actual.Results[0].Id);
-    CheckEquals(7205710, Actual.Results[1].Id);
-    CheckEquals(7205709, Actual.Results[2].Id);
-    CheckEquals(7205708, Actual.Results[3].Id);
+    CheckEquals(4, Actual.OrdersCount);
+    CheckEquals(7205711, Actual.OrderId[0]);
+    CheckEquals(7205710, Actual.OrderId[1]);
+    CheckEquals(7205709, Actual.OrderId[2]);
+    CheckEquals(7205708, Actual.OrderId[3]);
   finally
     FreeAndNil(JsonValue);
-  end; }
+  end;
 end;
 
 initialization

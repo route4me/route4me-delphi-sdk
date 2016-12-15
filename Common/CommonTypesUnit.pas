@@ -24,12 +24,27 @@ type
     property Value: String read FValue;
   end;
 
+  TSimpleInteger = class
+  private
+    FValue: integer;
+  public
+    constructor Create(Value: integer);
+
+    property Value: integer read FValue;
+  end;
 
 implementation
 
 { TSimpleString }
 
 constructor TSimpleString.Create(Value: String);
+begin
+  FValue := Value;
+end;
+
+{ TSimpleInteger }
+
+constructor TSimpleInteger.Create(Value: integer);
 begin
   FValue := Value;
 end;

@@ -35,7 +35,9 @@ type
     FMemberId: NullableString;
 
     [JSONNameAttribute('addresses')]
-    FAddressIds: TArray<integer>;
+    [NullableArray(TSimpleInteger)]
+    FAddressIds: TArray<TSimpleInteger>;
+//    FAddressIds: TArray<integer>;
 
     [JSONNameAttribute('territory')]
     [NullableObject(TTerritoryContour)]
@@ -78,7 +80,8 @@ type
     /// <summary>
     ///  Territory
     /// </summary>
-    property AddressIds: TArray<integer> read FAddressIds;
+//    property AddressIds: TArray<integer> read FAddressIds;
+    property AddressIds: TArray<TSimpleInteger> read FAddressIds;
     procedure AddAddressId(AddressId: integer);
   end;
 
@@ -120,7 +123,8 @@ end;
 procedure TTerritory.AddAddressId(AddressId: integer);
 begin
   SetLength(FAddressIds, Length(FAddressIds) + 1);
-  FAddressIds[High(FAddressIds)] := AddressId;
+//  FAddressIds[High(FAddressIds)] := AddressId;
+  FAddressIds[High(FAddressIds)] := TSimpleInteger.Create(AddressId);
 end;
 
 constructor TTerritory.Create(TerritoryName, TerritoryColor: String;
@@ -166,11 +170,11 @@ begin
 
   Result := False;
 
-  SortedData1 := TUtils.SortIntegerArray(FAddressIds);
+{!!!  SortedData1 := TUtils.SortIntegerArray(FAddressIds);
   SortedData2 := TUtils.SortIntegerArray(Other.FAddressIds);
   for i := 0 to Length(SortedData1) - 1 do
     if (SortedData1[i] <> SortedData2[i]) then
-      Exit;
+      Exit;}
 
   Result := True;
 end;

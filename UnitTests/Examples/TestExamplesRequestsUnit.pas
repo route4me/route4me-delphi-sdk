@@ -16,6 +16,8 @@ type
     procedure SaveString(s: String);
 
     procedure CheckEqualsBody(TestName: String; Actual: String);
+
+    procedure AddCircleTerritoryWithAddresses;
   public
     procedure SetUp; override;
     procedure TearDown; override;
@@ -141,7 +143,7 @@ uses
   CommonTypesUnit, OrderUnit, AddressBookContactUnit, RouteParametersUnit,
   AddOrderToRouteRequestUnit, AddOrderToRouteParameterProviderUnit,
   AddOrderToOptimizationRequestUnit, EnumsUnit, UserParametersUnit,
-  UserParameterProviderUnit;
+  UserParameterProviderUnit, TerritoryContourUnit, TerritoryActionsUnit;
 
 procedure TTestExamplesRequests.SaveString(s: String);
 var
@@ -494,6 +496,37 @@ begin
   CheckEquals('https://www.route4me.com/api.v4/territory.php?api_key=11111111111111111111111111111111', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.AddCircleTerritoryWithAddresses;
+var
+  ErrorString: String;
+  TerritoryName, TerritoryColor: String;
+  TerritoryContour: TTerritoryContour;
+  TerritoryId: NullableString;
+  Actions: TTerritoryActions;
+  Addresses: TArray<integer>;
+begin
+  Actions := TTerritoryActions.Create(FConnection);
+  try
+    TerritoryName := 'Circle Territory';
+    TerritoryColor := 'ff0000';
+    TerritoryContour := TTerritoryContour.MakeCircleContour(
+      37.5697528227865, -77.4783325195313, 5000);
+    SetLength(Addresses, 2);
+    Addresses[0] := 123;
+    Addresses[1] := 789;
+
+    TerritoryId := Actions.Add(TerritoryName, TerritoryColor, TerritoryContour,
+      Addresses, ErrorString);
+
+    CheckEqualsBody('AddCircleTerritoryWithAddresses', FConnection.RequestBody);
+    CheckEquals('https://www.route4me.com/api.v4/territory.php?api_key=11111111111111111111111111111111', FConnection.Url);
+    CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
+    CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+  finally
+    FreeAndNil(Actions);
+  end;
 end;
 
 procedure TTestExamplesRequests.GetAreaAddedActivities;
