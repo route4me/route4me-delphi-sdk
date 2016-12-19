@@ -134,6 +134,11 @@ type
     procedure UpdateTerritory;
     procedure GetTerritories;
     procedure GetTerritory;
+    procedure ForwardGeocodeAddress;
+    procedure ReverseGeocodeAddress;
+    procedure GetSingleAddress;
+    procedure GetAddresses;
+    procedure GetLimitedAddresses;
   end;
 
 implementation
@@ -143,7 +148,8 @@ uses
   CommonTypesUnit, OrderUnit, AddressBookContactUnit, RouteParametersUnit,
   AddOrderToRouteRequestUnit, AddOrderToRouteParameterProviderUnit,
   AddOrderToOptimizationRequestUnit, EnumsUnit, UserParametersUnit,
-  UserParameterProviderUnit, TerritoryContourUnit, TerritoryActionsUnit;
+  UserParameterProviderUnit, TerritoryContourUnit, TerritoryActionsUnit,
+  DirectionPathPointUnit;
 
 procedure TTestExamplesRequests.SaveString(s: String);
 var
@@ -1000,6 +1006,20 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
+procedure TTestExamplesRequests.ForwardGeocodeAddress;
+var
+  Address: String;
+begin
+  Address := 'Los Angeles International Airport, CA';
+  FExamples.ForwardGeocodeAddress(Address);
+
+  CheckEquals('{}', FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api/geocoder.php?api_key=11111111111111111111111111111111&' +
+    'addresses=Los%20Angeles%20International%20Airport,%20CA&format=xml', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
 procedure TTestExamplesRequests.GenericExample;
 begin
   FExamples.GenericExample(FConnection);
@@ -1159,6 +1179,30 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
+procedure TTestExamplesRequests.GetAddresses;
+begin
+  FExamples.GetGeocodingAddresses();
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://rapid.route4me.com/street_data/?api_key=11111111111111111111111111111111', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.GetLimitedAddresses;
+var
+  Limit, Offset: integer;
+begin
+  Limit := 5;
+  Offset := 2;
+  FExamples.GetLimitedGeocodingAddresses(Limit, Offset);
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://rapid.route4me.com/street_data/2/5/?api_key=11111111111111111111111111111111', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
 procedure TTestExamplesRequests.GetLocation;
 var
   Query: String;
@@ -1312,7 +1356,7 @@ begin
 
   CheckEquals(EmptyStr, FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/order.php?api_key=11111111111111111111111111111111&' +
-    'fields=Test%2520Fields&offset=0&limit=10', FConnection.Url);
+    'fields=Test%20Fields&offset=0&limit=10', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
@@ -1409,6 +1453,19 @@ begin
   end;
 end;
 
+procedure TTestExamplesRequests.GetSingleAddress;
+var
+  Pk: integer;
+begin
+  Pk := 4;
+  FExamples.GetSingleGeocodingAddress(Pk);
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://rapid.route4me.com/street_data/4/?api_key=11111111111111111111111111111111', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
 procedure TTestExamplesRequests.GetUserDetails;
 var
   MemberId: integer;
@@ -1852,6 +1909,24 @@ begin
   end;
 end;
 
+procedure TTestExamplesRequests.ReverseGeocodeAddress;
+var
+  Address: String;
+  Location: TDirectionPathPoint;
+begin
+  Location := TDirectionPathPoint.Create(42.35863, -71.0567);
+  FExamples.ReverseGeocodeAddress(Location);
+
+  CheckEquals('{}', FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api/geocoder.php?api_key=11111111111111111111111111111111&' +
+    'addresses=42.35863,-71.0567&format=xml', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+
+//curl -o file1.txt -g -X POST -k -H "Content-Type: multipart/form-data;" -F "recipient_email=oooooo@gmail.com" "%url%?api_key=%apikey%&route_id=%routeid%&response_format=json"
+//curl -o file1.txt -g -X POST "%url%?api_key=%apikey%&format=%format%&addresses=%addrs%"
+end;
+
 initialization
   // Register any test cases with the test runner
   RegisterTest('Examples\Requests\', TTestExamplesRequests.Suite);

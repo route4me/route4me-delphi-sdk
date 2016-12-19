@@ -7,7 +7,7 @@ uses
   Generics.Defaults,
   JSONNullableAttributeUnit,
   NullableBasicTypesUnit, AddressNoteUnit, EnumsUnit,
-  DirectionUnit, ManifestUnit, DirectionPathPointUnit, GeocodingUnit,
+  DirectionUnit, ManifestUnit, DirectionPathPointUnit, AddressGeocodingUnit,
   JSONDictionaryIntermediateObjectUnit;
 
 type
@@ -156,8 +156,8 @@ type
     FFailedGeocoding: NullableBoolean;
 
     [JSONName('geocodings')]
-    [NullableArray(TGeocoding)]
-    FGeocodings: TGeocodingArray;
+    [NullableArray(TAddressGeocoding)]
+    FGeocodings: TAddressGeocodingArray;
 
     [JSONName('contact_id')]
     [Nullable]
@@ -495,8 +495,8 @@ type
     /// <summary>
     ///  Geocodings ID
     /// </summary>
-    property Geocodings: TGeocodingArray read FGeocodings;
-    procedure AddGeocoding(Geocoding: TGeocoding);
+    property Geocodings: TAddressGeocodingArray read FGeocodings;
+    procedure AddGeocoding(Geocoding: TAddressGeocoding);
 
     /// <summary>
     ///  Address book contact id (0 means not connected to the address book)
@@ -850,7 +850,7 @@ var
   SortedPathToNext1, SortedPathToNext2: TDirectionPathPointArray;
   SortedDirections1, SortedDirections2: TDirectionArray;
   SortedNotes1, SortedNotes2: TAddressNoteArray;
-  SortedGeocodings1, SortedGeocodings2: TGeocodingArray;
+  SortedGeocodings1, SortedGeocodings2: TAddressGeocodingArray;
 begin
   Result := False;
 
@@ -943,8 +943,8 @@ begin
     if (not SortedDirections1[i].Equals(SortedDirections2[i])) then
       Exit;
 
-  SortedGeocodings1 := GeocodingUnit.SortGeocodings(Geocodings);
-  SortedGeocodings2 := GeocodingUnit.SortGeocodings(Other.Geocodings);
+  SortedGeocodings1 := AddressGeocodingUnit.SortAddressGeocodings(Geocodings);
+  SortedGeocodings2 := AddressGeocodingUnit.SortAddressGeocodings(Other.Geocodings);
   for i := 0 to Length(SortedGeocodings1) - 1 do
     if (not SortedGeocodings1[i].Equals(SortedGeocodings2[i])) then
       Exit;
@@ -1013,7 +1013,7 @@ begin
   FDirections[High(FDirections)] := Direction;
 end;
 
-procedure TAddress.AddGeocoding(Geocoding: TGeocoding);
+procedure TAddress.AddGeocoding(Geocoding: TAddressGeocoding);
 begin
   SetLength(FGeocodings, Length(FGeocodings) + 1);
   FGeocodings[High(FGeocodings)] := Geocoding;

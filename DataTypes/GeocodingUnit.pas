@@ -6,28 +6,17 @@ uses
   REST.Json.Types, System.Generics.Collections, SysUtils,
   Generics.Defaults,
   JSONNullableAttributeUnit,
-  NullableBasicTypesUnit, DirectionPathPointUnit;
+  NullableBasicTypesUnit, EnumsUnit;
 
 type
   /// <summary>
   ///  Geocoding
   /// </summary>
-  /// <remarks>
-  ///  https://github.com/route4me/json-schemas/blob/master/geocoding.dtd
-  /// </remarks>
   TGeocoding = class
   private
-    [JSONName('key')]
+    [JSONName('destination')]
     [Nullable]
-    FKey: NullableString;
-
-    [JSONName('name')]
-    [Nullable]
-    FName: NullableString;
-
-    [JSONName('bbox')]
-    [NullableArray(TDirectionPathPoint)]
-    FBoundaryBox: TDirectionPathPointArray;
+    FDestination: NullableString;
 
     [JSONName('lat')]
     [Nullable]
@@ -45,39 +34,20 @@ type
     [Nullable]
     FType: NullableString;
 
-    [JSONName('postalCode')]
+    [JSONName('original')]
     [Nullable]
-    FPostalCode: NullableString;
+    FOriginal: NullableString;
 
-    [JSONName('countryRegion')]
-    [Nullable]
-    FCountryRegion: NullableString;
-
-    [JSONName('curbside_coordinates')]
-    [NullableArray(TDirectionPathPoint)]
-    FCurbsideCoordinates: TDirectionPathPointArray;
-
+    function GetConfidence: TConfidenceType;
+    procedure SetConfidence(const Value: TConfidenceType);
   public
     constructor Create;
     destructor Destroy; override;
 
-    function Equals(Obj: TObject): Boolean; override;
-
-    /// <summary>
-    ///  A unique identifier for the geocoding
-    /// </summary>
-    property Key: NullableString read FKey write FKey;
-
     /// <summary>
     ///  Specific description of the geocoding result
     /// </summary>
-    property Name: NullableString read FName write FName;
-
-    /// <summary>
-    ///  Boundary box
-    /// </summary>
-    property BoundaryBox: TDirectionPathPointArray read FBoundaryBox;
-    procedure AddBoundaryBox(Value: TDirectionPathPoint);
+    property Destination: NullableString read FDestination write FDestination;
 
     /// <summary>
     ///  Latitude
@@ -92,7 +62,7 @@ type
     /// <summary>
     ///  Confidence ("high", "medium", "low")
     /// </summary>
-    property Confidence: NullableString read FConfidence write FConfidence;
+    property Confidence: TConfidenceType read GetConfidence write SetConfidence;
 
     /// <summary>
     ///  Non-standardized. Is used for tooltip ("Street", "City" etc)
@@ -100,131 +70,47 @@ type
     property Type_: NullableString read FType write FType;
 
     /// <summary>
-    ///  If the result has a postal code, it's returned here
     /// </summary>
-    property PostalCode: NullableString read FPostalCode write FPostalCode;
-
-    /// <summary>
-    ///  If the region is known, it's returned here
-    /// </summary>
-    property CountryRegion: NullableString read FCountryRegion write FCountryRegion;
-
-    /// <summary>
-    ///  Curbside Coordinates
-    /// </summary>
-    property CurbsideCoordinates: TDirectionPathPointArray read FCurbsideCoordinates;
-    procedure AddCurbsideCoordinate(Value: TDirectionPathPoint);
+    property Original: NullableString read FOriginal write FOriginal;
   end;
 
   TGeocodingArray = TArray<TGeocoding>;
 
-function SortGeocodings(Geocodings: TGeocodingArray): TGeocodingArray;
-
 implementation
 
-function SortGeocodings(Geocodings: TGeocodingArray): TGeocodingArray;
-begin
-  SetLength(Result, Length(Geocodings));
-  if Length(Geocodings) = 0 then
-    Exit;
-
-  TArray.Copy<TGeocoding>(Geocodings, Result, Length(Geocodings));
-  TArray.Sort<TGeocoding>(Result, TComparer<TGeocoding>.Construct(
-    function (const Geocoding1, Geocoding2: TGeocoding): Integer
-    begin
-      Result := Geocoding1.Key.Compare(Geocoding2.Key);
-    end));
-end;
-
 { TGeocoding }
-
-procedure TGeocoding.AddBoundaryBox(Value: TDirectionPathPoint);
-begin
-  SetLength(FBoundaryBox, Length(FBoundaryBox) + 1);
-  FBoundaryBox[High(FBoundaryBox)] := Value;
-end;
-
-procedure TGeocoding.AddCurbsideCoordinate(Value: TDirectionPathPoint);
-begin
-  SetLength(FCurbsideCoordinates, Length(FCurbsideCoordinates) + 1);
-  FCurbsideCoordinates[High(FCurbsideCoordinates)] := Value;
-end;
 
 constructor TGeocoding.Create;
 begin
   Inherited;
 
-  FKey := NullableString.Null;
-  FName := NullableString.Null;
+  FDestination := NullableString.Null;
   FLatitude := NullableDouble.Null;
   FLongitude := NullableDouble.Null;
   FConfidence := NullableString.Null;
   FType := NullableString.Null;
-  FPostalCode := NullableString.Null;
-  FCountryRegion := NullableString.Null;
-
-  SetLength(FBoundaryBox, 0);
-  SetLength(FCurbsideCoordinates, 0);
+  FOriginal := NullableString.Null;
 end;
 
 destructor TGeocoding.Destroy;
-var
-  i: integer;
 begin
-  for i := Length(FBoundaryBox) - 1 downto 0 do
-    FreeAndNil(FBoundaryBox[i]);
-
-  for i := Length(FCurbsideCoordinates) - 1 downto 0 do
-    FreeAndNil(FCurbsideCoordinates[i]);
-
   inherited;
 end;
 
-function TGeocoding.Equals(Obj: TObject): Boolean;
+function TGeocoding.GetConfidence: TConfidenceType;
 var
-  Other: TGeocoding;
-  i: integer;
-  SortedBoundaryBox1, SortedBoundaryBox2: TDirectionPathPointArray;
-  SortedCurbsideCoordinates1, SortedCurbsideCoordinates2: TDirectionPathPointArray;
+  ConfidenceType: TConfidenceType;
 begin
-  Result := False;
+  Result := TConfidenceType.ctUnknown;
+  if FConfidence.IsNotNull then
+    for ConfidenceType := Low(TConfidenceType) to High(TConfidenceType) do
+      if (FConfidence = TConfidenceTypeDescription[ConfidenceType]) then
+        Exit(ConfidenceType);
+end;
 
-  if not (Obj is TGeocoding) then
-    Exit;
-
-  Other := TGeocoding(Obj);
-
-  Result :=
-    (FKey = Other.FKey) and
-    (FName = Other.FName) and
-    (FLongitude = Other.FLongitude) and
-    (FConfidence = Other.FConfidence) and
-    (FType = Other.FType) and
-    (FPostalCode = Other.FPostalCode) and
-    (FCountryRegion = Other.FCountryRegion);
-
-  if not Result then
-    Exit;
-
-  Result := False;
-
-  if (Length(FBoundaryBox) <> Length(Other.FBoundaryBox)) or
-    (Length(FCurbsideCoordinates) <> Length(Other.FCurbsideCoordinates)) then
-    Exit;
-
-  SortedBoundaryBox1 := DirectionPathPointUnit.SortDirectionPathPoints(BoundaryBox);
-  SortedBoundaryBox2 := DirectionPathPointUnit.SortDirectionPathPoints(Other.BoundaryBox);
-  for i := 0 to Length(SortedBoundaryBox1) - 1 do
-    if (not SortedBoundaryBox1[i].Equals(SortedBoundaryBox2[i])) then
-      Exit;
-
-  SortedCurbsideCoordinates1 := DirectionPathPointUnit.SortDirectionPathPoints(CurbsideCoordinates);
-  SortedCurbsideCoordinates2 := DirectionPathPointUnit.SortDirectionPathPoints(Other.CurbsideCoordinates);
-  for i := 0 to Length(SortedCurbsideCoordinates1) - 1 do
-    if (not SortedCurbsideCoordinates1[i].Equals(SortedCurbsideCoordinates2[i])) then
-      Exit;
-
-  Result := True;
+procedure TGeocoding.SetConfidence(const Value: TConfidenceType);
+begin
+  FConfidence := TConfidenceTypeDescription[Value];
 end;
 
 end.

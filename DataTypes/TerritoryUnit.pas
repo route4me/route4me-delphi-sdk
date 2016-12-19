@@ -147,7 +147,7 @@ end;
 function TTerritory.Equals(Obj: TObject): Boolean;
 var
   Other: TTerritory;
-  SortedData1, SortedData2: TArray<integer>;
+  SortedData1, SortedData2: TArray<TSimpleInteger>;
   i: integer;
 begin
   Result := False;
@@ -170,11 +170,11 @@ begin
 
   Result := False;
 
-{!!!  SortedData1 := TUtils.SortIntegerArray(FAddressIds);
-  SortedData2 := TUtils.SortIntegerArray(Other.FAddressIds);
+  SortedData1 := SortSimpleIntegerArray(FAddressIds);
+  SortedData2 := SortSimpleIntegerArray(Other.FAddressIds);
   for i := 0 to Length(SortedData1) - 1 do
     if (SortedData1[i] <> SortedData2[i]) then
-      Exit;}
+      Exit;
 
   Result := True;
 end;

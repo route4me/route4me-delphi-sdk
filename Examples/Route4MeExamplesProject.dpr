@@ -40,7 +40,6 @@ uses
   AvoidanceZoneUnit in '..\DataTypes\AvoidanceZoneUnit.pas',
   OrderUnit in '..\DataTypes\OrderUnit.pas',
   ManifestUnit in '..\DataTypes\ManifestUnit.pas',
-  GeocodingUnit in '..\DataTypes\GeocodingUnit.pas',
   ErrorResponseUnit in '..\DataTypes\ErrorResponseUnit.pas',
   BaseOptimizationParametersProviderUnit in 'TestDataProviders\OptimizationParameters\BaseOptimizationParametersProviderUnit.pas',
   IOptimizationParametersProviderUnit in 'TestDataProviders\OptimizationParameters\IOptimizationParametersProviderUnit.pas',
@@ -237,7 +236,14 @@ uses
   RemoveTerritoryUnit in 'Examples\Territories\RemoveTerritoryUnit.pas',
   UpdateTerritoryUnit in 'Examples\Territories\UpdateTerritoryUnit.pas',
   UpdateTerritoryRequestUnit in '..\QueryTypes\UpdateTerritoryRequestUnit.pas',
-  PositionUnit in '..\DataTypes\PositionUnit.pas';
+  PositionUnit in '..\DataTypes\PositionUnit.pas',
+  GeocodingUnit in '..\DataTypes\GeocodingUnit.pas',
+  AddressGeocodingUnit in '..\DataTypes\AddressGeocodingUnit.pas',
+  GeocodingAddressUnit in '..\DataTypes\GeocodingAddressUnit.pas',
+  GetGeocodingAddressesUnit in 'Examples\Geocoding\GetGeocodingAddressesUnit.pas',
+  GetLimitedGeocodingAddressesUnit in 'Examples\Geocoding\GetLimitedGeocodingAddressesUnit.pas',
+  GetSingleGeocodingAddressUnit in 'Examples\Geocoding\GetSingleGeocodingAddressUnit.pas',
+  ReverseGeocodeAddressUnit in 'Examples\Geocoding\ReverseGeocodeAddressUnit.pas';
 
 {var
   CustomerSample: TCustomerQuestionAbout7Stops;}

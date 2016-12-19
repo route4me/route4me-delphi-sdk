@@ -213,7 +213,7 @@ begin
   Result := EmptyStr;
 
   for Pair in Parameters do
-    Result := Result + Pair.Key + '=' + TUtils.EncodeURL(Pair.Value) + '&';
+    Result := Result + Pair.Key + '=' + {TUtils.EncodeURL}(Pair.Value) + '&';
 
   if (Result <> EmptyStr) then
   begin

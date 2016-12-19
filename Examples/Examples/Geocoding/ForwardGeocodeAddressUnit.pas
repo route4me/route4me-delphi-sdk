@@ -12,27 +12,28 @@ type
 
 implementation
 
-uses EnumsUnit;
+uses GeocodingUnit;
 
 procedure TForwardGeocodeAddress.Execute(Address: String);
 var
   ErrorString: String;
+  Geocoding: TGeocoding;
 begin
-  Route4MeManager.Geocoding.ForwardGeocodeAddress(Address, ErrorString);
+  Geocoding := Route4MeManager.Geocoding.ForwardGeocodeAddress(Address, ErrorString);
   try
     WriteLn('');
 
-{    if (AvoidanceZone <> nil) then
+    if (Geocoding <> nil) and
+      (Geocoding.Latitude.IsNotNull) and(Geocoding.Longitude.IsNotNull) then
     begin
-      WriteLn('AddAvoidanceZone executed successfully');
-      WriteLn(Format('Territory ID: %s', [AvoidanceZone.TerritoryId.Value]));
-
-      Result := AvoidanceZone.TerritoryId;
+      WriteLn('ForwardGeocodeAddress executed successfully');
+      WriteLn(Format('Latitude: %d, Longitude: %d',
+        [Geocoding.Latitude.Value, Geocoding.Longitude.Value]));
     end
     else
-      WriteLn(Format('AddAvoidanceZone error: "%s"', [ErrorString]));}
+      WriteLn(Format('ForwardGeocodeAddress error: "%s"', [ErrorString]));
   finally
-//    FreeAndNil(AvoidanceZone);
+    FreeAndNil(Geocoding);
   end;
 end;
 

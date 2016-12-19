@@ -33,7 +33,12 @@ type
     property Value: integer read FValue;
   end;
 
+function SortSimpleIntegerArray(Integers: TArray<TSimpleInteger>): TArray<TSimpleInteger>;
+
 implementation
+
+uses
+  Generics.Defaults, Math;
 
 { TSimpleString }
 
@@ -47,6 +52,20 @@ end;
 constructor TSimpleInteger.Create(Value: integer);
 begin
   FValue := Value;
+end;
+
+function SortSimpleIntegerArray(Integers: TArray<TSimpleInteger>): TArray<TSimpleInteger>;
+begin
+  SetLength(Result, Length(Integers));
+  if Length(Integers) = 0 then
+    Exit;
+
+  TArray.Copy<TSimpleInteger>(Integers, Result, Length(Integers));
+  TArray.Sort<TSimpleInteger>(Result, TComparer<TSimpleInteger>.Construct(
+    function (const Value1, Value2: TSimpleInteger): Integer
+    begin
+      Result := Math.CompareValue(Value1.FValue, Value2.FValue);
+    end));
 end;
 
 end.

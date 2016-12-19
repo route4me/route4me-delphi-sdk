@@ -84,7 +84,7 @@ uses
   RemoveOrdersResponseUnit in '..\QueryTypes\RemoveOrdersResponseUnit.pas',
   GPSParametersUnit in '..\QueryTypes\GPSParametersUnit.pas',
   TrackingActionsUnit in '..\Actions\TrackingActionsUnit.pas',
-  GeocodingUnit in '..\DataTypes\GeocodingUnit.pas',
+  AddressGeocodingUnit in '..\DataTypes\AddressGeocodingUnit.pas',
   ManifestUnit in '..\DataTypes\ManifestUnit.pas',
   ErrorResponseUnit in '..\DataTypes\ErrorResponseUnit.pas',
   TestUnmarshalAvoidanceZoneUnit in 'TestDataProviders\AvoidanceZone\TestUnmarshalAvoidanceZoneUnit.pas',
@@ -271,7 +271,14 @@ uses
   TestAddressNotesSamplesUnit in 'Examples\Online\TestAddressNotesSamplesUnit.pas',
   UpdateTerritoryRequestUnit in '..\QueryTypes\UpdateTerritoryRequestUnit.pas',
   PositionUnit in '..\DataTypes\PositionUnit.pas',
-  TestUnmarshalTerritoryListUnit in 'Json\Unmarshal\TestUnmarshalTerritoryListUnit.pas';
+  TestUnmarshalTerritoryListUnit in 'Json\Unmarshal\TestUnmarshalTerritoryListUnit.pas',
+  ReverseGeocodeAddressUnit in '..\Examples\Examples\Geocoding\ReverseGeocodeAddressUnit.pas',
+  GeocodingUnit in '..\DataTypes\GeocodingUnit.pas',
+  GeocodingAddressUnit in '..\DataTypes\GeocodingAddressUnit.pas',
+  TestGeocodingSamplesUnit in 'Examples\Online\TestGeocodingSamplesUnit.pas',
+  GetSingleGeocodingAddressUnit in '..\Examples\Examples\Geocoding\GetSingleGeocodingAddressUnit.pas',
+  GetGeocodingAddressesUnit in '..\Examples\Examples\Geocoding\GetGeocodingAddressesUnit.pas',
+  GetLimitedGeocodingAddressesUnit in '..\Examples\Examples\Geocoding\GetLimitedGeocodingAddressesUnit.pas';
 
 {R *.RES}
 
@@ -282,8 +289,3 @@ end.
 // RSP-16172
 
 // сверху до UpdateRouteCustomFields есть утечки
-
-{"addresses":[],"territory_name":"Test Territory Updated","territory_color":"ff00ff","territory":{"data":["38.4132225905681,-78.501953234","3000"],"type":"circle"}}
-
-{"addresses":null,"territory_name":"Test Territory Updated","territory_color":"ff00ff","territory":{"data":["38.4132225905681,-78.501953234","3000"],"type":"circle"}}
-

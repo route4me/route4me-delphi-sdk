@@ -141,6 +141,7 @@ var
   GetEnclosedAddresses: boolean;
   Territory: TTerritory;
 begin
+  GetEnclosedAddresses := True;
   CheckNull(FRoute4MeManager.Territory.Get('-123', GetEnclosedAddresses, ErrorString));
   CheckNotEquals(EmptyStr, ErrorString);
 

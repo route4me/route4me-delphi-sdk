@@ -8,7 +8,7 @@ uses
   CommonTypesUnit, IConnectionUnit,
   DataObjectUnit, AddressBookContactUnit, OrderUnit, RouteParametersUnit,
   AddOrderToRouteRequestUnit, AddressUnit, EnumsUnit, UserParametersUnit,
-  TerritoryUnit;
+  TerritoryUnit, DirectionPathPointUnit;
 
 type
   TRoute4MeExamples = class
@@ -51,6 +51,10 @@ type
     procedure GetRoute(RouteId: String; GetRouteDirections, GetRoutePathPoints: boolean);
     function GetRoutes(Limit, Offset: integer): TDataObjectRouteList;
     procedure ForwardGeocodeAddress(Address: String);
+    procedure ReverseGeocodeAddress(Location: TDirectionPathPoint);
+    procedure GetSingleGeocodingAddress(Pk: integer);
+    procedure GetGeocodingAddresses;
+    procedure GetLimitedGeocodingAddresses(Limit, Offset: integer);
     procedure GetUsers();
     procedure ValidateSession(SessionId, MemberId: integer);
     procedure RegisterAccount(Plan, Industry, FirstName, LastName, Email: String;
@@ -197,7 +201,9 @@ uses
   DisplayRoutedUnit, LocationSearchUnit, AddPolygonAvoidanceZoneUnit,
   AddRectangularAvoidanceZoneUnit, AddCircleTerritoryUnit, RemoveTerritoryUnit,
   AddPolygonTerritoryUnit, AddRectangularTerritoryUnit, GetTerritoriesUnit,
-  GetTerritoryUnit, UpdateTerritoryUnit;
+  GetTerritoryUnit, UpdateTerritoryUnit, ReverseGeocodeAddressUnit,
+  GetSingleGeocodingAddressUnit, GetLimitedGeocodingAddressesUnit,
+  GetGeocodingAddressesUnit;
 
 procedure TRoute4MeExamples.GetAreaAddedActivities;
 var
@@ -698,6 +704,18 @@ begin
   end;
 end;
 
+procedure TRoute4MeExamples.GetGeocodingAddresses;
+var
+  Example: TGetGeocodingAddresses;
+begin
+  Example := MakeExample(TGetGeocodingAddresses) as TGetGeocodingAddresses;
+  try
+    Example.Execute();
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
 procedure TRoute4MeExamples.GetGeofenceEnteredActivities;
 var
   Example: TGetGeofenceEnteredActivities;
@@ -826,6 +844,18 @@ begin
   Example := MakeExample(TGetAddress) as TGetAddress;
   try
     Example.Execute(RouteId, RouteDestinationId);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.GetLimitedGeocodingAddresses(Limit, Offset: integer);
+var
+  Example: TGetLimitedGeocodingAddresses;
+begin
+  Example := MakeExample(TGetLimitedGeocodingAddresses) as TGetLimitedGeocodingAddresses;
+  try
+    Example.Execute(Limit, Offset);
   finally
     FreeAndNil(Example);
   end;
@@ -1056,6 +1086,18 @@ begin
   Example := MakeExample(TGetRoutes) as TGetRoutes;
   try
     Result := Example.Execute(Limit, Offset);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.GetSingleGeocodingAddress(Pk: integer);
+var
+  Example: TGetSingleGeocodingAddress;
+begin
+  Example := MakeExample(TGetSingleGeocodingAddress) as TGetSingleGeocodingAddress;
+  try
+    Example.Execute(Pk);
   finally
     FreeAndNil(Example);
   end;
@@ -1389,6 +1431,19 @@ begin
   Example := MakeExample(TResequenceRouteDestinations) as TResequenceRouteDestinations;
   try
     Example.Execute(Route);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.ReverseGeocodeAddress(
+  Location: TDirectionPathPoint);
+var
+  Example: TReverseGeocodeAddress;
+begin
+  Example := MakeExample(TReverseGeocodeAddress) as TReverseGeocodeAddress;
+  try
+    Example.Execute(Location);
   finally
     FreeAndNil(Example);
   end;

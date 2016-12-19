@@ -21,7 +21,6 @@ uses AddressParametersUnit, AddressUnit;
 
 var
   FRouteId: String;
-  FAddressId: integer;
   FMemberId: integer;
   FRouteDestinationId: integer;
 

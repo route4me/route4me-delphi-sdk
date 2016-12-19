@@ -3,6 +3,13 @@ unit EnumsUnit;
 interface
 
 type
+  TConfidenceType = (
+    ctHigh,
+    ctMedium,
+    ctLow,
+    ctUnknown
+  );
+
   TDisplayLocations = (
     dlAll,
     dlRouted,
@@ -244,6 +251,9 @@ var
 
   TDisplayLocationsDescription: array[TDisplayLocations] of String = (
     'all', 'routed', 'unrouted');
+
+  TConfidenceTypeDescription: array[TConfidenceType] of String = (
+    'high', 'medium', 'low', 'unknown');
 
 implementation
 

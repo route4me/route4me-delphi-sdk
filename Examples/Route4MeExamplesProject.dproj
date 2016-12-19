@@ -110,7 +110,6 @@
         <DCCReference Include="..\DataTypes\AvoidanceZoneUnit.pas"/>
         <DCCReference Include="..\DataTypes\OrderUnit.pas"/>
         <DCCReference Include="..\DataTypes\ManifestUnit.pas"/>
-        <DCCReference Include="..\DataTypes\GeocodingUnit.pas"/>
         <DCCReference Include="..\DataTypes\ErrorResponseUnit.pas"/>
         <DCCReference Include="TestDataProviders\OptimizationParameters\BaseOptimizationParametersProviderUnit.pas"/>
         <DCCReference Include="TestDataProviders\OptimizationParameters\IOptimizationParametersProviderUnit.pas"/>
@@ -308,6 +307,13 @@
         <DCCReference Include="Examples\Territories\UpdateTerritoryUnit.pas"/>
         <DCCReference Include="..\QueryTypes\UpdateTerritoryRequestUnit.pas"/>
         <DCCReference Include="..\DataTypes\PositionUnit.pas"/>
+        <DCCReference Include="..\DataTypes\GeocodingUnit.pas"/>
+        <DCCReference Include="..\DataTypes\AddressGeocodingUnit.pas"/>
+        <DCCReference Include="..\DataTypes\GeocodingAddressUnit.pas"/>
+        <DCCReference Include="Examples\Geocoding\GetGeocodingAddressesUnit.pas"/>
+        <DCCReference Include="Examples\Geocoding\GetLimitedGeocodingAddressesUnit.pas"/>
+        <DCCReference Include="Examples\Geocoding\GetSingleGeocodingAddressUnit.pas"/>
+        <DCCReference Include="Examples\Geocoding\ReverseGeocodeAddressUnit.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

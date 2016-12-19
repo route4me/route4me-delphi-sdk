@@ -28,7 +28,8 @@ type
     ///  Constructor with 0-arguments must be and be public.
     ///  For JSON-deserialization.
     /// </remarks>
-    constructor Create;
+    constructor Create; overload;
+    constructor Create(Latitude, Longitude: double); reintroduce; overload;
 
     function Equals(Obj: TObject): Boolean; override;
 
@@ -73,6 +74,12 @@ begin
 
   FLatitude := NullableDouble.Null;
   FLongitude := NullableDouble.Null;
+end;
+
+constructor TDirectionPathPoint.Create(Latitude, Longitude: double);
+begin
+  FLatitude := Latitude;
+  FLongitude := Longitude;
 end;
 
 function TDirectionPathPoint.Equals(Obj: TObject): Boolean;
