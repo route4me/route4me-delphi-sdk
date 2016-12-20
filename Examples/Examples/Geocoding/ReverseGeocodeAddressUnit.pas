@@ -17,16 +17,19 @@ uses GeocodingUnit;
 procedure TReverseGeocodeAddress.Execute(Location: TDirectionPathPoint);
 var
   ErrorString: String;
-  Geocoding: TGeocoding;
+  Geocoding: TGeocodingList;
+  i: integer;
 begin
   Geocoding := Route4MeManager.Geocoding.ReverseGeocodeAddress(Location, ErrorString);
   try
     WriteLn('');
 
-    if (Geocoding <> nil) and (Geocoding.Destination.IsNotNull) then
+    if (Geocoding.Count > 0) then
     begin
       WriteLn('ReverseGeocodeAddress executed successfully');
-      WriteLn(Format('Destination: %s', [Geocoding.Destination.Value]));
+      for i := 0 to Geocoding.Count - 1 do
+        if Geocoding[i].Destination.IsNotNull then
+          WriteLn(Format('Destination: %s', [Geocoding[i].Destination.Value]));
     end
     else
       WriteLn(Format('ReverseGeocodeAddress error: "%s"', [ErrorString]));

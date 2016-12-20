@@ -9,12 +9,16 @@ uses
 type
   TTestGeocodingSamples = class(TTestOnlineExamples)
   private
-    procedure GetLimitedAddresses;
+  published
     procedure ForwardGeocodeAddress;
     procedure ReverseGeocodeAddress;
-  published
     procedure GetSingleAddress;
     procedure GetAddresses;
+    procedure GetZipCodes;
+    procedure GetLimitedAddresses;
+    procedure GetLimitedZipCodes;
+    procedure GetZipCodeAndHouseNumber;
+    procedure GetLimitedZipCodeAndHouseNumber;
   end;
 
 implementation
@@ -30,13 +34,21 @@ var
 begin
   Address := 'Los Angeles International Airport, CA';
   Geocoding := FRoute4MeManager.Geocoding.ForwardGeocodeAddress(Address, ErrorString);
-  CheckNotNull(Geocoding);
-  CheckEquals(EmptyStr, ErrorString);
+  try
+    CheckNotNull(Geocoding);
+    CheckEquals(EmptyStr, ErrorString);
+  finally
+    FreeAndNil(Geocoding);
+  end;
 
   Address := 'qwsdwfwfwef2';
   Geocoding := FRoute4MeManager.Geocoding.ForwardGeocodeAddress(Address, ErrorString);
-  CheckNull(Geocoding);
-  CheckNotEquals(EmptyStr, ErrorString);
+  try
+    CheckNull(Geocoding);
+    CheckNotEquals(EmptyStr, ErrorString);
+  finally
+    FreeAndNil(Geocoding);
+  end;
 end;
 
 procedure TTestGeocodingSamples.GetAddresses;
@@ -60,10 +72,52 @@ var
   Addresses: TGeocodingAddressList;
   Limit, Offset: integer;
 begin
-  // todo: 404 ошибка в ответ с сервера
+  Limit := 20;
+  Offset := 1;
+  Addresses := FRoute4MeManager.Geocoding.GetAddresses(Limit, Offset, ErrorString);
+  try
+    CheckNotNull(Addresses);
+    CheckTrue(Addresses.Count > 0);
+    CheckEquals(EmptyStr, ErrorString);
+  finally
+    FreeAndNil(Addresses);
+  end;
+end;
+
+procedure TTestGeocodingSamples.GetLimitedZipCodeAndHouseNumber;
+var
+  ErrorString: String;
+  Addresses: TGeocodingAddressList;
+  Limit, Offset: integer;
+  ZipCode, HouseNumber: String;
+begin
   Limit := 3;
-  Offset := 0;
-  Addresses := FRoute4MeManager.Geocoding.GetLimitedAddresses(Limit, Offset, ErrorString);
+  Offset := 1;
+  ZipCode := '00601';
+  HouseNumber := '17';
+
+  Addresses := FRoute4MeManager.Geocoding.GetZipCodeAndHouseNumber(
+    ZipCode, HouseNumber, Limit, Offset, ErrorString);
+  try
+    CheckNotNull(Addresses);
+    CheckTrue(Addresses.Count > 0);
+    CheckEquals(EmptyStr, ErrorString);
+  finally
+    FreeAndNil(Addresses);
+  end;
+end;
+
+procedure TTestGeocodingSamples.GetLimitedZipCodes;
+var
+  ErrorString: String;
+  Addresses: TGeocodingAddressList;
+  Limit, Offset: integer;
+  ZipCode: String;
+begin
+  Limit := 3;
+  Offset := 1;
+  ZipCode := '00601';
+  Addresses := FRoute4MeManager.Geocoding.GetZipCodes(ZipCode, Limit, Offset, ErrorString);
   try
     CheckNotNull(Addresses);
     CheckTrue(Addresses.Count > 0);
@@ -98,21 +152,68 @@ begin
   end;
 end;
 
+procedure TTestGeocodingSamples.GetZipCodeAndHouseNumber;
+var
+  ErrorString: String;
+  Addresses: TGeocodingAddressList;
+  ZipCode, HouseNumber: String;
+begin
+  ZipCode := '00601';
+  HouseNumber := '17';
+
+  Addresses := FRoute4MeManager.Geocoding.GetZipCodeAndHouseNumber(
+    ZipCode, HouseNumber, ErrorString);
+  try
+    CheckNotNull(Addresses);
+    CheckTrue(Addresses.Count > 0);
+    CheckEquals(EmptyStr, ErrorString);
+  finally
+    FreeAndNil(Addresses);
+  end;
+end;
+
+procedure TTestGeocodingSamples.GetZipCodes;
+var
+  ErrorString: String;
+  Addresses: TGeocodingAddressList;
+  ZipCode: String;
+begin
+  ZipCode := '00601';
+  Addresses := FRoute4MeManager.Geocoding.GetZipCodes(ZipCode, ErrorString);
+  try
+    CheckNotNull(Addresses);
+    CheckTrue(Addresses.Count > 0);
+    CheckEquals(EmptyStr, ErrorString);
+  finally
+    FreeAndNil(Addresses);
+  end;
+end;
+
 procedure TTestGeocodingSamples.ReverseGeocodeAddress;
 var
   ErrorString: String;
   Location: TDirectionPathPoint;
-  Geocoding: TGeocoding;
+  Geocoding: TGeocodingList;
 begin
   Location := TDirectionPathPoint.Create(42.35863, -71.05670);
   Geocoding := FRoute4MeManager.Geocoding.ReverseGeocodeAddress(Location, ErrorString);
-  CheckNotNull(Geocoding);
-  CheckEquals(EmptyStr, ErrorString);
+  try
+    CheckNotNull(Geocoding);
+    CheckTrue(Geocoding.Count > 0);
+    CheckEquals(EmptyStr, ErrorString);
+  finally
+    FreeAndNil(Geocoding);
+  end;
 
-  Location := TDirectionPathPoint.Create(123, 123);
-  Geocoding := FRoute4MeManager.Geocoding.ReverseGeocodeAddress(Location, ErrorString);
-  CheckNull(Geocoding);
-  CheckNotEquals(EmptyStr, ErrorString);
+  Location := TDirectionPathPoint.Create(123456789, 1234564789);
+  try
+    Geocoding := FRoute4MeManager.Geocoding.ReverseGeocodeAddress(Location, ErrorString);
+    CheckNotNull(Geocoding);
+    CheckEquals(0, Geocoding.Count);
+    CheckEquals(EmptyStr, ErrorString);
+  finally
+    FreeAndNil(Geocoding);
+  end;
 end;
 
 initialization

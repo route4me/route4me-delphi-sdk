@@ -53,7 +53,8 @@ end;
 
 procedure TGenericParameters.AddParameter(Key, Value: String);
 begin
-  FParametersCollection.Add(TStringPair.Create(Key, TUtils.EncodeURL(Value)));
+//  FParametersCollection.Add(TStringPair.Create(Key, TUtils.EncodeURL(Value)));
+  FParametersCollection.Add(TStringPair.Create(Key, Value));
 end;
 
 constructor TGenericParameters.Create;

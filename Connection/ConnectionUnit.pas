@@ -51,7 +51,7 @@ type
   protected
     function RunRequest(URL: String; Method: TRESTRequestMethod;
       Body: String; ContentType: TRESTContentType; out ErrorString: String;
-      out ResponseAsString: String{; out NeedFreeResult: boolean}): TJsonValue; virtual;
+      out ResponseAsString: String): TJsonValue; virtual;
   public
     constructor Create(ApiKey: String);
     destructor Destroy; override;
@@ -132,7 +132,6 @@ var
   IsError: boolean;
   ResponseAsString: String;
   JsonValue: TJsonValue;
-//  NeedFreeResult: boolean;
 begin
   Result := nil;
 
@@ -164,30 +163,26 @@ begin
 
     Response := RunRequest(
       Url + UrlParameters(Parameters),
-      Method, Body, ContentType, ErrorString, ResponseAsString{, NeedFreeResult});
-//    try
-      for ResultClassType in PossibleResultClassType do
-      begin
-        if (ResultClassType = TSimpleString) then
-        begin
-          Result := TSimpleString.Create(ResponseAsString);
-          Break;
-        end;
+      Method, Body, ContentType, ErrorString, ResponseAsString);
 
-        IsError := False;
-        try
-          if (Response <> nil) then
-            Result := TMarshalUnMarshal.FromJson(ResultClassType, Response);
-        except
-          IsError := True;
-        end;
-        if not IsError then
-          Break;
+    for ResultClassType in PossibleResultClassType do
+    begin
+      if (ResultClassType = TSimpleString) then
+      begin
+        Result := TSimpleString.Create(ResponseAsString);
+        Break;
       end;
-{    finally
-      if (NeedFreeResult) then
-        FreeAndNil(Response);
-    end;}
+
+      IsError := False;
+      try
+        if (Response <> nil) then
+          Result := TMarshalUnMarshal.FromJson(ResultClassType, Response)
+      except
+        IsError := True;
+      end;
+      if not IsError then
+        Break;
+    end;
   finally
     FreeAndNil(Parameters);
   end;
@@ -195,10 +190,10 @@ end;
 
 function TConnection.RunRequest(URL: String; Method: TRESTRequestMethod;
   Body: String; ContentType: TRESTContentType; out ErrorString: String;
-  out ResponseAsString: String{; out NeedFreeResult: boolean}): TJsonValue;
+  out ResponseAsString: String): TJsonValue;
 begin
   Result := FConnection.ExecuteRequest(URL, Method, Body, ContentType,
-    ErrorString, ResponseAsString{, NeedFreeResult});
+    ErrorString, ResponseAsString);
 end;
 
 procedure TConnection.SetProxy(Host: String; Port: integer; Username, Password: String);
@@ -213,7 +208,7 @@ begin
   Result := EmptyStr;
 
   for Pair in Parameters do
-    Result := Result + Pair.Key + '=' + {TUtils.EncodeURL}(Pair.Value) + '&';
+    Result := Result + Pair.Key + '=' + Pair.Value + '&';
 
   if (Result <> EmptyStr) then
   begin
@@ -294,7 +289,7 @@ end;
 
 function TConnectionFacade.ExecuteRequest(URL: String;
   Method: TRESTRequestMethod; Body: String; ContentType: TRESTContentType;
-  out ErrorString: String; out ResponseAsString: String{; out NeedFreeResult: boolean}): TJsonValue;
+  out ErrorString: String; out ResponseAsString: String): TJsonValue;
   function GetHeaderValue(Name: String): String;
   var
     s: String;
@@ -327,15 +322,11 @@ begin
     DeleteRequest(URL, Body, ContentType,
       Success, StatusCode, JSONValue, ResponseAsString);
     FCollectionForDeleting.Add(JSONValue);
-{    NeedFreeResult := True;
-    if (not Success) then
-      FreeAndNil(JSONValue);}
   end
   else
   begin
     RESTRequest(URL, Method, Body, ContentType,
       Success, StatusCode, JSONValue, ResponseAsString);
-//    NeedFreeResult := False;
   end;
 
   if (Success) then
@@ -345,7 +336,7 @@ begin
     if (StatusCode = 303) then
       Result := ExecuteRequest(
         GetHeaderValue('Location'), TRESTRequestMethod.rmGET, EmptyStr,
-          ContentType, ErrorString, ResponseAsString{, NeedFreeResult})
+          ContentType, ErrorString, ResponseAsString)
     else
     begin
       ErrorString := EmptyStr;
@@ -380,7 +371,6 @@ begin
   FRESTRequest.Method := Method;
   FRESTRequest.ClearBody;
   FRESTRequest.AddBody(Body, ContentType);
-//  ContentType := TRESTContentType.ctMULTIPART_FORM_DATA;
   if (ContentType = TRESTContentType.ctAPPLICATION_X_WWW_FORM_URLENCODED) then
     FRESTRequest.Params[FRESTRequest.Params.Count - 1].Options :=
       FRESTRequest.Params[FRESTRequest.Params.Count - 1].Options + [TRESTRequestParameterOption.poDoNotEncode];

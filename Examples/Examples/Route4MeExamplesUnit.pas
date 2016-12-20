@@ -55,6 +55,10 @@ type
     procedure GetSingleGeocodingAddress(Pk: integer);
     procedure GetGeocodingAddresses;
     procedure GetLimitedGeocodingAddresses(Limit, Offset: integer);
+    procedure GetZipCodes(ZipCode: String);
+    procedure GetLimitedZipCodes(ZipCode: String; Limit, Offset: integer);
+    procedure GetZipCodeAndHouseNumber(ZipCode, HouseNumber: String);
+    procedure GetLimitedZipCodeAndHouseNumber(ZipCode, HouseNumber: String; Limit, Offset: integer);
     procedure GetUsers();
     procedure ValidateSession(SessionId, MemberId: integer);
     procedure RegisterAccount(Plan, Industry, FirstName, LastName, Email: String;
@@ -203,7 +207,8 @@ uses
   AddPolygonTerritoryUnit, AddRectangularTerritoryUnit, GetTerritoriesUnit,
   GetTerritoryUnit, UpdateTerritoryUnit, ReverseGeocodeAddressUnit,
   GetSingleGeocodingAddressUnit, GetLimitedGeocodingAddressesUnit,
-  GetGeocodingAddressesUnit;
+  GetGeocodingAddressesUnit, GetZipCodesUnit, GetLimitedZipCodesUnit,
+  GetZipCodeAndHouseNumberUnit, GetLimitedZipCodeAndHouseNumberUnit;
 
 procedure TRoute4MeExamples.GetAreaAddedActivities;
 var
@@ -861,6 +866,31 @@ begin
   end;
 end;
 
+procedure TRoute4MeExamples.GetLimitedZipCodeAndHouseNumber(ZipCode,
+  HouseNumber: String; Limit, Offset: integer);
+var
+  Example: TGetLimitedZipCodeAndHouseNumber;
+begin
+  Example := MakeExample(TGetLimitedZipCodeAndHouseNumber) as TGetLimitedZipCodeAndHouseNumber;
+  try
+    Example.Execute(ZipCode, HouseNumber, Limit, Offset);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.GetLimitedZipCodes(ZipCode: String; Limit, Offset: integer);
+var
+  Example: TGetLimitedZipCodes;
+begin
+  Example := MakeExample(TGetLimitedZipCodes) as TGetLimitedZipCodes;
+  try
+    Example.Execute(ZipCode, Limit, Offset);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
 procedure TRoute4MeExamples.GetLocation(Query: String);
 var
   Example: TGetLocation;
@@ -1122,6 +1152,30 @@ begin
   Example := MakeExample(TGetUsers) as TGetUsers;
   try
     Example.Execute;
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.GetZipCodeAndHouseNumber(ZipCode, HouseNumber: String);
+var
+  Example: TGetZipCodeAndHouseNumber;
+begin
+  Example := MakeExample(TGetZipCodeAndHouseNumber) as TGetZipCodeAndHouseNumber;
+  try
+    Example.Execute(ZipCode, HouseNumber);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.GetZipCodes(ZipCode: String);
+var
+  Example: TGetZipCodes;
+begin
+  Example := MakeExample(TGetZipCodes) as TGetZipCodes;
+  try
+    Example.Execute(ZipCode);
   finally
     FreeAndNil(Example);
   end;

@@ -8,6 +8,8 @@ uses
 
 type
   TGeocodingActions = class(TBaseAction)
+  private
+    function ParseXml(XmlString: String): TGeocodingList;
   public
     /// <summary>
     /// Forward geocoding is the process of converting place name information into latitude and longitude values
@@ -22,7 +24,7 @@ type
     /// neighbourhoods, county, state or country) which include a specified address.
     /// </summary>
     function ReverseGeocodeAddress(Location: TDirectionPathPoint;
-      out ErrorString: String): TGeocoding;
+      out ErrorString: String): TGeocodingList;
 
     /// <summary>
     /// Single address geocoding refers to the process of getting a geographic address by address name sent with HTTP GET data.
@@ -32,13 +34,36 @@ type
     /// <summary>
     /// This example refers to the process of getting all addresses.
     /// </summary>
-    function GetAddresses(out ErrorString: String): TGeocodingAddressList;
+    function GetAddresses(out ErrorString: String): TGeocodingAddressList; overload;
 
     /// <summary>
     /// This example refers to the process of getting a limited number of the addresses. The limitation parameters are: offset and limit.
     /// </summary>
-    function GetLimitedAddresses(Limit, Offset: integer;
-      out ErrorString: String): TGeocodingAddressList;
+    function GetAddresses(Limit, Offset: integer;
+      out ErrorString: String): TGeocodingAddressList; overload;
+
+    /// <summary>
+    /// This example refers to the process of getting all addresses containing a specified zip code.
+    /// </summary>
+    function GetZipCodes(ZipCode: String; out ErrorString: String): TGeocodingAddressList; overload;
+
+    /// <summary>
+    /// This example refers to the process of getting a limited number of addresses containing a specified zip code.
+    /// </summary>
+    function GetZipCodes(ZipCode: String; Limit, Offset: integer;
+      out ErrorString: String): TGeocodingAddressList; overload;
+
+    /// <summary>
+    /// This example refers to the process of getting all addresses containing a specified zip code and house number.
+    /// </summary>
+    function GetZipCodeAndHouseNumber(ZipCode: String; HouseNumber: String;
+      out ErrorString: String): TGeocodingAddressList; overload;
+
+    /// <summary>
+    /// This example refers to the process of getting a limited number of addresses containing a specified zip code and house number.
+    /// </summary>
+    function GetZipCodeAndHouseNumber(ZipCode: String; HouseNumber: String;
+      Limit, Offset: integer; out ErrorString: String): TGeocodingAddressList; overload;
   end;
 
 implementation
@@ -46,7 +71,9 @@ implementation
 { TGeocodingActions }
 
 uses
-  SettingsUnit, GenericParametersUnit, UtilsUnit;
+  Xml.XMLDoc, Xml.XMLIntf,
+  SettingsUnit, GenericParametersUnit, UtilsUnit, CommonTypesUnit,
+  NullableBasicTypesUnit;
 
 
 { TGeocodingActions }
@@ -55,37 +82,62 @@ function TGeocodingActions.ForwardGeocodeAddress(Address: String;
   out ErrorString: String): TGeocoding;
 var
   Request: TGenericParameters;
-  Format: TFormatEnum;
+  XmlString: TSimpleString;
+  Parsed: TGeocodingList;
 begin
+  Result := nil;
+
   Request := TGenericParameters.Create;
   try
     Request.AddParameter('addresses', Address);
     Request.AddParameter('format', TFormatDescription[TFormatEnum.Xml]);
 
-    Result := FConnection.Post(TSettings.EndPoints.Geocoding, Request,
-      TGeocoding, ErrorString) as TGeocoding;
+    XmlString := FConnection.Post(TSettings.EndPoints.Geocoding, Request,
+      TSimpleString, ErrorString) as TSimpleString;
+    try
+      if (XmlString <> nil) then
+      begin
+        Parsed := ParseXml(XmlString.Value);
+        try
+          if (Parsed.Count > 0) then
+          begin
+            if (Parsed[0].Type_.IsNotNull) and (Parsed[0].Type_.Value = 'invalid') then
+            begin
+              ErrorString := 'Forward Geocode Address fault';
+              Exit;
+            end;
+
+            Result := Parsed[0];
+            Parsed.OwnsObjects := False;
+            Parsed.Remove(Result);
+            Parsed.OwnsObjects := True;
+          end;
+        finally
+          FreeAndNil(Parsed);
+        end;
+      end;
+    finally
+      FreeAndNil(XmlString);
+    end;
 
     if (Result = nil) and (ErrorString = EmptyStr) then
       ErrorString := 'Forward Geocode Address fault';
   finally
     FreeAndNil(Request);
   end;
-
-// todo: в ответ XML
-{
-<?xml version="1.0" encoding="UTF-8" ?><destinations>
-	<destination  destination="Los%20Angeles%20International%20Airport,%20CA" lat="0" lng="0" type="invalid" confidence="0" original="Los%20Angeles%20International%20Airport,%20CA"/></destinations>
-}
 end;
 
 function TGeocodingActions.GetAddresses(
   out ErrorString: String): TGeocodingAddressList;
 var
   Request: TGenericParameters;
+  Url: String;
 begin
   Request := TGenericParameters.Create;
   try
-    Result := FConnection.Get(TSettings.EndPoints.RapidAddressSearch, Request,
+    Url := Format('%s/', [TSettings.EndPoints.RapidAddressSearch]);
+
+    Result := FConnection.Get(Url, Request,
       TGeocodingAddressList, ErrorString) as TGeocodingAddressList;
 
     if (Result = nil) and (ErrorString = EmptyStr) then
@@ -95,7 +147,7 @@ begin
   end;
 end;
 
-function TGeocodingActions.GetLimitedAddresses(Limit, Offset: integer;
+function TGeocodingActions.GetZipCodes(ZipCode: String;
   out ErrorString: String): TGeocodingAddressList;
 var
   Request: TGenericParameters;
@@ -103,14 +155,33 @@ var
 begin
   Request := TGenericParameters.Create;
   try
-    Url := TSettings.EndPoints.RapidAddressSearch +
-      IntToStr(Offset) + '/' + IntToStr(Limit) + '/';
+    Url := Format('%s/zipcode/%s/', [TSettings.EndPoints.RapidAddressSearch, ZipCode]);
 
     Result := FConnection.Get(Url, Request,
       TGeocodingAddressList, ErrorString) as TGeocodingAddressList;
 
     if (Result = nil) and (ErrorString = EmptyStr) then
-      ErrorString := 'Get Limited Addresses fault';
+      ErrorString := 'Get Zip Codes fault';
+  finally
+    FreeAndNil(Request);
+  end;
+end;
+
+function TGeocodingActions.GetAddresses(Limit, Offset: integer;
+  out ErrorString: String): TGeocodingAddressList;
+var
+  Request: TGenericParameters;
+  Url: String;
+begin
+  Request := TGenericParameters.Create;
+  try
+    Url := Format('%s/%d/%d/', [TSettings.EndPoints.RapidAddressSearch, Offset, Limit]);
+
+    Result := FConnection.Get(Url, Request,
+      TGeocodingAddressList, ErrorString) as TGeocodingAddressList;
+
+    if (Result = nil) and (ErrorString = EmptyStr) then
+      ErrorString := 'Get Addresses fault';
   finally
     FreeAndNil(Request);
   end;
@@ -124,7 +195,7 @@ var
 begin
   Request := TGenericParameters.Create;
   try
-    Url := TSettings.EndPoints.RapidAddressSearch + IntToStr(Pk) + '/';
+    Url := Format('%s/%d/', [TSettings.EndPoints.RapidAddressSearch, Pk]);
 
     Result := FConnection.Get(Url, Request,
       TGeocodingAddress, ErrorString) as TGeocodingAddress;
@@ -136,13 +207,135 @@ begin
   end;
 end;
 
-function TGeocodingActions.ReverseGeocodeAddress(
-  Location: TDirectionPathPoint; out ErrorString: String): TGeocoding;
+function TGeocodingActions.GetZipCodeAndHouseNumber(ZipCode,
+  HouseNumber: String; Limit, Offset: integer;
+  out ErrorString: String): TGeocodingAddressList;
 var
   Request: TGenericParameters;
-  Format: TFormatEnum;
-  LocationParam: String;
+  Url: String;
 begin
+  Request := TGenericParameters.Create;
+  try
+    Url := Format('%s/service/%s/%s/%d/%d/',
+      [TSettings.EndPoints.RapidAddressSearch, ZipCode, HouseNumber, Offset, Limit]);
+
+    Result := FConnection.Get(Url, Request,
+      TGeocodingAddressList, ErrorString) as TGeocodingAddressList;
+
+    if (Result = nil) and (ErrorString = EmptyStr) then
+      ErrorString := 'Get Zip Code And House Number fault';
+  finally
+    FreeAndNil(Request);
+  end;
+end;
+
+function TGeocodingActions.GetZipCodes(ZipCode: String; Limit, Offset: integer;
+  out ErrorString: String): TGeocodingAddressList;
+var
+  Request: TGenericParameters;
+  Url: String;
+begin
+  Request := TGenericParameters.Create;
+  try
+    Url := Format('%s/zipcode/%s/%d/%d/',
+      [TSettings.EndPoints.RapidAddressSearch, ZipCode, Offset, Limit]);
+
+    Result := FConnection.Get(Url, Request,
+      TGeocodingAddressList, ErrorString) as TGeocodingAddressList;
+
+    if (Result = nil) and (ErrorString = EmptyStr) then
+      ErrorString := 'Get Zip Codes fault';
+  finally
+    FreeAndNil(Request);
+  end;
+end;
+
+function TGeocodingActions.ParseXml(XmlString: String): TGeocodingList;
+var
+  Doc: IXMLDocument;
+  Node, DestinationNode: IXmlNode;
+  Destination: NullableString;
+  Latitude, Longitude: NullableDouble;
+  Confidence: NullableString;
+  AType: NullableString;
+  Original: NullableString;
+  Item: TGeocoding;
+  i: integer;
+begin
+  Result := TGeocodingList.Create;
+
+  Doc := TXMLDocument.Create(nil);
+  try
+    Doc.LoadFromXML(XmlString);
+    Node := Doc.ChildNodes.FindNode('destinations');
+    if (Node = nil) then
+      Exit;
+
+    for i := 0 to Node.ChildNodes.Count - 1 do
+    begin
+      if (Node.ChildNodes[i].NodeName <> 'destination') then
+        Continue;
+
+      DestinationNode := Node.ChildNodes[i];
+
+      Item := TGeocoding.Create;
+
+      if DestinationNode.HasAttribute('destination') then
+        Item.Destination := DestinationNode.Attributes['destination'];
+
+      if DestinationNode.HasAttribute('lat') then
+        Item.Latitude := TUtils.StrToFloat(DestinationNode.Attributes['lat']);
+
+      if DestinationNode.HasAttribute('lng') then
+        Item.Longitude := TUtils.StrToFloat(DestinationNode.Attributes['lng']);
+
+      if DestinationNode.HasAttribute('confidence') then
+        Item.SetConfidenceAsString(DestinationNode.Attributes['confidence']);
+
+      if DestinationNode.HasAttribute('type') then
+        Item.Type_ := DestinationNode.Attributes['type'];
+
+      if DestinationNode.HasAttribute('original') then
+        Item.Original := DestinationNode.Attributes['original'];
+
+      Result.Add(Item);
+    end;
+  finally
+    Doc := nil;
+  end;
+end;
+
+function TGeocodingActions.GetZipCodeAndHouseNumber(ZipCode,
+  HouseNumber: String; out ErrorString: String): TGeocodingAddressList;
+var
+  Request: TGenericParameters;
+  Url: String;
+begin
+  Request := TGenericParameters.Create;
+  try
+    Url := Format('%s/service/%s/%s/',
+      [TSettings.EndPoints.RapidAddressSearch, ZipCode, HouseNumber]);
+
+    Result := FConnection.Get(Url, Request,
+      TGeocodingAddressList, ErrorString) as TGeocodingAddressList;
+
+    if (Result = nil) and (ErrorString = EmptyStr) then
+      ErrorString := 'Get Zip Code And House Number fault';
+  finally
+    FreeAndNil(Request);
+  end;
+end;
+
+function TGeocodingActions.ReverseGeocodeAddress(
+  Location: TDirectionPathPoint; out ErrorString: String): TGeocodingList;
+var
+  Request: TGenericParameters;
+  LocationParam: String;
+  XmlString: TSimpleString;
+  List: TGeocodingList;
+begin
+  Result := TGeocodingList.Create;
+
   Request := TGenericParameters.Create;
   try
     LocationParam := TUtils.FloatToStrDot(Location.Latitude.Value) + ',' +
@@ -150,19 +343,31 @@ begin
     Request.AddParameter('addresses', LocationParam);
     Request.AddParameter('format', TFormatDescription[TFormatEnum.Xml]);
 
-    Result := FConnection.Post(TSettings.EndPoints.Geocoding, Request,
-      TGeocoding, ErrorString) as TGeocoding;
+    XmlString := FConnection.Post(TSettings.EndPoints.Geocoding, Request,
+      TSimpleString, ErrorString) as TSimpleString;
+    try
+      if (XmlString <> nil) then
+      begin
+        List := ParseXml(XmlString.Value);
+        try
+          if (List.Count = 1) and (List[0].Type_.IsNotNull) and (List[0].Type_.Value = 'invalid') then
+            Exit;
+
+          List.OwnsObjects := False;
+          Result.AddRange(List);
+        finally
+          FreeAndNil(List);
+        end;
+      end;
+    finally
+      FreeAndNil(XmlString);
+    end;
 
     if (Result = nil) and (ErrorString = EmptyStr) then
       ErrorString := 'Reverse Geocode Address fault';
   finally
     FreeAndNil(Request);
   end;
-// todo: в ответ XML
-{
-<?xml version="1.0" encoding="UTF-8" ?><destinations>
-	<destination  destination="Unnamed Road, Stepasdabali, Georgia" lat="42.3543396" lng="42.3567284" type="route" confidence="medium" original="42.35863,42.35863"/>	<destination  destination="Samegrelo-Zemo Svaneti, Georgia" lat="42.7352247" lng="42.1689362" type="administrative_area_level_1, political" confidence="medium" original="42.35863,42.35863"/>	<destination  destination="Georgia" lat="42.315407" lng="43.356892" type="country, political" confidence="medium" original="42.35863,42.35863"/></destinations>
-}
 end;
 
 end.

@@ -37,7 +37,7 @@ type
     const Order = Main + '/api.v4/order.php';
     const Territory = Main + '/api.v4/territory.php';
 
-    const RapidAddressSearch = 'https://rapid.route4me.com/street_data/';
+    const RapidAddressSearch = 'https://rapid.route4me.com/street_data';
   end;
 
   /// <summary>

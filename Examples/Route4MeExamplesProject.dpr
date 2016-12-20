@@ -243,7 +243,11 @@ uses
   GetGeocodingAddressesUnit in 'Examples\Geocoding\GetGeocodingAddressesUnit.pas',
   GetLimitedGeocodingAddressesUnit in 'Examples\Geocoding\GetLimitedGeocodingAddressesUnit.pas',
   GetSingleGeocodingAddressUnit in 'Examples\Geocoding\GetSingleGeocodingAddressUnit.pas',
-  ReverseGeocodeAddressUnit in 'Examples\Geocoding\ReverseGeocodeAddressUnit.pas';
+  ReverseGeocodeAddressUnit in 'Examples\Geocoding\ReverseGeocodeAddressUnit.pas',
+  GetLimitedZipCodeAndHouseNumberUnit in 'Examples\Geocoding\GetLimitedZipCodeAndHouseNumberUnit.pas',
+  GetLimitedZipCodesUnit in 'Examples\Geocoding\GetLimitedZipCodesUnit.pas',
+  GetZipCodeAndHouseNumberUnit in 'Examples\Geocoding\GetZipCodeAndHouseNumberUnit.pas',
+  GetZipCodesUnit in 'Examples\Geocoding\GetZipCodesUnit.pas';
 
 {var
   CustomerSample: TCustomerQuestionAbout7Stops;}

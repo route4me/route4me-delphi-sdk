@@ -278,7 +278,11 @@ uses
   TestGeocodingSamplesUnit in 'Examples\Online\TestGeocodingSamplesUnit.pas',
   GetSingleGeocodingAddressUnit in '..\Examples\Examples\Geocoding\GetSingleGeocodingAddressUnit.pas',
   GetGeocodingAddressesUnit in '..\Examples\Examples\Geocoding\GetGeocodingAddressesUnit.pas',
-  GetLimitedGeocodingAddressesUnit in '..\Examples\Examples\Geocoding\GetLimitedGeocodingAddressesUnit.pas';
+  GetLimitedGeocodingAddressesUnit in '..\Examples\Examples\Geocoding\GetLimitedGeocodingAddressesUnit.pas',
+  GetZipCodesUnit in '..\Examples\Examples\Geocoding\GetZipCodesUnit.pas',
+  GetLimitedZipCodesUnit in '..\Examples\Examples\Geocoding\GetLimitedZipCodesUnit.pas',
+  GetZipCodeAndHouseNumberUnit in '..\Examples\Examples\Geocoding\GetZipCodeAndHouseNumberUnit.pas',
+  GetLimitedZipCodeAndHouseNumberUnit in '..\Examples\Examples\Geocoding\GetLimitedZipCodeAndHouseNumberUnit.pas';
 
 {R *.RES}
 

@@ -19,7 +19,7 @@ procedure TGetLimitedGeocodingAddresses.Execute(Limit, Offset: integer);
   ErrorString: String;
   Addresses: TGeocodingAddressList;
 begin
-  Addresses := Route4MeManager.Geocoding.GetLimitedAddresses(
+  Addresses := Route4MeManager.Geocoding.GetAddresses(
     Limit, Offset, ErrorString);
   try
     WriteLn('');

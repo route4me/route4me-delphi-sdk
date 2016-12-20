@@ -13,6 +13,7 @@ type
     /// </summary>
     class function ConvertToUnixTimestamp(Date: TDateTime): int64;
     class function FloatToStrDot(Value: Extended): String;
+    class function StrToFloat(Value: String): double;
     class function SortStringArray(Strings: TStringArray): TStringArray;
     class function SortIntegerArray(Integers: TIntegerArray): TIntegerArray;
     class function EncodeURL(URL: String): String;
@@ -70,6 +71,11 @@ begin
     begin
       Result := String.Compare(String1, String2);
     end));
+end;
+
+class function TUtils.StrToFloat(Value: String): double;
+begin
+  Result := SysUtils.StrToFloat(Value, DottedFormat);
 end;
 
 initialization

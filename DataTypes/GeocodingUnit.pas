@@ -63,6 +63,7 @@ type
     ///  Confidence ("high", "medium", "low")
     /// </summary>
     property Confidence: TConfidenceType read GetConfidence write SetConfidence;
+    procedure SetConfidenceAsString(Value: NullableString);
 
     /// <summary>
     ///  Non-standardized. Is used for tooltip ("Street", "City" etc)
@@ -75,6 +76,7 @@ type
   end;
 
   TGeocodingArray = TArray<TGeocoding>;
+  TGeocodingList = TObjectList<TGeocoding>;
 
 implementation
 
@@ -111,6 +113,11 @@ end;
 procedure TGeocoding.SetConfidence(const Value: TConfidenceType);
 begin
   FConfidence := TConfidenceTypeDescription[Value];
+end;
+
+procedure TGeocoding.SetConfidenceAsString(Value: NullableString);
+begin
+  FConfidence := Value;
 end;
 
 end.

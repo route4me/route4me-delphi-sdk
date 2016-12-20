@@ -24,10 +24,10 @@ begin
     WriteLn('');
 
     if (Geocoding <> nil) and
-      (Geocoding.Latitude.IsNotNull) and(Geocoding.Longitude.IsNotNull) then
+      (Geocoding.Latitude.IsNotNull) and (Geocoding.Longitude.IsNotNull) then
     begin
       WriteLn('ForwardGeocodeAddress executed successfully');
-      WriteLn(Format('Latitude: %d, Longitude: %d',
+      WriteLn(Format('Latitude: %f, Longitude: %f',
         [Geocoding.Latitude.Value, Geocoding.Longitude.Value]));
     end
     else

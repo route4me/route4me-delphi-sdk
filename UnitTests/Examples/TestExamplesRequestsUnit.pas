@@ -139,6 +139,10 @@ type
     procedure GetSingleAddress;
     procedure GetAddresses;
     procedure GetLimitedAddresses;
+    procedure GetZipCodes;
+    procedure GetLimitedZipCodes;
+    procedure GetZipCodeAndHouseNumber;
+    procedure GetLimitedZipCodeAndHouseNumber;
   end;
 
 implementation
@@ -1015,7 +1019,7 @@ begin
 
   CheckEquals('{}', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api/geocoder.php?api_key=11111111111111111111111111111111&' +
-    'addresses=Los%20Angeles%20International%20Airport,%20CA&format=xml', FConnection.Url);
+    'addresses=Los Angeles International Airport, CA&format=xml', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
@@ -1203,6 +1207,40 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
+procedure TTestExamplesRequests.GetLimitedZipCodeAndHouseNumber;
+var
+  Limit, Offset: integer;
+  ZipCode: String;
+  HouseNumber: String;
+begin
+  ZipCode := '00601';
+  HouseNumber := '17';
+  Limit := 5;
+  Offset := 2;
+  FExamples.GetLimitedZipCodeAndHouseNumber(ZipCode, HouseNumber, Limit, Offset);
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://rapid.route4me.com/street_data/service/00601/17/2/5/?api_key=11111111111111111111111111111111', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.GetLimitedZipCodes;
+var
+  Limit, Offset: integer;
+  ZipCode: String;
+begin
+  ZipCode := '00601';
+  Limit := 5;
+  Offset := 2;
+  FExamples.GetLimitedZipCodes(ZipCode, Limit, Offset);
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://rapid.route4me.com/street_data/zipcode/00601/2/5/?api_key=11111111111111111111111111111111', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
 procedure TTestExamplesRequests.GetLocation;
 var
   Query: String;
@@ -1356,7 +1394,7 @@ begin
 
   CheckEquals(EmptyStr, FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/order.php?api_key=11111111111111111111111111111111&' +
-    'fields=Test%20Fields&offset=0&limit=10', FConnection.Url);
+    'fields=Test Fields&offset=0&limit=10', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
@@ -1487,6 +1525,34 @@ begin
 
   CheckEquals(EmptyStr, FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api/member/view_users.php?api_key=11111111111111111111111111111111', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.GetZipCodeAndHouseNumber;
+var
+  ZipCode: String;
+  HouseNumber: String;
+begin
+  ZipCode := '00601';
+  HouseNumber := '17';
+  FExamples.GetZipCodeAndHouseNumber(ZipCode, HouseNumber);
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://rapid.route4me.com/street_data/service/00601/17/?api_key=11111111111111111111111111111111', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.GetZipCodes;
+var
+  ZipCode: String;
+begin
+  ZipCode := '00601';
+  FExamples.GetZipCodes(ZipCode);
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://rapid.route4me.com/street_data/zipcode/00601/?api_key=11111111111111111111111111111111', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
@@ -1922,11 +1988,8 @@ begin
     'addresses=42.35863,-71.0567&format=xml', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
-
-//curl -o file1.txt -g -X POST -k -H "Content-Type: multipart/form-data;" -F "recipient_email=oooooo@gmail.com" "%url%?api_key=%apikey%&route_id=%routeid%&response_format=json"
-//curl -o file1.txt -g -X POST "%url%?api_key=%apikey%&format=%format%&addresses=%addrs%"
 end;
-
+
 initialization
   // Register any test cases with the test runner
   RegisterTest('Examples\Requests\', TTestExamplesRequests.Suite);
