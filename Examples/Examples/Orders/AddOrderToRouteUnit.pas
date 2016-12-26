@@ -20,28 +20,15 @@ procedure TAddOrderToRoute.Execute(RouteId: String;
   RouteParameters: TRouteParameters; OrderedAddresses: TOrderedAddressArray);
 var
   ErrorString: String;
-  Parameters: TAddOrderToRouteRequest;
-  Address: TOrderedAddress;
 begin
-  Parameters := TAddOrderToRouteRequest.Create;
-  try
-    Parameters.RouteId := RouteId;
-    Parameters.Redirect := False;
-    Parameters.Parameters := RouteParameters;
-    for Address in OrderedAddresses do
-      Parameters.AddAddress(Address);
+  Route4MeManager.Route.AddOrder(RouteId, RouteParameters, OrderedAddresses, ErrorString);
 
-    Route4MeManager.Route.AddOrder(Parameters, ErrorString);
+  WriteLn('');
 
-    WriteLn('');
-
-    if (ErrorString = EmptyStr) then
-      WriteLn('AddOrderToRoute executed successfully')
-    else
-      WriteLn(Format('AddOrderToRoute error: "%s"', [ErrorString]));
-  finally
-    FreeAndNil(Parameters);
-  end;
+  if (ErrorString = EmptyStr) then
+    WriteLn('AddOrderToRoute executed successfully')
+  else
+    WriteLn(Format('AddOrderToRoute error: "%s"', [ErrorString]));
 end;
 
 end.

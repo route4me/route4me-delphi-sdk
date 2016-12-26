@@ -3,7 +3,7 @@ unit GeocodingActionsUnit;
 interface
 
 uses
-  SysUtils, BaseActionUnit,
+  SysUtils, BaseActionUnit, CommonTypesUnit, BulkGeocodingRequestUnit,
   GeocodingUnit, EnumsUnit, DirectionPathPointUnit, GeocodingAddressUnit;
 
 type
@@ -16,6 +16,12 @@ type
     /// </summary>
     function ForwardGeocodeAddress(Address: String;
       out ErrorString: String): TGeocoding;
+
+    /// <summary>
+    /// Forward geocoding is the process of converting place name information into latitude and longitude values
+    /// </summary>
+    function ForwardGeocodeAddresses(Addresses: TAddressInfoArray;
+      out ErrorString: String): TGeocodingList;
 
     /// <summary>
     /// With the reverse geocoding you can retrieve an address name from a geographical location point (latitude, longitude).
@@ -72,7 +78,7 @@ implementation
 
 uses
   Xml.XMLDoc, Xml.XMLIntf,
-  SettingsUnit, GenericParametersUnit, UtilsUnit, CommonTypesUnit,
+  SettingsUnit, GenericParametersUnit, UtilsUnit,
   NullableBasicTypesUnit;
 
 
@@ -167,6 +173,64 @@ begin
   end;
 end;
 
+function TGeocodingActions.ForwardGeocodeAddresses(Addresses: TAddressInfoArray;
+  out ErrorString: String): TGeocodingList;
+var
+  Request: TBulkGeocodingRequest;
+  XmlString: TSimpleString;
+  List: TGeocodingList;
+  i: integer;
+  IsInvalid: boolean;
+begin
+  Result := TGeocodingList.Create;
+
+  Request := TBulkGeocodingRequest.Create;
+  try
+    for i := 0 to High(Addresses) do
+      Request.AddAddress(Addresses[i]);
+
+    XmlString := FConnection.Post(TSettings.EndPoints.BulkGeocoding, Request,
+      TSimpleString, ErrorString) as TSimpleString;
+    try
+      if (XmlString <> nil) then
+      begin
+        try
+          List := ParseXml(XmlString.Value);
+          try
+            if (List.Count > 0) then
+            begin
+              IsInvalid := True;
+              for i := 0 to List.Count - 1 do
+                if (List[0].Type_.IsNotNull) and (List[0].Type_.Value <> 'invalid') then
+                begin
+                  IsInvalid := False;
+                  Break;
+                end;
+              if IsInvalid then
+                Exit;
+
+              List.OwnsObjects := False;
+              Result.AddRange(List);
+            end;
+          finally
+            FreeAndNil(List);
+          end;
+        except
+          ErrorString := XmlString.Value;
+          Exit;
+        end;
+      end;
+    finally
+      FreeAndNil(XmlString);
+    end;
+
+    if (Result = nil) and (ErrorString = EmptyStr) then
+      ErrorString := 'Forward Geocode Addresses fault';
+  finally
+    FreeAndNil(Request);
+  end;
+end;
+
 function TGeocodingActions.GetAddresses(Limit, Offset: integer;
   out ErrorString: String): TGeocodingAddressList;
 var
@@ -254,11 +318,6 @@ function TGeocodingActions.ParseXml(XmlString: String): TGeocodingList;
 var
   Doc: IXMLDocument;
   Node, DestinationNode: IXmlNode;
-  Destination: NullableString;
-  Latitude, Longitude: NullableDouble;
-  Confidence: NullableString;
-  AType: NullableString;
-  Original: NullableString;
   Item: TGeocoding;
   i: integer;
 begin
@@ -333,6 +392,8 @@ var
   LocationParam: String;
   XmlString: TSimpleString;
   List: TGeocodingList;
+  i: integer;
+  IsInvalid: boolean;
 begin
   Result := TGeocodingList.Create;
 
@@ -350,11 +411,21 @@ begin
       begin
         List := ParseXml(XmlString.Value);
         try
-          if (List.Count = 1) and (List[0].Type_.IsNotNull) and (List[0].Type_.Value = 'invalid') then
-            Exit;
+          if (List.Count > 0) then
+          begin
+            IsInvalid := True;
+            for i := 0 to List.Count - 1 do
+              if (List[0].Type_.IsNotNull) and (List[0].Type_.Value <> 'invalid') then
+              begin
+                IsInvalid := False;
+                Break;
+              end;
+            if IsInvalid then
+              Exit;
 
-          List.OwnsObjects := False;
-          Result.AddRange(List);
+            List.OwnsObjects := False;
+            Result.AddRange(List);
+          end;
         finally
           FreeAndNil(List);
         end;

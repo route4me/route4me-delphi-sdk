@@ -20,7 +20,6 @@ type
     procedure GetOrdersWithSpecifiedText;
 
     procedure GetOrdersWithCustomFields;
-    procedure AddOrderToRoute;
     procedure AddOrderToOptimization;
 
     procedure UpdateOrder;
@@ -33,7 +32,8 @@ implementation
 { TTestMemberSamples }
 
 uses UserParametersUnit, UserParameterProviderUnit, UserUnit, EnumsUnit,
-  OrderParametersUnit, CommonTypesUnit;
+  OrderParametersUnit, CommonTypesUnit, DataObjectUnit,
+  AddOrderToRouteRequestUnit;
 
 var
   FOrderId: NullableInteger;
@@ -65,11 +65,6 @@ begin
 end;
 
 procedure TTestOrderSamples.AddOrderToOptimization;
-begin
-// todo: сделать
-end;
-
-procedure TTestOrderSamples.AddOrderToRoute;
 begin
 // todo: сделать
 end;
@@ -249,7 +244,7 @@ end;
 
 procedure TTestOrderSamples.GetOrdersWithCustomFields;
 begin
-// todo: сделать
+// todo: сделать (нужен парминг из многомерного массива)
 end;
 
 procedure TTestOrderSamples.GetOrdersWithSpecifiedText;

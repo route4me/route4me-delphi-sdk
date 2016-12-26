@@ -47,6 +47,7 @@ type
     procedure MergeRoutes;
     procedure GetRoute;
     procedure GetRoutes;
+    procedure SearchRoutesForSpecifiedText;
     procedure ShareRoute;
     procedure GetUsers;
     procedure ValidateSession;
@@ -97,6 +98,8 @@ type
     procedure DuplicateRoute;
     procedure SetGPSPosition;
     procedure TrackDeviceLastLocationHistory;
+    procedure GetLocationHistoryFromTimeRange;
+    procedure GetAssetTrackingData;
     procedure DeleteRoutes;
     procedure RemoveOptimization;
     procedure CreateLocation;
@@ -134,7 +137,8 @@ type
     procedure UpdateTerritory;
     procedure GetTerritories;
     procedure GetTerritory;
-    procedure ForwardGeocodeAddress;
+    procedure BatchForwardGeocodeAddress;
+    procedure BulkForwardGeocodeAddresses;
     procedure ReverseGeocodeAddress;
     procedure GetSingleAddress;
     procedure GetAddresses;
@@ -153,7 +157,7 @@ uses
   AddOrderToRouteRequestUnit, AddOrderToRouteParameterProviderUnit,
   AddOrderToOptimizationRequestUnit, EnumsUnit, UserParametersUnit,
   UserParameterProviderUnit, TerritoryContourUnit, TerritoryActionsUnit,
-  DirectionPathPointUnit;
+  DirectionPathPointUnit, BulkGeocodingRequestUnit, UtilsUnit;
 
 procedure TTestExamplesRequests.SaveString(s: String);
 var
@@ -168,9 +172,37 @@ begin
   end;
 end;
 
-procedure TTestExamplesRequests.SetGPSPosition;
+procedure TTestExamplesRequests.SearchRoutesForSpecifiedText;
+var
+  Routes: TDataObjectRouteList;
+  Text: String;
 begin
-  // todo: нет примеров в C#
+  Text := 'Test Text';
+  Routes := FExamples.SearchRoutesForSpecifiedText(Text);
+  try
+    CheckEquals(EmptyStr, FConnection.RequestBody);
+    CheckEquals('https://www.route4me.com/api.v4/route.php?api_key=11111111111111111111111111111111&query=Test Text', FConnection.Url);
+    CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+    CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+  finally
+    FreeAndNil(Routes);
+  end;
+end;
+
+procedure TTestExamplesRequests.SetGPSPosition;
+var
+  RouteId: String;
+begin
+  RouteId := '68621A20B99EBA14F1A4F2FDAC907B42';
+
+  FExamples.SetGPSPosition(RouteId);
+
+  CheckEquals('', FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/track/set.php?api_key=11111111111111111111111111111111&' +
+    'format=xml&member_id=1&route_id=68621A20B99EBA14F1A4F2FDAC907B42&course=70&' +
+    'speed=60&lat=55.6884868&lng=12.5366426&device_type=android_phone&device_guid=HK5454H0K454564WWER445', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
 procedure TTestExamplesRequests.SetUp;
@@ -303,8 +335,8 @@ begin
 
   CheckEquals('strUpdateType=dropoff&strNoteContents=Test+Note+Contents+' + TNetEncoding.URL.Encode(DateTimeToStr(Now)),
     FConnection.RequestBody);
-  LongitudeStr := FloatToStr(-83.244743347168);
-  LatitudeStr := FloatToStr(33.132675170898);
+  LongitudeStr := FloatToStr(-83.244743347168, DottedFormat);
+  LatitudeStr := FloatToStr(33.132675170898, DottedFormat);
   CheckEquals('https://www.route4me.com/actions/addRouteNotes.php?api_key=11111111111111111111111111111111&' +
     'route_id=585D2628AE1C5A4FBD7B4050CB9D9601&address_id=194622711&' +
     'dev_lat=' + LatitudeStr + '&dev_lng=' + LongitudeStr + '&device_type=web&strUpdateType=dropoff', FConnection.Url);
@@ -572,6 +604,21 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
+procedure TTestExamplesRequests.GetAssetTrackingData;
+var
+  TrackingNumber: String;
+begin
+  TrackingNumber := 'Q7G9P1L9';
+
+  FExamples.GetAssetTrackingData(TrackingNumber);
+
+  CheckEquals('', FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api.v4/status.php?api_key=11111111111111111111111111111111&' +
+    'tracking=Q7G9P1L9', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
 procedure TTestExamplesRequests.Authentication;
 var
   EMail, Password: String;
@@ -588,8 +635,18 @@ begin
 end;
 
 procedure TTestExamplesRequests.TrackDeviceLastLocationHistory;
+var
+  RouteId: String;
 begin
-  // todo: нет примеров в C#
+  RouteId := '68621A20B99EBA14F1A4F2FDAC907B42';
+
+  FExamples.TrackDeviceLastLocationHistory(RouteId);
+
+  CheckEquals('', FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api.v4/route.php?api_key=11111111111111111111111111111111&' +
+    'route_id=68621A20B99EBA14F1A4F2FDAC907B42&device_tracking_history=1', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
 procedure TTestExamplesRequests.UpdateLocation;
@@ -1010,16 +1067,35 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
-procedure TTestExamplesRequests.ForwardGeocodeAddress;
+procedure TTestExamplesRequests.BatchForwardGeocodeAddress;
 var
   Address: String;
 begin
   Address := 'Los Angeles International Airport, CA';
-  FExamples.ForwardGeocodeAddress(Address);
+  FExamples.BatchForwardGeocodeAddress(Address);
 
   CheckEquals('{}', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api/geocoder.php?api_key=11111111111111111111111111111111&' +
     'addresses=Los Angeles International Airport, CA&format=xml', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.BulkForwardGeocodeAddresses;
+var
+  Addresses: TAddressInfoArray;
+begin
+  SetLength(Addresses, 3);
+  Addresses[0] := TAddressInfo.Create('6817 Harrison Rd, Fredericksburg, VA 22407',
+    'MirandaJCohen@dayrep.com', 'Reste1982', 'arridea.com', '404-317-9869', 'Miranda', 'Cohen');
+  Addresses[1] := TAddressInfo.Create('7404 Drew Ln, Fredericksburg, VA 22407',
+    'WilliamCBennett@rhyta.com', 'Enton1954', '', '912-852-2180', 'William', 'Bennett');
+  Addresses[2] := TAddressInfo.Create('12316 Willow Woods Dr, Fredericksburg, VA 22407',
+    'GeorgeENicholson@armyspy.com', 'Smis1967', '', '912-852-2180', 'George', 'Nicholson');
+  FExamples.BulkForwardGeocodeAddresses(Addresses);
+
+  CheckEqualsBody('BulkForwardGeocodeAddresses', FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/actions/upload/json-geocode.php?api_key=11111111111111111111111111111111', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
@@ -1251,6 +1327,25 @@ begin
   CheckEquals(EmptyStr, FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/address_book.php?api_key=11111111111111111111111111111111&' +
     'limit=10&offset=0&query=technology', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.GetLocationHistoryFromTimeRange;
+var
+  RouteId: String;
+  StartDate, EndDate: TDateTime;
+begin
+  RouteId := '68621A20B99EBA14F1A4F2FDAC907B42';
+  StartDate := 42702.8408228241;
+  EndDate := 42702.9408228241;
+
+  FExamples.GetLocationHistoryFromTimeRange(RouteId, StartDate, EndDate);
+
+  CheckEquals('', FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api/track/get_device_location.php?api_key=11111111111111111111111111111111&' +
+    'route_id=68621A20B99EBA14F1A4F2FDAC907B42&format=json&last_position=0&time_period=custom&' +
+    'start_date=1480335047&end_date=1480343687', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
@@ -1977,7 +2072,6 @@ end;
 
 procedure TTestExamplesRequests.ReverseGeocodeAddress;
 var
-  Address: String;
   Location: TDirectionPathPoint;
 begin
   Location := TDirectionPathPoint.Create(42.35863, -71.0567);

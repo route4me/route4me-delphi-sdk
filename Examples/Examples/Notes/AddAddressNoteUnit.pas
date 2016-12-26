@@ -27,8 +27,8 @@ begin
     Parameters.AddressId := AddressId;
     Parameters.Latitude := 33.132675170898;
     Parameters.Longitude := -83.244743347168;
-    Parameters.DeviceType := TDeviceTypeDescription[TDeviceType.Web];
-    Parameters.ActivityType := TStatusUpdateTypeDescription[TStatusUpdateType.DropOff];
+    Parameters.DeviceType := TDeviceType.Web;
+    Parameters.ActivityType := TStatusUpdateType.DropOff;
 
     Contents := 'Test Note Contents ' + DateTimeToStr(Now);
     Note := Route4MeManager.AddressNote.Add(Parameters, Contents, ErrorString);

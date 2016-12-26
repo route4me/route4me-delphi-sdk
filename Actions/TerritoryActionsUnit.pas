@@ -54,7 +54,6 @@ function TTerritoryActions.Add(Name: String; Color: String;
 var
   Response: TTerritory;
   Parameters: TTerritory;
-  i: integer;
 begin
   Result := NullableString.Null;
 

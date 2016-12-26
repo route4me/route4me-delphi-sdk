@@ -3,6 +3,27 @@ unit EnumsUnit;
 interface
 
 type
+  TTrackingInfo = (
+    tiOrderReceived,
+    tiOrderAssignedToRoute,
+    tiPacking,
+    tiLoadedToVehicle,
+    tiOutForDelivery,
+    tiUnknown
+  );
+
+  TPeriod = (
+    pToday,
+    pYesterday,
+    pThismonth,
+    p7days,
+    p14days,
+    p30days,
+    p60days,
+    p90days,
+    pAllTime
+  );
+
   TConfidenceType = (
     ctHigh,
     ctMedium,
@@ -152,7 +173,8 @@ type
     ScheduledLunch,
     ScheduledProductDemo,
     ScheduledClinicalDemo,
-    NoOpportunity
+    NoOpportunity,
+    Unclassified
   );
 
   //an optimization problem can be at one state at any given time
@@ -216,7 +238,7 @@ var
     'wrongaddressrecipient', 'notpresent', 'parts_missing', 'service_rendered',
     'follow_up', 'left_information', 'spoke_with_decision_maker', 'spoke_with_decision_influencer',
     'competitive_account', 'scheduled_follow_up_meeting', 'scheduled_lunch',
-    'scheduled_product_demo', 'scheduled_clinical_demo', 'no_opportunity');
+    'scheduled_product_demo', 'scheduled_clinical_demo', 'no_opportunity', 'unclassified');
   TTerritoryTypeDescription: array[TTerritoryType] of String = ('circle', 'poly', 'rect', 'Undefined');
   TFormatDescription: array[TFormatEnum] of String = ('csv', 'serialized', 'xml', 'UndefinedFormat');
   TAddressStopTypeDescription: array[TAddressStopType] of String = ('PICKUP', 'DELIVERY', 'BREAK', 'MEETUP', 'Unknown');
@@ -254,6 +276,13 @@ var
 
   TConfidenceTypeDescription: array[TConfidenceType] of String = (
     'high', 'medium', 'low', 'unknown');
+
+  TPeriodDescription: array[TPeriod] of String = ('today', 'yesterday',
+    'thismonth', '7days', '14days', '30days', '60days', '90days', 'all_time');
+
+  TTrackingInfoDescription: array[TTrackingInfo] of String = (
+    'Order Received', 'Order Assigned to Route', 'Packing', 'Loaded to Vehicle',
+    'Out for Delivery', 'Unknown');
 
 implementation
 

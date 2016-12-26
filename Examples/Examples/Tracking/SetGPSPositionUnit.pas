@@ -18,27 +18,25 @@ procedure TSetGPSPosition.Execute(RouteId: String);
 var
   ErrorString: String;
   Parameters: TGPSParameters;
-  Response: String;
 begin
   Parameters := TGPSParameters.Create();
   try
-    Parameters.Format := TFormatDescription[TFormatEnum.Csv];
+    Parameters.Format := TFormatDescription[TFormatEnum.Xml];
     Parameters.RouteId := RouteId;
-    Parameters.Latitude := 33.14384;
-    Parameters.Longitude := -83.22466;
-    Parameters.Course := 1;
-    Parameters.Speed := 120;
-    Parameters.DeviceType := TDeviceTypeDescription[TDeviceType.IPhone];
+    Parameters.Latitude := 55.6884868;
+    Parameters.Longitude := 12.5366426;
+    Parameters.Course := 70;
+    Parameters.Speed := 60;
+    Parameters.DeviceType := TDeviceTypeDescription[TDeviceType.AndroidPhone];
     Parameters.MemberId := 1;
-    Parameters.DeviceGuid := 'TEST_GPS';
-    Parameters.DeviceTimestamp := '2014-06-14 17:43:35';
+    Parameters.DeviceGuid := 'HK5454H0K454564WWER445';
 
-    Response := Route4MeManager.Tracking.SetGPS(Parameters, ErrorString);
+    Route4MeManager.Tracking.SetGPS(Parameters, ErrorString);
 
     WriteLn('');
 
     if (ErrorString = EmptyStr) then
-      WriteLn(Format('SetGps response: %s', [Response]))
+      WriteLn('SetGps success')
     else
       WriteLn(Format('SetGps error: "%s"', [ErrorString]));
   finally

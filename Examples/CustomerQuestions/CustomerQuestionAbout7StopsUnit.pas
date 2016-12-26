@@ -110,7 +110,11 @@ begin
           for Route in OptimizationProblemDetails.Routes do
           begin
             DetailedRoute := Route4MeManager.Route.Get(Route.RouteId, TRoutePathOutput.rpoPoints, ErrorString);
-            PrintIfHasError(ErrorString);
+            try
+              PrintIfHasError(ErrorString);
+            finally
+              FreeAndNil(DetailedRoute);
+            end;
           end;
         finally
           FreeAndNil(OptimizationProblemDetails);

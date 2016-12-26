@@ -31,7 +31,8 @@ begin
     Addresses[0].SequenceNo := 4;
 
     OptimalPosition := False;
-    Result := Route4MeManager.Route.Add(RouteId, Addresses, OptimalPosition, ErrorString);
+    Result := Route4MeManager.Route.AddAddresses(
+      RouteId, Addresses, OptimalPosition, ErrorString);
 
     WriteLn('');
 

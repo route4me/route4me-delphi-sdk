@@ -1,11 +1,11 @@
-unit ForwardGeocodeAddressUnit;
+unit BatchForwardGeocodeAddressUnit;
 
 interface
 
 uses SysUtils, BaseExampleUnit;
 
 type
-  TForwardGeocodeAddress = class(TBaseExample)
+  TBatchForwardGeocodeAddress = class(TBaseExample)
   public
     procedure Execute(Address: String);
   end;
@@ -14,7 +14,7 @@ implementation
 
 uses GeocodingUnit;
 
-procedure TForwardGeocodeAddress.Execute(Address: String);
+procedure TBatchForwardGeocodeAddress.Execute(Address: String);
 var
   ErrorString: String;
   Geocoding: TGeocoding;
@@ -26,12 +26,12 @@ begin
     if (Geocoding <> nil) and
       (Geocoding.Latitude.IsNotNull) and (Geocoding.Longitude.IsNotNull) then
     begin
-      WriteLn('ForwardGeocodeAddress executed successfully');
+      WriteLn('BatchForwardGeocodeAddress executed successfully');
       WriteLn(Format('Latitude: %f, Longitude: %f',
         [Geocoding.Latitude.Value, Geocoding.Longitude.Value]));
     end
     else
-      WriteLn(Format('ForwardGeocodeAddress error: "%s"', [ErrorString]));
+      WriteLn(Format('BatchForwardGeocodeAddress error: "%s"', [ErrorString]));
   finally
     FreeAndNil(Geocoding);
   end;

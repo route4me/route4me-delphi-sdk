@@ -4,7 +4,8 @@ interface
 
 uses
   SysUtils, BaseActionUnit,
-  DataObjectUnit, NoteParametersUnit, AddressNoteUnit, IConnectionUnit;
+  DataObjectUnit, NoteParametersUnit, AddressNoteUnit, IConnectionUnit,
+  AddNoteFileResponseUnit, EnumsUnit;
 
 type
   TAddressNoteActions = class(TBaseAction)
@@ -21,6 +22,11 @@ type
       out ErrorString: String): TAddressNoteList;
 
     function Add(NoteParameters: TNoteParameters; NoteContents: String;
+      out ErrorString: String): TAddressNote;
+
+    function AddFile(RouteId: String; AddressId: integer;
+      Latitude, Longitude: double; DeviceType: TDeviceType;
+      ActivityType: TStatusUpdateType; Filename: String;
       out ErrorString: String): TAddressNote;
   end;
 
@@ -39,7 +45,6 @@ function TAddressNoteActions.Add(NoteParameters: TNoteParameters;
 var
   Response: TAddAddressNoteResponse;
   Parameters: TGenericParameters;
-  StrUpdateType: String;
   NoteParameterPairs: TListStringPair;
   i: integer;
 begin
@@ -47,11 +52,7 @@ begin
 
   Parameters := TGenericParameters.Create;
   try
-    if (NoteParameters.ActivityType.IsNotNull) then
-      StrUpdateType := NoteParameters.ActivityType
-    else
-      StrUpdateType := 'unclassified';
-    Parameters.AddBodyParameter('strUpdateType', StrUpdateType);
+    Parameters.AddBodyParameter('strUpdateType', TStatusUpdateTypeDescription[NoteParameters.ActivityType]);
     Parameters.AddBodyParameter('strNoteContents', TNetEncoding.URL.Encode(NoteContents));
     NoteParameterPairs := NoteParameters.Serialize('');
     try
@@ -75,6 +76,65 @@ begin
     end;
   finally
     FreeAndNil(Parameters);
+  end;
+end;
+
+function TAddressNoteActions.AddFile(RouteId: String; AddressId: integer;
+  Latitude, Longitude: double; DeviceType: TDeviceType;
+  ActivityType: TStatusUpdateType; Filename: String;
+  out ErrorString: String): TAddressNote;
+var
+{  Response: TAddAddressNoteResponse;
+  Parameters: TGenericParameters;
+  NoteParameterPairs: TListStringPair;
+  i: integer;}
+  NoteParameters: TNoteParameters;
+begin
+  Result := nil;
+  if not FileExists(Filename) then
+  begin
+    ErrorString := Format('File "%s" not existed', [Filename]);
+    Exit;
+  end;
+
+  NoteParameters := TNoteParameters.Create;
+  try
+    NoteParameters.RouteId := RouteId;
+    NoteParameters.AddressId := AddressId;
+    NoteParameters.Latitude := Latitude;
+    NoteParameters.Longitude := Longitude;
+    NoteParameters.DeviceType := DeviceType;
+    NoteParameters.ActivityType := ActivityType;
+
+    // todo: сделать Add a Note File
+
+{    Parameters := TGenericParameters.Create;
+    try
+      NoteParameterPairs := NoteParameters.Serialize('');
+      try
+        for i := 0 to NoteParameterPairs.Count - 1 do
+          Parameters.AddParameter(NoteParameterPairs[i].Key, NoteParameterPairs[i].Value);
+      finally
+        FreeAndNil(NoteParameterPairs);
+      end;
+
+      Response := FConnection.Post(TSettings.EndPoints.AddRouteNotes, Parameters,
+        TAddAddressNoteResponse, ErrorString) as TAddAddressNoteResponse;
+      try
+        if (Response <> nil) then
+          if (Response.Note <> nil) then
+            Result := Response.Note
+          else
+            if (Response.Status = False) then
+              ErrorString := 'Note file not added';
+      finally
+        FreeAndNil(Response);
+      end;
+    finally
+      FreeAndNil(Parameters);
+    end;}
+  finally
+    FreeAndNil(NoteParameters);
   end;
 end;
 

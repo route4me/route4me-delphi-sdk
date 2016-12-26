@@ -10,7 +10,8 @@ type
   TTestGeocodingSamples = class(TTestOnlineExamples)
   private
   published
-    procedure ForwardGeocodeAddress;
+    procedure BatchForwardGeocodeAddress;
+    procedure BulkForwardGeocodeAddresses;
     procedure ReverseGeocodeAddress;
     procedure GetSingleAddress;
     procedure GetAddresses;
@@ -24,9 +25,9 @@ type
 implementation
 
 uses NullableBasicTypesUnit, GeocodingUnit, DirectionPathPointUnit,
-  GeocodingAddressUnit;
+  GeocodingAddressUnit, CommonTypesUnit, BulkGeocodingRequestUnit;
 
-procedure TTestGeocodingSamples.ForwardGeocodeAddress;
+procedure TTestGeocodingSamples.BatchForwardGeocodeAddress;
 var
   ErrorString: String;
   Address: String;
@@ -48,6 +49,44 @@ begin
     CheckNotEquals(EmptyStr, ErrorString);
   finally
     FreeAndNil(Geocoding);
+  end;
+end;
+
+procedure TTestGeocodingSamples.BulkForwardGeocodeAddresses;
+var
+  ErrorString: String;
+  Addresses: TAddressInfoArray;
+  Geocodings: TGeocodingList;
+begin
+(* todo: задал вопрос Олегу, какой ответ должен быть правильный, сейчас это
+{"optimization_problem_id":"96ED7C330F00C281DDD4DACEC9AAE9A1","address_count":1,"status":true}
+
+  SetLength(Addresses, 3);
+  Addresses[0] := TAddressInfo.Create('6817 Harrison Rd, Fredericksburg, VA 22407',
+    'MirandaJCohen@dayrep.com', 'Reste1982', 'arridea.com', '404-317-9869', 'Miranda', 'Cohen');
+  Addresses[1] := TAddressInfo.Create('7404 Drew Ln, Fredericksburg, VA 22407',
+    'WilliamCBennett@rhyta.com', 'Enton1954', '', '912-852-2180', 'William', 'Bennett');
+  Addresses[2] := TAddressInfo.Create('12316 Willow Woods Dr, Fredericksburg, VA 22407',
+    'GeorgeENicholson@armyspy.com', 'Smis1967', '', '912-852-2180', 'George', 'Nicholson');
+  Geocodings := FRoute4MeManager.Geocoding.ForwardGeocodeAddresses(Addresses, ErrorString);
+  try
+    CheckNotNull(Geocodings);
+    CheckEquals(3, Geocodings.Count);
+    CheckEquals(EmptyStr, ErrorString);
+  finally
+    FreeAndNil(Geocodings);
+  end;*)
+
+  SetLength(Addresses, 1);
+  Addresses[0] := TAddressInfo.Create('qweasd',
+    'qweasd@dayrep.com', 'qweasd', 'qweasd.com', '111-111-111', 'qweasd', 'qweasd');
+  Geocodings := FRoute4MeManager.Geocoding.ForwardGeocodeAddresses(Addresses, ErrorString);
+  try
+    CheckNotNull(Geocodings);
+    CheckEquals(0, Geocodings.Count);
+    CheckNotEquals(EmptyStr, ErrorString);
+  finally
+    FreeAndNil(Geocodings);
   end;
 end;
 

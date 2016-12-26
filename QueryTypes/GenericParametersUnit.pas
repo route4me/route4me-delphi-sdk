@@ -183,7 +183,10 @@ begin
       end
       else
       begin
-        FieldValue := Value.ToString;
+        if (Value.Kind = tkFloat) then
+          FieldValue := FloatToStr(Value.AsExtended, DottedFormat)
+        else
+          FieldValue := Value.ToString;
 
         if (Value.Kind = tkEnumeration) and (FConvertBooleansToInteger) then
           if Value.AsBoolean then

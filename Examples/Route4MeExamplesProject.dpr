@@ -164,7 +164,7 @@ uses
   MarkAddressAsDetectedAsVisitedUnit in 'Examples\Addresses\MarkAddressAsDetectedAsVisitedUnit.pas',
   MarkAddressAsDetectedAsDepartedUnit in 'Examples\Addresses\MarkAddressAsDetectedAsDepartedUnit.pas',
   MarkAddressAsDetectedAsDepartedRequestUnit in '..\QueryTypes\MarkAddressAsDetectedAsDepartedRequestUnit.pas',
-  ForwardGeocodeAddressUnit in 'Examples\Geocoding\ForwardGeocodeAddressUnit.pas',
+  BatchForwardGeocodeAddressUnit in 'Examples\Geocoding\BatchForwardGeocodeAddressUnit.pas',
   GeocodingActionsUnit in '..\Actions\GeocodingActionsUnit.pas',
   ValidateSessionResponseUnit in '..\QueryTypes\ValidateSessionResponseUnit.pas',
   ValidateSessionUnit in 'Examples\Members\ValidateSessionUnit.pas',
@@ -247,7 +247,16 @@ uses
   GetLimitedZipCodeAndHouseNumberUnit in 'Examples\Geocoding\GetLimitedZipCodeAndHouseNumberUnit.pas',
   GetLimitedZipCodesUnit in 'Examples\Geocoding\GetLimitedZipCodesUnit.pas',
   GetZipCodeAndHouseNumberUnit in 'Examples\Geocoding\GetZipCodeAndHouseNumberUnit.pas',
-  GetZipCodesUnit in 'Examples\Geocoding\GetZipCodesUnit.pas';
+  GetZipCodesUnit in 'Examples\Geocoding\GetZipCodesUnit.pas',
+  BulkGeocodingRequestUnit in '..\QueryTypes\BulkGeocodingRequestUnit.pas',
+  BulkForwardGeocodeAddressesUnit in 'Examples\Geocoding\BulkForwardGeocodeAddressesUnit.pas',
+  SearchRoutesForSpecifiedTextUnit in 'Examples\Routes\SearchRoutesForSpecifiedTextUnit.pas',
+  TrackingHistoryResponseUnit in '..\QueryTypes\TrackingHistoryResponseUnit.pas',
+  TrackingDataUnit in '..\DataTypes\TrackingDataUnit.pas',
+  TrackingHistoryRequestUnit in '..\QueryTypes\TrackingHistoryRequestUnit.pas',
+  GetAssetTrackingDataUnit in 'Examples\Tracking\GetAssetTrackingDataUnit.pas',
+  GetLocationHistoryFromTimeRangeUnit in 'Examples\Tracking\GetLocationHistoryFromTimeRangeUnit.pas',
+  AddNoteFileResponseUnit in '..\QueryTypes\AddNoteFileResponseUnit.pas';
 
 {var
   CustomerSample: TCustomerQuestionAbout7Stops;}

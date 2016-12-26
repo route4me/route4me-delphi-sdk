@@ -33,7 +33,8 @@ begin
       33.177852, -83.263535, 0);
 
     OptimalPosition := True;
-    Result := Route4MeManager.Route.Add(RouteId, Addresses, OptimalPosition, ErrorString);
+    Result := Route4MeManager.Route.AddAddresses(
+      RouteId, Addresses, OptimalPosition, ErrorString);
 
     WriteLn('');
 

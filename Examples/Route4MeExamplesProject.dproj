@@ -234,7 +234,7 @@
         <DCCReference Include="Examples\Addresses\MarkAddressAsDetectedAsVisitedUnit.pas"/>
         <DCCReference Include="Examples\Addresses\MarkAddressAsDetectedAsDepartedUnit.pas"/>
         <DCCReference Include="..\QueryTypes\MarkAddressAsDetectedAsDepartedRequestUnit.pas"/>
-        <DCCReference Include="Examples\Geocoding\ForwardGeocodeAddressUnit.pas"/>
+        <DCCReference Include="Examples\Geocoding\BatchForwardGeocodeAddressUnit.pas"/>
         <DCCReference Include="..\Actions\GeocodingActionsUnit.pas"/>
         <DCCReference Include="..\QueryTypes\ValidateSessionResponseUnit.pas"/>
         <DCCReference Include="Examples\Members\ValidateSessionUnit.pas"/>
@@ -318,6 +318,15 @@
         <DCCReference Include="Examples\Geocoding\GetLimitedZipCodesUnit.pas"/>
         <DCCReference Include="Examples\Geocoding\GetZipCodeAndHouseNumberUnit.pas"/>
         <DCCReference Include="Examples\Geocoding\GetZipCodesUnit.pas"/>
+        <DCCReference Include="..\QueryTypes\BulkGeocodingRequestUnit.pas"/>
+        <DCCReference Include="Examples\Geocoding\BulkForwardGeocodeAddressesUnit.pas"/>
+        <DCCReference Include="Examples\Routes\SearchRoutesForSpecifiedTextUnit.pas"/>
+        <DCCReference Include="..\QueryTypes\TrackingHistoryResponseUnit.pas"/>
+        <DCCReference Include="..\DataTypes\TrackingDataUnit.pas"/>
+        <DCCReference Include="..\QueryTypes\TrackingHistoryRequestUnit.pas"/>
+        <DCCReference Include="Examples\Tracking\GetAssetTrackingDataUnit.pas"/>
+        <DCCReference Include="Examples\Tracking\GetLocationHistoryFromTimeRangeUnit.pas"/>
+        <DCCReference Include="..\QueryTypes\AddNoteFileResponseUnit.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

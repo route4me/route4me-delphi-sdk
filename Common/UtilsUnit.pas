@@ -79,6 +79,9 @@ begin
 end;
 
 initialization
-  GetLocaleFormatSettings(LOCALE_SYSTEM_DEFAULT, DottedFormat);
+//  GetLocaleFormatSettings(LOCALE_SYSTEM_DEFAULT, DottedFormat);
+{$WARN SYMBOL_PLATFORM OFF}
+  DottedFormat := TFormatSettings.Create(LOCALE_SYSTEM_DEFAULT);
   DottedFormat.DecimalSeparator := '.';
+{$WARN SYMBOL_PLATFORM ON}
 end.

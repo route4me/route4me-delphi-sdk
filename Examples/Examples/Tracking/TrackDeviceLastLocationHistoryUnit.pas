@@ -12,79 +12,42 @@ type
 
 implementation
 
-uses GPSParametersUnit, EnumsUnit, GenericParametersUnit, DataObjectUnit,
+uses EnumsUnit, DataObjectUnit,
   TrackingHistoryUnit;
 
 procedure TTrackDeviceLastLocationHistory.Execute(RouteId: String);
 var
   ErrorString: String;
-  Parameters: TGPSParameters;
-  GenericParameters: TGenericParameters;
-  Response: String;
-  DataObject: TDataObject;
+  Route: TDataObjectRoute;
   HistoryStep: TTrackingHistory;
 begin
-  Parameters := TGPSParameters.Create();
+  Route := Route4MeManager.Tracking.GetLastLocation(RouteId, ErrorString);
   try
-    Parameters.Format := TFormatDescription[TFormatEnum.Csv];
-    Parameters.RouteId := RouteId;
-    Parameters.Latitude := 33.14384;
-    Parameters.Longitude := -83.22466;
-    Parameters.Course := 1;
-    Parameters.Speed := 120;
-    Parameters.DeviceType := TDeviceTypeDescription[TDeviceType.IPhone];
-    Parameters.MemberId := 1;
-    Parameters.DeviceGuid := 'TEST_GPS';
-    Parameters.DeviceTimestamp := '2014-06-14 17:43:35';
+    WriteLn('');
 
-    Response := Route4MeManager.Tracking.SetGPS(Parameters, ErrorString);
-
-    if (ErrorString <> EmptyStr) then
+    if (Route <> nil) then
     begin
-      WriteLn(Format('SetGps error: "%s"', [ErrorString]));
-      Exit;
-    end;
+      WriteLn('TrackDeviceLastLocationHistory executed successfully');
+      WriteLn('');
 
-    WriteLn(Format('SetGps response: %s', [Response]));
+      WriteLn(Format('Optimization Problem ID: %s', [Route.OptimizationProblemId]));
+        WriteLn(Format('State: %s',
+          [TOptimizationDescription[TOptimizationState(Route.State)]]));
+      WriteLn('');
 
-    GenericParameters := TGenericParameters.Create();
-    try
-      GenericParameters.AddParameter('route_id', RouteId);
-      GenericParameters.AddParameter('device_tracking_history', '1');
-
-      DataObject := Route4MeManager.Tracking.GetLastLocation(GenericParameters, ErrorString);
-      try
+      for HistoryStep in Route.TrackingHistories do
+      begin
+        WriteLn(Format('Speed: %f', [HistoryStep.Speed.Value]));
+        WriteLn(Format('Longitude: %f', [HistoryStep.Longitude.Value]));
+        WriteLn(Format('Latitude: %f', [HistoryStep.Latitude.Value]));
+        WriteLn(Format('Time Stamp: %s', [HistoryStep.TimeStamp.Value]));
         WriteLn('');
-
-        if (DataObject <> nil) then
-        begin
-          WriteLn('TrackDeviceLastLocationHistory executed successfully');
-          WriteLn('');
-
-          WriteLn(Format('Optimization Problem ID: %s', [DataObject.OptimizationProblemId]));
-            WriteLn(Format('State: %s',
-              [TOptimizationDescription[TOptimizationState(DataObject.State)]]));
-          WriteLn('');
-
-          for HistoryStep in DataObject.TrackingHistories do
-          begin
-            WriteLn(Format('Speed: %f', [HistoryStep.Speed.Value]));
-            WriteLn(Format('Longitude: %f', [HistoryStep.Longitude.Value]));
-            WriteLn(Format('Latitude: %f', [HistoryStep.Latitude.Value]));
-            WriteLn(Format('Time Stamp: %s', [HistoryStep.TimeStamp.Value]));
-            WriteLn('');
-          end;
-        end
-        else
-          WriteLn(Format('TrackDeviceLastLocationHistory error: "%s"', [ErrorString]));
-      finally
-        FreeAndNil(DataObject);
       end;
-    finally
-      FreeAndNil(GenericParameters);
-    end;
+    end
+    else
+      WriteLn(Format('TrackDeviceLastLocationHistory error: "%s"', [ErrorString]));
   finally
-    FreeAndNil(Parameters);
+    FreeAndNil(Route);
   end;
 end;
 

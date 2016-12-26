@@ -81,6 +81,7 @@ type
   end;
 
   TTrackingHistoryArray = TArray<TTrackingHistory>;
+  TTrackingHistoryList = TObjectList<TTrackingHistory>;
 
 function SortTrackingHistory(TrackingHistories: TTrackingHistoryArray): TTrackingHistoryArray;
 

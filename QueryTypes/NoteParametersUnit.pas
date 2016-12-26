@@ -4,7 +4,7 @@ interface
 
 uses
   HttpQueryMemberAttributeUnit, JSONNullableAttributeUnit,
-  NullableBasicTypesUnit, GenericParametersUnit;
+  NullableBasicTypesUnit, GenericParametersUnit, EnumsUnit;
 
 type
   TNoteParameters = class(TGenericParameters)
@@ -32,6 +32,11 @@ type
     [HttpQueryMember('strUpdateType')]
     [Nullable]
     FActivityType: NullableString;
+
+    function GetDeviceType: TDeviceType;
+    procedure SetDeviceType(const Value: TDeviceType);
+    function GetActivityType: TStatusUpdateType;
+    procedure SetActivityType(const Value: TStatusUpdateType);
   public
     constructor Create; override;
 
@@ -39,8 +44,8 @@ type
     property AddressId: NullableInteger read FAddressId write FAddressId;
     property Latitude: NullableDouble read FLatitude write FLatitude;
     property Longitude: NullableDouble read FLongitude write FLongitude;
-    property DeviceType: NullableString read FDeviceType write FDeviceType;
-    property ActivityType: NullableString read FActivityType write FActivityType;
+    property DeviceType: TDeviceType read GetDeviceType write SetDeviceType;
+    property ActivityType: TStatusUpdateType read GetActivityType write SetActivityType;
   end;
 
 implementation
@@ -57,6 +62,38 @@ begin
   FLongitude := NullableDouble.Null;
   FDeviceType := NullableString.Null;
   FActivityType := NullableString.Null;
+end;
+
+function TNoteParameters.GetActivityType: TStatusUpdateType;
+var
+  ActivityType: TStatusUpdateType;
+begin
+  Result := TStatusUpdateType.Unclassified;
+  if FActivityType.IsNotNull then
+    for ActivityType := Low(TStatusUpdateType) to High(TStatusUpdateType) do
+      if (FActivityType = TStatusUpdateTypeDescription[ActivityType]) then
+        Exit(ActivityType);
+end;
+
+function TNoteParameters.GetDeviceType: TDeviceType;
+var
+  DeviceType: TDeviceType;
+begin
+  Result := TDeviceType.UnknownDevice;
+  if FDeviceType.IsNotNull then
+    for DeviceType := Low(TDeviceType) to High(TDeviceType) do
+      if (FDeviceType = TDeviceTypeDescription[DeviceType]) then
+        Exit(DeviceType);
+end;
+
+procedure TNoteParameters.SetActivityType(const Value: TStatusUpdateType);
+begin
+  FActivityType := TStatusUpdateTypeDescription[Value];
+end;
+
+procedure TNoteParameters.SetDeviceType(const Value: TDeviceType);
+begin
+  FDeviceType := TDeviceTypeDescription[Value];
 end;
 
 end.

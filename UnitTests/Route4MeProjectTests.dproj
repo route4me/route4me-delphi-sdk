@@ -260,7 +260,7 @@
         <DCCReference Include="..\Examples\Examples\Addresses\MarkAddressAsDetectedAsDepartedUnit.pas"/>
         <DCCReference Include="..\Examples\Examples\Addresses\MarkAddressAsDetectedAsVisitedUnit.pas"/>
         <DCCReference Include="..\Actions\GeocodingActionsUnit.pas"/>
-        <DCCReference Include="..\Examples\Examples\Geocoding\ForwardGeocodeAddressUnit.pas"/>
+        <DCCReference Include="..\Examples\Examples\Geocoding\BatchForwardGeocodeAddressUnit.pas"/>
         <DCCReference Include="..\QueryTypes\ValidateSessionResponseUnit.pas"/>
         <DCCReference Include="..\Examples\Examples\Members\ValidateSessionUnit.pas"/>
         <DCCReference Include="..\QueryTypes\AddNewUserResponseUnit.pas"/>
@@ -352,6 +352,17 @@
         <DCCReference Include="..\Examples\Examples\Geocoding\GetLimitedZipCodesUnit.pas"/>
         <DCCReference Include="..\Examples\Examples\Geocoding\GetZipCodeAndHouseNumberUnit.pas"/>
         <DCCReference Include="..\Examples\Examples\Geocoding\GetLimitedZipCodeAndHouseNumberUnit.pas"/>
+        <DCCReference Include="..\QueryTypes\BulkGeocodingRequestUnit.pas"/>
+        <DCCReference Include="..\Examples\Examples\Geocoding\BulkForwardGeocodeAddressesUnit.pas"/>
+        <DCCReference Include="..\Examples\Examples\Routes\SearchRoutesForSpecifiedTextUnit.pas"/>
+        <DCCReference Include="Examples\Online\TestTrackingSamplesUnit.pas"/>
+        <DCCReference Include="..\QueryTypes\TrackingHistoryRequestUnit.pas"/>
+        <DCCReference Include="..\QueryTypes\TrackingHistoryResponseUnit.pas"/>
+        <DCCReference Include="..\Examples\Examples\Tracking\GetLocationHistoryFromTimeRangeUnit.pas"/>
+        <DCCReference Include="..\DataTypes\TrackingDataUnit.pas"/>
+        <DCCReference Include="..\Examples\Examples\Tracking\GetAssetTrackingDataUnit.pas"/>
+        <DCCReference Include="..\QueryTypes\AddNoteFileResponseUnit.pas"/>
+        <DCCReference Include="Examples\Online\TestRouteSamplesUnit.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

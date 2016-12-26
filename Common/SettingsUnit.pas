@@ -26,6 +26,7 @@ type
     const ActivityFeed = Main + '/api.v4/activity_feed.php';
     const GetActivities = Main + '/api/get_activities.php';
     const Geocoding = Main + '/api/geocoder.php';
+    const BulkGeocoding = Main + '/actions/upload/json-geocode.php';
     const GetAddress = Main + '/api.v4/address.php';
     const DuplicateRoute = Main + '/actions/duplicate_route.php';
     const MoveRouteDestination = Main + '/actions/route/move_route_destination.php';
@@ -36,6 +37,8 @@ type
     const Avoidance = Main + '/api.v4/avoidance.php';
     const Order = Main + '/api.v4/order.php';
     const Territory = Main + '/api.v4/territory.php';
+    const GetDeviceLocation = Main + '/api/track/get_device_location.php';
+    const TrackingStatus = Main + '/api.v4/status.php';
 
     const RapidAddressSearch = 'https://rapid.route4me.com/street_data';
   end;

@@ -5,7 +5,7 @@ interface
 uses
   SysUtils, System.Generics.Collections,
   Route4MeManagerUnit, OutputUnit, NullableBasicTypesUnit,
-  CommonTypesUnit, IConnectionUnit,
+  CommonTypesUnit, IConnectionUnit, BulkGeocodingRequestUnit,
   DataObjectUnit, AddressBookContactUnit, OrderUnit, RouteParametersUnit,
   AddOrderToRouteRequestUnit, AddressUnit, EnumsUnit, UserParametersUnit,
   TerritoryUnit, DirectionPathPointUnit;
@@ -50,7 +50,9 @@ type
     procedure UpdateRoutesCustomFields(RouteId: String; RouteDestinationId: integer);
     procedure GetRoute(RouteId: String; GetRouteDirections, GetRoutePathPoints: boolean);
     function GetRoutes(Limit, Offset: integer): TDataObjectRouteList;
-    procedure ForwardGeocodeAddress(Address: String);
+    function SearchRoutesForSpecifiedText(Text: String): TDataObjectRouteList;
+    procedure BatchForwardGeocodeAddress(Address: String);
+    procedure BulkForwardGeocodeAddresses(Addresses: TAddressInfoArray);
     procedure ReverseGeocodeAddress(Location: TDirectionPathPoint);
     procedure GetSingleGeocodingAddress(Pk: integer);
     procedure GetGeocodingAddresses;
@@ -146,6 +148,8 @@ type
       Parameters: TRouteParameters; OrderedAddresses: TOrderedAddressArray);
     procedure SetGPSPosition(RouteId: String);
     procedure TrackDeviceLastLocationHistory(RouteId: String);
+    procedure GetLocationHistoryFromTimeRange(RouteId: String; StartDate, EndDate: TDateTime);
+    procedure GetAssetTrackingData(TrackingNumber: String);
     procedure GenericExample(Connection: IConnection);
     procedure GenericExampleShortcut(Connection: IConnection);
     function AddCircleTerritory: NullableString;
@@ -184,7 +188,7 @@ uses
   GetOrdersByDateUnit, GetOrdersScheduledForUnit, GetOrdersWithCustomFieldsUnit,
   GetOrdersWithSpecifiedTextUnit, MarkAddressAsDepartedUnit,
   MarkAddressAsVisitedUnit, MarkAddressAsDetectedAsVisitedUnit,
-  MarkAddressAsDetectedAsDepartedUnit, ForwardGeocodeAddressUnit,
+  MarkAddressAsDetectedAsDepartedUnit, BatchForwardGeocodeAddressUnit,
   ValidateSessionUnit, RegisterAccountUnit, GetUserDetailsUnit, AddNewUserUnit,
   UpdateUserUnit, RemoveAddressBookContactsRequestUnit, RemoveUserUnit,
   AuthenticationUnit, DeviceLicenseUnit, UserLicenseUnit, RegisterWebinarUnit,
@@ -208,7 +212,9 @@ uses
   GetTerritoryUnit, UpdateTerritoryUnit, ReverseGeocodeAddressUnit,
   GetSingleGeocodingAddressUnit, GetLimitedGeocodingAddressesUnit,
   GetGeocodingAddressesUnit, GetZipCodesUnit, GetLimitedZipCodesUnit,
-  GetZipCodeAndHouseNumberUnit, GetLimitedZipCodeAndHouseNumberUnit;
+  GetZipCodeAndHouseNumberUnit, GetLimitedZipCodeAndHouseNumberUnit,
+  BulkForwardGeocodeAddressesUnit, SearchRoutesForSpecifiedTextUnit,
+  GetLocationHistoryFromTimeRangeUnit, GetAssetTrackingDataUnit;
 
 procedure TRoute4MeExamples.GetAreaAddedActivities;
 var
@@ -241,6 +247,18 @@ begin
   Example := MakeExample(TGetAreaUpdatedActivities) as TGetAreaUpdatedActivities;
   try
     Example.Execute;
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.GetAssetTrackingData(TrackingNumber: String);
+var
+  Example: TGetAssetTrackingData;
+begin
+  Example := MakeExample(TGetAssetTrackingData) as TGetAssetTrackingData;
+  try
+    Example.Execute(TrackingNumber);
   finally
     FreeAndNil(Example);
   end;
@@ -673,13 +691,25 @@ begin
   end;
 end;
 
-procedure TRoute4MeExamples.ForwardGeocodeAddress(Address: String);
+procedure TRoute4MeExamples.BatchForwardGeocodeAddress(Address: String);
 var
-  Example: TForwardGeocodeAddress;
+  Example: TBatchForwardGeocodeAddress;
 begin
-  Example := MakeExample(TForwardGeocodeAddress) as TForwardGeocodeAddress;
+  Example := MakeExample(TBatchForwardGeocodeAddress) as TBatchForwardGeocodeAddress;
   try
     Example.Execute(Address);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.BulkForwardGeocodeAddresses(Addresses: TAddressInfoArray);
+var
+  Example: TBulkForwardGeocodeAddresses;
+begin
+  Example := MakeExample(TBulkForwardGeocodeAddresses) as TBulkForwardGeocodeAddresses;
+  try
+    Example.Execute(Addresses);
   finally
     FreeAndNil(Example);
   end;
@@ -898,6 +928,19 @@ begin
   Example := MakeExample(TGetLocation) as TGetLocation;
   try
     Example.Execute(Query);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.GetLocationHistoryFromTimeRange(RouteId: String;
+  StartDate, EndDate: TDateTime);
+var
+  Example: TGetLocationHistoryFromTimeRange;
+begin
+  Example := MakeExample(TGetLocationHistoryFromTimeRange) as TGetLocationHistoryFromTimeRange;
+  try
+    Example.Execute(RouteId, StartDate, EndDate);
   finally
     FreeAndNil(Example);
   end;
@@ -1498,6 +1541,19 @@ begin
   Example := MakeExample(TReverseGeocodeAddress) as TReverseGeocodeAddress;
   try
     Example.Execute(Location);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+function TRoute4MeExamples.SearchRoutesForSpecifiedText(
+  Text: String): TDataObjectRouteList;
+var
+  Example: TSearchRoutesForSpecifiedText;
+begin
+  Example := MakeExample(TSearchRoutesForSpecifiedText) as TSearchRoutesForSpecifiedText;
+  try
+    Result := Example.Execute(Text);
   finally
     FreeAndNil(Example);
   end;

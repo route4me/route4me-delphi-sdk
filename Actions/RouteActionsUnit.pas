@@ -28,8 +28,15 @@ type
     /// <param name="OptimalPosition"> If true, an address will be inserted at optimal position of a route </param>
     /// <param name="ErrorString"> out: Error as string </param>
     /// <returns> IDs of added addresses </returns>
-    function Add(RouteId: String; Addresses: TAddressesArray;
-      OptimalPosition: boolean; out ErrorString: String): TArray<integer>; overload;
+    function AddAddresses(RouteId: String; Addresses: TAddressesArray;
+      OptimalPosition: boolean; out ErrorString: String): TArray<integer>;
+
+    /// <summary>
+    ///  Insert an existing order into an existing route.
+    /// </summary>
+    function AddOrder(RouteId: String;
+      RouteParameters: TRouteParameters; Addresses: TOrderedAddressArray;
+      out ErrorString: String): TDataObjectRoute;
 
     function Remove(RouteId: String; DestinationId: integer;
       out ErrorString: String): boolean;
@@ -50,7 +57,12 @@ type
       out ErrorString: String): TDataObjectRoute; overload;
 
     function GetList(Limit, Offset: integer;
-      out ErrorString: String): TDataObjectRouteList;
+      out ErrorString: String): TDataObjectRouteList; overload;
+
+    /// <summary>
+    ///  Search for the specified text throughout all routes belonging to the userТs account.
+    /// </summary>
+    function GetList(Text: String; out ErrorString: String): TDataObjectRouteList; overload;
 
     function Delete(RouteIds: TStringArray;
       out ErrorString: String): TStringArray;
@@ -64,12 +76,6 @@ type
     procedure Share(RouteId: String; RecipientEmail: String; out ErrorString: String);
 
     procedure Merge(RouteIds: TStringArray; out ErrorString: String);
-
-    /// <summary>
-    ///  Insert an existing order into an existing route.
-    /// </summary>
-    function AddOrder(Parameters: TAddOrderToRouteRequest;
-      out ErrorString: String): TDataObjectRoute;
   end;
 
 implementation
@@ -85,7 +91,7 @@ uses
   StatusResponseUnit, MergeRouteRequestUnit, UpdateRoutesCustomDataRequestUnit,
   ErrorResponseUnit, ResequenceAllRoutesRequestUnit;
 
-function TRouteActions.Add(RouteId: String; Addresses: TAddressesArray;
+function TRouteActions.AddAddresses(RouteId: String; Addresses: TAddressesArray;
   OptimalPosition: boolean; out ErrorString: String): TArray<integer>;
 var
   Request: TAddRouteDestinationRequest;
@@ -129,14 +135,29 @@ begin
   end;
 end;
 
-function TRouteActions.AddOrder(Parameters: TAddOrderToRouteRequest;
+function TRouteActions.AddOrder(RouteId: String;
+  RouteParameters: TRouteParameters; Addresses: TOrderedAddressArray;
   out ErrorString: String): TDataObjectRoute;
+var
+  Parameters: TAddOrderToRouteRequest;
+  i: integer;
 begin
-  Result := FConnection.Put(TSettings.EndPoints.Route,
-    Parameters, TDataObjectRoute, ErrorString) as TDataObjectRoute;
+  Parameters := TAddOrderToRouteRequest.Create;
+  try
+    Parameters.RouteId := RouteId;
+    Parameters.Redirect := False;
+    Parameters.Parameters := RouteParameters;
+    for i := 0 to High(Addresses) do
+      Parameters.AddAddress(Addresses[i]);
 
-  if (Result = nil) and (ErrorString = EmptyStr) then
-    ErrorString := 'Order to a Route not added';
+    Result := FConnection.Put(TSettings.EndPoints.Route,
+      Parameters, TDataObjectRoute, ErrorString) as TDataObjectRoute;
+
+    if (Result = nil) and (ErrorString = EmptyStr) then
+      ErrorString := 'Order to a Route not added';
+  finally
+    FreeAndNil(Parameters);
+  end;
 end;
 
 function TRouteActions.Delete(RouteIds: TStringArray;
@@ -208,6 +229,22 @@ begin
     RouteParameters.RoutePathOutput := RoutePathOutput;
 
     Result := Get(RouteParameters, ErrorString);
+  finally
+    FreeAndNil(RouteParameters);
+  end;
+end;
+
+function TRouteActions.GetList(Text: String; out ErrorString: String): TDataObjectRouteList;
+var
+  RouteParameters: TGenericParameters;
+begin
+  // todo: сделать тест-онлайн дл€ этого и сообщить ќлегу, что пример готов
+  RouteParameters := TGenericParameters.Create;
+  try
+    RouteParameters.AddParameter('query', Text);
+
+    Result := FConnection.Get(TSettings.EndPoints.Route,
+      RouteParameters, TDataObjectRouteList, ErrorString) as TDataObjectRouteList;
   finally
     FreeAndNil(RouteParameters);
   end;

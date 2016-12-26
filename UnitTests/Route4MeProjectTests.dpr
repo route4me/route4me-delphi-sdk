@@ -191,7 +191,7 @@ uses
   MarkAddressAsDetectedAsDepartedUnit in '..\Examples\Examples\Addresses\MarkAddressAsDetectedAsDepartedUnit.pas',
   MarkAddressAsDetectedAsVisitedUnit in '..\Examples\Examples\Addresses\MarkAddressAsDetectedAsVisitedUnit.pas',
   GeocodingActionsUnit in '..\Actions\GeocodingActionsUnit.pas',
-  ForwardGeocodeAddressUnit in '..\Examples\Examples\Geocoding\ForwardGeocodeAddressUnit.pas',
+  BatchForwardGeocodeAddressUnit in '..\Examples\Examples\Geocoding\BatchForwardGeocodeAddressUnit.pas',
   ValidateSessionResponseUnit in '..\QueryTypes\ValidateSessionResponseUnit.pas',
   ValidateSessionUnit in '..\Examples\Examples\Members\ValidateSessionUnit.pas',
   AddNewUserResponseUnit in '..\QueryTypes\AddNewUserResponseUnit.pas',
@@ -282,7 +282,18 @@ uses
   GetZipCodesUnit in '..\Examples\Examples\Geocoding\GetZipCodesUnit.pas',
   GetLimitedZipCodesUnit in '..\Examples\Examples\Geocoding\GetLimitedZipCodesUnit.pas',
   GetZipCodeAndHouseNumberUnit in '..\Examples\Examples\Geocoding\GetZipCodeAndHouseNumberUnit.pas',
-  GetLimitedZipCodeAndHouseNumberUnit in '..\Examples\Examples\Geocoding\GetLimitedZipCodeAndHouseNumberUnit.pas';
+  GetLimitedZipCodeAndHouseNumberUnit in '..\Examples\Examples\Geocoding\GetLimitedZipCodeAndHouseNumberUnit.pas',
+  BulkGeocodingRequestUnit in '..\QueryTypes\BulkGeocodingRequestUnit.pas',
+  BulkForwardGeocodeAddressesUnit in '..\Examples\Examples\Geocoding\BulkForwardGeocodeAddressesUnit.pas',
+  SearchRoutesForSpecifiedTextUnit in '..\Examples\Examples\Routes\SearchRoutesForSpecifiedTextUnit.pas',
+  TestTrackingSamplesUnit in 'Examples\Online\TestTrackingSamplesUnit.pas',
+  TrackingHistoryRequestUnit in '..\QueryTypes\TrackingHistoryRequestUnit.pas',
+  TrackingHistoryResponseUnit in '..\QueryTypes\TrackingHistoryResponseUnit.pas',
+  GetLocationHistoryFromTimeRangeUnit in '..\Examples\Examples\Tracking\GetLocationHistoryFromTimeRangeUnit.pas',
+  TrackingDataUnit in '..\DataTypes\TrackingDataUnit.pas',
+  GetAssetTrackingDataUnit in '..\Examples\Examples\Tracking\GetAssetTrackingDataUnit.pas',
+  AddNoteFileResponseUnit in '..\QueryTypes\AddNoteFileResponseUnit.pas',
+  TestRouteSamplesUnit in 'Examples\Online\TestRouteSamplesUnit.pas';
 
 {R *.RES}
 
