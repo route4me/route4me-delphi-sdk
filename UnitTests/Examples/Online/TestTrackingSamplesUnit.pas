@@ -21,8 +21,10 @@ implementation
 uses DateUtils, NullableBasicTypesUnit, GPSParametersUnit, EnumsUnit,
   DataObjectUnit, TrackingHistoryResponseUnit, TrackingDataUnit;
 
-var
-  FRouteId: String;
+{var
+  FRouteId: String;}
+const
+  FRouteId = '814FB49CEA8188D134E9D4D4B8B0DAF7';
 
 procedure TTestTrackingSamples.GetAssetTrackingData;
 var
@@ -76,7 +78,8 @@ begin
   Response := FRoute4MeManager.Tracking.GetLocationHistory(
     RouteId, Period, LastPositionOnly, ErrorString);
   try
-    CheckNull(Response);
+    CheckNotNull(Response);
+    CheckEquals(0, Length(Response.TrackingHistories));
     CheckEquals(EmptyStr, ErrorString);
   finally
     FreeAndNil(Response);
@@ -109,7 +112,8 @@ begin
   Response := FRoute4MeManager.Tracking.GetLocationHistory(
     RouteId, StartDate, EndDate, LastPositionOnly, ErrorString);
   try
-    CheckNull(Response);
+    CheckNotNull(Response);
+    CheckEquals(0, Length(Response.TrackingHistories));
     CheckEquals(EmptyStr, ErrorString);
   finally
     FreeAndNil(Response);
@@ -120,7 +124,8 @@ begin
   Response := FRoute4MeManager.Tracking.GetLocationHistory(
     FRouteId, StartDate, EndDate, LastPositionOnly, ErrorString);
   try
-    CheckNull(Response);
+    CheckNotNull(Response);
+    CheckEquals(0, Length(Response.TrackingHistories));
     CheckEquals(EmptyStr, ErrorString);
   finally
     FreeAndNil(Response);
@@ -133,7 +138,7 @@ var
   Parameters: TGPSParameters;
 begin
   // todo: проинициализиривать в реальное значение
-  FRouteId := '1';
+//  FRouteId := '1';
 
   Parameters := TGPSParameters.Create;
   try
@@ -172,7 +177,7 @@ begin
   Route := FRoute4MeManager.Tracking.GetLastLocation(RouteId, ErrorString);
   try
     CheckNull(Route);
-    CheckEquals(EmptyStr, ErrorString);
+    CheckNotEquals(EmptyStr, ErrorString);
   finally
     FreeAndNil(Route);
   end;

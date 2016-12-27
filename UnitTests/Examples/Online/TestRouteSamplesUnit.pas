@@ -4,7 +4,7 @@ interface
 
 uses
   TestFramework, Classes, SysUtils, DateUtils,
-  BaseTestOnlineExamplesUnit, NullableBasicTypesUnit, OrderUnit;
+  BaseTestOnlineExamplesUnit;
 
 type
   TTestRouteSamples = class(TTestOnlineExamples)
@@ -19,7 +19,7 @@ type
 
 uses AddressUnit, DataObjectUnit, RouteParametersUnit, EnumsUnit,
   MultipleDepotMultipleDriverTestDataProviderUnit, OptimizationParametersUnit,
-  IOptimizationParametersProviderUnit, CommonTypesUnit;
+  IOptimizationParametersProviderUnit, CommonTypesUnit, NullableBasicTypesUnit;
 
 var
   FRouteId: NullableString;
@@ -84,7 +84,7 @@ begin
     OptimizationProblemDetails := FRoute4MeManager.Optimization.Get(
       FOptimizationProblemId, ErrorString);
     try
-      CheckNotNull(DataObject);
+      CheckNotNull(OptimizationProblemDetails);
       CheckEquals(EmptyStr, ErrorString);
       CheckTrue(Length(OptimizationProblemDetails.Routes) > 0);
 
@@ -108,7 +108,7 @@ var
 begin
   DeletedRouteIds := FRoute4MeManager.Route.Delete(['qwe'], ErrorString);
   CheckEquals(0, Length(DeletedRouteIds));
-  CheckEquals(EmptyStr, ErrorString);
+  CheckNotEquals(EmptyStr, ErrorString);
 
   CheckTrue(FRouteId.IsNotNull);
   DeletedRouteIds := FRoute4MeManager.Route.Delete([FRouteId], ErrorString);
@@ -121,4 +121,6 @@ begin
   CheckEquals(EmptyStr, ErrorString);
 end;
 
+initialization
+  RegisterTest('Examples\Online\Routes\', TTestRouteSamples.Suite);
 end.

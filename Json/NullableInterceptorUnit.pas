@@ -100,6 +100,7 @@ uses
 
 var
   LocaleFormatSettings: TFormatSettings;
+//  DottedFormatSettings: TFormatSettings;
 
 { TNullableInterceptor }
 
@@ -373,6 +374,8 @@ begin
       else
       begin
         if (ObjectType.TypeKind = tkFloat) then
+//          Arg := FloatToJson(StrToFloat(Arg, DottedFormatSettings));
+          // здесь загрузка идет из JSON, который соответствует региональным настройкам
           Arg := FloatToJson(StrToFloat(Arg, LocaleFormatSettings));
         Value := InternalUnMarshal.StringToTValue(Arg, ValueField.FieldType.Handle);
       end;
@@ -393,5 +396,7 @@ end;
 initialization
   {$WARN SYMBOL_PLATFORM OFF}
   LocaleFormatSettings := TFormatSettings.Create(LOCALE_USER_DEFAULT);
+//  DottedFormatSettings := TFormatSettings.Create(LOCALE_USER_DEFAULT);
+//  DottedFormatSettings.DecimalSeparator := '.';
   {$WARN SYMBOL_PLATFORM ON}
 end.

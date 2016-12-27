@@ -114,6 +114,7 @@ begin
   Limit := 20;
   Offset := 1;
   Addresses := FRoute4MeManager.Geocoding.GetAddresses(Limit, Offset, ErrorString);
+  // todo: возвращает "404 Not Found". Спросил у Олега почему так.
   try
     CheckNotNull(Addresses);
     CheckTrue(Addresses.Count > 0);
