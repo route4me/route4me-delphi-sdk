@@ -19,15 +19,15 @@ type
   private
     [JSONName('s')]
     [Nullable]
-    FSpeed: NullableString;
+    FSpeed: NullableDouble;
 
     [JSONName('lt')]
     [Nullable]
-    FLatitude: NullableString;
+    FLatitude: NullableDouble;
 
     [JSONName('lg')]
     [Nullable]
-    FLongitude: NullableString;
+    FLongitude: NullableDouble;
 
     [JSONName('d')]
     [Nullable]
@@ -45,24 +45,24 @@ type
     ///  Constructor with 0-arguments must be and be public.
     ///  For JSON-deserialization.
     /// </remarks>
-    constructor Create;
+    constructor Create; overload;
 
     function Equals(Obj: TObject): Boolean; override;
 
     /// <summary>
     ///  Speed at the time of the location transaction event
     /// </summary>
-    property Speed: NullableString read FSpeed write FSpeed;
+    property Speed: NullableDouble read FSpeed write FSpeed;
 
     /// <summary>
     ///  Latitude at the time of the location transaction event
     /// </summary>
-    property Latitude: NullableString read FLatitude write FLatitude;
+    property Latitude: NullableDouble read FLatitude write FLatitude;
 
     /// <summary>
     ///  Longitude at the time of the location transaction event
     /// </summary>
-    property Longitude: NullableString read FLongitude write FLongitude;
+    property Longitude: NullableDouble read FLongitude write FLongitude;
 
     /// <summary>
     ///  Direction/Heading at the time of the location transaction event
@@ -107,9 +107,9 @@ end;
 
 constructor TTrackingHistory.Create;
 begin
-  FSpeed := NullableString.Null;
-  FLatitude := NullableString.Null;
-  FLongitude := NullableString.Null;
+  FSpeed := NullableDouble.Null;
+  FLatitude := NullableDouble.Null;
+  FLongitude := NullableDouble.Null;
   FD := NullableString.Null;
   FTimeStamp := NullableString.Null;
   FTimeStampFriendly := NullableString.Null;

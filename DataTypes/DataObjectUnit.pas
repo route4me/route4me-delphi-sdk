@@ -54,9 +54,6 @@ type
 
     function Equals(Obj: TObject): Boolean; override;
 
-    procedure AddAddress(Address: TAddress);
-    procedure AddRoute(Route: TDataObjectRoute);
-
     /// <summary>
     ///  Optimization which generated this route
     /// </summary>
@@ -87,6 +84,7 @@ type
     ///  Route Addresses
     /// </summary>
     property Addresses: TAddressesArray read FAddresses;
+    procedure AddAddress(Address: TAddress);
 
     /// <summary>
     ///  Route Parameters
@@ -97,6 +95,7 @@ type
     ///  Routes
     /// </summary>
     property Routes: TDataObjectRouteArray read FRoutes;
+    procedure AddRoute(Route: TDataObjectRoute);
 
     /// <summary>
     ///  Links to the GET operations for the optimization problem

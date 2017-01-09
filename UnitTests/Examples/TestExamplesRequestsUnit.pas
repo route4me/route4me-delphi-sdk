@@ -290,7 +290,7 @@ procedure TTestExamplesRequests.SingleDriverRoute10Stops;
 var
   DataObject: TDataObject;
 begin
-  // todo: memory leaks
+  // todo 5: memory leaks
   DataObject := FExamples.SingleDriverRoute10Stops;
   try
     CheckEqualsBody('SingleDriverRoute10Stops', FConnection.RequestBody);
@@ -733,7 +733,7 @@ var
   RouteId: String;
   RouteDestinationId: integer;
 begin
-  // todo: memory leaks
+  // todo 5: memory leaks
   RouteId := '5BCEACC31C444BCF9D8AB604DA4DFCA7';
   RouteDestinationId := 194622711;
 

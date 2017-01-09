@@ -10,6 +10,7 @@ type
   TTestAddressesSamples = class(TTestOnlineExamples)
   private
     procedure GetAddress;
+
     procedure MarkAsVisited;
     procedure MarkAsDeparted;
     procedure MarkAsDetectedAsVisited;
@@ -19,32 +20,58 @@ type
 
 implementation
 
-uses AddressParametersUnit, AddressUnit;
+uses AddressParametersUnit, AddressUnit, NullableBasicTypesUnit, AddressBookContactUnit, DataObjectUnit;
 
 var
-  FRouteId: String;
-  FAddressId: integer;
-  FMemberId: integer;
-  FRouteDestinationId: integer;
+  FRouteId: NullableString;
+  FAddressId: NullableInteger;
+  FMemberId: NullableInteger;
+  FRouteDestinationId: NullableInteger;
 
 { TTestAddressesSamples }
 
 procedure TTestAddressesSamples.GetAddress;
-var
+{var
   ErrorString: String;
   Parameters: TAddressParameters;
   Address: TAddress;
+  Limit, Offset, Total: Integer;
+  Routes: TDataObjectRouteList;}
 begin
+      // todo 3: проинициализировать параметры, после этого заработают остальные тесты
+
+{  Limit := 1;
+  Offset := 0;
+  Routes := FRoute4MeManager.Route.GetList(Limit, Offset, ErrorString);
+  try
+    CheckNotNull(Routes);
+    CheckEquals(EmptyStr, ErrorString);
+    CheckEquals(1, Routes.Count);
+
+    FRouteId := Routes[0].RouteId;
+    FMemberId := Routes[0].MemberId;
+
+    CheckTrue(Length(Routes[0].Addresses) > 0);
+    FAddressId := Routes[0].Addresses[0].id;
+  finally
+    FreeAndNil(Routes);
+  end;
+
   Parameters := TAddressParameters.Create;
+  try
+    Address := FRoute4MeManager.Address.Get(Parameters, ErrorString);
+    try
+      CheckEquals(EmptyStr, ErrorString);
 
-  Address := FRoute4MeManager.Address.Get(Parameters, ErrorString);
-  CheckEquals(EmptyStr, ErrorString);
-
-  // todo: проинициализировать параметры, после этого заработают остальные тесты
-  FRouteId := Address.RouteId;
-  FMemberId := Address.MemberId;
-  FRouteDestinationId := Address.RouteDestinationId;
-//  FAddressId := Address.adRouteId;
+      FRouteId := Address.RouteId;
+      FMemberId := Address.MemberId;
+      FRouteDestinationId := Address.RouteDestinationId;
+    finally
+      FreeAndNil(Address);
+    end;
+  finally
+    FreeAndNil(Parameters);
+  end;}
 end;
 
 procedure TTestAddressesSamples.MarkAsDeparted;
@@ -52,6 +79,10 @@ var
   ErrorString: String;
   IsDeparted: boolean;
 begin
+  CheckTrue(FRouteId.IsNotNull);
+  CheckTrue(FAddressId.IsNotNull);
+  CheckTrue(FMemberId.IsNotNull);
+
   IsDeparted := True;
   FRoute4MeManager.Address.MarkAsDeparted(
     FRouteId, FAddressId, FMemberId, IsDeparted, ErrorString);
@@ -80,6 +111,9 @@ var
   ErrorString: String;
   IsDeparted: boolean;
 begin
+  CheckTrue(FRouteId.IsNotNull);
+  CheckTrue(FRouteDestinationId.IsNotNull);
+
   IsDeparted := True;
   FRoute4MeManager.Address.MarkAsDetectedAsDeparted(
     FRouteId, FRouteDestinationId, IsDeparted, ErrorString);
@@ -104,6 +138,9 @@ var
   ErrorString: String;
   IsVisited: boolean;
 begin
+  CheckTrue(FRouteId.IsNotNull);
+  CheckTrue(FRouteDestinationId.IsNotNull);
+
   IsVisited := True;
   FRoute4MeManager.Address.MarkAsDetectedAsVisited(
     FRouteId, FRouteDestinationId, IsVisited, ErrorString);
@@ -128,6 +165,10 @@ var
   ErrorString: String;
   IsVisited: boolean;
 begin
+  CheckTrue(FRouteId.IsNotNull);
+  CheckTrue(FAddressId.IsNotNull);
+  CheckTrue(FMemberId.IsNotNull);
+
   IsVisited := True;
   FRoute4MeManager.Address.MarkAsVisited(
     FRouteId, FAddressId, FMemberId, IsVisited, ErrorString);
@@ -153,4 +194,8 @@ end;
 
 initialization
   RegisterTest('Examples\Online\Addresses\', TTestAddressesSamples.Suite);
+  FRouteId := NullableString.Null;
+  FAddressId := NullableInteger.Null;
+  FMemberId := NullableInteger.Null;
+  FRouteDestinationId := NullableInteger.Null;
 end.

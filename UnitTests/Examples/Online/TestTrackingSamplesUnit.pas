@@ -8,6 +8,8 @@ uses
 
 type
   TTestTrackingSamples = class(TTestOnlineExamples)
+  private
+    function GetRouteId: String;
   published
     procedure SetGPS;
     procedure TrackDeviceLastLocationHistory;
@@ -21,10 +23,8 @@ implementation
 uses DateUtils, NullableBasicTypesUnit, GPSParametersUnit, EnumsUnit,
   DataObjectUnit, TrackingHistoryResponseUnit, TrackingDataUnit;
 
-{var
-  FRouteId: String;}
-const
-  FRouteId = '814FB49CEA8188D134E9D4D4B8B0DAF7';
+var
+  FRouteId: NullableString;
 
 procedure TTestTrackingSamples.GetAssetTrackingData;
 var
@@ -62,6 +62,8 @@ var
   RouteId: String;
   Period: TPeriod;
 begin
+  CheckTrue(FRouteId.IsNotNull);
+
   Period := pAllTime;
 
   Response := FRoute4MeManager.Tracking.GetLocationHistory(
@@ -78,8 +80,7 @@ begin
   Response := FRoute4MeManager.Tracking.GetLocationHistory(
     RouteId, Period, LastPositionOnly, ErrorString);
   try
-    CheckNotNull(Response);
-    CheckEquals(0, Length(Response.TrackingHistories));
+    CheckNull(Response);
     CheckEquals(EmptyStr, ErrorString);
   finally
     FreeAndNil(Response);
@@ -95,6 +96,8 @@ var
   RouteId: String;
   StartDate, EndDate: TDateTime;
 begin
+  CheckTrue(FRouteId.IsNotNull);
+
   StartDate := EncodeDateTime(2016, 10, 20, 0, 0, 0, 0);
   EndDate := EncodeDateTime(2016, 10, 26, 23, 59, 59, 0);
 
@@ -112,8 +115,7 @@ begin
   Response := FRoute4MeManager.Tracking.GetLocationHistory(
     RouteId, StartDate, EndDate, LastPositionOnly, ErrorString);
   try
-    CheckNotNull(Response);
-    CheckEquals(0, Length(Response.TrackingHistories));
+    CheckNull(Response);
     CheckEquals(EmptyStr, ErrorString);
   finally
     FreeAndNil(Response);
@@ -124,11 +126,28 @@ begin
   Response := FRoute4MeManager.Tracking.GetLocationHistory(
     FRouteId, StartDate, EndDate, LastPositionOnly, ErrorString);
   try
-    CheckNotNull(Response);
-    CheckEquals(0, Length(Response.TrackingHistories));
+    CheckNull(Response);
     CheckEquals(EmptyStr, ErrorString);
   finally
     FreeAndNil(Response);
+  end;
+end;
+
+function TTestTrackingSamples.GetRouteId: String;
+var
+  ErrorString: String;
+  Routes: TDataObjectRouteList;
+begin
+  // todo 1: проинициализировать в реальное значение
+  Routes := FRoute4MeManager.Route.GetList(1, 0, ErrorString);
+  try
+    CheckNotNull(Routes);
+    CheckEquals(EmptyStr, ErrorString);
+    CheckTrue(Routes.Count > 0);
+
+    FRouteId := Routes[0].RouteId;
+  finally
+    FreeAndNil(Routes);
   end;
 end;
 
@@ -136,14 +155,14 @@ procedure TTestTrackingSamples.SetGPS;
 var
   ErrorString: String;
   Parameters: TGPSParameters;
+  RouteId: String;
 begin
-  // todo: проинициализиривать в реальное значение
-//  FRouteId := '1';
+  RouteId := '114B01238180A4227FD187E128C056F5';
 
   Parameters := TGPSParameters.Create;
   try
     Parameters.Format := TFormatDescription[TFormatEnum.Xml];
-    Parameters.RouteId := FRouteId;
+    Parameters.RouteId := RouteId;
     Parameters.Latitude := 55.6884868;
     Parameters.Longitude := 12.5366426;
     Parameters.Course := 70;
@@ -165,7 +184,9 @@ var
   Route: TDataObjectRoute;
   RouteId: String;
 begin
-  Route := FRoute4MeManager.Tracking.GetLastLocation(FRouteId, ErrorString);
+  RouteId := '814FB49CEA8188D134E9D4D4B8B0DAF7';
+
+  Route := FRoute4MeManager.Tracking.GetLastLocation(RouteId, ErrorString);
   try
     CheckNotNull(Route);
     CheckEquals(EmptyStr, ErrorString);
@@ -177,7 +198,7 @@ begin
   Route := FRoute4MeManager.Tracking.GetLastLocation(RouteId, ErrorString);
   try
     CheckNull(Route);
-    CheckNotEquals(EmptyStr, ErrorString);
+    CheckEquals(EmptyStr, ErrorString);
   finally
     FreeAndNil(Route);
   end;

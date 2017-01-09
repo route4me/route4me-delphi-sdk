@@ -137,6 +137,7 @@ begin
   Request := TRegisterWebinarRequest.Create(Email, FirstName, LastName, Phone,
     Company, MemberId, StartDate);
   try
+    // todo 5: узнать какой ответ в случае успеха
     Response := FConnection.Post(TSettings.EndPoints.RegisterWebinar,
       Request, TSimpleString, ErrorString) as TSimpleString;
     try
@@ -295,7 +296,7 @@ begin
 
   Request := TDeviceLicenseRequest.Create(DeviceId, DeviceType, 'json');
   try
-    // todo: возвращает просто строку: "Missing or Invalid Device ID"
+    // todo 2: узнать какой ответ в случае успеха. Сейчас возвращает просто строку: "Missing or Invalid Device ID"
     Response := FConnection.Post(TSettings.EndPoints.VerifyDeviceLicense,
       Request, TSimpleString, ErrorString) as TSimpleString;
     try

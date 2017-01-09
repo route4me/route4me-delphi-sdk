@@ -58,7 +58,8 @@ var
   Addresses: TAddressInfoArray;
   Geocodings: TGeocodingList;
 begin
-(* todo: задал вопрос Олегу, какой ответ должен быть правильный, сейчас это
+// todo 4: задал вопрос Олегу, какой ответ должен быть правильный
+(* сейчас это:
 {"optimization_problem_id":"96ED7C330F00C281DDD4DACEC9AAE9A1","address_count":1,"status":true}
 
   SetLength(Addresses, 3);
@@ -114,7 +115,6 @@ begin
   Limit := 20;
   Offset := 1;
   Addresses := FRoute4MeManager.Geocoding.GetAddresses(Limit, Offset, ErrorString);
-  // todo: возвращает "404 Not Found". Спросил у Олега почему так.
   try
     CheckNotNull(Addresses);
     CheckTrue(Addresses.Count > 0);

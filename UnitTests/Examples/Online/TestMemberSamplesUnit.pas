@@ -98,10 +98,10 @@ begin
   CheckFalse(FRoute4MeManager.User.DeviceLicense(DeviceId, DeviceType, ErrorString));
   CheckNotEquals(EmptyStr, ErrorString);
 
-  // todo: узнать какой ответ в случае успеха
-  // Repeat adding same new user. Must be success.
-//  DoubleMemberId := FRoute4MeManager.User.AddNewUser(Parameters, ErrorString);
-//  CheckTrue(DoubleMemberId.IsNull);
+  // Registered DeviceId. Must be success.
+  DeviceId := '546546516';
+  CheckTrue(FRoute4MeManager.User.DeviceLicense(DeviceId, DeviceType, ErrorString));
+  CheckEquals(EmptyStr, ErrorString);
 end;
 
 procedure TTestMemberSamples.GetUserDetails;
@@ -156,9 +156,8 @@ begin
   CheckEquals(EmptyStr, ErrorString);
 
   // Must be success.
-{   todo: узнать какой ответ в случае успеха
   CheckTrue(FRoute4MeManager.User.RegisterWebinar(FEmail, FirstName, LastName,
-    Phone, Company, FMemberId, StartDate, ErrorString));}
+    Phone, Company, FMemberId, StartDate, ErrorString));
   CheckEquals(EmptyStr, ErrorString);
 end;
 
@@ -220,10 +219,11 @@ begin
     DeviceId, DeviceType, Subscription, Token, Payload, ErrorString));
   CheckNotEquals(EmptyStr, ErrorString);
 
-  // todo: узнать какой ответ в случае успеха
-  // Repeat adding same new user. Must be success.
-//  DoubleMemberId := FRoute4MeManager.User.AddNewUser(Parameters, ErrorString);
-//  CheckTrue(DoubleMemberId.IsNull);
+  // Registered DeviceId. Must be success.
+  DeviceId := '546546516';
+  CheckTrue(FRoute4MeManager.User.UserLicense(FMemberId, FSessionId, DeviceId,
+    DeviceType, Subscription, Token, Payload, ErrorString));
+  CheckEquals(EmptyStr, ErrorString);
 end;
 
 procedure TTestMemberSamples.ValidateSession;
@@ -234,8 +234,7 @@ begin
   CheckTrue(FMemberId.IsNotNull);
 
   // Validate session of the corrected user. Must be success.
-{ todo: тест не проходит
-  CheckTrue(FRoute4MeManager.User.IsSessionValid(FSessionId, FMemberId, ErrorString));}
+  CheckTrue(FRoute4MeManager.User.IsSessionValid(FSessionId, FMemberId, ErrorString));
   CheckEquals(EmptyStr, ErrorString);
 
   // Validate session of the incorrected session. Must be error.
@@ -249,4 +248,6 @@ end;
 
 initialization
   RegisterTest('Examples\Online\Members\', TTestMemberSamples.Suite);
+  FMemberId := NullableInteger.Null;
+  FSessionId := NullableInteger.Null;
 end.

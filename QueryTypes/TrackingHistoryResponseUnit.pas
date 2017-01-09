@@ -11,27 +11,21 @@ type
   TTrackingHistorySummary = class(TGenericParameters)
   private
     [JSONName('total_distance')]
-    [Nullable]
     FTotalDistance: NullableDouble;
 
     [JSONName('matched_time')]
-    [Nullable]
     FMatchedTime: NullableInteger;
 
     [JSONName('matched_distance')]
-    [Nullable]
     FMatchedDistance: NullableDouble;
 
     [JSONName('total_time')]
-    [Nullable]
     FTotalTime: NullableInteger;
 
     [JSONName('trace_time')]
-    [Nullable]
     FTraceTime: NullableInteger;
 
     [JSONName('trace_distance')]
-    [Nullable]
     FTraceDistance: NullableDouble;
   public
     constructor Create; override;
@@ -47,7 +41,6 @@ type
   TMmd = class(TGenericParameters)
   private
     [JSONName('status')]
-    [Nullable]
     FStatus: NullableInteger;
 
     [JSONName('summary')]

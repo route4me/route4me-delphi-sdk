@@ -50,10 +50,7 @@ type
     function MoveDestinationToRoute(ToRouteId: String;
       RouteDestinationId, AfterDestinationId: integer; out ErrorString: String): boolean;
 
-    function Get(RouteParameters: TRouteParametersQuery;
-      out ErrorString: String): TDataObjectRoute; overload;
-
-    function Get(RouteId: String; RoutePathOutput: TRoutePathOutput;
+    function Get(RouteId: String; GetRouteDirections, GetRoutePathPoints: boolean;
       out ErrorString: String): TDataObjectRoute; overload;
 
     function GetList(Limit, Offset: integer;
@@ -211,24 +208,23 @@ begin
   end;
 end;
 
-function TRouteActions.Get(RouteParameters: TRouteParametersQuery;
-  out ErrorString: String): TDataObjectRoute;
-begin
-  Result := FConnection.Get(TSettings.EndPoints.Route,
-    RouteParameters, TDataObjectRoute, ErrorString) as TDataObjectRoute;
-end;
-
-function TRouteActions.Get(RouteId: String; RoutePathOutput: TRoutePathOutput;
-  out ErrorString: String): TDataObjectRoute;
+function TRouteActions.Get(RouteId: String; GetRouteDirections,
+  GetRoutePathPoints: boolean; out ErrorString: String): TDataObjectRoute;
 var
   RouteParameters: TRouteParametersQuery;
 begin
   RouteParameters := TRouteParametersQuery.Create;
   try
     RouteParameters.RouteId := RouteId;
-    RouteParameters.RoutePathOutput := RoutePathOutput;
+    if (GetRouteDirections) then
+      RouteParameters.Directions := True;
 
-    Result := Get(RouteParameters, ErrorString);
+    if (GetRoutePathPoints) then
+      RouteParameters.RoutePathOutput := TRoutePathOutput.rpoPoints;
+
+    Result := FConnection.Get(TSettings.EndPoints.Route,
+      RouteParameters, TDataObjectRoute, ErrorString) as TDataObjectRoute;
+
   finally
     FreeAndNil(RouteParameters);
   end;

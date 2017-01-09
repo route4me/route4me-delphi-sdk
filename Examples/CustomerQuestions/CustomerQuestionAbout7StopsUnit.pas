@@ -71,6 +71,8 @@ var
   OptimizationProblemDetails: TDataObject;
   Route: TDataObjectRoute;
   DetailedRoute: TDataObjectRoute;
+  GetRouteDirections: Boolean;
+  GetRoutePathPoints: Boolean;
 begin
   try
     Route4MeManager := TRoute4MeManager.Create(TConnection.Create(FApiKey));
@@ -109,7 +111,10 @@ begin
         try
           for Route in OptimizationProblemDetails.Routes do
           begin
-            DetailedRoute := Route4MeManager.Route.Get(Route.RouteId, TRoutePathOutput.rpoPoints, ErrorString);
+            GetRouteDirections := False;
+            GetRoutePathPoints := True;
+            DetailedRoute := Route4MeManager.Route.Get(Route.RouteId,
+              GetRouteDirections, GetRoutePathPoints, ErrorString);
             try
               PrintIfHasError(ErrorString);
             finally

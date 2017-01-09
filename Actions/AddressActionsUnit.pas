@@ -12,15 +12,27 @@ type
     function Get(AddressParameters: TAddressParameters;
       out ErrorString: String): TAddress;
 
+    /// <summary>
+    /// Mark an address as visited.
+    /// </summary>
     procedure MarkAsVisited(RouteId: String; AddressId, MemberId: integer;
       IsVisited: boolean; out ErrorString: String);
 
+    /// <summary>
+    /// Mark a destination of a route as departed.
+    /// </summary>
     procedure MarkAsDeparted(RouteId: String; AddressId, MemberId: integer;
       IsDeparted: boolean; out ErrorString: String);
 
+    /// <summary>
+    /// The example refers to the process of marking an address as Detected as Visited.
+    /// </summary>
     procedure MarkAsDetectedAsVisited(RouteId: String; RouteDestinationId: integer;
       IsVisited: boolean; out ErrorString: String);
 
+    /// <summary>
+    /// The example refers to the process of marking an address as Detected as Departed.
+    /// </summary>
     procedure MarkAsDetectedAsDeparted(RouteId: String; RouteDestinationId: integer;
       IsDeparted: boolean; out ErrorString: String);
   end;

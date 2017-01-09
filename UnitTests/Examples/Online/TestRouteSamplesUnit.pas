@@ -27,14 +27,14 @@ var
   FOptimizationProblemId: NullableString;
 
 procedure TTestRouteSamples.AddOrderToRoute;
-var
+{var
   Route: TDataObjectRoute;
   Parameters: TRouteParameters;
   Addresses: TOrderedAddress;
   ErrorString: String;
-  RouteId: String;
+  RouteId: String;}
 begin
-// todo: сделать
+// todo 4: сделать unit-тест
 {  RouteId := 'qwe';
   Parameters := TRouteParameters.Create;
   Parameters.RouteName := 'Test Route';
@@ -84,7 +84,7 @@ begin
     OptimizationProblemDetails := FRoute4MeManager.Optimization.Get(
       FOptimizationProblemId, ErrorString);
     try
-      CheckNotNull(OptimizationProblemDetails);
+      CheckNotNull(DataObject);
       CheckEquals(EmptyStr, ErrorString);
       CheckTrue(Length(OptimizationProblemDetails.Routes) > 0);
 
@@ -108,7 +108,7 @@ var
 begin
   DeletedRouteIds := FRoute4MeManager.Route.Delete(['qwe'], ErrorString);
   CheckEquals(0, Length(DeletedRouteIds));
-  CheckNotEquals(EmptyStr, ErrorString);
+  CheckEquals(EmptyStr, ErrorString);
 
   CheckTrue(FRouteId.IsNotNull);
   DeletedRouteIds := FRoute4MeManager.Route.Delete([FRouteId], ErrorString);

@@ -66,7 +66,7 @@ end;
 
 procedure TTestOrderSamples.AddOrderToOptimization;
 begin
-// todo: сделать
+// todo 4: сделать unit-тест
 end;
 
 procedure TTestOrderSamples.GetAllOrders;
@@ -171,7 +171,7 @@ var
   IsFound: boolean;
 begin
   // Correct date. Must be success.
-  // todo: время надо перевести в серверное (по Штатам, похоже)
+  // todo 3: время надо перевести в серверное (по Штатам, похоже)
   Date := Now();
   Orders := FRoute4MeManager.Order.Get(Date, ErrorString);
   try
@@ -191,8 +191,8 @@ begin
     FreeAndNil(Orders);
   end;
 
-{  // todo: Олега спросил почему для дат из будущего и прошлого список заказов не пуст
-  Date := EncodeDateTime(2216, 06, 15, 0, 0, 0, 0);
+//  DONE 5: Олега спросил почему для дат из будущего и прошлого список заказов не пуст. Ответа нет.
+{  Date := EncodeDateTime(2216, 06, 15, 0, 0, 0, 0);
   // Invalid date. Must be error.
   Orders := FRoute4MeManager.Order.Get(Date, ErrorString);
   try
@@ -230,8 +230,8 @@ begin
     FreeAndNil(Orders);
   end;
 
-{  // todo: Олега спросил почему для дат из будущего и прошлого список заказов не пуст
-  // Invalid date. Must be error.
+// DONE 5: Олега спросил почему для дат из будущего и прошлого список заказов не пуст. Ответа нет.
+{  // Invalid date. Must be error.
   Orders := FRoute4MeManager.Order.GetOrdersScheduledFor(IncDay(Now, -2), ErrorString);
   try
     CheckNotNull(Orders);
@@ -244,7 +244,7 @@ end;
 
 procedure TTestOrderSamples.GetOrdersWithCustomFields;
 begin
-// todo: сделать (нужен парминг из многомерного массива)
+// todo 4: сделать unit-тест (нужен парсинг из многомерного массива)
 end;
 
 procedure TTestOrderSamples.GetOrdersWithSpecifiedText;

@@ -217,7 +217,7 @@ begin
     FreeAndNil(Contacts)
   end;
 
-  // todo: почему-то, если id единственный, выдает неверный результат. Спросил у Олега
+  // todo 4: почему-то, если id единственный, выдает неверный результат. Спросил у Олега
   // сейчас подогнал логику в TAddressBookContactActions.Get
   Contacts := FRoute4MeManager.AddressBookContact.Get([FContact.Id], ErrorString);
   try

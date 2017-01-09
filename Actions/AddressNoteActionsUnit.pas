@@ -84,10 +84,10 @@ function TAddressNoteActions.AddFile(RouteId: String; AddressId: integer;
   ActivityType: TStatusUpdateType; Filename: String;
   out ErrorString: String): TAddressNote;
 var
-{  Response: TAddAddressNoteResponse;
+  Response: TAddAddressNoteResponse;
   Parameters: TGenericParameters;
   NoteParameterPairs: TListStringPair;
-  i: integer;}
+  i: integer;
   NoteParameters: TNoteParameters;
 begin
   Result := nil;
@@ -106,9 +106,7 @@ begin
     NoteParameters.DeviceType := DeviceType;
     NoteParameters.ActivityType := ActivityType;
 
-    // todo: сделать Add a Note File
-
-{    Parameters := TGenericParameters.Create;
+    Parameters := TGenericParameters.Create;
     try
       NoteParameterPairs := NoteParameters.Serialize('');
       try
@@ -118,6 +116,7 @@ begin
         FreeAndNil(NoteParameterPairs);
       end;
 
+      // todo 5: сделать Add a Note File
       Response := FConnection.Post(TSettings.EndPoints.AddRouteNotes, Parameters,
         TAddAddressNoteResponse, ErrorString) as TAddAddressNoteResponse;
       try
@@ -132,7 +131,7 @@ begin
       end;
     finally
       FreeAndNil(Parameters);
-    end;}
+    end;
   finally
     FreeAndNil(NoteParameters);
   end;

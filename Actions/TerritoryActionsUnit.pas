@@ -15,7 +15,7 @@ type
     function Add(Name: String; Color: String; Contour: TTerritoryContour;
       out ErrorString: String): NullableString; overload;
 
-    // todo: если даже отправлять список адресов на сервер, то в ответе он обнуляется
+    // todo 5: если даже отправлять список адресов на сервер, то в ответе он обнуляется
     function Add(Name: String; Color: String; Contour: TTerritoryContour;
       AddressIds: TArray<integer>; out ErrorString: String): NullableString; overload;
 

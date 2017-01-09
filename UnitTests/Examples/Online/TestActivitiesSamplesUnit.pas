@@ -522,8 +522,8 @@ begin
   CheckNotEquals(EmptyStr, ErrorString);
 
   RouteId := 'qwe';
-  Message := 'Test';
-  // todo: при несуществующем RouteId все равно сервер возвращает True. Спросил у Олега
+  Message := 'T 5est';
+  // todo 5: при несуществующем RouteId все равно сервер возвращает True. Спросил у Олега
   CheckTrue(
     FRoute4MeManager.ActivityFeed.LogSpecificMessage(RouteId, Message, ErrorString));
   CheckEquals(EmptyStr, ErrorString);
