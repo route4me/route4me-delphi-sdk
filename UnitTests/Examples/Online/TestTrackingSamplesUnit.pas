@@ -7,9 +7,17 @@ uses
   BaseTestOnlineExamplesUnit;
 
 type
+  TRec = record
+    RouteId: String;
+    MemberId: string;
+  end;
+  TRecs = array of TRec;
+
   TTestTrackingSamples = class(TTestOnlineExamples)
   private
-    function GetRouteId: String;
+    procedure InitParameters(index: Integer; out RouteId: String; out MemberId: String);
+    procedure SaveParameters();
+    procedure LoadParameters();
   published
     procedure SetGPS;
     procedure TrackDeviceLastLocationHistory;
@@ -25,6 +33,7 @@ uses DateUtils, NullableBasicTypesUnit, GPSParametersUnit, EnumsUnit,
 
 var
   FRouteId: NullableString;
+  FRecs: TRecs;
 
 procedure TTestTrackingSamples.GetAssetTrackingData;
 var
@@ -62,8 +71,7 @@ var
   RouteId: String;
   Period: TPeriod;
 begin
-  CheckTrue(FRouteId.IsNotNull);
-
+  RouteId := '814FB49CEA8188D134E9D4D4B8B0DAF7';
   Period := pAllTime;
 
   Response := FRoute4MeManager.Tracking.GetLocationHistory(
@@ -96,8 +104,7 @@ var
   RouteId: String;
   StartDate, EndDate: TDateTime;
 begin
-  CheckTrue(FRouteId.IsNotNull);
-
+  RouteId := '814FB49CEA8188D134E9D4D4B8B0DAF7';
   StartDate := EncodeDateTime(2016, 10, 20, 0, 0, 0, 0);
   EndDate := EncodeDateTime(2016, 10, 26, 23, 59, 59, 0);
 
@@ -133,22 +140,70 @@ begin
   end;
 end;
 
-function TTestTrackingSamples.GetRouteId: String;
+procedure TTestTrackingSamples.InitParameters(index: Integer;
+  out RouteId: String; out MemberId: String);
+begin
+  RouteId := FRecs[index].RouteId;
+  MemberId := FRecs[index].MemberId;
+end;
+
+procedure TTestTrackingSamples.LoadParameters;
+var
+  st: TStringList;
+  strings: TStringList;
+  i: Integer;
+begin
+  if not FileExists('RouteIds.txt') then
+    Exit;
+
+  st := TStringList.Create;
+  try
+    st.LoadFromFile('RouteIds.txt');
+
+    SetLength(FRecs, st.Count);
+    for i := 0 to st.Count - 1 do
+    begin
+      strings := TStringList.Create;
+      try
+        ExtractStrings([';'], [' '], PWideChar(st[i]), strings);
+        FRecs[i].RouteId := strings[0];
+        FRecs[i].MemberId := strings[1];
+      finally
+        FreeAndNil(strings);
+      end;
+    end;
+  finally
+    FreeAndNil(st);
+  end;
+end;
+
+procedure TTestTrackingSamples.SaveParameters;
+const
+  MaxPageCount = 5;
 var
   ErrorString: String;
   Routes: TDataObjectRouteList;
+  st: TStringList;
+  offset: Integer;
+  i: Integer;
 begin
-  // todo 1: проинициализировать в реальное значение
-  Routes := FRoute4MeManager.Route.GetList(1, 0, ErrorString);
-  try
-    CheckNotNull(Routes);
-    CheckEquals(EmptyStr, ErrorString);
-    CheckTrue(Routes.Count > 0);
+  st := TStringList.Create;
 
-    FRouteId := Routes[0].RouteId;
-  finally
-    FreeAndNil(Routes);
+  begin
+    Routes := FRoute4MeManager.Route.GetList(5000, 0, ErrorString);
+    try
+      CheckNotNull(Routes);
+      CheckEquals(EmptyStr, ErrorString);
+      CheckTrue(Routes.Count > 0);
+
+      for i := 0 to Routes.Count - 1 do
+        st.Add(Routes[i].RouteId + ';' + Routes[i].MemberId);
+    finally
+      FreeAndNil(Routes);
+    end;
   end;
+
+  st.SaveToFile('RouteIds.txt');
 end;
 
 procedure TTestTrackingSamples.SetGPS;
@@ -157,7 +212,7 @@ var
   Parameters: TGPSParameters;
   RouteId: String;
 begin
-  RouteId := '114B01238180A4227FD187E128C056F5';
+  RouteId := '15D9B7219B4691E0CAB8937FAFF11E58';
 
   Parameters := TGPSParameters.Create;
   try
@@ -173,6 +228,10 @@ begin
 
     FRoute4MeManager.Tracking.SetGPS(Parameters, ErrorString);
     CheckEquals(EmptyStr, ErrorString);
+
+    Parameters.MemberId := -1;
+    FRoute4MeManager.Tracking.SetGPS(Parameters, ErrorString);
+    CheckNotEquals(EmptyStr, ErrorString);
   finally
     FreeAndNil(Parameters);
   end;
@@ -184,7 +243,7 @@ var
   Route: TDataObjectRoute;
   RouteId: String;
 begin
-  RouteId := '814FB49CEA8188D134E9D4D4B8B0DAF7';
+  RouteId := '15D9B7219B4691E0CAB8937FAFF11E58';
 
   Route := FRoute4MeManager.Tracking.GetLastLocation(RouteId, ErrorString);
   try
@@ -198,7 +257,7 @@ begin
   Route := FRoute4MeManager.Tracking.GetLastLocation(RouteId, ErrorString);
   try
     CheckNull(Route);
-    CheckEquals(EmptyStr, ErrorString);
+    CheckNotEquals(EmptyStr, ErrorString);
   finally
     FreeAndNil(Route);
   end;
@@ -206,4 +265,5 @@ end;
 
 initialization
   RegisterTest('Examples\Online\Tracking\', TTestTrackingSamples.Suite);
+  SetLength(FRecs, 0);
 end.

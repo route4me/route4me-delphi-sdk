@@ -192,7 +192,7 @@ begin
   end;
 
 //  DONE 5: Олега спросил почему для дат из будущего и прошлого список заказов не пуст. Ответа нет.
-{  Date := EncodeDateTime(2216, 06, 15, 0, 0, 0, 0);
+  Date := EncodeDateTime(1980, 06, 15, 0, 0, 0, 0);
   // Invalid date. Must be error.
   Orders := FRoute4MeManager.Order.Get(Date, ErrorString);
   try
@@ -201,7 +201,19 @@ begin
     CheckEquals(EmptyStr, ErrorString);
   finally
     FreeAndNil(Orders);
-  end;}
+  end;
+
+//  DONE 5: Олега спросил почему для дат из будущего и прошлого список заказов не пуст. Ответа нет.
+  Date := EncodeDateTime(2216, 06, 15, 0, 0, 0, 0);
+  // Invalid date. Must be error.
+  Orders := FRoute4MeManager.Order.Get(Date, ErrorString);
+  try
+    CheckNotNull(Orders);
+    CheckEquals(0, Orders.Count);
+    CheckEquals(EmptyStr, ErrorString);
+  finally
+    FreeAndNil(Orders);
+  end;
 end;
 
 procedure TTestOrderSamples.GetOrdersScheduledFor;

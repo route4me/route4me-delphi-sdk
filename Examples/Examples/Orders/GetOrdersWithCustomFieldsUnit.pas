@@ -7,14 +7,14 @@ uses SysUtils, BaseExampleUnit;
 type
   TGetOrdersWithCustomFields = class(TBaseExample)
   public
-    procedure Execute(Fields: String);
+    procedure Execute(Fields: TArray<String>);
   end;
 
 implementation
 
 uses CommonTypesUnit;
 
-procedure TGetOrdersWithCustomFields.Execute(Fields: String);
+procedure TGetOrdersWithCustomFields.Execute(Fields: TArray<String>);
 var
   ErrorString: String;
   Orders: TIntegerArray;
@@ -24,8 +24,8 @@ procedure TGetOrdersWithCustomFields.Execute(Fields: String);
 begin
   Limit := 10;
   Offset := 0;
-  Orders := Route4MeManager.Order.GetOrdersWithCustomFields(
-    Fields, Limit, Offset, Total, ErrorString);
+{  Orders := Route4MeManager.Order.GetOrdersWithCustomFields(
+    Fields, Limit, Offset, Total, ErrorString);}
   try
     WriteLn('');
 

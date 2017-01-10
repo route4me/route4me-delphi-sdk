@@ -3,10 +3,13 @@ unit OrderActionsUnit;
 interface
 
 uses
-  SysUtils, BaseActionUnit,
+  SysUtils, BaseActionUnit, System.Generics.Collections,
   OrderUnit, OrderParametersUnit, CommonTypesUnit;
 
 type
+  TOrdersCustomFields = TDictionary<string, TArray<string>>;
+//  TOrdersCustomFields = array of //TArray<TArray<string>>;
+
   TOrderActions = class(TBaseAction)
   private
     function GetDateStr(Date: TDate): String;
@@ -29,8 +32,9 @@ type
     /// <summary>
     ///  Searching all Orders with specified custom fields
     /// </summary>
-    function GetOrdersWithCustomFields(Fields: String; Limit, Offset: integer;
-      out Total: integer; out ErrorString: String): TIntegerArray;
+    function GetOrdersWithCustomFields(Fields: TArray<String>;
+      Limit, Offset: integer; out Total: integer;
+      out ErrorString: String): TOrdersCustomFields;
 
     /// <summary>
     ///  Search for all order records which contain specified text in any field
@@ -223,19 +227,26 @@ begin
   end;
 end;
 
-function TOrderActions.GetOrdersWithCustomFields(Fields: String;
-  Limit, Offset: integer; out Total: integer; out ErrorString: String): TIntegerArray;
+function TOrderActions.GetOrdersWithCustomFields(Fields: TArray<String>;
+  Limit, Offset: integer; out Total: integer; out ErrorString: String): TOrdersCustomFields;
 var
   Response: TGetOrdersWithCustomFieldsResponse;
   Request: TGenericParameters;
   i: integer;
+  FieldsStr: String;
 begin
-  SetLength(Result, 0);
+  Result := TOrdersCustomFields.Create();
+
+//  SetLength(Result, 0);
   Total := 0;
+
+  FieldsStr := EmptyStr;
+  for i := 0 to High(Fields) do
+    FieldsStr := FieldsStr + Fields[i];
 
   Request := TGenericParameters.Create;
   try
-    Request.AddParameter('fields', Fields);
+    Request.AddParameter('fields', FieldsStr);
     Request.AddParameter('offset', IntToStr(Offset));
     Request.AddParameter('limit', IntToStr(Limit));
 
@@ -244,9 +255,9 @@ begin
     try
       if (Response <> nil) then
       begin
-        SetLength(Result, Response.OrdersCount);
-        for i := 0 to Response.OrdersCount - 1 do
-          Result[i] := Response.OrderId[i];
+//        SetLength(Result, Response.OrdersCount);
+{        for i := 0 to Response.OrdersCount - 1 do
+          Result[i] := Response.OrderId[i];}
         Total := Response.Total;
       end
       else

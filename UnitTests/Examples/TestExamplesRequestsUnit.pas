@@ -1482,14 +1482,14 @@ end;
 
 procedure TTestExamplesRequests.GetOrdersWithCustomFields;
 var
-  Fields: String;
+  Fields: TArray<String>;
 begin
-  Fields := 'Test Fields';
+  Fields := ['order_id', 'member_id'];
   FExamples.GetOrdersWithCustomFields(Fields);
 
   CheckEquals(EmptyStr, FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/order.php?api_key=11111111111111111111111111111111&' +
-    'fields=Test Fields&offset=0&limit=10', FConnection.Url);
+    'fields=order_id,member_id&offset=0&limit=10', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;

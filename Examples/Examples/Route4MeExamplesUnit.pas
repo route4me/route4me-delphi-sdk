@@ -138,7 +138,7 @@ type
     procedure GetOrder(OrderId: integer);
     procedure GetOrders(Date: TDate); overload;
     procedure GetOrdersScheduledFor(Date: TDate);
-    procedure GetOrdersWithCustomFields(Fields: String);
+    procedure GetOrdersWithCustomFields(Fields: TArray<String>);
     procedure GetOrdersWithSpecifiedText(SpecifiedText: String);
     procedure UpdateOrder(Order: TOrder);
     procedure RemoveOrders(OrderIds: TIntegerArray);
@@ -1067,7 +1067,7 @@ begin
   end;
 end;
 
-procedure TRoute4MeExamples.GetOrdersWithCustomFields(Fields: String);
+procedure TRoute4MeExamples.GetOrdersWithCustomFields(Fields: TArray<String>);
 var
   Example: TGetOrdersWithCustomFields;
 begin

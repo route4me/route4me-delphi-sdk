@@ -19,15 +19,15 @@ type
   private
     [JSONName('s')]
     [Nullable]
-    FSpeed: NullableDouble;
+    FSpeed: NullableString;
 
     [JSONName('lt')]
     [Nullable]
-    FLatitude: NullableDouble;
+    FLatitude: NullableString;
 
     [JSONName('lg')]
     [Nullable]
-    FLongitude: NullableDouble;
+    FLongitude: NullableString;
 
     [JSONName('d')]
     [Nullable]
@@ -52,17 +52,17 @@ type
     /// <summary>
     ///  Speed at the time of the location transaction event
     /// </summary>
-    property Speed: NullableDouble read FSpeed write FSpeed;
+    property Speed: NullableString read FSpeed write FSpeed;
 
     /// <summary>
     ///  Latitude at the time of the location transaction event
     /// </summary>
-    property Latitude: NullableDouble read FLatitude write FLatitude;
+    property Latitude: NullableString read FLatitude write FLatitude;
 
     /// <summary>
     ///  Longitude at the time of the location transaction event
     /// </summary>
-    property Longitude: NullableDouble read FLongitude write FLongitude;
+    property Longitude: NullableString read FLongitude write FLongitude;
 
     /// <summary>
     ///  Direction/Heading at the time of the location transaction event
@@ -107,9 +107,9 @@ end;
 
 constructor TTrackingHistory.Create;
 begin
-  FSpeed := NullableDouble.Null;
-  FLatitude := NullableDouble.Null;
-  FLongitude := NullableDouble.Null;
+  FSpeed := NullableString.Null;
+  FLatitude := NullableString.Null;
+  FLongitude := NullableString.Null;
   FD := NullableString.Null;
   FTimeStamp := NullableString.Null;
   FTimeStampFriendly := NullableString.Null;

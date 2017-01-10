@@ -52,7 +52,6 @@ begin
   try
     Parameters.AddParameter('route_id', RouteId);
     Parameters.AddParameter('device_tracking_history', '1');
-    Parameters.AddParameter('format', 'json');
 
     Result := FConnection.Get(TSettings.EndPoints.Route, Parameters,
       TDataObjectRoute, ErrorString) as TDataObjectRoute;
