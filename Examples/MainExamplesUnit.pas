@@ -62,9 +62,9 @@ var
   RouteDestinationId: integer;
   AddressId: NullableInteger;
   MemberId: integer;
-  SessionId: NullableInteger;
   EMail: String;
   Limit, Offset: integer;
+  SessionGuid: NullableString;
 begin
   try
     Connection := TConnection.Create(c_ApiKey);
@@ -84,13 +84,13 @@ begin
           UserParameters.FirstName := 'John';
           Examples.UpdateUser(UserParameters);
 
-          SessionId := Examples.Authentication(UserParameters.Email, UserParameters.Password);
+          SessionGuid := Examples.Authentication(UserParameters.Email, UserParameters.Password);
         finally
           FreeAndNil(UserParameters);
         end;
 
-        if SessionId.IsNotNull then
-          Examples.ValidateSession(SessionId, MemberId);
+        if SessionGuid.IsNotNull then
+          Examples.ValidateSession(SessionGuid, MemberId);
         Examples.GetUsers();
         Examples.RemoveUser(MemberId);
 

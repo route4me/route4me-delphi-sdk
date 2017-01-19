@@ -33,7 +33,7 @@ implementation
 
 uses UserParametersUnit, UserParameterProviderUnit, UserUnit, EnumsUnit,
   OrderParametersUnit, CommonTypesUnit, DataObjectUnit,
-  AddOrderToRouteRequestUnit;
+  AddOrderToRouteRequestUnit, OrderActionsUnit;
 
 var
   FOrderId: NullableInteger;
@@ -254,8 +254,96 @@ begin
 end;
 
 procedure TTestOrderSamples.GetOrdersWithCustomFields;
+var
+  ErrorString: String;
+  Orders: TOrdersCustomFields;
+  Offset, Limit, Total: integer;
+  Fields: TStringArray;
+  Value: string;
+  IsException: boolean;
 begin
-// todo 4: сделать unit-тест (нужен парсинг из многомерного массива)
+  SetLength(Fields, 0);
+  Limit := 2;
+  Offset := 0;
+  Orders := FRoute4MeManager.Order.GetOrdersWithCustomFields(
+    Fields, Limit, Offset, Total, ErrorString);
+  try
+    CheckNotNull(Orders);
+    CheckEquals(0, Orders.Count);
+    CheckNotEquals(EmptyStr, ErrorString);
+    CheckEquals(0, Total);
+  finally
+    FreeAndNil(Orders);
+  end;
+
+  Fields := ['randomField'];
+  IsException := False;
+  try
+    Orders := FRoute4MeManager.Order.GetOrdersWithCustomFields(
+      Fields, Limit, Offset, Total, ErrorString);
+  except
+    IsException := True;
+  end;
+  CheckTrue(IsException);
+
+  Fields := ['order_id'];
+  Orders := FRoute4MeManager.Order.GetOrdersWithCustomFields(
+    Fields, Limit, Offset, Total, ErrorString);
+  try
+    CheckNotNull(Orders);
+    CheckEquals(2, Orders.Count);
+    CheckEquals(EmptyStr, ErrorString);
+    CheckTrue(Total > 0);
+    CheckEquals(1, Orders[0].Keys.Count);
+
+    CheckEquals('order_id', Orders[0].Keys.ToArray[0]);
+    CheckTrue(Orders[0].TryGetValue('order_id', Value));
+    CheckNotEquals(EmptyStr, Value);
+
+    CheckEquals('order_id', Orders[1].Keys.ToArray[0]);
+    CheckTrue(Orders[0].TryGetValue('order_id', Value));
+    CheckNotEquals(EmptyStr, Value);
+  finally
+    FreeAndNil(Orders);
+  end;
+
+  Fields := ['order_id', 'member_id'];
+  Orders := FRoute4MeManager.Order.GetOrdersWithCustomFields(
+    Fields, Limit, Offset, Total, ErrorString);
+  try
+    CheckNotNull(Orders);
+    CheckEquals(2, Orders.Count);
+    CheckTrue(Total > 0);
+    CheckEquals(EmptyStr, ErrorString);
+
+    CheckEquals(2, Orders[0].Keys.Count);
+
+    CheckEquals('order_id', Orders[0].Keys.ToArray[1]);
+    CheckEquals('member_id', Orders[0].Keys.ToArray[0]);
+    CheckTrue(Orders[0].TryGetValue('order_id', Value));
+    CheckNotEquals(EmptyStr, Value);
+    CheckTrue(Orders[0].TryGetValue('member_id', Value));
+    CheckNotEquals(EmptyStr, Value);
+
+    CheckEquals('order_id', Orders[1].Keys.ToArray[1]);
+    CheckEquals('member_id', Orders[1].Keys.ToArray[0]);
+    CheckTrue(Orders[1].TryGetValue('order_id', Value));
+    CheckNotEquals(EmptyStr, Value);
+    CheckTrue(Orders[1].TryGetValue('member_id', Value));
+    CheckNotEquals(EmptyStr, Value);
+  finally
+    FreeAndNil(Orders);
+  end;
+
+  Fields := ['randomField', 'order_id', 'randomField1'];
+  IsException := False;
+  try
+    Orders := FRoute4MeManager.Order.GetOrdersWithCustomFields(
+      Fields, Limit, Offset, Total, ErrorString);
+  except
+    IsException := True;
+  end;
+  CheckTrue(IsException);
 end;
 
 procedure TTestOrderSamples.GetOrdersWithSpecifiedText;

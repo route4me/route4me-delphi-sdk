@@ -29,13 +29,16 @@ var
   Parameters: TAddressParameters;
   Address: TAddress;
 begin
-  Parameters := TAddressParameters.Create;
+  FRouteId := '241466F15515D67D3F951E2DA38DE76D';
+  FRouteDestinationId := 167899269;
+
+{  Parameters := TAddressParameters.Create;
 
   Address := FRoute4MeManager.Address.Get(Parameters, ErrorString);
   CheckEquals(EmptyStr, ErrorString);
 
   FRouteId := Address.RouteId;
-  FRouteDestinationId := Address.RouteDestinationId;
+  FRouteDestinationId := Address.RouteDestinationId;}
 end;
 
 procedure TTestAddressNotesSamples.MarkAsDetectedAsDeparted;

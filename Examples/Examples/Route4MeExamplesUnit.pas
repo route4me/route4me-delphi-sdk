@@ -62,7 +62,7 @@ type
     procedure GetZipCodeAndHouseNumber(ZipCode, HouseNumber: String);
     procedure GetLimitedZipCodeAndHouseNumber(ZipCode, HouseNumber: String; Limit, Offset: integer);
     procedure GetUsers();
-    procedure ValidateSession(SessionId, MemberId: integer);
+    procedure ValidateSession(SessionGuid: String; MemberId: integer);
     procedure RegisterAccount(Plan, Industry, FirstName, LastName, Email: String;
       Terms: boolean; DeviceType: TDeviceType;
       Password, PasswordConfirmation: String);
@@ -70,7 +70,7 @@ type
     function AddNewUser(Parameters: TUserParameters): NullableInteger;
     procedure UpdateUser(Parameters: TUserParameters);
     procedure RemoveUser(MemberId: integer);
-    function Authentication(EMail, Password: String): NullableInteger;
+    function Authentication(EMail, Password: String): NullableString;
     procedure DeviceLicense(DeviceId: String; DeviceType: TDeviceType);
     procedure UserLicense(MemberId, SessionId: integer; DeviceId: String;
       DeviceType: TDeviceType; Subscription, Token, Payload: String);
@@ -448,8 +448,7 @@ begin
   end;
 end;
 
-function TRoute4MeExamples.Authentication(EMail,
-  Password: String): NullableInteger;
+function TRoute4MeExamples.Authentication(EMail, Password: String): NullableString;
 var
   Example: TAuthentication;
 begin
@@ -1732,13 +1731,13 @@ begin
   end;
 end;
 
-procedure TRoute4MeExamples.ValidateSession(SessionId, MemberId: integer);
+procedure TRoute4MeExamples.ValidateSession(SessionGuid: String; MemberId: integer);
 var
   Example: TValidateSession;
 begin
   Example := MakeExample(TValidateSession) as TValidateSession;
   try
-    Example.Execute(SessionId, MemberId);
+    Example.Execute(SessionGuid, MemberId);
   finally
     FreeAndNil(Example);
   end;

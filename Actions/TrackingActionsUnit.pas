@@ -73,6 +73,14 @@ begin
 
     Result := FConnection.Get(TSettings.EndPoints.GetDeviceLocation, Parameters,
       TTrackingHistoryResponse, ErrorString) as TTrackingHistoryResponse;
+
+    if (Result <> nil) and (ErrorString = EmptyStr) and
+      (Length(Result.TrackingHistories) = 0) and (Result.Mmd = nil) then
+    begin
+      FreeAndNil(Result);
+      ErrorString := 'GetLocationHistory was failed'
+    end;
+
   finally
     FreeAndNil(Parameters);
   end;
@@ -94,6 +102,13 @@ begin
 
     Result := FConnection.Get(TSettings.EndPoints.GetDeviceLocation, Parameters,
       TTrackingHistoryResponse, ErrorString) as TTrackingHistoryResponse;
+
+    if (Result <> nil) and (ErrorString = EmptyStr) and
+      (Length(Result.TrackingHistories) = 0) and (Result.Mmd = nil) then
+    begin
+      FreeAndNil(Result);
+      ErrorString := 'GetLocationHistory was failed'
+    end;
   finally
     FreeAndNil(Parameters);
   end;

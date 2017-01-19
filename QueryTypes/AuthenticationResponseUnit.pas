@@ -50,9 +50,13 @@ type
 
     [JSONName('session_id')]
     FSessionId: integer;
+
+    [JSONName('session_guid')]
+    FSessionGuid: String;
   public
-    property Status: boolean read FStatus write FStatus;
-    property SessionId: integer read FSessionId write FSessionId;
+    property Status: boolean read FStatus;
+    property SessionId: integer read FSessionId;
+    property SessionGuid: String read FSessionGuid;
   end;
 
 implementation

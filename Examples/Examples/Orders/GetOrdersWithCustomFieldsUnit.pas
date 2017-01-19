@@ -12,32 +12,30 @@ type
 
 implementation
 
-uses CommonTypesUnit;
+uses CommonTypesUnit, OrderActionsUnit;
 
 procedure TGetOrdersWithCustomFields.Execute(Fields: TArray<String>);
 var
   ErrorString: String;
-  Orders: TIntegerArray;
-  i: integer;
+  Orders: TOrdersCustomFields;
   Offset, Limit: integer;
   Total: integer;
 begin
   Limit := 10;
   Offset := 0;
-{  Orders := Route4MeManager.Order.GetOrdersWithCustomFields(
-    Fields, Limit, Offset, Total, ErrorString);}
+  Orders := Route4MeManager.Order.GetOrdersWithCustomFields(
+    Fields, Limit, Offset, Total, ErrorString);
   try
     WriteLn('');
 
-    if (Length(Orders) > 0) then
+    if (Orders.Count > 0) then
       WriteLn(Format(
         'GetOrdersWithCustomFields executed successfully, %d orders returned, %d total',
-          [Length(Orders), Total]))
+          [Orders.Count, Total]))
     else
       WriteLn(Format('GetOrdersWithCustomFields error: "%s"', [ErrorString]));
   finally
-    for i := Length(Orders) - 1 downto 0 do
-      FreeAndNil(Orders[i]);
+      FreeAndNil(Orders);
   end;
 end;
 

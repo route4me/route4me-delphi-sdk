@@ -15,9 +15,9 @@ type
 
   TTestTrackingSamples = class(TTestOnlineExamples)
   private
-    procedure InitParameters(index: Integer; out RouteId: String; out MemberId: String);
+{    procedure InitParameters(index: Integer; out RouteId: String; out MemberId: String);
     procedure SaveParameters();
-    procedure LoadParameters();
+    procedure LoadParameters();}
   published
     procedure SetGPS;
     procedure TrackDeviceLastLocationHistory;
@@ -31,9 +31,8 @@ implementation
 uses DateUtils, NullableBasicTypesUnit, GPSParametersUnit, EnumsUnit,
   DataObjectUnit, TrackingHistoryResponseUnit, TrackingDataUnit;
 
-var
-  FRouteId: NullableString;
-  FRecs: TRecs;
+{var
+  FRecs: TRecs;}
 
 procedure TTestTrackingSamples.GetAssetTrackingData;
 var
@@ -75,7 +74,7 @@ begin
   Period := pAllTime;
 
   Response := FRoute4MeManager.Tracking.GetLocationHistory(
-    FRouteId, Period, LastPositionOnly, ErrorString);
+    RouteId, Period, LastPositionOnly, ErrorString);
   try
     CheckNotNull(Response);
     CheckTrue(Length(Response.TrackingHistories) > 0);
@@ -89,7 +88,7 @@ begin
     RouteId, Period, LastPositionOnly, ErrorString);
   try
     CheckNull(Response);
-    CheckEquals(EmptyStr, ErrorString);
+    CheckNotEquals(EmptyStr, ErrorString);
   finally
     FreeAndNil(Response);
   end;
@@ -109,7 +108,7 @@ begin
   EndDate := EncodeDateTime(2016, 10, 26, 23, 59, 59, 0);
 
   Response := FRoute4MeManager.Tracking.GetLocationHistory(
-    FRouteId, StartDate, EndDate, LastPositionOnly, ErrorString);
+    RouteId, StartDate, EndDate, LastPositionOnly, ErrorString);
   try
     CheckNotNull(Response);
     CheckTrue(Length(Response.TrackingHistories) > 0);
@@ -123,7 +122,7 @@ begin
     RouteId, StartDate, EndDate, LastPositionOnly, ErrorString);
   try
     CheckNull(Response);
-    CheckEquals(EmptyStr, ErrorString);
+    CheckNotEquals(EmptyStr, ErrorString);
   finally
     FreeAndNil(Response);
   end;
@@ -131,16 +130,16 @@ begin
   StartDate := IncYear(Now);
   EndDate := IncDay(StartDate);
   Response := FRoute4MeManager.Tracking.GetLocationHistory(
-    FRouteId, StartDate, EndDate, LastPositionOnly, ErrorString);
+    RouteId, StartDate, EndDate, LastPositionOnly, ErrorString);
   try
     CheckNull(Response);
-    CheckEquals(EmptyStr, ErrorString);
+    CheckNotEquals(EmptyStr, ErrorString);
   finally
     FreeAndNil(Response);
   end;
 end;
 
-procedure TTestTrackingSamples.InitParameters(index: Integer;
+{procedure TTestTrackingSamples.InitParameters(index: Integer;
   out RouteId: String; out MemberId: String);
 begin
   RouteId := FRecs[index].RouteId;
@@ -205,7 +204,7 @@ begin
 
   st.SaveToFile('RouteIds.txt');
 end;
-
+                    }
 procedure TTestTrackingSamples.SetGPS;
 var
   ErrorString: String;
@@ -265,5 +264,5 @@ end;
 
 initialization
   RegisterTest('Examples\Online\Tracking\', TTestTrackingSamples.Suite);
-  SetLength(FRecs, 0);
+//  SetLength(FRecs, 0);
 end.

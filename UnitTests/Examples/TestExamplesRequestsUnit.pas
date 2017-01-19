@@ -808,17 +808,17 @@ end;
 
 procedure TTestExamplesRequests.ValidateSession;
 var
-  SessionId: integer;
+  SessionGuid: String;
   MemberId: integer;
 begin
-  SessionId := 454563;
+  SessionGuid := 'ea250d5b4d48735419d300a95add8208';
   MemberId := 194622711;
 
-  FExamples.ValidateSession(SessionId, MemberId);
+  FExamples.ValidateSession(SessionGuid, MemberId);
 
   CheckEquals(EmptyStr, FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/datafeed/session/validate_session.php?api_key=11111111111111111111111111111111&' +
-    'session_guid=454563&member_id=194622711&format=json', FConnection.Url);
+    'session_guid=ea250d5b4d48735419d300a95add8208&member_id=194622711&format=json', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;

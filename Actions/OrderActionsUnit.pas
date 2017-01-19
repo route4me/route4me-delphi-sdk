@@ -7,8 +7,8 @@ uses
   OrderUnit, OrderParametersUnit, CommonTypesUnit;
 
 type
-  TOrdersCustomFields = TDictionary<string, TArray<string>>;
-//  TOrdersCustomFields = array of //TArray<TArray<string>>;
+//  TOrdersCustomFields = TList<TPair<string, string>>;
+  TOrdersCustomFields = TList<TDictionary<string, string>>;
 
   TOrderActions = class(TBaseAction)
   private
@@ -232,17 +232,22 @@ function TOrderActions.GetOrdersWithCustomFields(Fields: TArray<String>;
 var
   Response: TGetOrdersWithCustomFieldsResponse;
   Request: TGenericParameters;
-  i: integer;
+  i, j: integer;
   FieldsStr: String;
+  Item: TStringArray;
+  Dict: TDictionary<string,string>;
 begin
   Result := TOrdersCustomFields.Create();
 
-//  SetLength(Result, 0);
   Total := 0;
 
   FieldsStr := EmptyStr;
   for i := 0 to High(Fields) do
+  begin
+    if (i <> 0) then
+      FieldsStr := FieldsStr + ',';
     FieldsStr := FieldsStr + Fields[i];
+  end;
 
   Request := TGenericParameters.Create;
   try
@@ -255,20 +260,34 @@ begin
     try
       if (Response <> nil) then
       begin
-//        SetLength(Result, Response.OrdersCount);
-{        for i := 0 to Response.OrdersCount - 1 do
-          Result[i] := Response.OrderId[i];}
+        for i := 0 to Response.ResultCount - 1 do
+        begin
+          Item := Response.Results[i];
+{          if (Length(Item) = 0) then
+            Continue;}
+
+          if (Length(Item) < Length(Fields)) then
+            raise Exception.Create('Some fields not existing in a database!');
+
+          Dict := TDictionary<string,string>.Create;
+          for j := 0 to High(Response.Fields) do
+            Dict.Add(Response.Fields[j], Item[j]);
+          Result.Add(Dict);
+        end;
+
         Total := Response.Total;
       end
       else
-      if (ErrorString = EmptyStr) then
-        ErrorString := 'Order details not got';
+        if (ErrorString = EmptyStr) then
+          ErrorString := 'Order details not got';
     finally
       FreeAndNil(Response);
     end;
   finally
     FreeAndNil(Request);
   end;
+
+//  TOrdersCustomFields = TList<TPair<string, string>>;
 end;
 
 function TOrderActions.GetOrdersWithSpecifiedText(SpecifiedText: String; Limit,

@@ -293,7 +293,8 @@ uses
   TrackingDataUnit in '..\DataTypes\TrackingDataUnit.pas',
   GetAssetTrackingDataUnit in '..\Examples\Examples\Tracking\GetAssetTrackingDataUnit.pas',
   AddNoteFileResponseUnit in '..\QueryTypes\AddNoteFileResponseUnit.pas',
-  TestRouteSamplesUnit in 'Examples\Online\TestRouteSamplesUnit.pas';
+  TestRouteSamplesUnit in 'Examples\Online\TestRouteSamplesUnit.pas',
+  DeviceLicenseResponseUnit in '..\QueryTypes\DeviceLicenseResponseUnit.pas';
 
 {R *.RES}
 

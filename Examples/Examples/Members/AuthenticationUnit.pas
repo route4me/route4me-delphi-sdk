@@ -7,16 +7,17 @@ uses SysUtils, BaseExampleUnit, NullableBasicTypesUnit, UserParametersUnit;
 type
   TAuthentication = class(TBaseExample)
   public
-    function Execute(EMail, Password: String): NullableInteger;
+    function Execute(EMail, Password: String): NullableString;
   end;
 
 implementation
 
-function TAuthentication.Execute(EMail, Password: String): NullableInteger;
+function TAuthentication.Execute(EMail, Password: String): NullableString;
 var
   ErrorString: String;
+  SessionId: NullableInteger;
 begin
-  Result := Route4MeManager.User.Authentication(EMail, Password, ErrorString);
+  Route4MeManager.User.Authentication(EMail, Password, ErrorString, SessionId, Result);
 
   WriteLn('');
 

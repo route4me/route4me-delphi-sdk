@@ -7,21 +7,21 @@ uses SysUtils, BaseExampleUnit;
 type
   TValidateSession = class(TBaseExample)
   public
-    procedure Execute(SessionId, MemberId: integer);
+    procedure Execute(SessionGuid: String; MemberId: integer);
   end;
 
 implementation
 
 uses UserUnit;
 
-procedure TValidateSession.Execute(SessionId, MemberId: integer);
+procedure TValidateSession.Execute(SessionGuid: String; MemberId: integer);
 var
   ErrorString: String;
   IsSessionValid: boolean;
   IsSessionValidStr: String;
 begin
   IsSessionValid := Route4MeManager.User.IsSessionValid(
-    SessionId, MemberId, ErrorString);
+    SessionGuid, MemberId, ErrorString);
 
   WriteLn('');
 

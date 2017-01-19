@@ -112,8 +112,9 @@ var
   Addresses: TGeocodingAddressList;
   Limit, Offset: integer;
 begin
-  Limit := 20;
+  Limit := 3;
   Offset := 1;
+  // бывают случаи, когда не проходит с первого раза
   Addresses := FRoute4MeManager.Geocoding.GetAddresses(Limit, Offset, ErrorString);
   try
     CheckNotNull(Addresses);

@@ -256,7 +256,8 @@ uses
   TrackingHistoryRequestUnit in '..\QueryTypes\TrackingHistoryRequestUnit.pas',
   GetAssetTrackingDataUnit in 'Examples\Tracking\GetAssetTrackingDataUnit.pas',
   GetLocationHistoryFromTimeRangeUnit in 'Examples\Tracking\GetLocationHistoryFromTimeRangeUnit.pas',
-  AddNoteFileResponseUnit in '..\QueryTypes\AddNoteFileResponseUnit.pas';
+  AddNoteFileResponseUnit in '..\QueryTypes\AddNoteFileResponseUnit.pas',
+  DeviceLicenseResponseUnit in '..\QueryTypes\DeviceLicenseResponseUnit.pas';
 
 {var
   CustomerSample: TCustomerQuestionAbout7Stops;}

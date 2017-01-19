@@ -11,21 +11,27 @@ type
   TTrackingHistorySummary = class(TGenericParameters)
   private
     [JSONName('total_distance')]
+    [Nullable]
     FTotalDistance: NullableDouble;
 
     [JSONName('matched_time')]
+    [Nullable]
     FMatchedTime: NullableInteger;
 
     [JSONName('matched_distance')]
+    [Nullable]
     FMatchedDistance: NullableDouble;
 
     [JSONName('total_time')]
+    [Nullable]
     FTotalTime: NullableInteger;
 
     [JSONName('trace_time')]
+    [Nullable]
     FTraceTime: NullableInteger;
 
     [JSONName('trace_distance')]
+    [Nullable]
     FTraceDistance: NullableDouble;
   public
     constructor Create; override;
@@ -41,6 +47,7 @@ type
   TMmd = class(TGenericParameters)
   private
     [JSONName('status')]
+    [Nullable]
     FStatus: NullableInteger;
 
     [JSONName('summary')]
@@ -63,11 +70,14 @@ type
     [JSONName('mmd')]
     [NullableObject(TMmd)]
     FMmd: NullableObject;
+
+    function GetMmd: TMmd;
   public
     constructor Create; override;
     destructor Destroy; override;
 
     property TrackingHistories: TArray<TTrackingHistory> read FTrackingHistories;
+    property Mmd: TMmd read GetMmd;
   end;
 
 implementation
@@ -85,6 +95,14 @@ begin
   FMmd.Free;
 
   inherited;
+end;
+
+function TTrackingHistoryResponse.GetMmd: TMmd;
+begin
+  if (FMmd.IsNotNull) then
+    Result := FMmd.Value as TMmd
+  else
+    Result := nil;
 end;
 
 { TTrackingHistorySummary }

@@ -84,7 +84,7 @@ begin
     OptimizationProblemDetails := FRoute4MeManager.Optimization.Get(
       FOptimizationProblemId, ErrorString);
     try
-      CheckNotNull(DataObject);
+      CheckNotNull(OptimizationProblemDetails);
       CheckEquals(EmptyStr, ErrorString);
       CheckTrue(Length(OptimizationProblemDetails.Routes) > 0);
 
@@ -108,7 +108,7 @@ var
 begin
   DeletedRouteIds := FRoute4MeManager.Route.Delete(['qwe'], ErrorString);
   CheckEquals(0, Length(DeletedRouteIds));
-  CheckEquals(EmptyStr, ErrorString);
+  CheckNotEquals(EmptyStr, ErrorString);
 
   CheckTrue(FRouteId.IsNotNull);
   DeletedRouteIds := FRoute4MeManager.Route.Delete([FRouteId], ErrorString);

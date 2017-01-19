@@ -33,9 +33,17 @@ type
     [Nullable]
     FD: NullableString;
 
+    [JSONName('m')]
+    [Nullable]
+    FM: NullableString;
+
     [JSONName('ts')]
     [Nullable]
     FTimeStamp: NullableString;
+
+    [JSONName('src')]
+    [Nullable]
+    FSrc: NullableString;
 
     [JSONName('ts_friendly')]
     [Nullable]
@@ -73,6 +81,16 @@ type
     ///  The original timestamp in unix timestamp format at the moment location transaction event
     /// </summary>
     property TimeStamp: NullableString read FTimeStamp write FTimeStamp;
+
+    /// <summary>
+    ///
+    /// </summary>
+    property M: NullableString read FM;
+
+    /// <summary>
+    ///
+    /// </summary>
+    property Src: NullableString read FSrc;
 
     /// <summary>
     ///  The original timestamp in a human readable timestamp format at the moment location transaction event
@@ -113,6 +131,8 @@ begin
   FD := NullableString.Null;
   FTimeStamp := NullableString.Null;
   FTimeStampFriendly := NullableString.Null;
+  FM := NullableString.Null;
+  FSrc := NullableString.Null;
 end;
 
 function TTrackingHistory.Equals(Obj: TObject): Boolean;
@@ -131,6 +151,8 @@ begin
     (FLatitude = Other.FLatitude) and
     (FLongitude = Other.FLongitude) and
     (FD = Other.FD) and
+    (FM = Other.FM) and
+    (FSrc = Other.FSrc) and
     (FTimeStamp = Other.FTimeStamp) and
     (FTimeStampFriendly = Other.FTimeStampFriendly);
 end;

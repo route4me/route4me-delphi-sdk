@@ -3,14 +3,14 @@ unit GetOrdersWithCustomFieldsResponseUnit;
 interface
 
 uses
-  REST.Json.Types,
+  REST.Json.Types, SysUtils,
   GenericParametersUnit, OrderUnit, CommonTypesUnit;
 
 type
   TGetOrdersWithCustomFieldsResponse = class(TGenericParameters)
   private
     [JSONName('results')]
-    FResults: TArray<TArray<integer>>;
+    FResults: TArray<TArray<string>>;
 
     [JSONName('total')]
     FTotal: integer;
@@ -18,17 +18,17 @@ type
     [JSONName('fields')]
     FFields: TStringArray;
 
-    function GetMemberId(index: integer): integer;
-    function GetOrderId(index: integer): integer;
-    function GetOrdersCount: integer;
+    function GetResults(index: integer): TStringArray;
+    function GetResultCount: Integer;
   public
     constructor Create; override;
 
-    property Total: integer read FTotal write FTotal;
-    property Fields: TStringArray read FFields write FFields;
-    property OrdersCount: integer read GetOrdersCount;
-    property OrderId[index: integer]: integer read GetOrderId;
-    property MemberId[index: integer]: integer read GetMemberId;
+    function GetResult(index: integer; Field: String): String;
+
+    property Total: integer read FTotal;
+    property Fields: TStringArray read FFields;
+    property Results[index: integer]: TStringArray read GetResults;
+    property ResultCount: Integer read GetResultCount;
   end;
 
 implementation
@@ -43,19 +43,32 @@ begin
   SetLength(FFields, 0);
 end;
 
-function TGetOrdersWithCustomFieldsResponse.GetMemberId(index: integer): integer;
+function TGetOrdersWithCustomFieldsResponse.GetResult(index: integer;
+  Field: String): String;
+var
+  Results: TStringArray;
+  FieldIndex: Integer;
+  i: Integer;
 begin
-  Result := FResults[index][1];
+  Result := EmptyStr;
+
+  Results := FResults[index];
+  for i := 0 to High(FFields) do
+    if (FFields[i] = Field) then
+    begin
+      Result := Results[i];
+      Break
+    end;
 end;
 
-function TGetOrdersWithCustomFieldsResponse.GetOrderId(index: integer): integer;
-begin
-  Result := FResults[index][0];
-end;
-
-function TGetOrdersWithCustomFieldsResponse.GetOrdersCount: integer;
+function TGetOrdersWithCustomFieldsResponse.GetResultCount: Integer;
 begin
   Result := Length(FResults);
+end;
+
+function TGetOrdersWithCustomFieldsResponse.GetResults(index: integer): TStringArray;
+begin
+  Result := FResults[index];
 end;
 
 end.

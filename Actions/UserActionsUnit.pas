@@ -20,13 +20,13 @@ type
     /// <returns>
     ///  SessionGuid
     /// </returns>
-    function Authentication(Email, Password: String;
-      out ErrorString: String): NullableInteger;
+    procedure Authentication(Email, Password: String; out ErrorString: String;
+      out SessionId: NullableInteger; out SessionGuid: NullableString);
 
     /// <summary>
     ///  Check if a session is valid.
     /// </summary>
-    function IsSessionValid(SessionId, MemberId: integer;
+    function IsSessionValid(SessionId: String; MemberId: integer;
       out ErrorString: String): boolean;
 
     /// <summary>
@@ -79,7 +79,7 @@ implementation
 uses SettingsUnit, ValidateSessionResponseUnit, AddNewUserResponseUnit,
   RegisterAccountResponseUnit, StatusResponseUnit, RemoveUserRequestUnit,
   AuthenticationResponseUnit, CommonTypesUnit, DeviceLicenseRequestUnit,
-  UserLicenseRequestUnit, RegisterWebinarRequestUnit;
+  UserLicenseRequestUnit, RegisterWebinarRequestUnit, DeviceLicenseResponseUnit;
 
 function TUserActions.RegisterAccount(Plan, Industry, FirstName, LastName, Email: String;
   Terms: boolean; DeviceType: TDeviceType; Password,
@@ -244,14 +244,15 @@ begin
   end;
 end;
 
-function TUserActions.Authentication(Email, Password: String;
-  out ErrorString: String): NullableInteger;
+procedure TUserActions.Authentication(Email, Password: String; out ErrorString: String;
+  out SessionId: NullableInteger; out SessionGuid: NullableString);
 var
   Parameters: TGenericParameters;
   Response: TObject;
   PossibleResponses: TClassArray;
 begin
-  Result := NullableInteger.Null;
+  SessionGuid := NullableString.Null;
+  SessionId := NullableInteger.Null;
 
   Parameters := TGenericParameters.Create;
   try
@@ -271,7 +272,10 @@ begin
       if Response is TGoodAuthenticationResponse then
       begin
         if (TGoodAuthenticationResponse(Response).Status) then
-          Result := TGoodAuthenticationResponse(Response).SessionId
+        begin
+          SessionGuid := TGoodAuthenticationResponse(Response).SessionGuid;
+          SessionId := TGoodAuthenticationResponse(Response).SessionId;
+        end
         else
           ErrorString := 'User authentication error';
       end
@@ -290,20 +294,31 @@ function TUserActions.DeviceLicense(DeviceId: String; DeviceType: TDeviceType;
   out ErrorString: String): boolean;
 var
   Request: TDeviceLicenseRequest;
-  Response: TSimpleString;
+  Response: TObject;
+  ResponseClasses: TClassArray;
 begin
   Result := False;
 
   Request := TDeviceLicenseRequest.Create(DeviceId, DeviceType, 'json');
   try
-    // todo 2: узнать какой ответ в случае успеха. Сейчас возвращает просто строку: "Missing or Invalid Device ID"
+    SetLength(ResponseClasses, 2);
+    ResponseClasses[0] := TDeviceLicenseResponse;
+    ResponseClasses[1] := TSimpleString;
     Response := FConnection.Post(TSettings.EndPoints.VerifyDeviceLicense,
-      Request, TSimpleString, ErrorString) as TSimpleString;
+      Request, ResponseClasses, ErrorString);
     try
-      if (Response <> nil) and (ErrorString = EmptyStr) then
-        ErrorString := Response.Value;
+      if (Response <> nil) then
+      begin
+        if (Response is TSimpleString) then
+        begin
+          if (ErrorString = EmptyStr) then
+            ErrorString := TSimpleString(Response).Value;
+        end
+        else
+          Result := (Response as TDeviceLicenseResponse).Status;
+      end;
 
-      if (Response = nil) and (ErrorString = EmptyStr) then
+      if (not Result) and (ErrorString = EmptyStr) then
         ErrorString := 'DeviceLicense fault';
     finally
       FreeAndNil(Response);
@@ -347,7 +362,7 @@ begin
   end;
 end;
 
-function TUserActions.IsSessionValid(SessionId, MemberId: integer;
+function TUserActions.IsSessionValid(SessionId: String; MemberId: integer;
   out ErrorString: String): boolean;
 var
   Parameters: TGenericParameters;
@@ -357,7 +372,7 @@ begin
 
   Parameters := TGenericParameters.Create;
   try
-    Parameters.AddParameter('session_guid', IntToStr(SessionId));
+    Parameters.AddParameter('session_guid', SessionId);
     Parameters.AddParameter('member_id', IntToStr(MemberId));
     Parameters.AddParameter('format', 'json');
 
