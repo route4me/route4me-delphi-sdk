@@ -99,12 +99,3 @@ The time required to integrate the SDK can be as little as 1 hour or may take se
 1. See project "Route4Me Route Optimization Examples" (class Route4MeSDKTest.Examples) for some examples of using Route4MeSDKLibrary
 2. See an example of creating a simple route below
 
-### Creating a Simple Route
-
-``` Delphi
-
-Example here
-
-```
-
--------------------
