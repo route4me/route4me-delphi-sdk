@@ -510,20 +510,23 @@ var
   Message: String;
   ErrorString: String;
 begin
+  // An empty message is an error
   RouteId := 'qwe';
   Message := EmptyStr;
   CheckFalse(
     FRoute4MeManager.ActivityFeed.LogSpecificMessage(RouteId, Message, ErrorString));
   CheckNotEquals(EmptyStr, ErrorString);
 
+  // An empty message is an error
   RouteId := GetRouteId();
   CheckFalse(
     FRoute4MeManager.ActivityFeed.LogSpecificMessage(RouteId, Message, ErrorString));
   CheckNotEquals(EmptyStr, ErrorString);
 
-  RouteId := 'qwe';
   Message := 'T 5est';
-  // todo 5: при несуществующем RouteId все равно сервер возвращает True. Спросил у Олега
+  // Non-existent RouteId is error
+  RouteId := 'qwe2321sadas';
+  // todo 1: при несуществующем RouteId все равно сервер возвращает True. Спросил у Олега
   CheckTrue(
     FRoute4MeManager.ActivityFeed.LogSpecificMessage(RouteId, Message, ErrorString));
   CheckEquals(EmptyStr, ErrorString);

@@ -12,7 +12,8 @@ type
   published
     procedure AddRoute;
     procedure AddOrderToRoute;
-    procedure RemoveRoute;
+    procedure GetListByText;
+    procedure RemoveRoute;
   end;
 
 implementation
@@ -98,6 +99,31 @@ begin
 
   finally
     DataProvider := nil;
+  end;
+end;
+
+procedure TTestRouteSamples.GetListByText;
+var
+  ErrorString: String;
+  Text: String;
+  Routes: TDataObjectRouteList;
+begin
+  Text := 'SomeUniqueText#d27zz';
+  Routes := FRoute4MeManager.Route.GetList(Text, ErrorString);
+  try
+    CheckNotNull(Routes);
+    CheckEquals(0, Routes.Count);
+  finally
+    FreeAndNil(Routes);
+  end;
+
+  Text := 'Tbilisi';
+  Routes := FRoute4MeManager.Route.GetList(Text, ErrorString);
+  try
+    CheckNotNull(Routes);
+    CheckTrue(Routes.Count > 0);
+  finally
+    FreeAndNil(Routes);
   end;
 end;
 

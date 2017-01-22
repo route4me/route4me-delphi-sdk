@@ -234,7 +234,6 @@ function TRouteActions.GetList(Text: String; out ErrorString: String): TDataObje
 var
   RouteParameters: TGenericParameters;
 begin
-  // todo: сделать тест-онлайн для этого и сообщить Олегу, что пример готов
   RouteParameters := TGenericParameters.Create;
   try
     RouteParameters.AddParameter('query', Text);
