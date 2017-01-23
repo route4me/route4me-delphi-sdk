@@ -3,8 +3,15 @@ unit NullableArrayInterceptorUnit;
 interface
 
 uses
-  Windows, REST.JsonReflect, Rtti, SysUtils, System.JSON, System.TypInfo,
-  System.Generics.Collections;
+  {$IF CompilerVersion < 27.0}
+  Data.DBXJSONReflect,
+  Data.DBXJSON,
+  {$ELSE}
+  REST.JsonReflect,
+  System.JSON,
+  {$IFEND}
+
+  Windows, Rtti, SysUtils, System.TypInfo, System.Generics.Collections;
 
 type
   TNullableArrayIntermediateObjectA = class

@@ -3,8 +3,16 @@ unit MarshalUnMarshalUnit;
 interface
 
 uses
-  GenericParametersUnit, System.Rtti, Classes, SysUtils,
-  REST.JsonReflect, System.JSON, REST.Json.Types, System.Generics.Collections;
+  {$IF CompilerVersion < 27.0}
+  Data.DBXJSONReflect,
+  Data.DBXJSON,
+  {$ELSE}
+  REST.Json.Types,
+  System.JSON,
+  REST.JsonReflect,
+  {$IFEND}
+
+  GenericParametersUnit, System.Rtti, Classes, SysUtils, System.Generics.Collections;
 
 type
   TMarshalUnMarshal = class

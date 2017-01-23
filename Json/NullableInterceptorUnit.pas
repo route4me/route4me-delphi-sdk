@@ -3,7 +3,14 @@ unit NullableInterceptorUnit;
 interface
 
 uses
-  Windows, REST.JsonReflect, Rtti, SysUtils, System.JSON, System.TypInfo,
+  {$IF CompilerVersion < 27.0}
+  Data.DBXJSONReflect,
+  Data.DBXJSON,
+  {$ELSE}
+  REST.JsonReflect,
+  System.JSON,
+  {$IFEND}
+  Windows, Rtti, SysUtils, System.TypInfo,
   System.Generics.Collections;
 
 type

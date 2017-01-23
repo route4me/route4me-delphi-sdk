@@ -3,7 +3,12 @@ unit OptimizationParametersUnit;
 interface
 
 uses
-  REST.Json.Types, System.Generics.Collections, SysUtils,
+  {$IF CompilerVersion < 27.0}
+  Data.DBXJSONReflect,
+  {$ELSE}
+  REST.Json.Types,
+  {$IFEND}
+  System.Generics.Collections, SysUtils,
   JSONNullableAttributeUnit, HttpQueryMemberAttributeUnit,
   GenericParametersUnit, RouteParametersUnit, AddressUnit,
   NullableBasicTypesUnit, EnumsUnit;

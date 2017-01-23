@@ -55,12 +55,15 @@ begin
 end;
 
 function SortSimpleIntegerArray(Integers: TArray<TSimpleInteger>): TArray<TSimpleInteger>;
+var
+  i: integer;
 begin
   SetLength(Result, Length(Integers));
   if Length(Integers) = 0 then
     Exit;
 
-  TArray.Copy<TSimpleInteger>(Integers, Result, Length(Integers));
+  for i := Low(Integers) to High(Integers) do
+    Result[i] := Integers[i];
   TArray.Sort<TSimpleInteger>(Result, TComparer<TSimpleInteger>.Construct(
     function (const Value1, Value2: TSimpleInteger): Integer
     begin

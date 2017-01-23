@@ -3,7 +3,18 @@ unit JSONNullableAttributeUnit;
 interface
 
 uses
-  REST.Json.Types, REST.JsonReflect;
+  {$IF CompilerVersion < 27.0}
+  Data.DBXJSONReflect
+  {$ELSE}
+  REST.Json.Types,
+  REST.JsonReflect
+  {$IFEND}
+  ;
+
+{$IF CompilerVersion < 27.0}
+type
+  JsonReflectAttribute = JsonReflect;
+{$IFEND}
 
 type
   BaseJSONNullableAttribute = class abstract(JsonReflectAttribute)

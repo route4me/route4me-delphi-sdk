@@ -3,8 +3,15 @@ unit GenericParametersUnit;
 interface
 
 uses
-  REST.Json.Types, HttpQueryMemberAttributeUnit, JSONNullableAttributeUnit,
-  SysUtils, Rtti, System.JSON,
+  {$IF CompilerVersion < 27.0}
+  Data.DBXJSONReflect,
+  Data.DBXJSON,
+  {$ELSE}
+  REST.Json.Types,
+  System.JSON,
+  {$IFEND}
+  HttpQueryMemberAttributeUnit, JSONNullableAttributeUnit,
+  SysUtils, Rtti,
   CommonTypesUnit;
 
 type
