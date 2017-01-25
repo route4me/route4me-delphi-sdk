@@ -44,7 +44,7 @@ implementation
 uses
   SettingsUnit, GenericParametersUnit, GetAddressUnit, StatusResponseUnit,
   MarkAddressAsDetectedAsVisitedRequestUnit,
-  MarkAddressAsDetectedAsDepartedRequestUnit;
+  MarkAddressAsDetectedAsDepartedRequestUnit, CommonTypesUnit;
 
 function TAddressActions.Get(AddressParameters: TAddressParameters;
   out ErrorString: String): TAddress;
@@ -72,7 +72,7 @@ begin
     Response := FConnection.Get(TSettings.EndPoints.MarkAddressAsDeparted, Request,
       TStatusResponse, ErrorString) as TStatusResponse;
     try
-      if (Response <> nil) and (Response.Status = False) and (ErrorString = EmptyStr) then
+      if ((Response = nil) or (Response.Status = False)) and (ErrorString = EmptyStr) then
         ErrorString := 'Mark As Departed fault';
     finally
       FreeAndNil(Response);
@@ -129,7 +129,7 @@ end;
 procedure TAddressActions.MarkAsVisited(RouteId: String;
   AddressId, MemberId: integer; IsVisited: boolean; out ErrorString: String);
 var
-  Response: TStatusResponse;
+  Response: TSimpleString;
   Request: TGenericParameters;
 begin
   Request := TGenericParameters.Create;
@@ -143,9 +143,9 @@ begin
       Request.AddParameter('is_visited', '0');
 
     Response := FConnection.Get(TSettings.EndPoints.MarkAddressAsVisited, Request,
-      TStatusResponse, ErrorString) as TStatusResponse;
+      TSimpleString, ErrorString) as TSimpleString;
     try
-      if (Response <> nil) and (Response.Status = False) and (ErrorString = EmptyStr) then
+      if ((Response = nil) or (Response.Value = '0')) and (ErrorString = EmptyStr) then
         ErrorString := 'Mark As Visited fault';
     finally
       FreeAndNil(Response);

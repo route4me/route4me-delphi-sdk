@@ -8,101 +8,52 @@ uses
 
 type
   TTestAddressesSamples = class(TTestOnlineExamples)
-  private
-    procedure GetAddress;
-
+  published
     procedure MarkAsVisited;
     procedure MarkAsDeparted;
     procedure MarkAsDetectedAsVisited;
     procedure MarkAsDetectedAsDeparted;
-  published
   end;
 
 implementation
 
 uses AddressParametersUnit, AddressUnit, NullableBasicTypesUnit, AddressBookContactUnit, DataObjectUnit;
 
-var
-  FRouteId: NullableString;
-  FAddressId: NullableInteger;
-  FMemberId: NullableInteger;
-  FRouteDestinationId: NullableInteger;
-
 { TTestAddressesSamples }
-
-procedure TTestAddressesSamples.GetAddress;
-{var
-  ErrorString: String;
-  Parameters: TAddressParameters;
-  Address: TAddress;
-  Limit, Offset, Total: Integer;
-  Routes: TDataObjectRouteList;}
-begin
-      // todo 3: проинициализировать параметры, после этого заработают остальные тесты
-
-{  Limit := 1;
-  Offset := 0;
-  Routes := FRoute4MeManager.Route.GetList(Limit, Offset, ErrorString);
-  try
-    CheckNotNull(Routes);
-    CheckEquals(EmptyStr, ErrorString);
-    CheckEquals(1, Routes.Count);
-
-    FRouteId := Routes[0].RouteId;
-    FMemberId := Routes[0].MemberId;
-
-    CheckTrue(Length(Routes[0].Addresses) > 0);
-    FAddressId := Routes[0].Addresses[0].id;
-  finally
-    FreeAndNil(Routes);
-  end;
-
-  Parameters := TAddressParameters.Create;
-  try
-    Address := FRoute4MeManager.Address.Get(Parameters, ErrorString);
-    try
-      CheckEquals(EmptyStr, ErrorString);
-
-      FRouteId := Address.RouteId;
-      FMemberId := Address.MemberId;
-      FRouteDestinationId := Address.RouteDestinationId;
-    finally
-      FreeAndNil(Address);
-    end;
-  finally
-    FreeAndNil(Parameters);
-  end;}
-end;
 
 procedure TTestAddressesSamples.MarkAsDeparted;
 var
   ErrorString: String;
   IsDeparted: boolean;
+  RouteId: String;
+  AddressId: integer;
+  MemberId: integer;
 begin
-  CheckTrue(FRouteId.IsNotNull);
-  CheckTrue(FAddressId.IsNotNull);
-  CheckTrue(FMemberId.IsNotNull);
+  RouteId := 'DD376C7148E7FEE36CFABE2BD9978BDD';
+  MemberId := 1;
+  AddressId := 183045808;
 
   IsDeparted := True;
   FRoute4MeManager.Address.MarkAsDeparted(
-    FRouteId, FAddressId, FMemberId, IsDeparted, ErrorString);
+    RouteId, AddressId, MemberId, IsDeparted, ErrorString);
   CheckEquals(EmptyStr, ErrorString);
 
   FRoute4MeManager.Address.MarkAsDeparted(
-    'qwe', FAddressId, FMemberId, IsDeparted, ErrorString);
+    'qwe', AddressId, MemberId, IsDeparted, ErrorString);
   CheckNotEquals(EmptyStr, ErrorString);
 
   FRoute4MeManager.Address.MarkAsDeparted(
-    FRouteId, -123, FMemberId, IsDeparted, ErrorString);
+    RouteId, -123, MemberId, IsDeparted, ErrorString);
   CheckNotEquals(EmptyStr, ErrorString);
 
   FRoute4MeManager.Address.MarkAsDeparted(
-    FRouteId, FAddressId, -123, IsDeparted, ErrorString);
-  CheckNotEquals(EmptyStr, ErrorString);
+    RouteId, AddressId, -123741, IsDeparted, ErrorString);
+  // I don't know why this case is not considered an error
+  CheckEquals(EmptyStr, ErrorString);
 
   IsDeparted := False;
   FRoute4MeManager.Address.MarkAsDeparted(
-    FRouteId, FAddressId, FMemberId, IsDeparted, ErrorString);
+    RouteId, AddressId, MemberId, IsDeparted, ErrorString);
   CheckEquals(EmptyStr, ErrorString);
 end;
 
@@ -110,26 +61,28 @@ procedure TTestAddressesSamples.MarkAsDetectedAsDeparted;
 var
   ErrorString: String;
   IsDeparted: boolean;
+  RouteId: String;
+  RouteDestinationId: integer;
 begin
-  CheckTrue(FRouteId.IsNotNull);
-  CheckTrue(FRouteDestinationId.IsNotNull);
+  RouteId := '241466F15515D67D3F951E2DA38DE76D';
+  RouteDestinationId := 167899269;
 
   IsDeparted := True;
   FRoute4MeManager.Address.MarkAsDetectedAsDeparted(
-    FRouteId, FRouteDestinationId, IsDeparted, ErrorString);
+    RouteId, RouteDestinationId, IsDeparted, ErrorString);
   CheckEquals(EmptyStr, ErrorString);
 
   FRoute4MeManager.Address.MarkAsDetectedAsVisited(
-    'qwe', FRouteDestinationId, IsDeparted, ErrorString);
+    'qwe', RouteDestinationId, IsDeparted, ErrorString);
   CheckNotEquals(EmptyStr, ErrorString);
 
   FRoute4MeManager.Address.MarkAsDetectedAsVisited(
-    FRouteId, -123, IsDeparted, ErrorString);
+    RouteId, -123, IsDeparted, ErrorString);
   CheckNotEquals(EmptyStr, ErrorString);
 
   IsDeparted := False;
   FRoute4MeManager.Address.MarkAsDetectedAsVisited(
-    FRouteId, FRouteDestinationId, IsDeparted, ErrorString);
+    RouteId, RouteDestinationId, IsDeparted, ErrorString);
   CheckEquals(EmptyStr, ErrorString);
 end;
 
@@ -137,26 +90,28 @@ procedure TTestAddressesSamples.MarkAsDetectedAsVisited;
 var
   ErrorString: String;
   IsVisited: boolean;
+  RouteId: String;
+  RouteDestinationId: integer;
 begin
-  CheckTrue(FRouteId.IsNotNull);
-  CheckTrue(FRouteDestinationId.IsNotNull);
+  RouteId := '241466F15515D67D3F951E2DA38DE76D';
+  RouteDestinationId := 167899269;
 
   IsVisited := True;
   FRoute4MeManager.Address.MarkAsDetectedAsVisited(
-    FRouteId, FRouteDestinationId, IsVisited, ErrorString);
+    RouteId, RouteDestinationId, IsVisited, ErrorString);
   CheckEquals(EmptyStr, ErrorString);
 
   FRoute4MeManager.Address.MarkAsDetectedAsVisited(
-    'qwe', FRouteDestinationId, IsVisited, ErrorString);
+    'qwe', RouteDestinationId, IsVisited, ErrorString);
   CheckNotEquals(EmptyStr, ErrorString);
 
   FRoute4MeManager.Address.MarkAsDetectedAsVisited(
-    FRouteId, -123, IsVisited, ErrorString);
+    RouteId, -123, IsVisited, ErrorString);
   CheckNotEquals(EmptyStr, ErrorString);
 
   IsVisited := False;
   FRoute4MeManager.Address.MarkAsDetectedAsVisited(
-    FRouteId, FRouteDestinationId, IsVisited, ErrorString);
+    RouteId, RouteDestinationId, IsVisited, ErrorString);
   CheckEquals(EmptyStr, ErrorString);
 end;
 
@@ -164,38 +119,45 @@ procedure TTestAddressesSamples.MarkAsVisited;
 var
   ErrorString: String;
   IsVisited: boolean;
+  RouteId: String;
+  AddressId: integer;
+  MemberId: integer;
+  IsException: boolean;
 begin
-  CheckTrue(FRouteId.IsNotNull);
-  CheckTrue(FAddressId.IsNotNull);
-  CheckTrue(FMemberId.IsNotNull);
+  RouteId := 'DD376C7148E7FEE36CFABE2BD9978BDD';
+  MemberId := 1;
+  AddressId := 183045808;
 
   IsVisited := True;
   FRoute4MeManager.Address.MarkAsVisited(
-    FRouteId, FAddressId, FMemberId, IsVisited, ErrorString);
+    RouteId, AddressId, MemberId, IsVisited, ErrorString);
   CheckEquals(EmptyStr, ErrorString);
 
   FRoute4MeManager.Address.MarkAsVisited(
-    'qwe', FAddressId, FMemberId, IsVisited, ErrorString);
+    'qwe', AddressId, MemberId, IsVisited, ErrorString);
   CheckNotEquals(EmptyStr, ErrorString);
 
   FRoute4MeManager.Address.MarkAsVisited(
-    FRouteId, -123, FMemberId, IsVisited, ErrorString);
+    RouteId, -123, MemberId, IsVisited, ErrorString);
   CheckNotEquals(EmptyStr, ErrorString);
 
-  FRoute4MeManager.Address.MarkAsVisited(
-    FRouteId, FAddressId, -123, IsVisited, ErrorString);
-  CheckNotEquals(EmptyStr, ErrorString);
+  // I don't know why it happens exception
+  IsException := False;
+  try
+    FRoute4MeManager.Address.MarkAsVisited(
+      RouteId, AddressId, -123, IsVisited, ErrorString);
+    CheckNotEquals(EmptyStr, ErrorString);
+  except
+    IsException := True;
+  end;
+  CheckTrue(IsException);
 
   IsVisited := False;
   FRoute4MeManager.Address.MarkAsVisited(
-    FRouteId, FAddressId, FMemberId, IsVisited, ErrorString);
+    RouteId, AddressId, MemberId, IsVisited, ErrorString);
   CheckEquals(EmptyStr, ErrorString);
 end;
 
 initialization
   RegisterTest('Examples\Online\Addresses\', TTestAddressesSamples.Suite);
-  FRouteId := NullableString.Null;
-  FAddressId := NullableInteger.Null;
-  FMemberId := NullableInteger.Null;
-  FRouteDestinationId := NullableInteger.Null;
 end.

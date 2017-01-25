@@ -167,6 +167,9 @@ begin
 
   Request := TGenericParameters.Create;
   try
+    // Correcting local time to server time zone
+//    CorrectDateToServerTime(AddedDate);
+
     Request.AddParameter('day_added_YYMMDD', GetDateStr(AddedDate));
 
     Response := FConnection.Get(TSettings.EndPoints.Order, Request,
