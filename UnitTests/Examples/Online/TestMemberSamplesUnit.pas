@@ -19,6 +19,7 @@ type
     procedure RegisterWebinar;
     procedure RemoveUser;
     procedure DeviceLicense;
+    procedure AddNewConfigValue;
   end;
 
 
@@ -34,6 +35,23 @@ var
   FEMail: String;
   FSessionGuid: NullableString;
   FSessionId: NullableInteger;
+
+procedure TTestMemberSamples.AddNewConfigValue;
+var
+  ErrorString: String;
+  Key: String;
+  Value: String;
+begin
+  Key := 'destination_icon_width';
+  Value := '32';
+  CheckTrue(FRoute4MeManager.User.AddNewConfigValue(Key, Value, ErrorString));
+  CheckEquals(EmptyStr, ErrorString);
+
+  Key := 'randomString_2#dsR#f1';
+  Value := 'aSD23dSD@sd';
+  CheckTrue(FRoute4MeManager.User.AddNewConfigValue(Key, Value, ErrorString));
+  CheckEquals(EmptyStr, ErrorString);
+end;
 
 procedure TTestMemberSamples.AddNewUser;
 var

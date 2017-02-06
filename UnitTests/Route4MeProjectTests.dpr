@@ -294,7 +294,10 @@ uses
   GetAssetTrackingDataUnit in '..\Examples\Examples\Tracking\GetAssetTrackingDataUnit.pas',
   AddNoteFileResponseUnit in '..\QueryTypes\AddNoteFileResponseUnit.pas',
   TestRouteSamplesUnit in 'Examples\Online\TestRouteSamplesUnit.pas',
-  DeviceLicenseResponseUnit in '..\QueryTypes\DeviceLicenseResponseUnit.pas';
+  DeviceLicenseResponseUnit in '..\QueryTypes\DeviceLicenseResponseUnit.pas',
+  AddNewConfigValueRequestUnit in '..\QueryTypes\AddNewConfigValueRequestUnit.pas',
+  AddNewConfigValueResponseUnit in '..\QueryTypes\AddNewConfigValueResponseUnit.pas',
+  AddNewConfigValueUnit in '..\Examples\Examples\Members\AddNewConfigValueUnit.pas';
 
 {R *.RES}
 

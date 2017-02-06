@@ -70,6 +70,9 @@ type
 
     function RegisterWebinar(Email, FirstName, LastName, Phone, Company: String;
       MemberId: integer; StartDate: TDateTime; out ErrorString: String): boolean;
+
+    function AddNewConfigValue(Key, Value: String;
+      out ErrorString: String): Boolean;
   end;
 
 implementation
@@ -79,7 +82,8 @@ implementation
 uses SettingsUnit, ValidateSessionResponseUnit, AddNewUserResponseUnit,
   RegisterAccountResponseUnit, StatusResponseUnit, RemoveUserRequestUnit,
   AuthenticationResponseUnit, CommonTypesUnit, DeviceLicenseRequestUnit,
-  UserLicenseRequestUnit, RegisterWebinarRequestUnit, DeviceLicenseResponseUnit;
+  UserLicenseRequestUnit, RegisterWebinarRequestUnit, DeviceLicenseResponseUnit,
+  AddNewConfigValueRequestUnit, AddNewConfigValueResponseUnit;
 
 function TUserActions.RegisterAccount(Plan, Industry, FirstName, LastName, Email: String;
   Terms: boolean; DeviceType: TDeviceType; Password,
@@ -209,6 +213,39 @@ begin
 
       if (Response = nil) and (ErrorString = EmptyStr) then
         ErrorString := 'UserLicense fault';
+    finally
+      FreeAndNil(Response);
+    end;
+  finally
+    FreeAndNil(Request);
+  end;
+end;
+
+function TUserActions.AddNewConfigValue(Key, Value: String;
+  out ErrorString: String): Boolean;
+const
+  SuccessResultCode = 'OK';
+var
+  Request: TAddNewConfigValueRequest;
+  Response: TAddNewConfigValueResponse;
+begin
+  Result := False;
+
+  Request := TAddNewConfigValueRequest.Create(Key, Value);
+  try
+    Response := FConnection.Post(TSettings.EndPoints.ConfigurationSettings,
+      Request, TAddNewConfigValueResponse,
+      ErrorString) as TAddNewConfigValueResponse;
+    try
+      if (Response = nil) and (ErrorString = EmptyStr) or
+        (Response <> nil) and (Response.Result.IsNull) then
+        ErrorString := 'AddNewAccountConfigValue fault'
+      else
+      if (Response <> nil) and (Response.Result.Value <> SuccessResultCode) then
+        ErrorString := Response.Result.Value;
+
+      Result := (Response <> nil) and (Response.Result.IsNotNull) and
+        (Response.Result.Value = SuccessResultCode);
     finally
       FreeAndNil(Response);
     end;

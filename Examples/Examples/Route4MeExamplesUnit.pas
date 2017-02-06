@@ -76,6 +76,7 @@ type
       DeviceType: TDeviceType; Subscription, Token, Payload: String);
     procedure RegisterWebinar(EMail, FirstName, LastName, Phone, Company: String;
       MemberId: integer; Date: TDateTime);
+    function AddNewConfigValue(Key, Value: String): boolean;
     function LogSpecificMessage(Message: String; RouteId: String): boolean;
     procedure GetAllActivities(Limit, Offset: integer);
     procedure GetTeamActivities(RouteId: String; Limit, Offset: integer);
@@ -214,7 +215,7 @@ uses
   GetGeocodingAddressesUnit, GetZipCodesUnit, GetLimitedZipCodesUnit,
   GetZipCodeAndHouseNumberUnit, GetLimitedZipCodeAndHouseNumberUnit,
   BulkForwardGeocodeAddressesUnit, SearchRoutesForSpecifiedTextUnit,
-  GetLocationHistoryFromTimeRangeUnit, GetAssetTrackingDataUnit;
+  GetLocationHistoryFromTimeRangeUnit, GetAssetTrackingDataUnit, AddNewConfigValueUnit;
 
 procedure TRoute4MeExamples.GetAreaAddedActivities;
 var
@@ -308,6 +309,18 @@ begin
   Example := MakeExample(TAddDestinationToOptimization) as TAddDestinationToOptimization;
   try
     Result := Example.Execute(OptimizationId, AndReOptimize);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+function TRoute4MeExamples.AddNewConfigValue(Key, Value: String): boolean;
+var
+  Example: TAddNewConfigValue;
+begin
+  Example := MakeExample(TAddNewConfigValue) as TAddNewConfigValue;
+  try
+    Result := Example.Execute(Key, Value);
   finally
     FreeAndNil(Example);
   end;

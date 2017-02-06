@@ -39,6 +39,7 @@ type
     const Territory = Main + '/api.v4/territory.php';
     const GetDeviceLocation = Main + '/api/track/get_device_location.php';
     const TrackingStatus = Main + '/api.v4/status.php';
+    const ConfigurationSettings = Main + '/api.v4/configuration-settings.php';
 
     const RapidAddressSearch = 'https://rapid.route4me.com/street_data';
   end;

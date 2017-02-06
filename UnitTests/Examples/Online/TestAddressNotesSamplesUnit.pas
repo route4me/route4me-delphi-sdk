@@ -24,10 +24,10 @@ var
   FRouteDestinationId: NullableInteger;
 
 procedure TTestAddressNotesSamples.GetAddress;
-var
+{var
   ErrorString: String;
   Parameters: TAddressParameters;
-  Address: TAddress;
+  Address: TAddress;}
 begin
   FRouteId := '241466F15515D67D3F951E2DA38DE76D';
   FRouteDestinationId := 167899269;

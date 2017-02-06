@@ -13,6 +13,7 @@ type
   TOrderActions = class(TBaseAction)
   private
     function GetDateStr(Date: TDate): String;
+    function GetOrdersByAddedDate(AddedDate: TDate; out ErrorString: String): TOrderList;
   public
     function Get(OrderQuery: TOrderParameters;
       out Total: integer; out ErrorString: String): TOrderList; overload;
@@ -56,7 +57,7 @@ implementation
 { TOrderActions }
 
 uses
-  System.NetEncoding, SettingsUnit, GetOrdersResponseUnit,
+  System.NetEncoding, DateUtils, SettingsUnit, GetOrdersResponseUnit,
   RemoveOrdersRequestUnit, StatusResponseUnit, GenericParametersUnit,
   GetOrdersWithCustomFieldsResponseUnit;
 
@@ -159,10 +160,51 @@ end;
 
 function TOrderActions.Get(AddedDate: TDate; out ErrorString: String): TOrderList;
 var
-  Response: TGetOrdersResponse;
-  Request: TGenericParameters;
-  i: integer;
+  Orders, TempOrders: TOrderList;
+  Order: TOrder;
+  StartToday, FinishToday: Int64;
+  TempErrorString: String;
 begin
+  // "Today" orders
+  Orders := GetOrdersByAddedDate(AddedDate, ErrorString);
+  try
+    // "Yesterday" orders
+    TempOrders := GetOrdersByAddedDate(IncDay(AddedDate, -1), TempErrorString);
+    try
+      Orders.AddRange(TempOrders);
+      TempOrders.OwnsObjects := False;
+    finally
+      FreeAndNil(TempOrders);
+    end;
+    // "Tomorrow" orders
+    TempOrders := GetOrdersByAddedDate(IncDay(AddedDate, +1), TempErrorString);
+    try
+      Orders.AddRange(TempOrders);
+      TempOrders.OwnsObjects := False;
+    finally
+      FreeAndNil(TempOrders);
+    end;
+
+    Result := TOrderList.Create;
+
+    // todo 3: время надо перевести в серверное (по Штатам, похоже). Время надо на начало дня, без минут
+
+    StartToday := DateTimeToUnix(AddedDate, False);
+    FinishToday := DateTimeToUnix(IncDay(AddedDate, +1), False);
+
+    for Order in Orders do
+    begin
+      if (Order.CreatedTimestamp >= StartToday) and (Order.CreatedTimestamp <= FinishToday) then
+      begin
+        Result.Add(Order);
+        Orders.Extract(Order);
+      end;
+    end;
+  finally
+    FreeAndNil(Orders);
+  end;
+{
+
   Result := TOrderList.Create;
 
   Request := TGenericParameters.Create;
@@ -186,7 +228,7 @@ begin
     end;
   finally
     FreeAndNil(Request);
-  end;
+  end;}
 end;
 
 function TOrderActions.GetDateStr(Date: TDate): String;
@@ -200,6 +242,36 @@ begin
   Result := DateToStr(Date, FormatSettings);
 end;
 
+function TOrderActions.GetOrdersByAddedDate(AddedDate: TDate;
+  out ErrorString: String): TOrderList;
+var
+  Response: TGetOrdersResponse;
+  Request: TGenericParameters;
+  i: integer;
+begin
+  Result := TOrderList.Create;
+
+  Request := TGenericParameters.Create;
+  try
+    Request.AddParameter('day_added_YYMMDD', GetDateStr(AddedDate));
+
+    Response := FConnection.Get(TSettings.EndPoints.Order, Request,
+      TGetOrdersResponse, ErrorString) as TGetOrdersResponse;
+    try
+      if (Response <> nil) then
+        for i := 0 to Length(Response.Results) - 1 do
+          Result.Add(Response.Results[i])
+      else
+      if (ErrorString = EmptyStr) then
+        ErrorString := 'Order details not got';
+    finally
+      FreeAndNil(Response);
+    end;
+  finally
+    FreeAndNil(Request);
+  end;
+end;
+
 function TOrderActions.GetOrdersScheduledFor(ScheduledDate: TDate;
   out ErrorString: String): TOrderList;
 var

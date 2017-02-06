@@ -59,6 +59,7 @@ type
     procedure RemoveUser;
     procedure DeviceLicense;
     procedure UserLicense;
+    procedure AddNewConfigValue;
     procedure RegisterWebinar;
     procedure LogSpecificMessage;
     procedure GetAllActivities;
@@ -373,6 +374,22 @@ begin
   finally
     FreeAndNil(DataObject);
   end;
+end;
+
+procedure TTestExamplesRequests.AddNewConfigValue;
+var
+  Key: String;
+  Value: String;
+begin
+  Key := 'destination_icon_width';
+  Value := '32';
+
+  FExamples.AddNewConfigValue(Key, Value);
+
+  CheckEqualsBody('AddNewConfigValue', FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api.v4/configuration-settings.php?api_key=11111111111111111111111111111111', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
 procedure TTestExamplesRequests.AddNewUser;
@@ -1459,8 +1476,9 @@ begin
   FExamples.GetOrders(Date);
 
   CheckEquals(EmptyStr, FConnection.RequestBody);
+  // The date "2054-07-25" is tomorrow's date relative to "Date"
   CheckEquals('https://www.route4me.com/api.v4/order.php?api_key=11111111111111111111111111111111&' +
-    'day_added_YYMMDD=2054-07-24', FConnection.Url);
+    'day_added_YYMMDD=2054-07-25', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;

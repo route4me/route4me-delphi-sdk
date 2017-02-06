@@ -93,6 +93,10 @@ type
     [Nullable]
     FScheduleDate: NullableString;
 
+    [JSONName('created_timestamp')]
+    [Nullable]
+    FCreatedTimestamp: NullableInteger;
+
     [JSONMarshalled(False)]
     FFormatSettings: TFormatSettings;
 
@@ -206,6 +210,11 @@ type
     property ScheduleDate: TDate read GetScheduleDate write SetScheduleDate;
 
     /// <summary>
+    /// Timestamp of an order creation.
+    /// </summary>
+    property CreatedTimestamp: NullableInteger read FCreatedTimestamp write FCreatedTimestamp;
+
+    /// <summary>
     /// Custom data
     /// </summary>
     property CustomData: NullableObject read FCustomData;
@@ -247,6 +256,7 @@ begin
   FEmail := NullableString.Null;
   FPhone := NullableString.Null;
   FScheduleDate := NullableString.Null;
+  FCreatedTimestamp := NullableInteger.Null;
   FCustomData := NullableObject.Null;
 end;
 
@@ -309,6 +319,7 @@ begin
     (FEmail = Other.FEmail) and
     (FPhone = Other.FPhone) and
     (FScheduleDate = Other.FScheduleDate) and
+    (FCreatedTimestamp = Other.FCreatedTimestamp) and
     (FCustomData = Other.FCustomData);
 end;
 

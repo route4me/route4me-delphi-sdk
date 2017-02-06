@@ -171,7 +171,6 @@ var
   IsFound: boolean;
 begin
   // Correct date. Must be success.
-  // todo 3: врем€ надо перевести в серверное (по Ўтатам, похоже)
   Date := Now();
   Orders := FRoute4MeManager.Order.Get(Date, ErrorString);
   try
