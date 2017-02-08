@@ -187,10 +187,8 @@ begin
 
     Result := TOrderList.Create;
 
-    // todo 3: время надо перевести в серверное (по Штатам, похоже). Время надо на начало дня, без минут
-
-    StartToday := DateTimeToUnix(AddedDate, False);
-    FinishToday := DateTimeToUnix(IncDay(AddedDate, +1), False);
+    StartToday := DateTimeToUnix(StartOfTheDay(AddedDate), False);
+    FinishToday := DateTimeToUnix(EndOfTheDay(AddedDate), False);
 
     for Order in Orders do
     begin
@@ -203,32 +201,6 @@ begin
   finally
     FreeAndNil(Orders);
   end;
-{
-
-  Result := TOrderList.Create;
-
-  Request := TGenericParameters.Create;
-  try
-    // Correcting local time to server time zone
-//    CorrectDateToServerTime(AddedDate);
-
-    Request.AddParameter('day_added_YYMMDD', GetDateStr(AddedDate));
-
-    Response := FConnection.Get(TSettings.EndPoints.Order, Request,
-      TGetOrdersResponse, ErrorString) as TGetOrdersResponse;
-    try
-      if (Response <> nil) then
-        for i := 0 to Length(Response.Results) - 1 do
-          Result.Add(Response.Results[i])
-      else
-      if (ErrorString = EmptyStr) then
-        ErrorString := 'Order details not got';
-    finally
-      FreeAndNil(Response);
-    end;
-  finally
-    FreeAndNil(Request);
-  end;}
 end;
 
 function TOrderActions.GetDateStr(Date: TDate): String;

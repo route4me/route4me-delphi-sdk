@@ -1,4 +1,4 @@
-unit AddNewConfigValueResponseUnit;
+unit ConfigValueResponseUnit;
 
 interface
 
@@ -7,7 +7,7 @@ uses
   NullableBasicTypesUnit, GenericParametersUnit, JSONNullableAttributeUnit;
 
 type
-  TAddNewConfigValueResponse = class(TGenericParameters)
+  TConfigValueResponse = class(TGenericParameters)
   private
     [JSONName('result')]
     [Nullable]

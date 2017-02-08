@@ -7,7 +7,8 @@ uses
   AddressBookContactActionsUnit, OptimizationActionsUnit, RouteActionsUnit,
   UserActionsUnit, AddressNoteActionsUnit, AddressActionsUnit,
   AvoidanceZoneActionsUnit, OrderActionsUnit, ActivityActionsUnit,
-  TrackingActionsUnit, GeocodingActionsUnit, TerritoryActionsUnit;
+  TrackingActionsUnit, GeocodingActionsUnit, TerritoryActionsUnit,
+  VehicleActionsUnit;
 
 type
   IRoute4MeManager = interface
@@ -24,6 +25,7 @@ type
     function ActivityFeed: TActivityActions;
     function Tracking: TTrackingActions;
     function Territory: TTerritoryActions;
+    function Vehicle: TVehicleActions;
 
     procedure SetConnectionProxy(Host: String; Port: integer; Username, Password: String);
     function Connection: IConnection;

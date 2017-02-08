@@ -149,8 +149,6 @@ begin
   FPhoneNumber := EmptyStr;
 end;
 
-{ TUser }
-
 function TUser.Equals(Obj: TObject): Boolean;
 var
   Other: TUser;

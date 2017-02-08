@@ -9,7 +9,7 @@ uses
   OptimizationActionsUnit, RouteActionsUnit, IConnectionUnit, UserActionsUnit,
   AddressNoteActionsUnit, AddressActionsUnit, AvoidanceZoneUnit,
   AvoidanceZoneActionsUnit, OrderActionsUnit, ActivityActionsUnit,
-  TrackingActionsUnit, GeocodingActionsUnit, TerritoryActionsUnit;
+  TrackingActionsUnit, GeocodingActionsUnit, TerritoryActionsUnit, VehicleActionsUnit;
 
 type
   TRoute4MeManager = class(TInterfacedObject, IRoute4MeManager)
@@ -28,6 +28,7 @@ type
     FActivity: TActivityActions;
     FTracking: TTrackingActions;
     FTerritory: TTerritoryActions;
+    FVehicle: TVehicleActions;
   public
     constructor Create(Connection: IConnection);
     destructor Destroy; override;
@@ -48,6 +49,7 @@ type
     function ActivityFeed: TActivityActions;
     function Tracking: TTrackingActions;
     function Territory: TTerritoryActions;
+    function Vehicle: TVehicleActions;
 
     function Connection: IConnection;
   end;
@@ -74,6 +76,7 @@ end;
 
 procedure TRoute4MeManager.Clear;
 begin
+  FreeAndNil(FVehicle);
   FreeAndNil(FTerritory);
   FreeAndNil(FTracking);
   FreeAndNil(FActivity);
@@ -111,6 +114,7 @@ begin
   FActivity := nil;
   FTracking := nil;
   FTerritory := nil;
+  FVehicle := nil;
 end;
 
 destructor TRoute4MeManager.Destroy;
@@ -172,6 +176,13 @@ begin
   if (FUser = nil) then
     FUser := TUserActions.Create(FConnection);
   Result := FUser;
+end;
+
+function TRoute4MeManager.Vehicle: TVehicleActions;
+begin
+  if (FVehicle = nil) then
+    FVehicle := TVehicleActions.Create(FConnection);
+  Result := FVehicle;
 end;
 
 function TRoute4MeManager.ActivityFeed: TActivityActions;

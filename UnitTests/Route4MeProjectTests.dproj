@@ -270,7 +270,6 @@
         <DCCReference Include="..\QueryTypes\UserParametersUnit.pas"/>
         <DCCReference Include="..\QueryTypes\RegisterAccountResponseUnit.pas"/>
         <DCCReference Include="..\Examples\TestDataProviders\UserParameterProviderUnit.pas"/>
-        <DCCReference Include="..\Examples\Examples\Members\UpdateUserUnit.pas"/>
         <DCCReference Include="..\QueryTypes\RemoveUserRequestUnit.pas"/>
         <DCCReference Include="..\Examples\Examples\Members\RemoveUserUnit.pas"/>
         <DCCReference Include="..\QueryTypes\AuthenticationResponseUnit.pas"/>
@@ -364,9 +363,20 @@
         <DCCReference Include="..\QueryTypes\AddNoteFileResponseUnit.pas"/>
         <DCCReference Include="Examples\Online\TestRouteSamplesUnit.pas"/>
         <DCCReference Include="..\QueryTypes\DeviceLicenseResponseUnit.pas"/>
-        <DCCReference Include="..\QueryTypes\AddNewConfigValueRequestUnit.pas"/>
-        <DCCReference Include="..\QueryTypes\AddNewConfigValueResponseUnit.pas"/>
-        <DCCReference Include="..\Examples\Examples\Members\AddNewConfigValueUnit.pas"/>
+        <DCCReference Include="..\QueryTypes\ConfigValueRequestUnit.pas"/>
+        <DCCReference Include="..\QueryTypes\ConfigValueResponseUnit.pas"/>
+        <DCCReference Include="..\Examples\Examples\Members\AddConfigValueUnit.pas"/>
+        <DCCReference Include="..\Examples\Examples\Members\UpdateConfigValueUnit.pas"/>
+        <DCCReference Include="..\Examples\Examples\Members\DeleteConfigValueUnit.pas"/>
+        <DCCReference Include="..\Examples\Examples\Members\UpdateUserUnit.pas"/>
+        <DCCReference Include="..\QueryTypes\GetConfigValueResponseUnit.pas"/>
+        <DCCReference Include="..\Examples\Examples\Members\GetConfigValueUnit.pas"/>
+        <DCCReference Include="..\Examples\Examples\Members\GetAllConfigValuesUnit.pas"/>
+        <DCCReference Include="..\Actions\VehicleActionsUnit.pas"/>
+        <DCCReference Include="..\DataTypes\VehicleUnit.pas"/>
+        <DCCReference Include="..\Examples\Examples\Vehicles\GetVehiclesUnit.pas"/>
+        <DCCReference Include="..\Examples\Examples\Vehicles\GetVehicleUnit.pas"/>
+        <DCCReference Include="Examples\Online\TestVehicleSamplesUnit.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

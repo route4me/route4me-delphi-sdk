@@ -59,7 +59,11 @@ type
     procedure RemoveUser;
     procedure DeviceLicense;
     procedure UserLicense;
-    procedure AddNewConfigValue;
+    procedure AddConfigValue;
+    procedure UpdateConfigValue;
+    procedure DeleteConfigValue;
+    procedure GetConfigValue;
+    procedure GetAllConfigValues;
     procedure RegisterWebinar;
     procedure LogSpecificMessage;
     procedure GetAllActivities;
@@ -148,6 +152,8 @@ type
     procedure GetLimitedZipCodes;
     procedure GetZipCodeAndHouseNumber;
     procedure GetLimitedZipCodeAndHouseNumber;
+    procedure GetVehicle;
+    procedure GetAllVehicles;
   end;
 
 implementation
@@ -376,7 +382,7 @@ begin
   end;
 end;
 
-procedure TTestExamplesRequests.AddNewConfigValue;
+procedure TTestExamplesRequests.AddConfigValue;
 var
   Key: String;
   Value: String;
@@ -384,9 +390,9 @@ begin
   Key := 'destination_icon_width';
   Value := '32';
 
-  FExamples.AddNewConfigValue(Key, Value);
+  FExamples.AddConfigValue(Key, Value);
 
-  CheckEqualsBody('AddNewConfigValue', FConnection.RequestBody);
+  CheckEqualsBody('AddConfigValue', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/configuration-settings.php?api_key=11111111111111111111111111111111', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
@@ -703,6 +709,22 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
+procedure TTestExamplesRequests.UpdateConfigValue;
+var
+  Key: String;
+  Value: String;
+begin
+  Key := 'destination_icon_uri';
+  Value := '222';
+
+  FExamples.UpdateConfigValue(Key, Value);
+
+  CheckEqualsBody('UpdateConfigValue', FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api.v4/configuration-settings.php?api_key=11111111111111111111111111111111', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmPUT = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
 procedure TTestExamplesRequests.UpdateOrder;
 var
   Order: TOrder;
@@ -986,6 +1008,16 @@ begin
   CheckEquals(EmptyStr, FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api/get_activities.php?api_key=11111111111111111111111111111111&' +
     'limit=10&offset=0&activity_type=note-insert', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.GetAllVehicles;
+begin
+  FExamples.GetAllVehicles;
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api/vehicles/view_vehicles.php?api_key=11111111111111111111111111111111', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
@@ -1406,6 +1438,16 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
+procedure TTestExamplesRequests.GetAllConfigValues;
+begin
+  FExamples.GetAllConfigValues;
+
+  CheckEquals('', FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api.v4/configuration-settings.php?api_key=11111111111111111111111111111111', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
 procedure TTestExamplesRequests.GetAvoidanceZone;
 var
   TerritoryId: String;
@@ -1425,6 +1467,21 @@ begin
 
   CheckEquals(EmptyStr, FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/avoidance.php?api_key=11111111111111111111111111111111', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.GetConfigValue;
+var
+  Key: String;
+begin
+  Key := 'destination_icon_width';
+
+  FExamples.GetConfigValue(Key);
+
+  CheckEquals('', FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api.v4/configuration-settings.php?api_key=11111111111111111111111111111111' +
+    '&config_key=destination_icon_width', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
@@ -1638,6 +1695,20 @@ begin
 
   CheckEquals(EmptyStr, FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api/member/view_users.php?api_key=11111111111111111111111111111111', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.GetVehicle;
+var
+  VehicleId: string;
+begin
+  VehicleId := '0A18C14AB42F6B6D7E830CE4082493E3';
+  FExamples.GetVehicle(VehicleId);
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api/vehicles/view_vehicles.php?api_key=11111111111111111111111111111111' +
+    '&vehicle_id=0A18C14AB42F6B6D7E830CE4082493E3', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
@@ -1918,6 +1989,20 @@ begin
 
   CheckEqualsBody('RemoveAddressBookContacts', FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api.v4/address_book.php?api_key=11111111111111111111111111111111', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmDELETE = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.DeleteConfigValue;
+var
+  Key: String;
+begin
+  Key := 'My height';
+
+  FExamples.DeleteConfigValue(Key);
+
+  CheckEqualsBody('DeleteConfigValue', FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/api.v4/configuration-settings.php?api_key=11111111111111111111111111111111', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmDELETE = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;

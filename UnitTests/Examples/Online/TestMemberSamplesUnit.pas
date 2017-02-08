@@ -19,16 +19,19 @@ type
     procedure RegisterWebinar;
     procedure RemoveUser;
     procedure DeviceLicense;
-    procedure AddNewConfigValue;
+    procedure AddConfigValue;
+    procedure UpdateConfigValue;
+    procedure GetConfigValue;
+    procedure GetAllConfigValues;
+    procedure DeleteConfigValue;
   end;
-
 
 implementation
 
 { TTestMemberSamples }
 
 uses UserParametersUnit, UserParameterProviderUnit, UserUnit, EnumsUnit,
-  NullableBasicTypesUnit;
+  NullableBasicTypesUnit, CommonTypesUnit;
 
 var
   FMemberId: NullableInteger;
@@ -36,7 +39,7 @@ var
   FSessionGuid: NullableString;
   FSessionId: NullableInteger;
 
-procedure TTestMemberSamples.AddNewConfigValue;
+procedure TTestMemberSamples.AddConfigValue;
 var
   ErrorString: String;
   Key: String;
@@ -44,12 +47,12 @@ var
 begin
   Key := 'destination_icon_width';
   Value := '32';
-  CheckTrue(FRoute4MeManager.User.AddNewConfigValue(Key, Value, ErrorString));
+  CheckTrue(FRoute4MeManager.User.AddConfigValue(Key, Value, ErrorString));
   CheckEquals(EmptyStr, ErrorString);
 
-  Key := 'randomString_2#dsR#f1';
+  Key := 'randomString_212';
   Value := 'aSD23dSD@sd';
-  CheckTrue(FRoute4MeManager.User.AddNewConfigValue(Key, Value, ErrorString));
+  CheckTrue(FRoute4MeManager.User.AddConfigValue(Key, Value, ErrorString));
   CheckEquals(EmptyStr, ErrorString);
 end;
 
@@ -108,6 +111,24 @@ begin
   end;
 end;
 
+procedure TTestMemberSamples.DeleteConfigValue;
+var
+  ErrorString: String;
+  Key: String;
+begin
+  Key := 'destination_icon_width';
+  CheckTrue(FRoute4MeManager.User.DeleteConfigValue(Key, ErrorString));
+  CheckEquals(EmptyStr, ErrorString);
+
+  Key := 'randomString_212';
+  CheckTrue(FRoute4MeManager.User.DeleteConfigValue(Key, ErrorString));
+  CheckEquals(EmptyStr, ErrorString);
+
+  Key := 'unexisting_key';
+  CheckFalse(FRoute4MeManager.User.DeleteConfigValue(Key, ErrorString));
+  CheckNotEquals(EmptyStr, ErrorString);
+end;
+
 procedure TTestMemberSamples.DeviceLicense;
 var
   ErrorString: String;
@@ -129,6 +150,41 @@ begin
   CheckEquals(EmptyStr, ErrorString);}
 end;
 
+procedure TTestMemberSamples.GetAllConfigValues;
+var
+  ErrorString: String;
+  Values: TListStringPair;
+begin
+  Values := FRoute4MeManager.User.GetAllConfigValues(ErrorString);
+  CheckEquals(EmptyStr, ErrorString);
+  CheckNotNull(Values);
+  CheckTrue(Values.Count > 0);
+end;
+
+procedure TTestMemberSamples.GetConfigValue;
+var
+  ErrorString: String;
+  Key: String;
+  Value: NullableString;
+begin
+  Key := 'destination_icon_width';
+  Value := FRoute4MeManager.User.GetConfigValue(Key, ErrorString);
+  CheckEquals(EmptyStr, ErrorString);
+  CheckTrue(Value.IsNotNull);
+  CheckEquals('78', Value.Value);
+
+  Key := 'randomString_212';
+  Value := FRoute4MeManager.User.GetConfigValue(Key, ErrorString);
+  CheckEquals(EmptyStr, ErrorString);
+  CheckTrue(Value.IsNotNull);
+  CheckEquals('aSD23dSD@sd', Value.Value);
+
+  Key := 'unexisting_key';
+  Value := FRoute4MeManager.User.GetConfigValue(Key, ErrorString);
+  CheckEquals(EmptyStr, ErrorString);
+  CheckTrue(Value.IsNull);
+end;
+
 procedure TTestMemberSamples.GetUserDetails;
 var
   ErrorString: String;
@@ -201,6 +257,24 @@ begin
   CheckNotEquals(EmptyStr, ErrorString);
 end;
 
+procedure TTestMemberSamples.UpdateConfigValue;
+var
+  ErrorString: String;
+  Key: String;
+  Value: String;
+begin
+  Key := 'destination_icon_width';
+  Value := '78';
+  CheckTrue(FRoute4MeManager.User.UpdateConfigValue(Key, Value, ErrorString));
+  CheckEquals(EmptyStr, ErrorString);
+
+  Key := 'unexisting_key';
+  Value := '123';
+  // todo 5: возвращает почему-то, что все в порядке, спросил Олега.
+  CheckTrue(FRoute4MeManager.User.UpdateConfigValue(Key, Value, ErrorString));
+  CheckEquals(EmptyStr, ErrorString);
+end;
+
 procedure TTestMemberSamples.UpdateUser;
 var
   Parameters: TUserParameters;

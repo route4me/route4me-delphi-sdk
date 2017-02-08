@@ -19,6 +19,7 @@ type
     const UserLicense = Main + '/api/member/user_license.php';
     const RegisterAccount = Main + '/actions/register_action.php';
     const Users = Main + '/api.v4/user.php';
+    const Vehicles = Main + '/api/vehicles/view_vehicles.php';
     const VerifyDeviceLicense = Main + '/api/device/verify_device_license.php';
     const RegisterWebinar = Main + '/actions/webinar_register.php';
     const ValidateSession = Main + '/datafeed/session/validate_session.php';

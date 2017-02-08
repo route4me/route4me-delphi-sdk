@@ -201,7 +201,6 @@ uses
   UserParametersUnit in '..\QueryTypes\UserParametersUnit.pas',
   RegisterAccountResponseUnit in '..\QueryTypes\RegisterAccountResponseUnit.pas',
   UserParameterProviderUnit in '..\Examples\TestDataProviders\UserParameterProviderUnit.pas',
-  UpdateUserUnit in '..\Examples\Examples\Members\UpdateUserUnit.pas',
   RemoveUserRequestUnit in '..\QueryTypes\RemoveUserRequestUnit.pas',
   RemoveUserUnit in '..\Examples\Examples\Members\RemoveUserUnit.pas',
   AuthenticationResponseUnit in '..\QueryTypes\AuthenticationResponseUnit.pas',
@@ -295,9 +294,20 @@ uses
   AddNoteFileResponseUnit in '..\QueryTypes\AddNoteFileResponseUnit.pas',
   TestRouteSamplesUnit in 'Examples\Online\TestRouteSamplesUnit.pas',
   DeviceLicenseResponseUnit in '..\QueryTypes\DeviceLicenseResponseUnit.pas',
-  AddNewConfigValueRequestUnit in '..\QueryTypes\AddNewConfigValueRequestUnit.pas',
-  AddNewConfigValueResponseUnit in '..\QueryTypes\AddNewConfigValueResponseUnit.pas',
-  AddNewConfigValueUnit in '..\Examples\Examples\Members\AddNewConfigValueUnit.pas';
+  ConfigValueRequestUnit in '..\QueryTypes\ConfigValueRequestUnit.pas',
+  ConfigValueResponseUnit in '..\QueryTypes\ConfigValueResponseUnit.pas',
+  AddConfigValueUnit in '..\Examples\Examples\Members\AddConfigValueUnit.pas',
+  UpdateConfigValueUnit in '..\Examples\Examples\Members\UpdateConfigValueUnit.pas',
+  DeleteConfigValueUnit in '..\Examples\Examples\Members\DeleteConfigValueUnit.pas',
+  UpdateUserUnit in '..\Examples\Examples\Members\UpdateUserUnit.pas',
+  GetConfigValueResponseUnit in '..\QueryTypes\GetConfigValueResponseUnit.pas',
+  GetConfigValueUnit in '..\Examples\Examples\Members\GetConfigValueUnit.pas',
+  GetAllConfigValuesUnit in '..\Examples\Examples\Members\GetAllConfigValuesUnit.pas',
+  VehicleActionsUnit in '..\Actions\VehicleActionsUnit.pas',
+  VehicleUnit in '..\DataTypes\VehicleUnit.pas',
+  GetVehiclesUnit in '..\Examples\Examples\Vehicles\GetVehiclesUnit.pas',
+  GetVehicleUnit in '..\Examples\Examples\Vehicles\GetVehicleUnit.pas',
+  TestVehicleSamplesUnit in 'Examples\Online\TestVehicleSamplesUnit.pas';
 
 {R *.RES}
 

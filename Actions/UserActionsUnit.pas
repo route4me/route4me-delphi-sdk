@@ -4,7 +4,7 @@ interface
 
 uses
   SysUtils, BaseActionUnit, System.Generics.Collections,
-  DataObjectUnit, GenericParametersUnit, UserUnit, EnumsUnit,
+  DataObjectUnit, GenericParametersUnit, UserUnit, EnumsUnit, CommonTypesUnit,
   NullableBasicTypesUnit, UserParametersUnit;
 
 type
@@ -71,8 +71,11 @@ type
     function RegisterWebinar(Email, FirstName, LastName, Phone, Company: String;
       MemberId: integer; StartDate: TDateTime; out ErrorString: String): boolean;
 
-    function AddNewConfigValue(Key, Value: String;
-      out ErrorString: String): Boolean;
+    function AddConfigValue(Key, Value: String; out ErrorString: String): Boolean;
+    function UpdateConfigValue(Key, Value: String; out ErrorString: String): Boolean;
+    function DeleteConfigValue(Key: String; out ErrorString: String): Boolean;
+    function GetAllConfigValues(out ErrorString: String): TListStringPair;
+    function GetConfigValue(Key: string; out ErrorString: String): NullableString;
   end;
 
 implementation
@@ -81,9 +84,9 @@ implementation
 
 uses SettingsUnit, ValidateSessionResponseUnit, AddNewUserResponseUnit,
   RegisterAccountResponseUnit, StatusResponseUnit, RemoveUserRequestUnit,
-  AuthenticationResponseUnit, CommonTypesUnit, DeviceLicenseRequestUnit,
+  AuthenticationResponseUnit, DeviceLicenseRequestUnit,
   UserLicenseRequestUnit, RegisterWebinarRequestUnit, DeviceLicenseResponseUnit,
-  AddNewConfigValueRequestUnit, AddNewConfigValueResponseUnit;
+  ConfigValueRequestUnit, ConfigValueResponseUnit, GetConfigValueResponseUnit;
 
 function TUserActions.RegisterAccount(Plan, Industry, FirstName, LastName, Email: String;
   Terms: boolean; DeviceType: TDeviceType; Password,
@@ -193,6 +196,36 @@ begin
   end;
 end;
 
+function TUserActions.UpdateConfigValue(Key, Value: String;
+  out ErrorString: String): Boolean;
+const
+  SuccessResultCode = 'OK';
+var
+  Request: TConfigValueRequest;
+  Response: TConfigValueResponse;
+begin
+  Request := TConfigValueRequest.Create(Key, Value);
+  try
+    Response := FConnection.Put(TSettings.EndPoints.ConfigurationSettings,
+      Request, TConfigValueResponse, ErrorString) as TConfigValueResponse;
+    try
+      if (Response = nil) and (ErrorString = EmptyStr) or
+        (Response <> nil) and (Response.Result.IsNull) then
+        ErrorString := 'UpdateConfigValue fault'
+      else
+      if (Response <> nil) and (Response.Result.Value <> SuccessResultCode) then
+        ErrorString := Response.Result.Value;
+
+      Result := (Response <> nil) and (Response.Result.IsNotNull) and
+        (Response.Result.Value = SuccessResultCode);
+    finally
+      FreeAndNil(Response);
+    end;
+  finally
+    FreeAndNil(Request);
+  end;
+end;
+
 function TUserActions.UserLicense(MemberId, SessionId: integer;
   DeviceId: String; DeviceType: TDeviceType; Subscription: String;
   Token: String; Payload: String; out ErrorString: String): boolean;
@@ -221,25 +254,22 @@ begin
   end;
 end;
 
-function TUserActions.AddNewConfigValue(Key, Value: String;
+function TUserActions.AddConfigValue(Key, Value: String;
   out ErrorString: String): Boolean;
 const
   SuccessResultCode = 'OK';
 var
-  Request: TAddNewConfigValueRequest;
-  Response: TAddNewConfigValueResponse;
+  Request: TConfigValueRequest;
+  Response: TConfigValueResponse;
 begin
-  Result := False;
-
-  Request := TAddNewConfigValueRequest.Create(Key, Value);
+  Request := TConfigValueRequest.Create(Key, Value);
   try
     Response := FConnection.Post(TSettings.EndPoints.ConfigurationSettings,
-      Request, TAddNewConfigValueResponse,
-      ErrorString) as TAddNewConfigValueResponse;
+      Request, TConfigValueResponse, ErrorString) as TConfigValueResponse;
     try
       if (Response = nil) and (ErrorString = EmptyStr) or
         (Response <> nil) and (Response.Result.IsNull) then
-        ErrorString := 'AddNewAccountConfigValue fault'
+        ErrorString := 'AddConfigValue fault'
       else
       if (Response <> nil) and (Response.Result.Value <> SuccessResultCode) then
         ErrorString := Response.Result.Value;
@@ -327,6 +357,36 @@ begin
   end;
 end;
 
+function TUserActions.DeleteConfigValue(Key: String;
+  out ErrorString: String): Boolean;
+const
+  SuccessResultCode = 'OK';
+var
+  Request: TConfigValueRequest;
+  Response: TConfigValueResponse;
+begin
+  Request := TConfigValueRequest.Create(Key);
+  try
+    Response := FConnection.Delete(TSettings.EndPoints.ConfigurationSettings,
+      Request, TConfigValueResponse, ErrorString) as TConfigValueResponse;
+    try
+      if (Response = nil) and (ErrorString = EmptyStr) or
+        (Response <> nil) and (Response.Result.IsNull) then
+        ErrorString := 'DeleteConfigValue fault'
+      else
+      if (Response <> nil) and (Response.Result.Value <> SuccessResultCode) then
+        ErrorString := Response.Result.Value;
+
+      Result := (Response <> nil) and (Response.Result.IsNotNull) and
+        (Response.Result.Value = SuccessResultCode);
+    finally
+      FreeAndNil(Response);
+    end;
+  finally
+    FreeAndNil(Request);
+  end;
+end;
+
 function TUserActions.DeviceLicense(DeviceId: String; DeviceType: TDeviceType;
   out ErrorString: String): boolean;
 var
@@ -399,6 +459,73 @@ begin
   end;
 end;
 
+function TUserActions.GetAllConfigValues(out ErrorString: String): TListStringPair;
+const
+  SuccessResultCode = 'OK';
+var
+  Request: TGenericParameters;
+  Response: TGetConfigValueResponse;
+  i: Integer;
+begin
+  Result := TListStringPair.Create;
+
+  Request := TGenericParameters.Create;
+  try
+    Response := FConnection.Get(TSettings.EndPoints.ConfigurationSettings,
+      Request, TGetConfigValueResponse, ErrorString) as TGetConfigValueResponse;
+    try
+      if (Response = nil) and (ErrorString = EmptyStr) or
+        (Response <> nil) and (Response.Result.IsNull) then
+        ErrorString := 'GetAllConfigValues fault'
+      else
+      if (Response <> nil) and (Response.Result.Value <> SuccessResultCode) then
+        ErrorString := Response.Result.Value;
+
+      if (ErrorString = EmptyStr) then
+        for i := 0 to High(Response.ConfigValues) do
+          Result.Add(Response.ConfigValues[i].AsStringPair);
+    finally
+      FreeAndNil(Response);
+    end;
+  finally
+    FreeAndNil(Request);
+  end;
+end;
+
+function TUserActions.GetConfigValue(Key: string;
+  out ErrorString: String): NullableString;
+const
+  SuccessResultCode = 'OK';
+var
+  Request: TGenericParameters;
+  Response: TGetConfigValueResponse;
+begin
+  Result := NullableString.Null;
+
+  Request := TGenericParameters.Create;
+  try
+    Request.AddParameter('config_key', Key);
+
+    Response := FConnection.Get(TSettings.EndPoints.ConfigurationSettings,
+      Request, TGetConfigValueResponse, ErrorString) as TGetConfigValueResponse;
+    try
+      if (Response = nil) and (ErrorString = EmptyStr) or
+        (Response <> nil) and (Response.Result.IsNull) then
+        ErrorString := 'GetConfigValue fault'
+      else
+      if (Response <> nil) and (Response.Result.Value <> SuccessResultCode) then
+        ErrorString := Response.Result.Value;
+
+      if (ErrorString = EmptyStr) and (Length(Response.ConfigValues) > 0) then
+          Result := Response.ConfigValues[0].Value;
+    finally
+      FreeAndNil(Response);
+    end;
+  finally
+    FreeAndNil(Request);
+  end;
+end;
+
 function TUserActions.IsSessionValid(SessionId: String; MemberId: integer;
   out ErrorString: String): boolean;
 var

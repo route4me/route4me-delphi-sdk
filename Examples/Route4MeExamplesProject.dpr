@@ -257,7 +257,19 @@ uses
   GetAssetTrackingDataUnit in 'Examples\Tracking\GetAssetTrackingDataUnit.pas',
   GetLocationHistoryFromTimeRangeUnit in 'Examples\Tracking\GetLocationHistoryFromTimeRangeUnit.pas',
   AddNoteFileResponseUnit in '..\QueryTypes\AddNoteFileResponseUnit.pas',
-  DeviceLicenseResponseUnit in '..\QueryTypes\DeviceLicenseResponseUnit.pas';
+  DeviceLicenseResponseUnit in '..\QueryTypes\DeviceLicenseResponseUnit.pas',
+  ConfigValueRequestUnit in '..\QueryTypes\ConfigValueRequestUnit.pas',
+  ConfigValueResponseUnit in '..\QueryTypes\ConfigValueResponseUnit.pas',
+  GetConfigValueResponseUnit in '..\QueryTypes\GetConfigValueResponseUnit.pas',
+  AddConfigValueUnit in 'Examples\Members\AddConfigValueUnit.pas',
+  DeleteConfigValueUnit in 'Examples\Members\DeleteConfigValueUnit.pas',
+  GetAllConfigValuesUnit in 'Examples\Members\GetAllConfigValuesUnit.pas',
+  GetConfigValueUnit in 'Examples\Members\GetConfigValueUnit.pas',
+  UpdateConfigValueUnit in 'Examples\Members\UpdateConfigValueUnit.pas',
+  VehicleActionsUnit in '..\Actions\VehicleActionsUnit.pas',
+  VehicleUnit in '..\DataTypes\VehicleUnit.pas',
+  GetVehiclesUnit in 'Examples\Vehicles\GetVehiclesUnit.pas',
+  GetVehicleUnit in 'Examples\Vehicles\GetVehicleUnit.pas';
 
 {var
   CustomerSample: TCustomerQuestionAbout7Stops;}

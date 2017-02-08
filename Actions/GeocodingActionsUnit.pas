@@ -14,8 +14,7 @@ type
     /// <summary>
     /// Forward geocoding is the process of converting place name information into latitude and longitude values
     /// </summary>
-    function ForwardGeocodeAddress(Address: String;
-      out ErrorString: String): TGeocoding;
+    function ForwardGeocodeAddress(Address: String; out ErrorString: String): TGeocoding;
 
     /// <summary>
     /// Forward geocoding is the process of converting place name information into latitude and longitude values

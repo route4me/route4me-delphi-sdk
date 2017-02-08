@@ -76,7 +76,11 @@ type
       DeviceType: TDeviceType; Subscription, Token, Payload: String);
     procedure RegisterWebinar(EMail, FirstName, LastName, Phone, Company: String;
       MemberId: integer; Date: TDateTime);
-    function AddNewConfigValue(Key, Value: String): boolean;
+    function AddConfigValue(Key, Value: String): boolean;
+    function UpdateConfigValue(Key, Value: String): boolean;
+    function DeleteConfigValue(Key: String): boolean;
+    procedure GetConfigValue(Key: String);
+    procedure GetAllConfigValues;
     function LogSpecificMessage(Message: String; RouteId: String): boolean;
     procedure GetAllActivities(Limit, Offset: integer);
     procedure GetTeamActivities(RouteId: String; Limit, Offset: integer);
@@ -160,6 +164,8 @@ type
     procedure GetTerritories;
     procedure GetTerritory(TerritoryId: String);
     procedure UpdateTerritory(TerritoryId: String);
+    procedure GetVehicle(VehicleId: String);
+    procedure GetAllVehicles;
   end;
 
 implementation
@@ -215,7 +221,9 @@ uses
   GetGeocodingAddressesUnit, GetZipCodesUnit, GetLimitedZipCodesUnit,
   GetZipCodeAndHouseNumberUnit, GetLimitedZipCodeAndHouseNumberUnit,
   BulkForwardGeocodeAddressesUnit, SearchRoutesForSpecifiedTextUnit,
-  GetLocationHistoryFromTimeRangeUnit, GetAssetTrackingDataUnit, AddNewConfigValueUnit;
+  GetLocationHistoryFromTimeRangeUnit, GetAssetTrackingDataUnit,
+  AddConfigValueUnit, DeleteConfigValueUnit, UpdateConfigValueUnit,
+  GetConfigValueUnit, GetAllConfigValuesUnit, GetVehiclesUnit, GetVehicleUnit;
 
 procedure TRoute4MeExamples.GetAreaAddedActivities;
 var
@@ -314,11 +322,11 @@ begin
   end;
 end;
 
-function TRoute4MeExamples.AddNewConfigValue(Key, Value: String): boolean;
+function TRoute4MeExamples.AddConfigValue(Key, Value: String): boolean;
 var
-  Example: TAddNewConfigValue;
+  Example: TAddConfigValue;
 begin
-  Example := MakeExample(TAddNewConfigValue) as TAddNewConfigValue;
+  Example := MakeExample(TAddConfigValue) as TAddConfigValue;
   try
     Result := Example.Execute(Key, Value);
   finally
@@ -491,6 +499,18 @@ begin
   end;
 end;
 
+function TRoute4MeExamples.DeleteConfigValue(Key: String): boolean;
+var
+  Example: TDeleteConfigValue;
+begin
+  Example := MakeExample(TDeleteConfigValue) as TDeleteConfigValue;
+  try
+    Result := Example.Execute(Key);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
 procedure TRoute4MeExamples.DeleteRoutes(RouteIds: TStringArray);
 var
   Example: TDeleteRoutes;
@@ -582,6 +602,18 @@ begin
   Example := MakeExample(TGetAllNoteInsertedActivities) as TGetAllNoteInsertedActivities;
   try
     Example.Execute();
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.GetAllVehicles;
+var
+  Example: TGetVehicles;
+begin
+  Example := MakeExample(TGetVehicles) as TGetVehicles;
+  try
+    Example.Execute;
   finally
     FreeAndNil(Example);
   end;
@@ -995,6 +1027,18 @@ begin
   end;
 end;
 
+procedure TRoute4MeExamples.GetAllConfigValues;
+var
+  Example: TGetAllConfigValues;
+begin
+  Example := MakeExample(TGetAllConfigValues) as TGetAllConfigValues;
+  try
+    Example.Execute();
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
 procedure TRoute4MeExamples.GetAvoidanceZone(TerritoryId: String);
 var
   Example: TGetAvoidanceZone;
@@ -1014,6 +1058,18 @@ begin
   Example := MakeExample(TGetAvoidanceZones) as TGetAvoidanceZones;
   try
     Example.Execute;
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.GetConfigValue(Key: String);
+var
+  Example: TGetConfigValue;
+begin
+  Example := MakeExample(TGetConfigValue) as TGetConfigValue;
+  try
+    Example.Execute(Key);
   finally
     FreeAndNil(Example);
   end;
@@ -1207,6 +1263,18 @@ begin
   Example := MakeExample(TGetUsers) as TGetUsers;
   try
     Example.Execute;
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.GetVehicle(VehicleId: string);
+var
+  Example: TGetVehicle;
+begin
+  Example := MakeExample(TGetVehicle) as TGetVehicle;
+  try
+    Example.Execute(VehicleId);
   finally
     FreeAndNil(Example);
   end;
@@ -1687,6 +1755,18 @@ begin
   Example := MakeExample(TUpdateAvoidanceZone) as TUpdateAvoidanceZone;
   try
     Example.Execute(TerritoryId);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+function TRoute4MeExamples.UpdateConfigValue(Key, Value: String): boolean;
+var
+  Example: TUpdateConfigValue;
+begin
+  Example := MakeExample(TUpdateConfigValue) as TUpdateConfigValue;
+  try
+    Result := Example.Execute(Key, Value);
   finally
     FreeAndNil(Example);
   end;
