@@ -47,7 +47,6 @@ function TGetOrdersWithCustomFieldsResponse.GetResult(index: integer;
   Field: String): String;
 var
   Results: TStringArray;
-  FieldIndex: Integer;
   i: Integer;
 begin
   Result := EmptyStr;

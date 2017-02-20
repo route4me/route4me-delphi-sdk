@@ -154,6 +154,10 @@ type
     procedure GetLimitedZipCodeAndHouseNumber;
     procedure GetVehicle;
     procedure GetAllVehicles;
+    procedure PreviewFile;
+    procedure UploadFileGeocoding;
+    procedure UploadCsvFile;
+    procedure UploadXlsFile;
   end;
 
 implementation
@@ -816,6 +820,39 @@ begin
   finally
     FreeAndNil(Parameters);
   end;
+end;
+
+procedure TTestExamplesRequests.UploadCsvFile;
+var
+  FileName: String;
+begin
+{  FileId := 'b2130b5fc36ae1109ef63b6db73781f6';
+  FExamples.UploadCsvFile(FileId);
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/actions/upload/upload.php?api_key=11111111111111111111111111111111&' +
+    'strUploadID=b2130b5fc36ae1109ef63b6db73781f6&format=json', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);}
+end;
+
+procedure TTestExamplesRequests.UploadFileGeocoding;
+var
+  FileId: String;
+begin
+  FileId := 'b2130b5fc36ae1109ef63b6db73781f6';
+  FExamples.UploadFileGeocoding(FileId);
+
+  CheckEquals('{}', FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/actions/upload/csv-xls-geocode.php?api_key=11111111111111111111111111111111&' +
+    'strUploadID=b2130b5fc36ae1109ef63b6db73781f6', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmPOST = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.UploadXlsFile;
+begin
+
 end;
 
 procedure TTestExamplesRequests.UserLicense;
@@ -1927,6 +1964,20 @@ begin
   finally
     FreeAndNil(DataObject);
   end;
+end;
+
+procedure TTestExamplesRequests.PreviewFile;
+var
+  FileId: String;
+begin
+  FileId := 'b2130b5fc36ae1109ef63b6db73781f6';
+  FExamples.PreviewFile(FileId);
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://www.route4me.com/actions/upload/csv-xls-preview.php?api_key=11111111111111111111111111111111&' +
+    'strUploadID=b2130b5fc36ae1109ef63b6db73781f6&format=json', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
 procedure TTestExamplesRequests.RegisterAccount;

@@ -307,7 +307,11 @@ uses
   VehicleUnit in '..\DataTypes\VehicleUnit.pas',
   GetVehiclesUnit in '..\Examples\Examples\Vehicles\GetVehiclesUnit.pas',
   GetVehicleUnit in '..\Examples\Examples\Vehicles\GetVehicleUnit.pas',
-  TestVehicleSamplesUnit in 'Examples\Online\TestVehicleSamplesUnit.pas';
+  TestVehicleSamplesUnit in 'Examples\Online\TestVehicleSamplesUnit.pas',
+  FileUploadingActionsUnit in '..\Actions\FileUploadingActionsUnit.pas',
+  PreviewFileUnit in '..\Examples\Examples\FileUploading\PreviewFileUnit.pas',
+  TestFileUploadingSamplesUnit in 'Examples\Online\TestFileUploadingSamplesUnit.pas',
+  UploadFileGeocodingUnit in '..\Examples\Examples\FileUploading\UploadFileGeocodingUnit.pas';
 
 {R *.RES}
 

@@ -9,7 +9,8 @@ uses
   OptimizationActionsUnit, RouteActionsUnit, IConnectionUnit, UserActionsUnit,
   AddressNoteActionsUnit, AddressActionsUnit, AvoidanceZoneUnit,
   AvoidanceZoneActionsUnit, OrderActionsUnit, ActivityActionsUnit,
-  TrackingActionsUnit, GeocodingActionsUnit, TerritoryActionsUnit, VehicleActionsUnit;
+  TrackingActionsUnit, GeocodingActionsUnit, TerritoryActionsUnit,
+  VehicleActionsUnit, FileUploadingActionsUnit;
 
 type
   TRoute4MeManager = class(TInterfacedObject, IRoute4MeManager)
@@ -29,6 +30,7 @@ type
     FTracking: TTrackingActions;
     FTerritory: TTerritoryActions;
     FVehicle: TVehicleActions;
+    FUploading: TFileUploadingActions;
   public
     constructor Create(Connection: IConnection);
     destructor Destroy; override;
@@ -50,6 +52,7 @@ type
     function Tracking: TTrackingActions;
     function Territory: TTerritoryActions;
     function Vehicle: TVehicleActions;
+    function Uploading: TFileUploadingActions;
 
     function Connection: IConnection;
   end;
@@ -76,6 +79,7 @@ end;
 
 procedure TRoute4MeManager.Clear;
 begin
+  FreeAndNil(FUploading);
   FreeAndNil(FVehicle);
   FreeAndNil(FTerritory);
   FreeAndNil(FTracking);
@@ -115,6 +119,7 @@ begin
   FTracking := nil;
   FTerritory := nil;
   FVehicle := nil;
+  FUploading := nil;
 end;
 
 destructor TRoute4MeManager.Destroy;
@@ -169,6 +174,13 @@ begin
   if (FTracking = nil) then
     FTracking := TTrackingActions.Create(FConnection);
   Result := FTracking;
+end;
+
+function TRoute4MeManager.Uploading: TFileUploadingActions;
+begin
+  if (FUploading = nil) then
+    FUploading := TFileUploadingActions.Create(FConnection);
+  Result := FUploading;
 end;
 
 function TRoute4MeManager.User: TUserActions;

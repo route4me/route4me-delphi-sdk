@@ -2,7 +2,7 @@ unit IConnectionUnit;
 
 interface
 
-uses GenericParametersUnit, DataObjectUnit, UtilsUnit, CommonTypesUnit;
+uses Classes, GenericParametersUnit, DataObjectUnit, UtilsUnit, CommonTypesUnit;
 
 type
   IConnection = interface
@@ -12,6 +12,8 @@ type
     function Get(Url: String; Data: TGenericParameters;
       ResultClassType: TClass; out ErrorString: String): TObject;
     function Post(Url: String; Data: TGenericParameters;
+      ResultClassType: TClass; out ErrorString: String): TObject; overload;
+    function Post(Url: String; Data: TGenericParameters; Stream: TStream;
       ResultClassType: TClass; out ErrorString: String): TObject; overload;
     function Post(Url: String; Data: TGenericParameters;
       PossibleResultClassType: TClassArray; out ErrorString: String): TObject; overload;

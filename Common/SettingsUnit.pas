@@ -41,6 +41,10 @@ type
     const GetDeviceLocation = Main + '/api/track/get_device_location.php';
     const TrackingStatus = Main + '/api.v4/status.php';
     const ConfigurationSettings = Main + '/api.v4/configuration-settings.php';
+    const FileUploading = Main + '/actions/upload/upload.php';
+    const CsvXlsGeocode = Main + '/actions/upload/csv-xls-geocode.php';
+    const CsvXlsPreview = Main + '/actions/upload/csv-xls-preview.php';
+
 
     const RapidAddressSearch = 'https://rapid.route4me.com/street_data';
   end;

@@ -22,7 +22,10 @@ type
     procedure RESTRequest(URL: String; Method: TRESTRequestMethod;
       Body: String; ContentType: TRESTContentType;
       out Success: boolean; out StatusCode: integer;
-      out JSONValue: TJsonValue; out ResponseContent: String);
+      out JSONValue: TJsonValue; out ResponseContent: String); overload;
+    procedure RESTRequest(URL: String; Stream: TStream;
+      out Success: boolean; out StatusCode: integer;
+      out JSONValue: TJsonValue; out ResponseContent: String); overload;
     procedure DeleteRequest(URL: String;
       Body: String; ContentType: TRESTContentType;
       out Success: boolean; out StatusCode: integer;
@@ -33,7 +36,10 @@ type
 
     function ExecuteRequest(URL: String; Method: TRESTRequestMethod;
       Body: String; ContentType: TRESTContentType; out ErrorString: String;
-      out ResponseAsString: String{; out NeedFreeResult: boolean}): TJsonValue;
+      out ResponseAsString: String): TJsonValue; overload;
+
+    function ExecuteRequest(URL: String;  Stream: TStream; out ErrorString: String;
+      out ResponseAsString: String): TJsonValue; overload;
 
     procedure SetProxy(Host: String; Port: integer; Username, Password: String);
   end;
@@ -45,13 +51,19 @@ type
 
     function ExecuteRequest(Url: String; Data: TGenericParameters;
       Method: TRESTRequestMethod; PossibleResultClassType: TClassArray;
-      out ErrorString: String): TObject;
+      out ErrorString: String): TObject; overload;
+
+    function ExecuteRequest(Url: String; Data: TGenericParameters;
+      Stream: TStream; ResultClassType: TClass;
+      out ErrorString: String): TObject; overload;
 
     function UrlParameters(Parameters: TListStringPair): String;
   protected
     function RunRequest(URL: String; Method: TRESTRequestMethod;
       Body: String; ContentType: TRESTContentType; out ErrorString: String;
-      out ResponseAsString: String): TJsonValue; virtual;
+      out ResponseAsString: String): TJsonValue; overload; virtual;
+    function RunRequest(URL: String; Stream: TStream; out ErrorString: String;
+      out ResponseAsString: String): TJsonValue; overload; virtual;
   public
     constructor Create(ApiKey: String);
     destructor Destroy; override;
@@ -64,6 +76,8 @@ type
       ResultClassType: TClass; out ErrorString: String): TObject; overload;
     function Post(Url: String; Data: TGenericParameters;
       PossibleResultClassType: TClassArray; out ErrorString: String): TObject; overload;
+    function Post(Url: String; Data: TGenericParameters; Stream: TStream;
+      ResultClassType: TClass; out ErrorString: String): TObject; overload;
     function Put(Url: String; Data: TGenericParameters;
       ResultClassType: TClass; out ErrorString: String): TObject;
     function Delete(Url: String; Data: TGenericParameters;
@@ -78,8 +92,11 @@ uses SettingsUnit, MarshalUnMarshalUnit, ErrorResponseUnit, UtilsUnit;
 
 function TConnection.Post(Url: String; Data: TGenericParameters;
   ResultClassType: TClass; out ErrorString: String): TObject;
+var
+  PossibleResultClassType: TClassArray;
 begin
-  Result := ExecuteRequest(Url, Data, rmPOST, [ResultClassType], ErrorString);
+  PossibleResultClassType := [ResultClassType];
+  Result := ExecuteRequest(Url, Data, rmPOST, PossibleResultClassType, ErrorString);
 end;
 
 function TConnection.Post(Url: String; Data: TGenericParameters;
@@ -88,10 +105,25 @@ begin
   Result := ExecuteRequest(Url, Data, rmPOST, PossibleResultClassType, ErrorString);
 end;
 
-function TConnection.Put(Url: String; Data: TGenericParameters;
+function TConnection.Post(Url: String; Data: TGenericParameters; Stream: TStream;
   ResultClassType: TClass; out ErrorString: String): TObject;
 begin
-  Result := ExecuteRequest(Url, Data, rmPUT, [ResultClassType], ErrorString);
+  Result := ExecuteRequest(Url, Data, Stream, ResultClassType, ErrorString);
+end;
+
+function TConnection.Put(Url: String; Data: TGenericParameters;
+  ResultClassType: TClass; out ErrorString: String): TObject;
+var
+  PossibleResultClassType: TClassArray;
+begin
+  PossibleResultClassType := [ResultClassType];
+  Result := ExecuteRequest(Url, Data, rmPUT, PossibleResultClassType, ErrorString);
+end;
+
+function TConnection.RunRequest(URL: String; Stream: TStream; out ErrorString,
+  ResponseAsString: String): TJsonValue;
+begin
+  Result := FConnection.ExecuteRequest(URL, Stream, ErrorString, ResponseAsString);
 end;
 
 constructor TConnection.Create(ApiKey: String);
@@ -102,8 +134,11 @@ end;
 
 function TConnection.Delete(Url: String; Data: TGenericParameters;
   ResultClassType: TClass; out ErrorString: String): TObject;
+var
+  PossibleResultClassType: TClassArray;
 begin
-  Result := ExecuteRequest(Url, Data, rmDELETE, [ResultClassType], ErrorString);
+  PossibleResultClassType := [ResultClassType];
+  Result := ExecuteRequest(Url, Data, rmDELETE, PossibleResultClassType, ErrorString);
 end;
 
 destructor TConnection.Destroy;
@@ -113,10 +148,34 @@ begin
   inherited;
 end;
 
+function TConnection.ExecuteRequest(Url: String; Data: TGenericParameters;
+  Stream: TStream; ResultClassType: TClass; out ErrorString: String): TObject;
+var
+  Response: TJSONValue;
+  Parameters: TListStringPair;
+  ResponseAsString: String;
+begin
+  Result := nil;
+
+  Parameters := Data.Serialize(FApiKey);
+  try
+    Response := RunRequest(Url + UrlParameters(Parameters),
+      Stream, ErrorString, ResponseAsString);
+
+    if (Response <> nil) then
+      Result := TMarshalUnMarshal.FromJson(ResultClassType, Response)
+  finally
+    FreeAndNil(Parameters);
+  end;
+end;
+
 function TConnection.Get(Url: String; Data: TGenericParameters;
   ResultClassType: TClass; out ErrorString: String): TObject;
+var
+  PossibleResultClassType: TClassArray;
 begin
-  Result := ExecuteRequest(Url, Data, rmGET, [ResultClassType], ErrorString);
+  PossibleResultClassType := [ResultClassType];
+  Result := ExecuteRequest(Url, Data, rmGET, PossibleResultClassType, ErrorString);
 end;
 
 function TConnection.ExecuteRequest(Url: String; Data: TGenericParameters;
@@ -247,6 +306,64 @@ begin
   inherited;
 end;
 
+function TConnectionFacade.ExecuteRequest(URL: String; Stream: TStream;
+  out ErrorString, ResponseAsString: String): TJsonValue;
+  function GetHeaderValue(Name: String): String;
+  var
+    s: String;
+  begin
+    Result := EmptyStr;
+
+    for s in FRESTResponse.Headers do
+      if s.StartsWith(Name, True) then
+      begin
+        Result := s;
+        System.Delete(Result, 1, Length(Name) + 1);
+        Break;
+      end;
+  end;
+var
+  ErrorResponse: TErrorResponse;
+  Error: String;
+  JsonResponse: TJsonValue;
+
+  Success: boolean;
+  StatusCode: integer;
+  JSONValue: TJsonValue;
+begin
+  Result := nil;
+  ErrorString := EmptyStr;
+
+  FClient.BaseURL := URL;
+
+  RESTRequest(URL, Stream, Success, StatusCode, JSONValue, ResponseAsString);
+
+  if (Success) then
+    Result := JSONValue
+  else
+  begin
+    ErrorString := EmptyStr;
+    JsonResponse := TJSONObject.ParseJSONValue(ResponseAsString);
+    if (JsonResponse <> nil) then
+    begin
+      ErrorResponse := TMarshalUnMarshal.FromJson(TErrorResponse, JsonResponse) as TErrorResponse;
+      try
+        if (ErrorResponse <> nil) then
+          for Error in ErrorResponse.Errors do
+          begin
+            if (Length(ErrorString) > 0) then
+              ErrorString := ErrorString + '; ';
+            ErrorString := ErrorString + Error;
+          end;
+      finally
+        FreeAndNil(ErrorResponse);
+      end;
+    end
+    else
+      ErrorString := 'Response: ' + FRESTResponse.StatusText;
+  end;
+end;
+
 procedure TConnectionFacade.DeleteRequest(URL, Body: String;
   ContentType: TRESTContentType; out Success: boolean; out StatusCode: integer;
   out JSONValue: TJsonValue; out ResponseContent: String);
@@ -360,6 +477,23 @@ begin
         ErrorString := 'Response: ' + FRESTResponse.StatusText;
     end;
   end;
+end;
+
+procedure TConnectionFacade.RESTRequest(URL: String; Stream: TStream;
+  out Success: boolean; out StatusCode: integer; out JSONValue: TJsonValue;
+  out ResponseContent: String);
+begin
+  FRESTRequest.Client.BaseURL := URL;
+  FRESTRequest.Method := rmPOST;
+  FRESTRequest.ClearBody;
+  FRESTRequest.AddBody(Stream, TRESTContentType.ctMULTIPART_FORM_DATA);
+
+  FRESTRequest.Execute;
+
+  Success := FRESTResponse.Status.Success;
+  StatusCode := FRESTResponse.StatusCode;
+  JSONValue := FRESTResponse.JSONValue;
+  ResponseContent := FRESTResponse.Content;
 end;
 
 procedure TConnectionFacade.RESTRequest(URL: String;

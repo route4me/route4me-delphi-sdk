@@ -3,7 +3,7 @@ unit AddressNoteActionsUnit;
 interface
 
 uses
-  SysUtils, BaseActionUnit,
+  SysUtils, Classes, BaseActionUnit,
   DataObjectUnit, NoteParametersUnit, AddressNoteUnit, IConnectionUnit,
   AddNoteFileResponseUnit, EnumsUnit;
 
@@ -89,6 +89,7 @@ var
   NoteParameterPairs: TListStringPair;
   i: integer;
   NoteParameters: TNoteParameters;
+  FileStream: TStream;
 begin
   Result := nil;
   if not FileExists(Filename) then
@@ -116,18 +117,23 @@ begin
         FreeAndNil(NoteParameterPairs);
       end;
 
-      // todo 5: сделать Add a Note File
-      Response := FConnection.Post(TSettings.EndPoints.AddRouteNotes, Parameters,
-        TAddAddressNoteResponse, ErrorString) as TAddAddressNoteResponse;
+      FileStream := TFileStream.Create(Filename, fmOpenRead);
       try
-        if (Response <> nil) then
-          if (Response.Note <> nil) then
-            Result := Response.Note
-          else
-            if (Response.Status = False) then
-              ErrorString := 'Note file not added';
+        // todo 1: сделать Add a Note File
+        Response := FConnection.Post(TSettings.EndPoints.AddRouteNotes, Parameters,
+          FileStream, TAddAddressNoteResponse, ErrorString) as TAddAddressNoteResponse;
+        try
+          if (Response <> nil) then
+            if (Response.Note <> nil) then
+              Result := Response.Note
+            else
+              if (Response.Status = False) then
+                ErrorString := 'Note file not added';
+        finally
+          FreeAndNil(Response);
+        end;
       finally
-        FreeAndNil(Response);
+        FreeAndNil(FileStream);
       end;
     finally
       FreeAndNil(Parameters);

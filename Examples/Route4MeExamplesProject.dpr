@@ -269,7 +269,10 @@ uses
   VehicleActionsUnit in '..\Actions\VehicleActionsUnit.pas',
   VehicleUnit in '..\DataTypes\VehicleUnit.pas',
   GetVehiclesUnit in 'Examples\Vehicles\GetVehiclesUnit.pas',
-  GetVehicleUnit in 'Examples\Vehicles\GetVehicleUnit.pas';
+  GetVehicleUnit in 'Examples\Vehicles\GetVehicleUnit.pas',
+  FileUploadingActionsUnit in '..\Actions\FileUploadingActionsUnit.pas',
+  PreviewFileUnit in 'Examples\FileUploading\PreviewFileUnit.pas',
+  UploadFileGeocodingUnit in 'Examples\FileUploading\UploadFileGeocodingUnit.pas';
 
 {var
   CustomerSample: TCustomerQuestionAbout7Stops;}

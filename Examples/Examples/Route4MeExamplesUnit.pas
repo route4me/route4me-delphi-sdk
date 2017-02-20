@@ -166,6 +166,8 @@ type
     procedure UpdateTerritory(TerritoryId: String);
     procedure GetVehicle(VehicleId: String);
     procedure GetAllVehicles;
+    procedure PreviewFile(FileId: string);
+    procedure UploadFileGeocoding(FileId: string);
   end;
 
 implementation
@@ -223,7 +225,7 @@ uses
   BulkForwardGeocodeAddressesUnit, SearchRoutesForSpecifiedTextUnit,
   GetLocationHistoryFromTimeRangeUnit, GetAssetTrackingDataUnit,
   AddConfigValueUnit, DeleteConfigValueUnit, UpdateConfigValueUnit,
-  GetConfigValueUnit, GetAllConfigValuesUnit, GetVehiclesUnit, GetVehicleUnit;
+  GetConfigValueUnit, GetAllConfigValuesUnit, GetVehiclesUnit, GetVehicleUnit, PreviewFileUnit, UploadFileGeocodingUnit;
 
 procedure TRoute4MeExamples.GetAreaAddedActivities;
 var
@@ -1450,6 +1452,18 @@ begin
   end;
 end;
 
+procedure TRoute4MeExamples.PreviewFile(FileId: string);
+var
+  Example: TPreviewFile;
+begin
+  Example := MakeExample(TPreviewFile) as TPreviewFile;
+  try
+    Example.Execute(FileId);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
 procedure TRoute4MeExamples.RegisterAccount(Plan, Industry, FirstName, LastName,
   Email: String; Terms: boolean; DeviceType: TDeviceType; Password,
   PasswordConfirmation: String);
@@ -1804,6 +1818,18 @@ begin
   Example := MakeExample(TUpdateUser) as TUpdateUser;
   try
     Example.Execute(Parameters);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.UploadFileGeocoding(FileId: string);
+var
+  Example: TUploadFileGeocoding;
+begin
+  Example := MakeExample(TUploadFileGeocoding) as TUploadFileGeocoding;
+  try
+    Example.Execute(FileId);
   finally
     FreeAndNil(Example);
   end;
