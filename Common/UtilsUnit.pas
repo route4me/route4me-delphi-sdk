@@ -3,7 +3,7 @@ unit UtilsUnit;
 interface
 
 uses
-  Windows, SysUtils, System.Generics.Collections, Generics.Defaults, CommonTypesUnit;
+  Windows, Classes, SysUtils, System.Generics.Collections, Generics.Defaults, CommonTypesUnit;
 
 type
   TUtils = class

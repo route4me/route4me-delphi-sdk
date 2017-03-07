@@ -2,7 +2,7 @@ unit UploadFileGeocodingUnit;
 
 interface
 
-uses SysUtils, BaseExampleUnit, EnumsUnit;
+uses SysUtils, Classes, BaseExampleUnit, EnumsUnit;
 
 type
   TUploadFileGeocoding = class(TBaseExample)
@@ -17,19 +17,22 @@ uses NullableBasicTypesUnit;
 procedure TUploadFileGeocoding.Execute(FileId: String);
 var
   ErrorString: String;
-  FileContent: String;
+  FileContent: TStringList;
 begin
   FileContent := Route4MeManager.Uploading.UploadFileGeocoding(FileId, ErrorString);
-
-  WriteLn('');
-
-  if (ErrorString = EmptyStr) then
-  begin
-    WriteLn('UploadFileGeocoding successfully');
+  try
     WriteLn('');
-  end
-  else
-    WriteLn(Format('UploadFileGeocoding error: "%s"', [ErrorString]));
+
+    if (ErrorString = EmptyStr) then
+    begin
+      WriteLn('UploadFileGeocoding successfully');
+      WriteLn('');
+    end
+    else
+      WriteLn(Format('UploadFileGeocoding error: "%s"', [ErrorString]));
+  finally
+    FreeAndNil(FileContent);
+  end;
 end;
 
 end.

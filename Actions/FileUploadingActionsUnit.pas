@@ -10,14 +10,14 @@ type
   TFileUploadingActions = class(TBaseAction)
   public
     function Preview(FileId: String; out ErrorString: String): String;
-    function UploadFileGeocoding(FileId: String; out ErrorString: String): String;
+    function UploadFileGeocoding(FileId: String; out ErrorString: String): TStringList;
     function Upload(Stream: TStream; out ErrorString: String): String;
   end;
 
 implementation
 
 uses
-  System.Generics.Collections, GenericParametersUnit, CommonTypesUnit, SettingsUnit;
+  System.Generics.Collections, GenericParametersUnit, CommonTypesUnit, SettingsUnit, UtilsUnit, FileUploadErrorsResponseUnit;
 
 function TFileUploadingActions.Preview(FileId: String; out ErrorString: String): String;
 var
@@ -74,24 +74,37 @@ begin
 end;
 
 function TFileUploadingActions.UploadFileGeocoding(
-  FileId: String; out ErrorString: String): String;
+  FileId: String; out ErrorString: String): TStringList;
 var
-  Response: TSimpleString;
+  Response: TObject;
   Parameters: TGenericParameters;
+  ClassArray: TClassArray;
 begin
-  Result := EmptyStr;
+  Result := TStringList.Create;
 
   Parameters := TGenericParameters.Create;
   try
     Parameters.AddParameter('strUploadID', FileId);
 
+    SetLength(ClassArray, 2);
+    ClassArray[0] := TSimpleString;
+    ClassArray[1] := TFileUploadErrorsResponse;
     Response := FConnection.Post(TSettings.EndPoints.CsvXlsGeocode, Parameters,
-      TSimpleString, ErrorString) as TSimpleString;
+      ClassArray, ErrorString);
     try
       if (Response = nil) and (ErrorString = EmptyStr) then
         ErrorString := 'Upload File Geocoding fault';
 
-      Result := Response.Value;
+      if (Response is TFileUploadErrorsResponse) then
+      begin
+        if Length(TFileUploadErrorsResponse(Response).Errors) > 0 then
+          ErrorString := TFileUploadErrorsResponse(Response).Errors[0]
+        else
+          ErrorString := 'Upload File Geocoding fault';
+      end;
+
+      if (Response is TSimpleString) and (ErrorString = EmptyStr) then
+        Result.Text := TSimpleString(Response).Value;
     finally
       FreeAndNil(Response);
     end;

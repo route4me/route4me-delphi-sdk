@@ -311,7 +311,8 @@ uses
   FileUploadingActionsUnit in '..\Actions\FileUploadingActionsUnit.pas',
   PreviewFileUnit in '..\Examples\Examples\FileUploading\PreviewFileUnit.pas',
   TestFileUploadingSamplesUnit in 'Examples\Online\TestFileUploadingSamplesUnit.pas',
-  UploadFileGeocodingUnit in '..\Examples\Examples\FileUploading\UploadFileGeocodingUnit.pas';
+  UploadFileGeocodingUnit in '..\Examples\Examples\FileUploading\UploadFileGeocodingUnit.pas',
+  FileUploadErrorsResponseUnit in '..\QueryTypes\FileUploadErrorsResponseUnit.pas';
 
 {R *.RES}
 

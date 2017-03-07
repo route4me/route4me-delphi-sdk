@@ -67,19 +67,21 @@ procedure TTestFileUploadingSamples.UploadFileGeocoding;
 var
   ErrorString: String;
   FileId: String;
-  Content: String;
+  Content: TStringList;
 begin
   FileId := 'b2130b5fc36ae1109ef63b6db73781f6';
   Content := FRoute4MeManager.Uploading.UploadFileGeocoding(FileId, ErrorString);
   // '{'#$A'    "optimization_problem_id": "F27753EA3D0734E854A35215B6712DA2",'#$A'    "address_count": 10,'#$A'    "status": true'#$A'}'
   CheckEquals(EmptyStr, ErrorString);
-  CheckNotEquals(EmptyStr, Content);
+  CheckNotNull(Content);
+  CheckTrue(Content.Count > 0);
 
   FileId := 'random_id_dDFsd2@D3d';
   Content := FRoute4MeManager.Uploading.UploadFileGeocoding(FileId, ErrorString);
   //'{"errors":["Upload not found"],"timestamp":1487595853}'
   CheckNotEquals(EmptyStr, ErrorString);
-  CheckEquals(EmptyStr, Content);
+  CheckNotNull(Content);
+  CheckTrue(Content.Count = 0);
 end;
 
 initialization
