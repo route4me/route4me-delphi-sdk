@@ -8,7 +8,7 @@ uses
   UserActionsUnit, AddressNoteActionsUnit, AddressActionsUnit,
   AvoidanceZoneActionsUnit, OrderActionsUnit, ActivityActionsUnit,
   TrackingActionsUnit, GeocodingActionsUnit, TerritoryActionsUnit,
-  VehicleActionsUnit, FileUploadingActionsUnit;
+  VehicleActionsUnit, FileUploadingActionsUnit, TelematicActionsUnit;
 
 type
   IRoute4MeManager = interface
@@ -27,6 +27,7 @@ type
     function Territory: TTerritoryActions;
     function Vehicle: TVehicleActions;
     function Uploading: TFileUploadingActions;
+    function Telematics: TTelematicActions;
 
     procedure SetConnectionProxy(Host: String; Port: integer; Username, Password: String);
     function Connection: IConnection;

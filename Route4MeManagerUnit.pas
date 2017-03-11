@@ -10,7 +10,7 @@ uses
   AddressNoteActionsUnit, AddressActionsUnit, AvoidanceZoneUnit,
   AvoidanceZoneActionsUnit, OrderActionsUnit, ActivityActionsUnit,
   TrackingActionsUnit, GeocodingActionsUnit, TerritoryActionsUnit,
-  VehicleActionsUnit, FileUploadingActionsUnit;
+  VehicleActionsUnit, FileUploadingActionsUnit, TelematicActionsUnit;
 
 type
   TRoute4MeManager = class(TInterfacedObject, IRoute4MeManager)
@@ -31,6 +31,7 @@ type
     FTerritory: TTerritoryActions;
     FVehicle: TVehicleActions;
     FUploading: TFileUploadingActions;
+    FTelematics: TTelematicActions;
   public
     constructor Create(Connection: IConnection);
     destructor Destroy; override;
@@ -53,6 +54,7 @@ type
     function Territory: TTerritoryActions;
     function Vehicle: TVehicleActions;
     function Uploading: TFileUploadingActions;
+    function Telematics: TTelematicActions;
 
     function Connection: IConnection;
   end;
@@ -79,6 +81,7 @@ end;
 
 procedure TRoute4MeManager.Clear;
 begin
+  FreeAndNil(FTelematics);
   FreeAndNil(FUploading);
   FreeAndNil(FVehicle);
   FreeAndNil(FTerritory);
@@ -120,6 +123,7 @@ begin
   FTerritory := nil;
   FVehicle := nil;
   FUploading := nil;
+  FTelematics := nil;
 end;
 
 destructor TRoute4MeManager.Destroy;
@@ -160,6 +164,13 @@ end;
 procedure TRoute4MeManager.SetConnectionProxy(Host: String; Port: integer; Username, Password: String);
 begin
   FConnection.SetProxy(Host, Port, Username, Password);
+end;
+
+function TRoute4MeManager.Telematics: TTelematicActions;
+begin
+  if (FTelematics = nil) then
+    FTelematics := TTelematicActions.Create(FConnection);
+  Result := FTelematics;
 end;
 
 function TRoute4MeManager.Territory: TTerritoryActions;

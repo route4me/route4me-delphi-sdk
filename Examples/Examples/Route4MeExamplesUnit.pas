@@ -168,6 +168,10 @@ type
     procedure GetAllVehicles;
     procedure PreviewFile(FileId: string);
     procedure UploadFileGeocoding(FileId: string);
+    procedure GetAllVendors;
+    procedure GetVendor(VendorId: integer);
+    procedure SearchVendors(Size: TVendorSizeType; IsIntegrated: boolean;
+      Feature, Country, Search: String; Page, PerPage: integer);
   end;
 
 implementation
@@ -225,7 +229,7 @@ uses
   BulkForwardGeocodeAddressesUnit, SearchRoutesForSpecifiedTextUnit,
   GetLocationHistoryFromTimeRangeUnit, GetAssetTrackingDataUnit,
   AddConfigValueUnit, DeleteConfigValueUnit, UpdateConfigValueUnit,
-  GetConfigValueUnit, GetAllConfigValuesUnit, GetVehiclesUnit, GetVehicleUnit, PreviewFileUnit, UploadFileGeocodingUnit;
+  GetConfigValueUnit, GetAllConfigValuesUnit, GetVehiclesUnit, GetVehicleUnit, PreviewFileUnit, UploadFileGeocodingUnit, GetAllVendorsUnit, GetVendorUnit, SearchVendorsUnit;
 
 procedure TRoute4MeExamples.GetAreaAddedActivities;
 var
@@ -616,6 +620,18 @@ begin
   Example := MakeExample(TGetVehicles) as TGetVehicles;
   try
     Example.Execute;
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.GetAllVendors;
+var
+  Example: TGetAllVendors;
+begin
+  Example := MakeExample(TGetAllVendors) as TGetAllVendors;
+  try
+    Example.Execute();
   finally
     FreeAndNil(Example);
   end;
@@ -1282,6 +1298,18 @@ begin
   end;
 end;
 
+procedure TRoute4MeExamples.GetVendor(VendorId: integer);
+var
+  Example: TGetVendor;
+begin
+  Example := MakeExample(TGetVendor) as TGetVendor;
+  try
+    Example.Execute(VendorId);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
 procedure TRoute4MeExamples.GetZipCodeAndHouseNumber(ZipCode, HouseNumber: String);
 var
   Example: TGetZipCodeAndHouseNumber;
@@ -1648,6 +1676,20 @@ begin
   Example := MakeExample(TSearchRoutesForSpecifiedText) as TSearchRoutesForSpecifiedText;
   try
     Result := Example.Execute(Text);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.SearchVendors(Size: TVendorSizeType;
+  IsIntegrated: boolean; Feature, Country, Search: String; Page,
+  PerPage: integer);
+var
+  Example: TSearchVendors;
+begin
+  Example := MakeExample(TSearchVendors) as TSearchVendors;
+  try
+    Example.Execute(Size, IsIntegrated, Feature, Country, Search, Page, PerPage);
   finally
     FreeAndNil(Example);
   end;

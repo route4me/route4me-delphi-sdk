@@ -10,7 +10,9 @@ type
     procedure SetProxy(Host: String; Port: integer; Username, Password: String);
 
     function Get(Url: String; Data: TGenericParameters;
-      ResultClassType: TClass; out ErrorString: String): TObject;
+      ResultClassType: TClass; out ErrorString: String): TObject; overload;
+    function Get(Url: String; Data: TGenericParameters;
+      PossibleResultClassType: TClassArray; out ErrorString: String): TObject; overload;
     function Post(Url: String; Data: TGenericParameters;
       ResultClassType: TClass; out ErrorString: String): TObject; overload;
     function Post(Url: String; Data: TGenericParameters; Stream: TStream;

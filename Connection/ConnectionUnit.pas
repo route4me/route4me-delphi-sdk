@@ -71,7 +71,9 @@ type
     procedure SetProxy(Host: String; Port: integer; Username, Password: String);
 
     function Get(Url: String; Data: TGenericParameters;
-      ResultClassType: TClass; out ErrorString: String): TObject;
+      ResultClassType: TClass; out ErrorString: String): TObject; overload;
+    function Get(Url: String; Data: TGenericParameters;
+      PossibleResultClassType: TClassArray; out ErrorString: String): TObject; overload;
     function Post(Url: String; Data: TGenericParameters;
       ResultClassType: TClass; out ErrorString: String): TObject; overload;
     function Post(Url: String; Data: TGenericParameters;
@@ -167,6 +169,12 @@ begin
   finally
     FreeAndNil(Parameters);
   end;
+end;
+
+function TConnection.Get(Url: String; Data: TGenericParameters;
+  PossibleResultClassType: TClassArray; out ErrorString: String): TObject;
+begin
+  Result := ExecuteRequest(Url, Data, rmGET, PossibleResultClassType, ErrorString);
 end;
 
 function TConnection.Get(Url: String; Data: TGenericParameters;

@@ -272,7 +272,15 @@ uses
   GetVehicleUnit in 'Examples\Vehicles\GetVehicleUnit.pas',
   FileUploadingActionsUnit in '..\Actions\FileUploadingActionsUnit.pas',
   PreviewFileUnit in 'Examples\FileUploading\PreviewFileUnit.pas',
-  UploadFileGeocodingUnit in 'Examples\FileUploading\UploadFileGeocodingUnit.pas';
+  UploadFileGeocodingUnit in 'Examples\FileUploading\UploadFileGeocodingUnit.pas',
+  FilePreviewErrorResponseUnit in '..\QueryTypes\FilePreviewErrorResponseUnit.pas',
+  FileUploadErrorsResponseUnit in '..\QueryTypes\FileUploadErrorsResponseUnit.pas',
+  TelematicActionsUnit in '..\Actions\TelematicActionsUnit.pas',
+  VendorUnit in '..\DataTypes\VendorUnit.pas',
+  GetVendorsResponseUnit in '..\QueryTypes\GetVendorsResponseUnit.pas',
+  GetAllVendorsUnit in 'Examples\Telematics\GetAllVendorsUnit.pas',
+  GetVendorUnit in 'Examples\Telematics\GetVendorUnit.pas',
+  SearchVendorsUnit in 'Examples\Telematics\SearchVendorsUnit.pas';
 
 {var
   CustomerSample: TCustomerQuestionAbout7Stops;}

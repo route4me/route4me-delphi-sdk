@@ -158,6 +158,9 @@ type
     procedure UploadFileGeocoding;
     procedure UploadCsvFile;
     procedure UploadXlsFile;
+    procedure GetAllVendors;
+    procedure GetVendor;
+    procedure SearchVendors;
   end;
 
 implementation
@@ -198,6 +201,29 @@ begin
   finally
     FreeAndNil(Routes);
   end;
+end;
+
+procedure TTestExamplesRequests.SearchVendors;
+var
+  Size: TVendorSizeType;
+  IsIntegrated: boolean;
+  Feature, Country, Search: String;
+  Page, PerPage: integer;
+begin
+  Size := TVendorSizeType.vsRegional;
+  IsIntegrated := True;
+  Feature := 'feature1';
+  Country := 'country2';
+  Search := 'search3';
+  Page := 4;
+  PerPage := 23;
+  FExamples.SearchVendors(Size, IsIntegrated, Feature, Country, Search, Page, PerPage);
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://telematics.route4me.com/api/vendors.php?api_key=11111111111111111111111111111111&' +
+    'is_integrated=1&feature=feature1&size=regional&country=country2&search=search3&page=4&per_page=23', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
 procedure TTestExamplesRequests.SetGPSPosition;
@@ -1059,6 +1085,16 @@ begin
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
+procedure TTestExamplesRequests.GetAllVendors;
+begin
+  FExamples.GetAllVendors();
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://telematics.route4me.com/api/vendors.php?api_key=11111111111111111111111111111111', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
 procedure TTestExamplesRequests.GetDestinationOutOfSequenceActivities;
 begin
   FExamples.GetDestinationOutOfSequenceActivities();
@@ -1746,6 +1782,20 @@ begin
   CheckEquals(EmptyStr, FConnection.RequestBody);
   CheckEquals('https://www.route4me.com/api/vehicles/view_vehicles.php?api_key=11111111111111111111111111111111' +
     '&vehicle_id=0A18C14AB42F6B6D7E830CE4082493E3', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
+end;
+
+procedure TTestExamplesRequests.GetVendor;
+var
+  VendorId: integer;
+begin
+  VendorId := 345;
+  FExamples.GetVendor(VendorId);
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://telematics.route4me.com/api/vendors.php?api_key=11111111111111111111111111111111&' +
+    'vendor_id=345', FConnection.Url);
   CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
   CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;

@@ -9,7 +9,7 @@ uses
 type
   TFileUploadingActions = class(TBaseAction)
   public
-    function Preview(FileId: String; out ErrorString: String): String;
+    function Preview(FileId: String; out ErrorString: String): TStringList;
     function UploadFileGeocoding(FileId: String; out ErrorString: String): TStringList;
     function Upload(Stream: TStream; out ErrorString: String): String;
   end;
@@ -17,27 +17,45 @@ type
 implementation
 
 uses
-  System.Generics.Collections, GenericParametersUnit, CommonTypesUnit, SettingsUnit, UtilsUnit, FileUploadErrorsResponseUnit;
+  System.Generics.Collections, GenericParametersUnit, CommonTypesUnit, SettingsUnit, UtilsUnit, FileUploadErrorsResponseUnit,
+  FilePreviewErrorResponseUnit;
 
-function TFileUploadingActions.Preview(FileId: String; out ErrorString: String): String;
+function TFileUploadingActions.Preview(FileId: String; out ErrorString: String): TStringList;
 var
-  Response: TSimpleString;
+  Response: TObject;
   Parameters: TGenericParameters;
+  ClassArray: TClassArray;
 begin
-  Result := EmptyStr;
+  Result := TStringList.Create;
 
   Parameters := TGenericParameters.Create;
   try
     Parameters.AddParameter('strUploadID', FileId);
     Parameters.AddParameter('format', 'json');
 
+    SetLength(ClassArray, 2);
+    (*todo: невозможно отличить строку
+    {"status":false,"errors":["Upload not found"]} от контента
+    Похоже парсинг этой строки надо производить здесь, а не в Connection
+    *)
+    ClassArray[0] := TSimpleString;
+    ClassArray[1] := TFilePreviewErrorResponse;
     Response := FConnection.Get(TSettings.EndPoints.CsvXlsPreview, Parameters,
-      TSimpleString, ErrorString) as TSimpleString;
+      ClassArray, ErrorString);
     try
       if (Response = nil) and (ErrorString = EmptyStr) then
         ErrorString := 'File Preview fault';
 
-      Result := Response.Value;
+      if (Response is TFilePreviewErrorResponse) then
+      begin
+        if Length(TFilePreviewErrorResponse(Response).Errors) > 0 then
+          ErrorString := TFilePreviewErrorResponse(Response).Errors[0]
+        else
+          ErrorString := 'File Preview fault';
+      end;
+
+      if (Response is TSimpleString) and (ErrorString = EmptyStr) then
+        Result.Text := TSimpleString(Response).Value;
     finally
       FreeAndNil(Response);
     end;

@@ -312,7 +312,15 @@ uses
   PreviewFileUnit in '..\Examples\Examples\FileUploading\PreviewFileUnit.pas',
   TestFileUploadingSamplesUnit in 'Examples\Online\TestFileUploadingSamplesUnit.pas',
   UploadFileGeocodingUnit in '..\Examples\Examples\FileUploading\UploadFileGeocodingUnit.pas',
-  FileUploadErrorsResponseUnit in '..\QueryTypes\FileUploadErrorsResponseUnit.pas';
+  FileUploadErrorsResponseUnit in '..\QueryTypes\FileUploadErrorsResponseUnit.pas',
+  TelematicActionsUnit in '..\Actions\TelematicActionsUnit.pas',
+  VendorUnit in '..\DataTypes\VendorUnit.pas',
+  GetAllVendorsUnit in '..\Examples\Examples\Telematics\GetAllVendorsUnit.pas',
+  GetVendorUnit in '..\Examples\Examples\Telematics\GetVendorUnit.pas',
+  SearchVendorsUnit in '..\Examples\Examples\Telematics\SearchVendorsUnit.pas',
+  TestTelematicsSamplesUnit in 'Examples\Online\TestTelematicsSamplesUnit.pas',
+  GetVendorsResponseUnit in '..\QueryTypes\GetVendorsResponseUnit.pas',
+  FilePreviewErrorResponseUnit in '..\QueryTypes\FilePreviewErrorResponseUnit.pas';
 
 {R *.RES}
 

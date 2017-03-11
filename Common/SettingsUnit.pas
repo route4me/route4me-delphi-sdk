@@ -47,6 +47,7 @@ type
 
 
     const RapidAddressSearch = 'https://rapid.route4me.com/street_data';
+    const TelematicsGateway = 'https://telematics.route4me.com/api/vendors.php';
   end;
 
   /// <summary>

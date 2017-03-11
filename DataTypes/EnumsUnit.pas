@@ -2,6 +2,9 @@ unit EnumsUnit;
 
 interface
 
+uses
+  SysUtils;
+
 type
   TTrackingInfo = (
     tiOrderReceived,
@@ -224,6 +227,7 @@ type
   TTravelMode = (Driving, Walking, Trucking, UnknownMode);
   TAvoid = (Highways, Tolls, MinimizeHighways, MinimizeTolls, Empty);
   TUploadType = (DriverImg, VehicleImg, AddressImg, CsvFile, XlsFile, AnyFile, UnknownUploadType);
+  TVendorSizeType = (vsGlobal, vsRegional, vsLocal);
 
 var
   TDeviceTypeDescription: array[TDeviceType] of String = ('web', 'iphone', 'ipad', 'android_phone', 'android_tablet', 'UnknownDevice');
@@ -284,6 +288,94 @@ var
     'Order Received', 'Order Assigned to Route', 'Packing', 'Loaded to Vehicle',
     'Out for Delivery', 'Unknown');
 
+  TVendorSizeTypeDescription: array[TVendorSizeType] of String = (
+    'global', 'regional', 'local');
+
+type
+  NullableVendorSizeType = record
+  strict private
+      FValue: TVendorSizeType;
+      FIsNull: boolean;
+
+      function GetValue: TVendorSizeType;
+  public
+      constructor Create(PValue: TVendorSizeType);
+
+      class operator Implicit(A: NullableVendorSizeType): TVendorSizeType;
+      class operator Implicit(PValue: TVendorSizeType): NullableVendorSizeType;
+      class operator Equal(A, B: NullableVendorSizeType): boolean;
+      class operator NotEqual(A, B: NullableVendorSizeType): boolean;
+
+      class function Null: NullableVendorSizeType; static;
+
+      property Value: TVendorSizeType read GetValue;
+      property IsNull: boolean read FIsNull;
+      function IsNotNull: boolean;
+  end;
+
 implementation
+
+{ NullableVendorSizeType }
+
+constructor NullableVendorSizeType.Create(PValue: TVendorSizeType);
+begin
+  FValue := PValue;
+  FIsNull := False;
+end;
+
+class operator NullableVendorSizeType.Equal(A,
+  B: NullableVendorSizeType): boolean;
+begin
+  if (A.IsNull <> B.IsNull) then
+    Result := False
+  else
+    if (A.IsNull = B.IsNull) and (A.IsNull) then
+      Result := True
+    else
+      if (A.IsNull = B.IsNull) and (not A.IsNull) then
+        Result := A.Value = B.Value
+      else
+        raise Exception.Create('Ќепредвиденный вариант сравнени€');
+end;
+
+function NullableVendorSizeType.GetValue: TVendorSizeType;
+begin
+  if (FIsNull) then
+    raise Exception.Create('Ќевозможно получить значение - оно равно Null')
+  else
+    Result := FValue;
+end;
+
+class operator NullableVendorSizeType.Implicit(
+  A: NullableVendorSizeType): TVendorSizeType;
+begin
+  Result := A.Value;
+end;
+
+class operator NullableVendorSizeType.Implicit(
+  PValue: TVendorSizeType): NullableVendorSizeType;
+begin
+  Result := NullableVendorSizeType.Create(PValue);
+end;
+
+
+function NullableVendorSizeType.IsNotNull: boolean;
+begin
+  Result := not IsNull;
+end;
+
+
+class operator NullableVendorSizeType.NotEqual(A,
+  B: NullableVendorSizeType): boolean;
+begin
+  Result := not (A = B);
+end;
+
+
+class function NullableVendorSizeType.Null: NullableVendorSizeType;
+begin
+  Result.FIsNull := True;
+end;
+
 
 end.

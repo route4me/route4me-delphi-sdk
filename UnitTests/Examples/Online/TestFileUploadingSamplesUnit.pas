@@ -24,18 +24,28 @@ procedure TTestFileUploadingSamples.Preview;
 var
   ErrorString: String;
   FileId: String;
-  Content: String;
+  Content: TStringList;
 begin
   FileId := 'b2130b5fc36ae1109ef63b6db73781f6';
   Content := FRoute4MeManager.Uploading.Preview(FileId, ErrorString);
-  CheckEquals(EmptyStr, ErrorString);
-  CheckNotEquals(EmptyStr, Content);
+  try
+    CheckEquals(EmptyStr, ErrorString);
+    CheckNotNull(Content);
+    CheckTrue(Content.Count > 0);
+  finally
+    FreeAndNil(Content);
+  end;
 
   FileId := 'random_id_dDFsd2@D3d';
   Content := FRoute4MeManager.Uploading.Preview(FileId, ErrorString);
-  // '{"status":false,"errors":["Upload not found"]}'
-  CheckNotEquals(EmptyStr, ErrorString);
-  CheckEquals(EmptyStr, Content);
+  try
+    // '{"status":false,"errors":["Upload not found"]}'
+    CheckNotEquals(EmptyStr, ErrorString);
+    CheckNotNull(Content);
+    CheckTrue(Content.Count = 0);
+  finally
+    FreeAndNil(Content);
+  end;
 end;
 
 procedure TTestFileUploadingSamples.Upload;
