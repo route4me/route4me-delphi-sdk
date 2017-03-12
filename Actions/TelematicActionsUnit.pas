@@ -93,7 +93,7 @@ begin
     if (Country.IsNotNull) then
       Parameters.AddParameter('country', Country);
     if (Search.IsNotNull) then
-      Parameters.AddParameter('search', Search);
+      Parameters.AddParameter('s', Search);
     if (Page.IsNotNull) then
       Parameters.AddParameter('page', IntToStr(Page));
     if (PerPage.IsNotNull) then
