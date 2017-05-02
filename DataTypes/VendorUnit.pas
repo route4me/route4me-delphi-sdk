@@ -35,6 +35,30 @@ type
   end;
   TVendorFeatureArray = TArray<TVendorFeature>;
 
+
+  TVendorCountry = class(TGenericParameters)
+  private
+    [JSONName('id')]
+    [Nullable]
+    FId: NullableString;
+
+    [JSONName('country_code')]
+    [Nullable]
+    FCode: NullableString;
+
+    [JSONName('country_name')]
+    [Nullable]
+    FName: NullableString;
+
+  public
+    constructor Create(); override;
+
+    property Id: NullableString read FId write FId;
+    property Name: NullableString read FName write FName;
+    property Code: NullableString read FCode write FCode;
+  end;
+  TVendorCountryArray = TArray<TVendorCountry>;
+
   /// <summary>
   ///  Vendor
   /// </summary>
@@ -83,6 +107,10 @@ type
     [JSONNameAttribute('features')]
     [NullableArray(TVendorFeature)]
     FFeatures: TVendorFeatureArray;
+
+    [JSONNameAttribute('countries')]
+    [NullableArray(TVendorCountry)]
+    FCountries: TVendorCountryArray;
 
     function GetIsIntegrated: NullableBoolean;
     procedure SetIsIntegrated(const Value: NullableBoolean);
@@ -148,6 +176,9 @@ type
     /// </summary>
     property Size: TVendorSizeType read GetSize write SetSize;
 
+    property Features: TVendorFeatureArray read FFeatures;
+
+    property Countries: TVendorCountryArray read FCountries;
   end;
 
   TVendorArray = TArray<TVendor>;
@@ -173,6 +204,7 @@ begin
   FSize := NullableString.Null;
 
   SetLength(FFeatures, 0);
+  SetLength(FCountries, 0);
 end;
 
 destructor TVendor.Destroy;
@@ -182,6 +214,10 @@ begin
   for i := High(FFeatures) downto 0 do
     FreeAndNil(FFeatures[i]);
   Finalize(FFeatures);
+
+  for i := High(FCountries) downto 0 do
+    FreeAndNil(FCountries[i]);
+  Finalize(FCountries);
 
   inherited;
 end;
@@ -255,6 +291,17 @@ begin
   FName := NullableString.Null;
   FSlug := NullableString.Null;
   FFeatureGroup := NullableString.Null;
+end;
+
+{ TVendorCountry }
+
+constructor TVendorCountry.Create;
+begin
+  inherited;
+
+  FId := NullableString.Null;
+  FName := NullableString.Null;
+  FCode := NullableString.Null;
 end;
 
 end.

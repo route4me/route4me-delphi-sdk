@@ -3,7 +3,8 @@ unit TelematicActionsUnit;
 interface
 
 uses
-  SysUtils, BaseActionUnit, VendorUnit, EnumsUnit, NullableBasicTypesUnit;
+  SysUtils, BaseActionUnit, VendorUnit, EnumsUnit,
+  NullableBasicTypesUnit, CommonTypesUnit;
 
 type
   TTelematicActions = class(TBaseAction)
@@ -24,6 +25,11 @@ type
     function Search(Size: NullableVendorSizeType; IsIntegrated: NullableBoolean;
       Feature, Country, Search: NullableString; Page: NullableInteger;
       PerPage: NullableInteger; out ErrorString: String): TVendorList;
+
+    /// <summary>
+    /// Compare elected vendors
+    /// </summary>
+    function Compare(VendorIds: TStringArray; out ErrorString: String): TVendorList;
   end;
 
 implementation
@@ -31,7 +37,7 @@ implementation
 { TTelematicActions }
 
 uses
-  SettingsUnit, GenericParametersUnit, CommonTypesUnit, GetVendorsResponseUnit;
+  SettingsUnit, GenericParametersUnit, GetVendorsResponseUnit;
 
 function TTelematicActions.Get(VendorId: integer; out ErrorString: String): TVendor;
 var
@@ -48,6 +54,41 @@ begin
   end;
 end;
 
+function TTelematicActions.Compare(VendorIds: TStringArray;
+  out ErrorString: String): TVendorList;
+var
+  Parameters: TGenericParameters;
+  Response: TGetVendorsResponse;
+  i: integer;
+  VendorsString: String;
+begin
+  Result := TVendorList.Create;
+
+  Parameters := TGenericParameters.Create;
+  try
+    VendorsString := EmptyStr;
+    for i := 0 to High(VendorIds) do
+    begin
+      VendorsString := VendorsString + VendorIds[i];
+      if (i <> High(VendorIds)) then
+        VendorsString := VendorsString + ',';
+    end;
+
+    Parameters.AddParameter('vendors', VendorsString);
+
+    Response := FConnection.Get(TSettings.EndPoints.TelematicsGateway, Parameters,
+      TGetVendorsResponse, ErrorString) as TGetVendorsResponse;
+    try
+      if (Response <> nil) then
+          Result.AddRange(Response.Vendors);
+    finally
+      FreeAndNil(Response);
+    end;
+  finally
+    FreeAndNil(Parameters);
+  end;
+end;
+
 function TTelematicActions.Get(out ErrorString: String): TVendorList;
 var
   Parameters: TGenericParameters;

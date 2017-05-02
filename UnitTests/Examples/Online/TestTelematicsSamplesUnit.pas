@@ -13,12 +13,13 @@ type
     procedure GetAllVendors;
     procedure GetVendor;
     procedure SearchVendors;
+    procedure CompareVendors;
   end;
 
 implementation
 
 uses
-  VehicleUnit, VendorUnit, EnumsUnit, NullableBasicTypesUnit;
+  VehicleUnit, VendorUnit, EnumsUnit, NullableBasicTypesUnit, CommonTypesUnit;
 
 procedure TTestTelematicsSamples.GetVendor;
 var
@@ -42,6 +43,60 @@ begin
     CheckNull(Vendor);
   finally
     FreeAndNil(Vendor);
+  end;
+end;
+
+procedure TTestTelematicsSamples.CompareVendors;
+var
+  ErrorString: String;
+  VendorIds: TStringArray;
+  Vendors: TVendorList;
+begin
+  SetLength(VendorIds, 3);
+  VendorIds[0] := '55';
+  VendorIds[1] := '56';
+  VendorIds[2] := '57';
+  Vendors := FRoute4MeManager.Telematics.Compare(VendorIds, ErrorString);
+  try
+    CheckEquals(EmptyStr, ErrorString);
+    CheckNotNull(Vendors);
+    CheckEquals(3, Vendors.Count);
+  finally
+    FreeAndNil(Vendors);
+  end;
+
+  SetLength(VendorIds, 1);
+  VendorIds[0] := '55';
+  Vendors := FRoute4MeManager.Telematics.Compare(VendorIds, ErrorString);
+  try
+    CheckEquals(EmptyStr, ErrorString);
+    CheckNotNull(Vendors);
+    CheckEquals(1, Vendors.Count);
+  finally
+    FreeAndNil(Vendors);
+  end;
+
+  SetLength(VendorIds, 1);
+  VendorIds[0] := '-123';
+  Vendors := FRoute4MeManager.Telematics.Compare(VendorIds, ErrorString);
+  try
+    CheckNotEquals(EmptyStr, ErrorString);
+    CheckNotNull(Vendors);
+    CheckEquals(0, Vendors.Count);
+  finally
+    FreeAndNil(Vendors);
+  end;
+
+  SetLength(VendorIds, 2);
+  VendorIds[0] := '55';
+  VendorIds[1] := '-123';
+  Vendors := FRoute4MeManager.Telematics.Compare(VendorIds, ErrorString);
+  try
+    CheckNotEquals(EmptyStr, ErrorString);
+    CheckNotNull(Vendors);
+    CheckEquals(1, Vendors.Count);
+  finally
+    FreeAndNil(Vendors);
   end;
 end;
 

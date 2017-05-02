@@ -172,6 +172,7 @@ type
     procedure GetVendor(VendorId: integer);
     procedure SearchVendors(Size: TVendorSizeType; IsIntegrated: boolean;
       Feature, Country, Search: String; Page, PerPage: integer);
+    procedure CompareVendors(VendorIds: TStringArray);
   end;
 
 implementation
@@ -229,7 +230,8 @@ uses
   BulkForwardGeocodeAddressesUnit, SearchRoutesForSpecifiedTextUnit,
   GetLocationHistoryFromTimeRangeUnit, GetAssetTrackingDataUnit,
   AddConfigValueUnit, DeleteConfigValueUnit, UpdateConfigValueUnit,
-  GetConfigValueUnit, GetAllConfigValuesUnit, GetVehiclesUnit, GetVehicleUnit, PreviewFileUnit, UploadFileGeocodingUnit, GetAllVendorsUnit, GetVendorUnit, SearchVendorsUnit;
+  GetConfigValueUnit, GetAllConfigValuesUnit, GetVehiclesUnit, GetVehicleUnit, PreviewFileUnit, UploadFileGeocodingUnit, GetAllVendorsUnit, GetVendorUnit, SearchVendorsUnit,
+  CompareVendorsUnit;
 
 procedure TRoute4MeExamples.GetAreaAddedActivities;
 var
@@ -482,6 +484,18 @@ begin
   Example := MakeExample(TAuthentication) as TAuthentication;
   try
     Result := Example.Execute(EMail, Password);
+  finally
+    FreeAndNil(Example);
+  end;
+end;
+
+procedure TRoute4MeExamples.CompareVendors(VendorIds: TStringArray);
+var
+  Example: TCompareVendors;
+begin
+  Example := MakeExample(TCompareVendors) as TCompareVendors;
+  try
+    Example.Execute(VendorIds);
   finally
     FreeAndNil(Example);
   end;

@@ -320,7 +320,8 @@ uses
   SearchVendorsUnit in '..\Examples\Examples\Telematics\SearchVendorsUnit.pas',
   TestTelematicsSamplesUnit in 'Examples\Online\TestTelematicsSamplesUnit.pas',
   GetVendorsResponseUnit in '..\QueryTypes\GetVendorsResponseUnit.pas',
-  FilePreviewErrorResponseUnit in '..\QueryTypes\FilePreviewErrorResponseUnit.pas';
+  FilePreviewErrorResponseUnit in '..\QueryTypes\FilePreviewErrorResponseUnit.pas',
+  CompareVendorsUnit in '..\Examples\Examples\Telematics\CompareVendorsUnit.pas';
 
 {R *.RES}
 

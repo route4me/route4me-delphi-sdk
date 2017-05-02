@@ -161,6 +161,7 @@ type
     procedure GetAllVendors;
     procedure GetVendor;
     procedure SearchVendors;
+    procedure CompareVendors;
   end;
 
 implementation
@@ -942,6 +943,24 @@ begin
   finally
     FreeAndNil(EtalonList);
   end;
+end;
+
+procedure TTestExamplesRequests.CompareVendors;
+var
+  Vendors: TStringArray;
+begin
+  SetLength(Vendors, 3);
+  Vendors[0] := '55';
+  Vendors[1] := '56';
+  Vendors[2] := '57';
+
+  FExamples.CompareVendors(Vendors);
+
+  CheckEquals(EmptyStr, FConnection.RequestBody);
+  CheckEquals('https://telematics.route4me.com/api/vendors.php?api_key=11111111111111111111111111111111&' +
+    'vendors=55,56,57', FConnection.Url);
+  CheckTrue(TRESTRequestMethod.rmGET = FConnection.Method);
+  CheckTrue(TRESTContentType.ctTEXT_PLAIN = FConnection.ContentType);
 end;
 
 procedure TTestExamplesRequests.DeleteAvoidanceZone;
