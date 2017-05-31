@@ -16,7 +16,6 @@ type
     function CheckActivitiesWithoutRouteId(ActivityType: TActivityType;
       IsNullNow: boolean = False): String;
   published
-    procedure LogSpecificMessage;
     procedure GetAllActivities;
     procedure GetTeamActivities;
     procedure GetAreaAddedActivities;
@@ -41,6 +40,7 @@ type
     procedure GetRouteOptimizedActivities;
     procedure GetRouteOwnerChangedActivities;
     procedure GetDestinationUpdatedActivities;
+    procedure LogSpecificMessage;
   end;
 
 implementation
@@ -298,7 +298,7 @@ begin
   ActivityType := TActivityType.atDriverArrivedOnTime;
 
   CheckActivitiesWithInvalidRouteId(ActivityType);
-  RouteId := CheckActivitiesWithoutRouteId(ActivityType, True);
+  RouteId := CheckActivitiesWithoutRouteId(ActivityType, False);
   if (RouteId <> EmptyStr) then
     CheckActivitiesWithRouteId(ActivityType, RouteId);
 end;
@@ -337,20 +337,25 @@ var
   i: integer;
   Limit, Offset: integer;
   Total: integer;
+  Expected: String;
 begin
   Limit := 5;
   Offset := 0;
   Activities := FRoute4MeManager.ActivityFeed.GetAllActivities(
     Limit, Offset, Total, ErrorString);
   try
-    CheckNotNull(Activities);
-    CheckEquals(EmptyStr, ErrorString);
-    CheckEquals(5, Activities.Count);
-    CheckTrue(Total > 0);
+    CheckNotNull(Activities, '1. Activities=null');
+    CheckEquals(EmptyStr, ErrorString, '1. ErrorString <> ""');
+    CheckEquals(5, Activities.Count, '1. Activities.Count');
+    CheckTrue(Total > 0, '1. Total');
 
     SetLength(ActivityIds, Activities.Count);
+    Expected := EmptyStr;
     for i := 0 to Activities.Count - 1 do
+    begin
       ActivityIds[i] := Activities[i].Id;
+      Expected := Expected + Activities[i].Id + '; ';
+    end;
   finally
     FreeAndNil(Activities);
   end;
@@ -360,12 +365,12 @@ begin
   Activities := FRoute4MeManager.ActivityFeed.GetAllActivities(
     Limit, Offset, Total, ErrorString);
   try
-    CheckNotNull(Activities);
-    CheckEquals(EmptyStr, ErrorString);
-    CheckEquals(2, Activities.Count);
-    CheckTrue(Total > 0);
-    CheckTrue(ActivityIds[0] = Activities[0].Id);
-    CheckTrue(ActivityIds[1] = Activities[1].Id);
+    CheckNotNull(Activities, '2. Activities=null');
+    CheckEquals(EmptyStr, ErrorString, '2. ErrorString <> ""');
+    CheckEquals(2, Activities.Count, '2. Activities.Count');
+    CheckTrue(Total > 0, '2. Total');
+    CheckTrue((ActivityIds[0] = Activities[0].Id) or (ActivityIds[1] = Activities[0].Id), '2. ActivityId0. Actual: ' + Activities[0].Id + '; Expected: ' + Expected);
+    CheckTrue((ActivityIds[1] = Activities[1].Id) or (ActivityIds[0] = Activities[1].Id), '2. ActivityId1. Actual: ' + Activities[1].Id + '; Expected: ' + Expected);
   finally
     FreeAndNil(Activities);
   end;
@@ -375,12 +380,12 @@ begin
   Activities := FRoute4MeManager.ActivityFeed.GetAllActivities(
     Limit, Offset, Total, ErrorString);
   try
-    CheckNotNull(Activities);
-    CheckEquals(EmptyStr, ErrorString);
-    CheckEquals(2, Activities.Count);
-    CheckTrue(Total > 0);
-    CheckTrue(ActivityIds[2] = Activities[0].Id);
-    CheckTrue(ActivityIds[3] = Activities[1].Id);
+    CheckNotNull(Activities, '3. Activities=null');
+    CheckEquals(EmptyStr, ErrorString, '3. ErrorString <> ""');
+    CheckEquals(2, Activities.Count, '3. Activities.Count');
+    CheckTrue(Total > 0, '3. Total');
+    CheckTrue((ActivityIds[2] = Activities[0].Id) or (ActivityIds[3] = Activities[0].Id),  '3. ActivityId0. Actual: ' + Activities[0].Id + '; Expected: ' + Expected);
+    CheckTrue((ActivityIds[3] = Activities[1].Id) or (ActivityIds[2] = Activities[1].Id), '3. ActivityId1. Actual: ' + Activities[1].Id + '; Expected: ' + Expected);
   finally
     FreeAndNil(Activities);
   end;
@@ -390,30 +395,32 @@ begin
   Activities := FRoute4MeManager.ActivityFeed.GetAllActivities(
     Limit, Offset, Total, ErrorString);
   try
-    CheckNotNull(Activities);
-    CheckEquals(EmptyStr, ErrorString);
-    CheckEquals(0, Activities.Count);
-    CheckTrue(Total > 0);
+    CheckNotNull(Activities, '4. Activities=null');
+    CheckEquals(EmptyStr, ErrorString, '4. ErrorString <> ""');
+    CheckEquals(0, Activities.Count, '4. Activities.Count');
+    CheckTrue(Total > 0, '4. Total');
   finally
     FreeAndNil(Activities);
   end;
 end;
 
 function TTestActivitiesSamples.GetRouteId: String;
-{var
+var
   Routes: TDataObjectRouteList;
-  ErrorString: String;}
+  ErrorString: String;
 begin
   // по этому Id 13 activities есть в базе
   Result := 'B15C0ED469425DBD5FC3B04DAFF2A54D';
-
-{  Routes := FRoute4MeManager.Route.GetList(1, 1, ErrorString);
+  Result := '4A840163D74804552EEAFC75EC1E50BD'; //4
+{
+  Routes := FRoute4MeManager.Route.GetList(20, 2, ErrorString);
   try
     CheckTrue(Routes.Count > 0);
     Result := Routes[0].RouteId;
   finally
     FreeAndNil(Routes);
-  end;}
+  end;
+}
 end;
 
 procedure TTestActivitiesSamples.GetTeamActivities;
@@ -571,7 +578,7 @@ begin
   ActivityType := TActivityType.atMemberModified;
 
   CheckActivitiesWithInvalidRouteId(ActivityType);
-  RouteId := CheckActivitiesWithoutRouteId(ActivityType);
+  RouteId := CheckActivitiesWithoutRouteId(ActivityType, True);
   if (RouteId <> EmptyStr) then
     CheckActivitiesWithRouteId(ActivityType, RouteId);
 end;
@@ -623,7 +630,7 @@ begin
   ActivityType := TActivityType.atRouteOwnerChanged;
 
   CheckActivitiesWithInvalidRouteId(ActivityType);
-  RouteId := CheckActivitiesWithoutRouteId(ActivityType);
+  RouteId := CheckActivitiesWithoutRouteId(ActivityType, True);
   if (RouteId <> EmptyStr) then
     CheckActivitiesWithRouteId(ActivityType, RouteId);
 end;

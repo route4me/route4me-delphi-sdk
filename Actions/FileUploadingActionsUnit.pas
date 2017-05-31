@@ -21,6 +21,8 @@ uses
   FilePreviewErrorResponseUnit;
 
 function TFileUploadingActions.Preview(FileId: String; out ErrorString: String): TStringList;
+const
+  ErrorTag = '{"status":false,"errors":["';
 var
   Response: TObject;
   Parameters: TGenericParameters;
@@ -34,10 +36,6 @@ begin
     Parameters.AddParameter('format', 'json');
 
     SetLength(ClassArray, 2);
-    (*todo: невозможно отличить строку
-    {"status":false,"errors":["Upload not found"]} от контента
-    Похоже парсинг этой строки надо производить здесь, а не в Connection
-    *)
     ClassArray[0] := TSimpleString;
     ClassArray[1] := TFilePreviewErrorResponse;
     Response := FConnection.Get(TSettings.EndPoints.CsvXlsPreview, Parameters,
@@ -55,7 +53,16 @@ begin
       end;
 
       if (Response is TSimpleString) and (ErrorString = EmptyStr) then
-        Result.Text := TSimpleString(Response).Value;
+      begin
+        if (pos(ErrorTag, TSimpleString(Response).Value) = 0) then
+          Result.Text := TSimpleString(Response).Value
+        else
+          ErrorString := 'Error';
+
+    (*todo: невозможно отличить строку {"status":false,"errors":["Upload not found"]} от контента
+    Похоже парсинг этой строки надо производить здесь, а не в Connection
+    *)
+      end;
     finally
       FreeAndNil(Response);
     end;

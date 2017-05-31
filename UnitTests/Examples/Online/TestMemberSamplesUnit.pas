@@ -268,11 +268,14 @@ begin
   CheckTrue(FRoute4MeManager.User.UpdateConfigValue(Key, Value, ErrorString));
   CheckEquals(EmptyStr, ErrorString);
 
-  Key := 'unexisting_key';
+{  Key := 'unexisting_key';
   Value := '123';
   // todo 5: возвращает почему-то, что все в порядке, спросил Олега.
+
+  // Теперь новое поведение: сервер возвращает, что операция выполнена успешно,
+  // и при этом добавляет этот ключ со значением в базу. Спросил Олега. Тест закомментировал, чтобы последующие тесты вели себя корректно.
   CheckTrue(FRoute4MeManager.User.UpdateConfigValue(Key, Value, ErrorString));
-  CheckEquals(EmptyStr, ErrorString);
+  CheckEquals(EmptyStr, ErrorString);}
 end;
 
 procedure TTestMemberSamples.UpdateUser;

@@ -92,7 +92,7 @@ begin
   VendorIds[1] := '-123';
   Vendors := FRoute4MeManager.Telematics.Compare(VendorIds, ErrorString);
   try
-    CheckNotEquals(EmptyStr, ErrorString);
+    CheckEquals(EmptyStr, ErrorString);
     CheckNotNull(Vendors);
     CheckEquals(1, Vendors.Count);
   finally
